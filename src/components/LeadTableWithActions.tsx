@@ -432,11 +432,6 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
 
               {/* Tags e badges */}
               <div className="flex flex-wrap gap-1">
-                {lead.business_type && (
-                  <Badge variant="outline" className="text-xs">
-                    {lead.business_type}
-                  </Badge>
-                )}
                 {lead.rating && lead.rating >= 4 && (
                   <Badge className="bg-green-100 text-green-800 text-xs">
                     ⭐ Premium
