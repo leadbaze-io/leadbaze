@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { QrCode, Smartphone, CheckCircle, AlertTriangle, Loader2, RefreshCw, X } from 'lucide-react'
+import { QrCode, Smartphone, CheckCircle, AlertTriangle, Loader2, RefreshCw, X, LogOut } from 'lucide-react'
 import { Button } from './ui/button'
 import { toast } from '../hooks/use-toast'
 import EvolutionApiService from '../lib/evolutionApiService'
@@ -12,15 +12,18 @@ interface WhatsAppConnectionProps {
   userName?: string
   onConnectionSuccess?: (instanceName: string) => void
   onConnectionError?: (error: string) => void
+  onDisconnect?: () => void
 }
 
 export default function WhatsAppConnection({ 
   userId, 
   userName, 
   onConnectionSuccess, 
-  onConnectionError 
+  onConnectionError,
+  onDisconnect
 }: WhatsAppConnectionProps) {
   const [isConnecting, setIsConnecting] = useState(false)
+  const [isDisconnecting, setIsDisconnecting] = useState(false)
   const [qrCode, setQrCode] = useState<string>('')
   const [instanceName, setInstanceName] = useState<string>('')
   const [connectionState, setConnectionState] = useState<ConnectionState | null>(null)
@@ -62,6 +65,58 @@ export default function WhatsAppConnection({
       }
     }
   }, [])
+
+  /**
+   * Desconecta o WhatsApp da instância atual
+   */
+  const handleDisconnectWhatsApp = async () => {
+    if (!instanceName) return
+
+    try {
+      setIsDisconnecting(true)
+      console.log('🔄 Desconectando WhatsApp...')
+
+      // 1. Deletar instância na Evolution API
+      await EvolutionApiService.deleteInstance(instanceName)
+
+      // 2. Atualizar status no banco de dados
+      if (userId) {
+        await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
+      }
+
+      // 3. Limpar estado local
+      setConnectionState(null)
+      setInstanceName('')
+      setQrCode('')
+
+      // 4. Parar polling se estiver ativo
+      if (stopPollingRef.current) {
+        stopPollingRef.current()
+        stopPollingRef.current = null
+      }
+      setIsPolling(false)
+
+      toast({
+        title: 'WhatsApp Desconectado!',
+        description: 'Sua conta WhatsApp foi desconectada com sucesso.',
+      })
+
+      // 5. Chamar callback de desconexão
+      onDisconnect?.()
+
+    } catch (error) {
+      console.error('❌ Erro ao desconectar WhatsApp:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+      
+      toast({
+        title: 'Erro na Desconexão',
+        description: errorMessage,
+        variant: 'destructive'
+      })
+    } finally {
+      setIsDisconnecting(false)
+    }
+  }
 
   /**
    * Inicia o processo de conexão WhatsApp
@@ -447,16 +502,38 @@ export default function WhatsAppConnection({
             animate={{ opacity: 1, y: 0 }}
             className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg"
           >
-            <div className="flex items-center space-x-3">
-              <CheckCircle className="w-6 h-6 text-green-600" />
-              <div>
-                <h3 className="font-medium text-green-800">
-                  WhatsApp Conectado com Sucesso!
-                </h3>
-                <p className="text-sm text-green-700">
-                  Sua conta está pronta para enviar mensagens.
-                </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+                <div>
+                  <h3 className="font-medium text-green-800">
+                    WhatsApp Conectado com Sucesso!
+                  </h3>
+                  <p className="text-sm text-green-700">
+                    Sua conta está pronta para enviar mensagens.
+                  </p>
+                  {instanceName && (
+                    <p className="text-xs text-green-600 mt-1">
+                      Instância: {instanceName}
+                    </p>
+                  )}
+                </div>
               </div>
+              
+              <Button
+                onClick={handleDisconnectWhatsApp}
+                variant="outline"
+                size="sm"
+                disabled={isDisconnecting}
+                className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+              >
+                {isDisconnecting ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                ) : (
+                  <LogOut className="w-4 h-4 mr-1" />
+                )}
+                {isDisconnecting ? 'Desconectando...' : 'Desconectar'}
+              </Button>
             </div>
           </motion.div>
         )}

@@ -442,6 +442,16 @@ export default function DisparadorMassa() {
     setWhatsappConfig(null)
   }
 
+  const handleDisconnect = () => {
+    console.log('🔄 WhatsApp desconectado, atualizando estado...')
+    setConnectedInstance(null)
+    setWhatsappConfig(null)
+    toast({
+      title: 'WhatsApp Desconectado',
+      description: 'Você pode conectar um novo número agora.',
+    })
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -914,6 +924,7 @@ export default function DisparadorMassa() {
               userName={user?.user_metadata?.full_name || user?.email?.split('@')[0]}
               onConnectionSuccess={handleConnectionSuccess}
               onConnectionError={handleConnectionError}
+              onDisconnect={handleDisconnect}
             />
 
             {/* Configuração Manual (Opcional) */}
