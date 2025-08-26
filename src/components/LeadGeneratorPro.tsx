@@ -744,14 +744,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                            )}
                          </div>
                          
-                         {/* Tipo de negócio */}
-                         {lead.business_type && (
-                           <div className="pt-1">
-                             <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
-                               {lead.business_type}
-                             </span>
-                           </div>
-                         )}
+
                        </div>
                      </motion.div>
                    ))}
