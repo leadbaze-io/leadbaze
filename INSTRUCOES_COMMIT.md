@@ -45,3 +45,4 @@ Após o push, verifique em: https://github.com/mindflowai1/leadflow
 - ✅ Feedback visual durante desconexão
 - ✅ Possibilidade de conectar novo número após desconexão
 
+

@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Trash2, CheckSquare, Square } from 'lucide-react'
+import { useState } from 'react'
+import { Trash2 } from 'lucide-react'
 import type { Lead } from '../types'
 import { Button } from './ui/button'
 import { useToast } from '../hooks/use-toast'
@@ -16,24 +16,6 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
   const [isDeleting, setIsDeleting] = useState(false)
   
   const { toast } = useToast()
-
-  const toggleLeadSelection = (leadId: string) => {
-    const newSelected = new Set(selectedLeads)
-    if (newSelected.has(leadId)) {
-      newSelected.delete(leadId)
-    } else {
-      newSelected.add(leadId)
-    }
-    setSelectedLeads(newSelected)
-  }
-
-  const toggleSelectAll = () => {
-    if (selectedLeads.size === leads.length) {
-      setSelectedLeads(new Set())
-    } else {
-      setSelectedLeads(new Set(leads.map(lead => lead.id || '').filter(Boolean)))
-    }
-  }
 
   const handleDeleteSelected = async () => {
     if (selectedLeads.size === 0) {
