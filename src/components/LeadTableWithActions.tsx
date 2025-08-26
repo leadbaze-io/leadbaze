@@ -175,10 +175,10 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               <Button
                 onClick={handleDeleteSelected}
                 disabled={isDeleting}
-                className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-500 hover:border-red-600 transition-all duration-200 transform hover:scale-105"
+                className="flex items-center space-x-2 bg-white text-red-600 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-200 transform hover:scale-105"
               >
                 <Trash2 className="w-4 h-4" />
-                <span>🗑️ Deletar {selectedLeads.size} Lead{selectedLeads.size > 1 ? 's' : ''}</span>
+                <span>Deletar {selectedLeads.size} Lead{selectedLeads.size > 1 ? 's' : ''}</span>
               </Button>
             )}
           </div>
