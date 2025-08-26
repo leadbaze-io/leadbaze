@@ -700,7 +700,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                         onClick={() => toggleLeadSelectionByFilteredIndex(index)}
                       >
                        <div className="space-y-3">
-                         {/* Header com checkbox e nome */}
+                         {/* Header com checkbox e número de avaliações */}
                          <div className="flex items-start justify-between">
                            <div className="flex items-center space-x-2 flex-1 min-w-0">
                              <input
@@ -710,9 +710,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                                onClick={(e) => e.stopPropagation()}
                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
                              />
-                             <h3 className="font-semibold text-gray-900 text-sm truncate">{lead.name}</h3>
+                             {renderReviewsCount(lead.reviews_count)}
                            </div>
-                           {renderReviewsCount(lead.reviews_count)}
+                           {renderStars(lead.rating)}
+                         </div>
+                         
+                         {/* Nome do estabelecimento */}
+                         <div className="pt-1">
+                           <h3 className="font-semibold text-gray-900 text-sm truncate">{lead.name}</h3>
                          </div>
                          
                          {/* Informações do lead */}
