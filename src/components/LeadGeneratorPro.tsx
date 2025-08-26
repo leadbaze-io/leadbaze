@@ -411,6 +411,19 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
     )
   }
 
+  const renderReviewsCount = (reviewsCount?: number) => {
+    if (!reviewsCount) return null
+    
+    return (
+      <div className="flex items-center space-x-1">
+        <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
+          <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
+        </div>
+        <span className="text-xs text-gray-600">avaliações</span>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Formulário de Extração */}
@@ -699,7 +712,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                              />
                              <h3 className="font-semibold text-gray-900 text-sm truncate">{lead.name}</h3>
                            </div>
-                           {renderStars(lead.rating)}
+                           {renderReviewsCount(lead.reviews_count)}
                          </div>
                          
                          {/* Informações do lead */}
