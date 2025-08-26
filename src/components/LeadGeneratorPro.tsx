@@ -28,8 +28,9 @@ import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { useToast } from "../hooks/use-toast"
 import { LeadService } from "../lib/leadService"
-import { Loader2, Search, MapPin, Star, Phone, Globe, Save } from "lucide-react"
+import { Loader2, Search, MapPin, Star, Phone, Globe, Save, Eye } from "lucide-react"
 import { Label } from "./ui/label"
+import { Badge } from "./ui/badge"
 import type { Lead, LeadList } from "../types"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -685,70 +686,87 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                 </div>
               </CardHeader>
               <CardContent>
-                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   {paginatedLeads.map((lead, index) => (
-                                           <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className={`p-4 border rounded-lg transition-all hover:shadow-md cursor-pointer ${
-                          lead.selected 
-                            ? 'border-blue-500 bg-blue-50 shadow-md' 
-                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
-                        onClick={() => toggleLeadSelectionByFilteredIndex(index)}
-                      >
-                       <div className="space-y-3">
-                         {/* Header com checkbox e número de avaliações */}
-                         <div className="flex items-start justify-between">
-                           <div className="flex items-center space-x-2 flex-1 min-w-0">
-                             <input
-                               type="checkbox"
-                               checked={lead.selected}
-                               onChange={() => toggleLeadSelectionByFilteredIndex(index)}
-                               onClick={(e) => e.stopPropagation()}
-                               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
-                             />
-                             {renderReviewsCount(lead.reviews_count)}
-                           </div>
-                           {renderStars(lead.rating)}
-                         </div>
-                         
-                         {/* Nome do estabelecimento */}
-                         <div className="pt-1">
-                           <h3 className="font-semibold text-gray-900 text-sm truncate">{lead.name}</h3>
-                         </div>
-                         
-                         {/* Informações do lead */}
-                         <div className="space-y-2">
-                           {lead.address && (
-                             <div className="flex items-start space-x-2 text-xs text-gray-600">
-                               <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0 mt-0.5" />
-                               <span className="line-clamp-2">{lead.address}</span>
-                             </div>
-                           )}
-                           
-                           {lead.phone && (
-                             <div className="flex items-center space-x-2 text-xs text-gray-600">
-                               <Phone className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                               <span>{lead.phone}</span>
-                             </div>
-                           )}
-                           
-                           {lead.website && (
-                             <div className="flex items-center space-x-2 text-xs">
-                               <Globe className="w-3 h-3 text-blue-500 flex-shrink-0" />
-                               <span className="text-blue-600 truncate">{lead.website}</span>
-                             </div>
-                           )}
-                         </div>
-                         
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {paginatedLeads.map((lead, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 rounded-lg p-4 ${
+                        lead.selected 
+                          ? 'border-blue-500 bg-blue-50 shadow-lg' 
+                          : 'border-gray-200 hover:border-blue-300 bg-white'
+                      }`}
+                      onClick={() => toggleLeadSelectionByFilteredIndex(index)}
+                    >
+                      {/* Header do Card */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center space-x-2 flex-1 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={lead.selected}
+                            onChange={() => toggleLeadSelectionByFilteredIndex(index)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                          />
+                          {renderReviewsCount(lead.reviews_count)}
+                        </div>
+                        {renderStars(lead.rating)}
+                      </div>
 
-                       </div>
-                     </motion.div>
-                   ))}
-                 </div>
+                      {/* Nome do estabelecimento */}
+                      <div className="mb-3">
+                        <h3 className="font-semibold text-gray-900 text-sm truncate mb-1">{lead.name}</h3>
+                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <MapPin className="w-3 h-3" />
+                          <span className="truncate">{lead.address}</span>
+                        </div>
+                      </div>
+
+                      {/* Informações de contato */}
+                      <div className="space-y-2 mb-3">
+                        {lead.phone && (
+                          <div className="flex items-center space-x-2 text-xs">
+                            <Phone className="w-3 h-3 text-green-600" />
+                            <span className="text-green-700 font-medium">{lead.phone}</span>
+                          </div>
+                        )}
+                        {lead.website && (
+                          <div className="flex items-center space-x-2 text-xs">
+                            <Globe className="w-3 h-3 text-blue-600" />
+                            <span className="text-blue-700 font-medium">Website disponível</span>
+                          </div>
+                        )}
+                        {!lead.phone && !lead.website && (
+                          <div className="flex items-center space-x-2 text-xs text-gray-400">
+                            <Eye className="w-3 h-3" />
+                            <span>Contato não disponível</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Tags e badges */}
+                      <div className="flex flex-wrap gap-1">
+                        {lead.business_type && (
+                          <Badge variant="outline" className="text-xs">
+                            {lead.business_type}
+                          </Badge>
+                        )}
+                        {lead.rating && lead.rating >= 4 && (
+                          <Badge className="bg-green-100 text-green-800 text-xs">
+                            ⭐ Premium
+                          </Badge>
+                        )}
+                        {lead.reviews_count && lead.reviews_count >= 100 && (
+                          <Badge className="bg-purple-100 text-purple-800 text-xs">
+                            🔥 Popular
+                          </Badge>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
 
                 {/* Paginação */}
                 {totalPages > 1 && (
