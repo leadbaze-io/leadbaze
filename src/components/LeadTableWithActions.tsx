@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Trash2, CheckSquare, Square, Search, Filter } from 'lucide-react'
+import { Trash2, CheckSquare, Square, Filter } from 'lucide-react'
 import type { Lead } from '../types'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from './ui/select'
 import { useToast } from '../hooks/use-toast'
-import LeadTable from './LeadTable'
 
 interface LeadTableWithActionsProps {
   leads: Lead[]
