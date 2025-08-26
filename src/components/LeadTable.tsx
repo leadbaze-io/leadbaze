@@ -11,6 +11,7 @@ interface LeadTableProps {
 export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [minRating, setMinRating] = useState(0)
+  const [minReviews, setMinReviews] = useState(0)
   const [maxLeads, setMaxLeads] = useState(50)
   const [sortBy, setSortBy] = useState<'name' | 'rating' | 'address'>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
@@ -23,8 +24,9 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                            (lead.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
       
       const matchesRating = !lead.rating || lead.rating >= minRating
+      const matchesReviews = !lead.reviews_count || lead.reviews_count >= minReviews
       
-      return matchesSearch && matchesRating
+      return matchesSearch && matchesRating && matchesReviews
     })
 
     // Ordenar
@@ -54,7 +56,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
 
     // Limitar quantidade
     return filtered.slice(0, maxLeads)
-  }, [leads, searchTerm, minRating, maxLeads, sortBy, sortOrder])
+  }, [leads, searchTerm, minRating, minReviews, maxLeads, sortBy, sortOrder])
 
   const handleSort = (field: 'name' | 'rating' | 'address') => {
     if (sortBy === field) {
@@ -118,7 +120,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
 
       {/* Filtros */}
       <div className="p-6 border-b border-gray-100 bg-gray-50">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Busca */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -147,7 +149,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
             </select>
           </div>
 
-          {/* Avaliação mínima */}
+          {/* Avaliação Mínima */}
           <div>
             <select
               value={minRating}
@@ -158,6 +160,23 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
               <option value={3}>3+ estrelas</option>
               <option value={4}>4+ estrelas</option>
               <option value={4.5}>4.5+ estrelas</option>
+            </select>
+          </div>
+
+          {/* Avaliações */}
+          <div>
+            <select
+              value={minReviews}
+              onChange={(e) => setMinReviews(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value={0}>Qualquer quantidade</option>
+              <option value={10}>10+ avaliações</option>
+              <option value={25}>25+ avaliações</option>
+              <option value={50}>50+ avaliações</option>
+              <option value={100}>100+ avaliações</option>
+              <option value={250}>250+ avaliações</option>
+              <option value={500}>500+ avaliações</option>
             </select>
           </div>
 

@@ -63,7 +63,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
   // Filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [cityFilter, setCityFilter] = useState("")
-     const [ratingFilter, setRatingFilter] = useState("all")
+  const [ratingFilter, setRatingFilter] = useState("all")
+  const [reviewsFilter, setReviewsFilter] = useState("all")
   const [websiteFilter, setWebsiteFilter] = useState("all")
   const [leadsPerPage, setLeadsPerPage] = useState("10")
   const [currentPage, setCurrentPage] = useState(1)
@@ -89,14 +90,17 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
     const matchesCity = cityFilter === "" || 
       lead.address?.toLowerCase().includes(cityFilter.toLowerCase())
     
-         const matchesRating = ratingFilter === "all" || 
-       (lead.rating && lead.rating >= parseFloat(ratingFilter))
+    const matchesRating = ratingFilter === "all" || 
+      (lead.rating && lead.rating >= parseFloat(ratingFilter))
+    
+    const matchesReviews = reviewsFilter === "all" || 
+      (lead.reviews_count && lead.reviews_count >= parseInt(reviewsFilter))
     
     const matchesWebsite = websiteFilter === "all" || 
       (websiteFilter === "with" && lead.website) ||
       (websiteFilter === "without" && !lead.website)
     
-    return matchesSearch && matchesCity && matchesRating && matchesWebsite
+    return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesWebsite
   })
 
   // Paginação
@@ -580,24 +584,48 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Avaliação mínima</Label>
-                                         <Select 
-                       value={ratingFilter} 
-                       onValueChange={(value) => {
-                         setRatingFilter(value)
-                         resetPagination()
-                       }}
-                     >
-                       <SelectTrigger className="h-8 text-sm">
-                         <SelectValue placeholder="Todas" />
-                       </SelectTrigger>
-                       <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                         <SelectItem value="all">Todas</SelectItem>
-                         <SelectItem value="4">4+ estrelas</SelectItem>
-                         <SelectItem value="3">3+ estrelas</SelectItem>
-                         <SelectItem value="2">2+ estrelas</SelectItem>
-                       </SelectContent>
-                     </Select>
+                    <Label className="text-xs font-medium text-gray-700">Avaliação Mínima</Label>
+                    <Select 
+                      value={ratingFilter} 
+                      onValueChange={(value) => {
+                        setRatingFilter(value)
+                        resetPagination()
+                      }}
+                    >
+                      <SelectTrigger className="h-8 text-sm">
+                        <SelectValue placeholder="Todas" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                        <SelectItem value="all">Todas</SelectItem>
+                        <SelectItem value="4">4+ estrelas</SelectItem>
+                        <SelectItem value="3">3+ estrelas</SelectItem>
+                        <SelectItem value="2">2+ estrelas</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-xs font-medium text-gray-700">Avaliações</Label>
+                    <Select 
+                      value={reviewsFilter} 
+                      onValueChange={(value) => {
+                        setReviewsFilter(value)
+                        resetPagination()
+                      }}
+                    >
+                      <SelectTrigger className="h-8 text-sm">
+                        <SelectValue placeholder="Todas" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                        <SelectItem value="all">Todas</SelectItem>
+                        <SelectItem value="10">10+ avaliações</SelectItem>
+                        <SelectItem value="25">25+ avaliações</SelectItem>
+                        <SelectItem value="50">50+ avaliações</SelectItem>
+                        <SelectItem value="100">100+ avaliações</SelectItem>
+                        <SelectItem value="250">250+ avaliações</SelectItem>
+                        <SelectItem value="500">500+ avaliações</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div>
