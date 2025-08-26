@@ -67,7 +67,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
   const [ratingFilter, setRatingFilter] = useState("all")
   const [reviewsFilter, setReviewsFilter] = useState("all")
   const [websiteFilter, setWebsiteFilter] = useState("all")
-  const [leadsPerPage, setLeadsPerPage] = useState("10")
+  const [leadsPerPage, setLeadsPerPage] = useState("9")
   const [currentPage, setCurrentPage] = useState(1)
   
   const { toast } = useToast()
@@ -675,18 +675,18 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                          <SelectValue />
                        </SelectTrigger>
                        <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                         <SelectItem value="10">10 leads</SelectItem>
-                         <SelectItem value="20">20 leads</SelectItem>
-                         <SelectItem value="30">30 leads</SelectItem>
-                         <SelectItem value="40">40 leads</SelectItem>
-                         <SelectItem value="50">50 leads</SelectItem>
+                         <SelectItem value="9">9 leads</SelectItem>
+                         <SelectItem value="18">18 leads</SelectItem>
+                         <SelectItem value="27">27 leads</SelectItem>
+                         <SelectItem value="36">36 leads</SelectItem>
+                         <SelectItem value="45">45 leads</SelectItem>
                        </SelectContent>
                      </Select>
                    </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {paginatedLeads.map((lead, index) => (
                     <motion.div
                       key={index}
