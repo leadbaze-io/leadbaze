@@ -85,7 +85,7 @@ export default function Dashboard() {
         {/* Gerenciador de Listas */}
         <ListManager 
           onSelectList={handleSelectList}
-          showWhatsAppButton={true}
+          showWhatsAppButton={false}
         />
 
         {/* Ações Rápidas */}

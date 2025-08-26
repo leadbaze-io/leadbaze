@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Calendar, Users, Loader, AlertCircle, Download, Share2 } from 'lucide-react'
 import { supabase, getCurrentUser } from '../lib/supabaseClient'
 import type { LeadList } from '../types'
-import LeadTable from '../components/LeadTable'
+import LeadTableWithActions from '../components/LeadTableWithActions'
 
 export default function ListaDetalhes() {
   const { id } = useParams<{ id: string }>()
@@ -107,6 +107,41 @@ export default function ListaDetalhes() {
     } else {
       navigator.clipboard.writeText(window.location.href)
       alert('Link copiado para a área de transferência!')
+    }
+  }
+
+  const handleLeadsDeleted = async (deletedLeadIds: string[]) => {
+    if (!leadList) return
+
+    try {
+      // Atualizar a lista local removendo os leads deletados
+      const updatedLeads = leadList.leads.filter(lead => !deletedLeadIds.includes(lead.id || ''))
+      
+      // Atualizar no banco de dados
+      const { error } = await supabase
+        .from('lead_lists')
+        .update({ 
+          leads: updatedLeads,
+          total_leads: updatedLeads.length,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', leadList.id)
+
+      if (error) {
+        throw error
+      }
+
+      // Atualizar o estado local
+      setLeadList({
+        ...leadList,
+        leads: updatedLeads,
+        total_leads: updatedLeads.length,
+        updated_at: new Date().toISOString()
+      })
+
+    } catch (error) {
+      console.error('Erro ao deletar leads:', error)
+      alert('Erro ao deletar leads. Tente novamente.')
     }
   }
 
@@ -269,10 +304,11 @@ export default function ListaDetalhes() {
 
         {/* Lead Table */}
         <div id="lead-table">
-                  <LeadTable 
-          leads={leadList.leads} 
-          title={leadList.name}
-        />
+          <LeadTableWithActions 
+            leads={leadList.leads} 
+            title={leadList.name}
+            onLeadsDeleted={handleLeadsDeleted}
+          />
         </div>
 
         {/* Tips */}

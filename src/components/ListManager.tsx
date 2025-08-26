@@ -45,6 +45,10 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [cityFilter, setCityFilter] = useState('')
+  const [ratingFilter, setRatingFilter] = useState('all')
+  const [reviewsFilter, setReviewsFilter] = useState('all')
+  const [websiteFilter, setWebsiteFilter] = useState('all')
   const [sortBy, setSortBy] = useState<'created_at' | 'name' | 'total_leads'>('created_at')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'archived'>('all')
@@ -57,7 +61,7 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
 
   useEffect(() => {
     filterAndSortLists()
-  }, [lists, searchTerm, sortBy, sortOrder, filterStatus])
+  }, [lists, searchTerm, cityFilter, ratingFilter, reviewsFilter, websiteFilter, sortBy, sortOrder, filterStatus])
 
   const loadLists = async () => {
     try {
@@ -90,6 +94,34 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
       filtered = filtered.filter(list => 
         (list.status || 'active') === filterStatus
       )
+    }
+
+    // Filtrar por características dos leads (se a lista tem leads que atendem aos critérios)
+    if (cityFilter || ratingFilter !== 'all' || reviewsFilter !== 'all' || websiteFilter !== 'all') {
+      filtered = filtered.filter(list => {
+        if (!list.leads || list.leads.length === 0) return false
+        
+        return list.leads.some(lead => {
+          // Filtro por cidade
+          const matchesCity = !cityFilter || 
+            lead.address?.toLowerCase().includes(cityFilter.toLowerCase())
+          
+          // Filtro por avaliação
+          const matchesRating = ratingFilter === 'all' || 
+            (lead.rating && lead.rating >= parseFloat(ratingFilter))
+          
+          // Filtro por número de avaliações
+          const matchesReviews = reviewsFilter === 'all' || 
+            (lead.reviews_count && lead.reviews_count >= parseInt(reviewsFilter))
+          
+          // Filtro por website
+          const matchesWebsite = websiteFilter === 'all' || 
+            (websiteFilter === 'with' && lead.website) ||
+            (websiteFilter === 'without' && !lead.website)
+          
+          return matchesCity && matchesRating && matchesReviews && matchesWebsite
+        })
+      })
     }
 
     // Ordenar
@@ -272,9 +304,9 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {/* Busca */}
-            <div className="relative flex-1">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Buscar listas..."
@@ -284,36 +316,107 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
               />
             </div>
 
+            {/* Cidade */}
+            <div>
+              <Input
+                placeholder="Filtrar por cidade..."
+                value={cityFilter}
+                onChange={(e) => setCityFilter(e.target.value)}
+              />
+            </div>
+
+            {/* Avaliação Mínima */}
+            <div>
+              <Select 
+                value={ratingFilter} 
+                onValueChange={(value) => setRatingFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Avaliação Mínima" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="4">4+ estrelas</SelectItem>
+                  <SelectItem value="3">3+ estrelas</SelectItem>
+                  <SelectItem value="2">2+ estrelas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Avaliações */}
+            <div>
+              <Select 
+                value={reviewsFilter} 
+                onValueChange={(value) => setReviewsFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Avaliações" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="10">10+ Avaliações</SelectItem>
+                  <SelectItem value="25">25+ Avaliações</SelectItem>
+                  <SelectItem value="50">50+ Avaliações</SelectItem>
+                  <SelectItem value="100">100+ Avaliações</SelectItem>
+                  <SelectItem value="250">250+ Avaliações</SelectItem>
+                  <SelectItem value="500">500+ Avaliações</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Website */}
+            <div>
+              <Select 
+                value={websiteFilter} 
+                onValueChange={(value) => setWebsiteFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Website" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="with">Com website</SelectItem>
+                  <SelectItem value="without">Sem website</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Filtro por Status */}
-            <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas as listas</SelectItem>
-                <SelectItem value="active">Ativas</SelectItem>
-                <SelectItem value="archived">Arquivadas</SelectItem>
-              </SelectContent>
-            </Select>
+            <div>
+              <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as listas</SelectItem>
+                  <SelectItem value="active">Ativas</SelectItem>
+                  <SelectItem value="archived">Arquivadas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
             {/* Ordenação */}
-            <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
-              const [field, order] = value.split('-')
-              setSortBy(field as any)
-              setSortOrder(order as any)
-            }}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created_at-desc">Mais recentes</SelectItem>
-                <SelectItem value="created_at-asc">Mais antigas</SelectItem>
-                <SelectItem value="name-asc">Nome (A-Z)</SelectItem>
-                <SelectItem value="name-desc">Nome (Z-A)</SelectItem>
-                <SelectItem value="total_leads-desc">Mais leads</SelectItem>
-                <SelectItem value="total_leads-asc">Menos leads</SelectItem>
-              </SelectContent>
-            </Select>
+            <div>
+              <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
+                const [field, order] = value.split('-')
+                setSortBy(field as any)
+                setSortOrder(order as any)
+              }}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at-desc">Mais recentes</SelectItem>
+                  <SelectItem value="created_at-asc">Mais antigas</SelectItem>
+                  <SelectItem value="name-asc">Nome (A-Z)</SelectItem>
+                  <SelectItem value="name-desc">Nome (Z-A)</SelectItem>
+                  <SelectItem value="total_leads-desc">Mais leads</SelectItem>
+                  <SelectItem value="total_leads-asc">Menos leads</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Lista de Listas */}
@@ -408,23 +511,6 @@ export function ListManager({ showWhatsAppButton = true }: ListManagerProps) {
                                 Ver
                               </Button>
                             </Link>
-
-                            {showWhatsAppButton && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  toast({
-                                    title: "Em breve!",
-                                    description: "Integração com WhatsApp chegando em breve.",
-                                  })
-                                }}
-                                className="text-green-600 border-green-200 hover:bg-green-50"
-                              >
-                                <MessageCircle className="w-4 h-4 mr-1" />
-                                WhatsApp
-                              </Button>
-                            )}
 
                             <Button
                               variant="ghost"
