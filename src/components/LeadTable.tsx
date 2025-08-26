@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Star, Phone, Globe, MapPin, Filter, Search, Download, MessageCircle, Clock, DollarSign } from 'lucide-react'
+import { Star, Phone, Globe, MapPin, Filter, Search, Download, Clock, DollarSign } from 'lucide-react'
 import type { Lead } from '../types'
 import { Badge } from './ui/badge'
 
@@ -337,32 +337,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 )}
               </div>
             </td>
-            <td className="px-6 py-4 whitespace-nowrap">
-              <div className="flex flex-col space-y-2">
-                {/* Botão WhatsApp - sempre visível, habilitado apenas se houver telefone */}
-                <button
-                  onClick={() => {
-                    if (lead.phone) {
-                      const cleanPhone = lead.phone.replace(/\D/g, '')
-                      const whatsappUrl = `https://wa.me/${cleanPhone}?text=Olá! Vi seu estabelecimento "${lead.name}" e gostaria de saber mais informações.`
-                      window.open(whatsappUrl, '_blank')
-                    } else {
-                      alert('Telefone não disponível para este lead')
-                    }
-                  }}
-                  disabled={!lead.phone}
-                  className={`inline-flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    lead.phone 
-                      ? 'bg-green-600 text-white hover:bg-green-700' 
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-                  title={lead.phone ? `Enviar WhatsApp para ${lead.phone}` : 'Telefone não disponível'}
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp</span>
-                </button>
-              </div>
-            </td>
+
           </tr>
         ))}
           </tbody>
