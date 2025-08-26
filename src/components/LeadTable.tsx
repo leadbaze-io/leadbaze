@@ -171,12 +171,12 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value={0}>Qualquer quantidade</option>
-              <option value={10}>10+ avaliações</option>
-              <option value={25}>25+ avaliações</option>
-              <option value={50}>50+ avaliações</option>
-              <option value={100}>100+ avaliações</option>
-              <option value={250}>250+ avaliações</option>
-              <option value={500}>500+ avaliações</option>
+                             <option value={10}>10+ Avaliações</option>
+               <option value={25}>25+ Avaliações</option>
+               <option value={50}>50+ Avaliações</option>
+               <option value={100}>100+ Avaliações</option>
+               <option value={250}>250+ Avaliações</option>
+               <option value={500}>500+ Avaliações</option>
             </select>
           </div>
 
@@ -275,9 +275,9 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                     {lead.totalScore ? `${lead.totalScore} / 5` : 'N/A'}
                   </Badge>
                   {lead.reviews_count && (
-                    <div className="text-xs text-gray-500 mt-1">
-                      {lead.reviews_count} avaliações
-                    </div>
+                                         <div className="text-xs text-gray-500 mt-1">
+                       {lead.reviews_count} Avaliações
+                     </div>
                   )}
                 </div>
 

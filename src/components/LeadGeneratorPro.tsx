@@ -419,7 +419,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
         <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
           <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
         </div>
-        <span className="text-xs text-gray-600">avaliações</span>
+        <span className="text-xs text-gray-600">Avaliações</span>
       </div>
     )
   }
@@ -631,12 +631,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
                       </SelectTrigger>
                       <SelectContent className="bg-white border border-gray-200 shadow-lg">
                         <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="10">10+ avaliações</SelectItem>
-                        <SelectItem value="25">25+ avaliações</SelectItem>
-                        <SelectItem value="50">50+ avaliações</SelectItem>
-                        <SelectItem value="100">100+ avaliações</SelectItem>
-                        <SelectItem value="250">250+ avaliações</SelectItem>
-                        <SelectItem value="500">500+ avaliações</SelectItem>
+                                                 <SelectItem value="10">10+ Avaliações</SelectItem>
+                         <SelectItem value="25">25+ Avaliações</SelectItem>
+                         <SelectItem value="50">50+ Avaliações</SelectItem>
+                         <SelectItem value="100">100+ Avaliações</SelectItem>
+                         <SelectItem value="250">250+ Avaliações</SelectItem>
+                         <SelectItem value="500">500+ Avaliações</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
