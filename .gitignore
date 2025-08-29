@@ -112,6 +112,10 @@ temp/
 # Vercel
 .vercel
 
+# Servla deployment files
+ecosystem.config.js
+backup-leadflow.sh
+
 # Supabase
 .supabase/
 
