@@ -79,7 +79,31 @@ jobs:
           cd /tmp/leadflow-deploy
           tar -xzf leadflow-deploy.tar.gz
           chmod +x deploy-leadflow-servla.sh
-          ./deploy-leadflow-servla.sh
+          
+          # Executar deploy e verificar se funcionou
+          if ./deploy-leadflow-servla.sh; then
+            echo '✅ Deploy executado com sucesso!'
+            
+            # Verificar se os arquivos foram copiados
+            if [ -f '/var/www/leadflow/index.html' ]; then
+              echo '✅ Arquivos copiados para /var/www/leadflow'
+              
+              # Verificar se o Nginx está funcionando
+              if sudo nginx -t && sudo systemctl restart nginx; then
+                echo '✅ Nginx reiniciado com sucesso'
+              else
+                echo '❌ Erro ao reiniciar Nginx'
+                exit 1
+              fi
+            else
+              echo '❌ Arquivos não foram copiados'
+              exit 1
+            fi
+          else
+            echo '❌ Deploy falhou'
+            exit 1
+          fi
+          
           cd /
           rm -rf /tmp/leadflow-deploy
         "
