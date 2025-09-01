@@ -74,35 +74,37 @@ jobs:
         # Enviar arquivo de deploy
         scp -i ~/.ssh/servla_key -P ${{ secrets.SERVLA_PORT }} leadflow-deploy.tar.gz ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }}:/tmp/leadflow-deploy/
         
-        # Executar deploy
-        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
-          cd /tmp/leadflow-deploy
-          tar -xzf leadflow-deploy.tar.gz
-          chmod +x deploy-leadflow-servla.sh
-          
-          # Executar deploy no diretório correto
-          if cd ~/leadbaze && ./deploy-leadflow-servla.sh; then
-            echo '✅ Deploy executado com sucesso!'
-            
-            # Verificar se os arquivos foram copiados
-            if [ -f '/var/www/leadflow/index.html' ]; then
-              echo '✅ Arquivos copiados para /var/www/leadflow'
-              
-              # Verificar se o Nginx está funcionando
-              if sudo nginx -t && sudo systemctl restart nginx; then
-                echo '✅ Nginx reiniciado com sucesso'
-              else
-                echo '❌ Erro ao reiniciar Nginx'
-                exit 1
-              fi
-            else
-              echo '❌ Arquivos não foram copiados'
-              exit 1
-            fi
-          else
-            echo '❌ Deploy falhou'
-            exit 1
-          fi
+                 # Executar deploy
+         ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+           cd /tmp/leadflow-deploy
+           tar -xzf leadflow-deploy.tar.gz
+           chmod +x deploy-leadflow-servla.sh
+           
+           # Copiar arquivos do build diretamente para o diretório de deploy
+           echo '📋 Copiando arquivos do build...'
+           sudo mkdir -p /var/www/leadflow
+           sudo cp -r dist/* /var/www/leadflow/
+           sudo chown -R www-data:www-data /var/www/leadflow
+           sudo chmod -R 755 /var/www/leadflow
+           echo '✅ Arquivos copiados para /var/www/leadflow'
+           
+           # Configurar Nginx
+           echo '🌐 Configurando Nginx...'
+           sudo cp nginx-simple.conf /etc/nginx/sites-enabled/leadflow
+           if sudo nginx -t && sudo systemctl restart nginx; then
+             echo '✅ Nginx configurado e reiniciado'
+           else
+             echo '❌ Erro ao configurar Nginx'
+             exit 1
+           fi
+           
+                      # Verificar se a aplicação está funcionando
+           if [ -f '/var/www/leadflow/index.html' ]; then
+             echo '✅ Deploy executado com sucesso!'
+           else
+             echo '❌ Deploy falhou'
+             exit 1
+           fi
           
           cd /
           rm -rf /tmp/leadflow-deploy
