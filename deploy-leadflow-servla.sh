@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🚀 LeadFlow Deploy Script para Servla.com.br
+# 🚀 LeadBaze Deploy Script para Servla.com.br
 # Versão: 2.0 - Completamente corrigida
 # Data: 2025-09-01
 
@@ -32,11 +32,11 @@ error() {
 
 # Verificar se estamos no diretório correto
 if [[ ! -f "package.json" ]]; then
-    error "Execute este script no diretório raiz do projeto LeadFlow"
+    error "Execute este script no diretório raiz do projeto LeadBaze"
     exit 1
 fi
 
-log "🚀 Iniciando deploy do LeadFlow na Servla..."
+log "🚀 Iniciando deploy do LeadBaze na Servla..."
 
 # 1. Verificar dependências do sistema
 log "📋 Verificando dependências do sistema..."
@@ -115,7 +115,7 @@ sudo rm -f "$NGINX_CONF"
 
 # Criar configuração Nginx otimizada
 sudo tee "$NGINX_CONF" > /dev/null << 'EOF'
-# Nginx Configuration for LeadFlow - Servla.com.br
+# Nginx Configuration for LeadBaze - Servla.com.br
 # Optimized and tested configuration
 
 server {
@@ -301,7 +301,7 @@ fi
 log "⚙️ Configurando variáveis de ambiente..."
 if [[ ! -f "$DEPLOY_DIR/.env" ]]; then
     sudo tee "$DEPLOY_DIR/.env" > /dev/null << 'EOF'
-# LeadFlow Environment Variables
+# LeadBaze Environment Variables
 VITE_SUPABASE_URL=https://lsvwjyhnnzeewuuuykmb.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzMzc4NTYsImV4cCI6MjA2OTkxMzg1Nn0.jNw-YTXlnbd51l7RHHQpTYgCqxERz6NqPggqMM41Fck
 VITE_N8N_WEBHOOK_URL=https://n8n-n8n-start.kof6cn.easypanel.host/webhook-test/leadflow-extraction
@@ -325,7 +325,7 @@ else
 fi
 
 # Verificar se Nginx está servindo
-if curl -s http://localhost/ | grep -q "LeadFlow"; then
+if curl -s http://localhost/ | grep -q "LeadBaze"; then
     success "Aplicação está sendo servida pelo Nginx"
 else
     warning "Aplicação pode não estar funcionando corretamente"
@@ -334,7 +334,7 @@ fi
 # 17. Resumo final
 echo ""
 echo "=========================================="
-echo "🎉 DEPLOY DO LEADFLOW CONCLUÍDO!"
+echo "🎉 DEPLOY DO LEADBAZE CONCLUÍDO!"
 echo "=========================================="
 echo "📍 Diretório: $DEPLOY_DIR"
 echo "🌐 URL: http://$(curl -s ifconfig.me)"
@@ -343,7 +343,7 @@ echo "⚡ PM2: $(pm2 list | grep leadflow | awk '{print $10}' || echo 'Não conf
 echo "=========================================="
 
 success "Deploy concluído com sucesso!"
-log "🚀 LeadFlow está rodando na Servla!"
+log "🚀 LeadBaze está rodando na Servla!"
 
 # Comandos úteis
 echo ""

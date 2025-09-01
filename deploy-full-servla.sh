@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 🚀 Script de Deploy Completo para Servla - LeadFlow
+# 🚀 Script de Deploy Completo para Servla - LeadBaze
 # Autor: MindFlow Digital
 # Versão: 2.0 - Otimizado para Servla.com.br
 
 set -e
 
-echo "🚀 Iniciando deploy completo do LeadFlow na Servla..."
+echo "🚀 Iniciando deploy completo do LeadBaze na Servla..."
 
 # Cores para output
 RED='\033[0;31m'
@@ -41,7 +41,7 @@ success() {
 
 # Verificar se estamos no diretório correto
 if [ ! -f "package.json" ]; then
-    error "Execute este script no diretório raiz do projeto LeadFlow"
+    error "Execute este script no diretório raiz do projeto LeadBaze"
 fi
 
 # Verificar se Node.js está instalado

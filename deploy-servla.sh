@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 🚀 Script de Deploy para Servla - LeadFlow
+# 🚀 Script de Deploy para Servla - LeadBaze
 # Autor: MindFlow Digital
 # Versão: 1.0
 
 set -e
 
-echo "🚀 Iniciando deploy do LeadFlow na Servla..."
+echo "🚀 Iniciando deploy do LeadBaze na Servla..."
 
 # Cores para output
 RED='\033[0;31m'

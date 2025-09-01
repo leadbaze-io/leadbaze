@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 🚀 Script de Deploy Remoto Automatizado - LeadFlow na Servla
+# 🚀 Script de Deploy Remoto Automatizado - LeadBaze na Servla
 # Autor: MindFlow Digital
 # Versão: 1.0
 
@@ -39,7 +39,7 @@ SERVLA_USER=$2
 SSH_KEY=$3
 SERVLA_PORT=${4:-22}
 
-log "🚀 Iniciando deploy remoto do LeadFlow na Servla..."
+log "🚀 Iniciando deploy remoto do LeadBaze na Servla..."
 log "Servidor: $SERVLA_HOST"
 log "Usuário: $SERVLA_USER"
 log "Porta: $SERVLA_PORT"

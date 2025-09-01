@@ -1,7 +1,7 @@
-# 🚀 LeadFlow - Gerador de Leads Profissional
+# 🚀 LeadBaze - Gerador de Leads Profissional
 
 <div align="center">
-  <img src="/public/lflogo1.png" alt="LeadFlow Logo" width="200"/>
+  <img src="/public/lflogo1.png" alt="LeadBaze Logo" width="200"/>
   
   [![React](https://img.shields.io/badge/React-18.0.0-blue.svg)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-blue.svg)](https://www.typescriptlang.org/)
@@ -85,8 +85,8 @@
 
 ### **1. Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/leadflow.git
-cd leadflow
+git clone https://github.com/seu-usuario/leadbaze.git
+cd leadbaze
 ```
 
 ### **2. Instale as dependências**
@@ -307,5 +307,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 <div align="center">
   <p>Desenvolvido com ❤️ pela <strong>MindFlow Digital</strong></p>
   <p>© 2025 LeadFlow. Todos os direitos reservados.</p>
-</div>#   T r i g g e r   n e w   d e p l o y m e n t  
+</div>#   T r i g g e r   n e w   d e p l o y m e n t 
+ 
  

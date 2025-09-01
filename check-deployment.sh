@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 🔍 Script de Verificação Pós-Deploy - LeadFlow
+# 🔍 Script de Verificação Pós-Deploy - LeadBaze
 # Autor: MindFlow Digital
 # Versão: 1.0
 
 set -e
 
-echo "🔍 Verificando deploy do LeadFlow..."
+echo "🔍 Verificando deploy do LeadBaze..."
 
 # Cores para output
 RED='\033[0;31m'
@@ -40,7 +40,7 @@ info() {
 SERVER_IP=$(hostname -I | awk '{print $1}')
 
 echo "=========================================="
-echo "🔍 VERIFICAÇÃO PÓS-DEPLOY - LEADFLOW"
+echo "🔍 VERIFICAÇÃO PÓS-DEPLOY - LEADBAZE"
 echo "=========================================="
 echo "Servidor: $SERVER_IP"
 echo "Data/Hora: $(date)"
