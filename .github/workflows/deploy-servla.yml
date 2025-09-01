@@ -49,9 +49,19 @@ jobs:
         
     - name: 🔑 Setup SSH key
       run: |
+        echo "🔍 Configurando chave SSH..."
+        mkdir -p ~/.ssh
+        echo "📝 Criando arquivo de chave..."
         echo "${{ secrets.SERVLA_SSH_KEY }}" > ~/.ssh/servla_key
+        echo "🔐 Configurando permissões..."
         chmod 600 ~/.ssh/servla_key
+        echo "🔍 Verificando arquivo..."
+        ls -la ~/.ssh/
+        echo "📋 Primeiras linhas da chave:"
+        head -3 ~/.ssh/servla_key
+        echo "🔗 Adicionando host key..."
         ssh-keyscan -H ${{ secrets.SERVLA_HOST }} >> ~/.ssh/known_hosts
+        echo "✅ Setup SSH concluído!"
         
     - name: 🚀 Deploy to Servla
       run: |
