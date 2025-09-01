@@ -45,7 +45,7 @@ jobs:
         
     - name: 📁 Create deployment package
       run: |
-        tar -czf leadflow-deploy.tar.gz dist/ deploy-full-servla.sh check-deployment.sh nginx-servla.conf env.example
+        tar -czf leadflow-deploy.tar.gz dist/ deploy-leadflow-servla.sh nginx-simple.conf env.example
         
     - name: 🔑 Setup SSH key
       run: |
@@ -78,10 +78,8 @@ jobs:
         ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
           cd /tmp/leadflow-deploy
           tar -xzf leadflow-deploy.tar.gz
-          chmod +x deploy-full-servla.sh
-          ./deploy-full-servla.sh --auto
-          chmod +x check-deployment.sh
-          ./check-deployment.sh
+          chmod +x deploy-leadflow-servla.sh
+          ./deploy-leadflow-servla.sh
           cd /
           rm -rf /tmp/leadflow-deploy
         "
