@@ -130,3 +130,4 @@ rm -f "$DEPLOY_PACKAGE"
 log "✅ Deploy remoto concluído!"
 log "🌐 Acesse: http://$SERVLA_HOST"
 log "📧 Suporte: contato@mindflowdigital.com.br"
+

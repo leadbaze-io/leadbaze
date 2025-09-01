@@ -36,3 +36,4 @@ Write-Host "✅ Push concluído!" -ForegroundColor Green
 Write-Host "🌐 Acesse: https://github.com/leadbaze-io/leadbaze" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "📞 Suporte: contato@mindflowdigital.com.br" -ForegroundColor Yellow
+

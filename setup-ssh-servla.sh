@@ -88,3 +88,4 @@ echo "4. Cole a chave privada completa"
 echo "5. Configure os outros secrets necessários"
 echo ""
 echo "📞 Suporte: contato@mindflowdigital.com.br"
+
