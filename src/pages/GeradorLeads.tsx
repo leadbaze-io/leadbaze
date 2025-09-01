@@ -5,7 +5,7 @@ import { getCurrentUser } from '../lib/supabaseClient'
 import { LeadService } from '../lib/leadService'
 import { LeadGeneratorPro } from '../components/LeadGeneratorPro'
 import type { LeadList } from '../types'
-import { ConnectivityTest } from '../components/ConnectivityTest'
+
 
 export default function GeradorLeads() {
   const [user, setUser] = useState<any>(null)
@@ -82,10 +82,7 @@ export default function GeradorLeads() {
           </div>
         </div>
 
-        {/* Teste de Conectividade */}
-        <div className="mb-8">
-          <ConnectivityTest />
-        </div>
+
 
         {/* Gerador de Leads Principal */}
         <LeadGeneratorPro 
