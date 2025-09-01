@@ -15,7 +15,7 @@ export default function MagicTestimonials() {
       role: "Diretor Comercial",
       company: "TechSolutions Ltda",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-      content: "O LeadFlow revolucionou nossa prospecção. Em 2 meses, aumentamos nossa base de leads em 400% e a qualidade dos contatos melhorou significativamente.",
+              content: "O LeadBaze revolucionou nossa prospecção. Em 2 meses, aumentamos nossa base de leads em 400% e a qualidade dos contatos melhorou significativamente.",
       rating: 5,
       highlight: "400% mais leads"
     },
@@ -93,7 +93,7 @@ export default function MagicTestimonials() {
               estão dizendo
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Histórias reais de empresas que transformaram sua prospecção com o LeadFlow
+              Histórias reais de empresas que transformaram sua prospecção com o LeadBaze
             </p>
           </div>
         </AnimatedBeam>

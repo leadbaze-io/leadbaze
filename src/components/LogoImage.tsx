@@ -1,12 +1,12 @@
 import React from 'react'
-import logoImage from '../assets/lflogo1.png'
+import logoImage from '../assets/lblogo1.png'
 
 interface LogoImageProps {
   className?: string
   alt?: string
 }
 
-export const LogoImage: React.FC<LogoImageProps> = ({ className = '', alt = 'LeadFlow' }) => {
+export const LogoImage: React.FC<LogoImageProps> = ({ className = '', alt = 'LeadBaze' }) => {
   return (
     <img 
       src={logoImage}
@@ -21,7 +21,7 @@ export const LogoImage: React.FC<LogoImageProps> = ({ className = '', alt = 'Lea
         
         // Criar um span com texto como fallback
         const fallback = document.createElement('span')
-        fallback.textContent = 'LeadFlow'
+        fallback.textContent = 'LeadBaze'
         fallback.className = 'text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'
         
         if (target.parentNode) {

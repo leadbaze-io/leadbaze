@@ -125,7 +125,7 @@ export default function MagicBenefits() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <TrendingUp className="w-4 h-4" />
-            <span>Por que escolher o LeadFlow?</span>
+            <span>Por que escolher o LeadBaze?</span>
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -135,7 +135,7 @@ export default function MagicBenefits() {
             seu Negócio
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Descubra como o LeadFlow pode revolucionar sua estratégia de prospecção e acelerar o crescimento da sua empresa
+            Descubra como o LeadBaze pode revolucionar sua estratégia de prospecção e acelerar o crescimento da sua empresa
           </p>
         </div>
 
@@ -200,7 +200,7 @@ export default function MagicBenefits() {
               Pronto para acelerar seus resultados?
             </h3>
             <p className="text-gray-600 mb-6">
-              Junte-se a centenas de empresas que já transformaram sua prospecção com o LeadFlow
+              Junte-se a centenas de empresas que já transformaram sua prospecção com o LeadBaze
             </p>
             <div className="flex justify-center">
               <Link to="/login">

@@ -61,7 +61,7 @@ export default function MagicCTA() {
               </span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Junte-se a milhares de empresas que já transformaram sua prospecção com o LeadFlow
+              Junte-se a milhares de empresas que já transformaram sua prospecção com o LeadBaze
             </p>
           </motion.div>
 

@@ -69,7 +69,7 @@ export default function MagicSteps() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Como Funciona o 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> LeadFlow</span>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> LeadBaze</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Em apenas 4 passos simples, transforme links do Google Maps em listas de leads qualificados
