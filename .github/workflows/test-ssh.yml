@@ -1,0 +1,34 @@
+name: 🔍 Test SSH Connection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-ssh:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🔑 Setup SSH key
+      run: |
+        echo "🔍 Configurando chave SSH..."
+        mkdir -p ~/.ssh
+        echo "📝 Criando arquivo de chave..."
+        echo "${{ secrets.SERVLA_SSH_KEY }}" > ~/.ssh/servla_key
+        echo "🔐 Configurando permissões..."
+        chmod 600 ~/.ssh/servla_key
+        echo "🔍 Verificando arquivo..."
+        ls -la ~/.ssh/
+        echo "📋 Primeiras linhas da chave:"
+        head -3 ~/.ssh/servla_key
+        echo "🔗 Adicionando host key..."
+        ssh-keyscan -H ${{ secrets.SERVLA_HOST }} >> ~/.ssh/known_hosts
+        echo "✅ Setup SSH concluído!"
+        
+    - name: 🧪 Test SSH Connection
+      run: |
+        echo "🔗 Testando conexão SSH..."
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "echo '✅ Conexão SSH OK!' && whoami && pwd"
+        echo "✅ Teste concluído!"
