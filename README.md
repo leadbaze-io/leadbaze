@@ -307,4 +307,5 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 <div align="center">
   <p>Desenvolvido com ❤️ pela <strong>MindFlow Digital</strong></p>
   <p>© 2025 LeadFlow. Todos os direitos reservados.</p>
-</div>
+</div>#   T r i g g e r   n e w   d e p l o y m e n t  
+ 
