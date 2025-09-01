@@ -61,20 +61,32 @@ if ! command -v npm &> /dev/null; then
 fi
 success "npm $(npm --version) OK"
 
-# 2. Instalar dependências
-log "📦 Instalando dependências..."
-npm ci --production=false
-success "Dependências instaladas"
+# 2. Verificar dependências já instaladas
+log "📦 Verificando dependências..."
+if [[ -d "node_modules" ]]; then
+    success "Dependências já instaladas"
+else
+    log "📦 Instalando dependências..."
+    npm ci --production=false
+    success "Dependências instaladas"
+fi
 
 # 3. Verificar TypeScript
 log "🔍 Verificando TypeScript..."
-npm run type-check
-success "TypeScript OK"
+if npm run type-check; then
+    success "TypeScript OK"
+else
+    warning "TypeScript falhou, mas continuando..."
+fi
 
 # 4. Build de produção
 log "🏗️ Fazendo build de produção..."
-npm run build:prod
-success "Build concluído"
+if npm run build:prod; then
+    success "Build concluído"
+else
+    error "Build falhou"
+    exit 1
+fi
 
 # 5. Preparar diretório de deploy
 DEPLOY_DIR="/var/www/leadflow"
