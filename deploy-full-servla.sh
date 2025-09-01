@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# 🚀 Script de Deploy Completo para Servla - LeadFlow (Frontend + Backend)
+# 🚀 Script de Deploy Completo para Servla - LeadFlow
 # Autor: MindFlow Digital
-# Versão: 2.0
+# Versão: 2.0 - Otimizado para Servla.com.br
 
 set -e
 
@@ -13,6 +13,8 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Função para log
@@ -27,6 +29,14 @@ warn() {
 error() {
     echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1${NC}"
     exit 1
+}
+
+info() {
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $1${NC}"
+}
+
+success() {
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] ✅ $1${NC}"
 }
 
 # Verificar se estamos no diretório correto
@@ -44,108 +54,91 @@ if ! command -v npm &> /dev/null; then
     error "npm não está instalado."
 fi
 
+# Verificar se git está instalado
+if ! command -v git &> /dev/null; then
+    warn "Git não está instalado. Instalando..."
+    apt update && apt install -y git
+fi
+
+log "📋 Verificando dependências do sistema..."
+
+# Verificar se Nginx está instalado
+if ! command -v nginx &> /dev/null; then
+    warn "Nginx não está instalado. Instalando..."
+    apt update && apt install -y nginx
+    systemctl enable nginx
+    systemctl start nginx
+fi
+
 # Verificar se PM2 está instalado
 if ! command -v pm2 &> /dev/null; then
-    log "📦 Instalando PM2..."
+    warn "PM2 não está instalado. Instalando..."
     npm install -g pm2
 fi
 
-log "📋 Verificando dependências do Frontend..."
+# Verificar se UFW está instalado
+if ! command -v ufw &> /dev/null; then
+    warn "UFW não está instalado. Instalando..."
+    apt update && apt install -y ufw
+fi
 
-# ========================================
-# DEPLOY DO FRONTEND
-# ========================================
+log "🔧 Configurando firewall..."
+ufw allow 22    # SSH
+ufw allow 80    # HTTP
+ufw allow 443   # HTTPS
+ufw --force enable
 
-log "🎨 Iniciando deploy do Frontend..."
-
-# Instalar dependências do frontend
-log "📦 Instalando dependências do frontend..."
+log "📦 Instalando dependências..."
 npm ci --production=false
 
 # Verificar TypeScript
 log "🔍 Verificando TypeScript..."
 npm run type-check
 
-# Build de produção do frontend
-log "🏗️ Fazendo build de produção do frontend..."
+# Verificar se o arquivo .env existe
+if [ ! -f ".env" ]; then
+    warn "Arquivo .env não encontrado. Copiando de env.example..."
+    cp env.example .env
+    warn "⚠️  IMPORTANTE: Configure as variáveis de ambiente no arquivo .env antes de continuar!"
+    warn "Pressione ENTER após configurar o arquivo .env..."
+    read
+fi
+
+# Build de produção
+log "🏗️ Fazendo build de produção..."
 npm run build:prod
 
 # Verificar se o build foi bem-sucedido
 if [ ! -d "dist" ]; then
-    error "Build do frontend falhou. Diretório 'dist' não foi criado."
+    error "Build falhou. Diretório 'dist' não foi criado."
 fi
 
-log "✅ Build do frontend concluído com sucesso!"
+success "Build concluído com sucesso!"
 
 # Criar diretório de deploy se não existir
-FRONTEND_DIR="/var/www/leadflow"
-log "📁 Preparando diretório de deploy do frontend: $FRONTEND_DIR"
+DEPLOY_DIR="/var/www/leadflow"
+log "📁 Preparando diretório de deploy: $DEPLOY_DIR"
 
-sudo mkdir -p $FRONTEND_DIR
-sudo chown -R $USER:$USER $FRONTEND_DIR
+sudo mkdir -p $DEPLOY_DIR
+sudo chown -R $USER:$USER $DEPLOY_DIR
 
-# Copiar arquivos do frontend para o diretório de deploy
-log "📋 Copiando arquivos do frontend..."
-cp -r dist/* $FRONTEND_DIR/
-
-# ========================================
-# DEPLOY DO BACKEND
-# ========================================
-
-log "⚙️ Iniciando deploy do Backend..."
-
-# Verificar se o diretório backend existe
-if [ ! -d "backend" ]; then
-    error "Diretório 'backend' não encontrado."
+# Fazer backup do deploy anterior se existir
+if [ -d "$DEPLOY_DIR/dist" ]; then
+    log "💾 Fazendo backup do deploy anterior..."
+    sudo cp -r $DEPLOY_DIR $DEPLOY_DIR.backup.$(date +%Y%m%d_%H%M%S)
 fi
 
-# Navegar para o diretório backend
-cd backend
+# Copiar arquivos para o diretório de deploy
+log "📋 Copiando arquivos..."
+sudo cp -r dist/* $DEPLOY_DIR/
 
-# Verificar se package.json existe no backend
-if [ ! -f "package.json" ]; then
-    error "package.json não encontrado no diretório backend."
-fi
+# Configurar permissões
+log "🔐 Configurando permissões..."
+sudo chown -R www-data:www-data $DEPLOY_DIR
+sudo chmod -R 755 $DEPLOY_DIR
 
-# Instalar dependências do backend
-log "📦 Instalando dependências do backend..."
-npm ci --production=false
-
-# Verificar se o arquivo de configuração existe
-if [ ! -f "config.env.example" ]; then
-    error "config.env.example não encontrado no backend."
-fi
-
-# Configurar variáveis de ambiente do backend
-log "🔧 Configurando variáveis de ambiente do backend..."
-if [ ! -f "config.env" ]; then
-    cp config.env.example config.env
-    warn "Arquivo config.env criado. Configure as variáveis de ambiente antes de continuar."
-    warn "Edite o arquivo: nano config.env"
-    read -p "Pressione Enter após configurar as variáveis de ambiente..."
-fi
-
-# Criar diretório de logs se não existir
-mkdir -p logs
-
-# Testar se o backend está funcionando
-log "🧪 Testando backend..."
-if node -e "require('./server.js')" 2>/dev/null; then
-    log "✅ Backend testado com sucesso!"
-else
-    warn "⚠️ Teste do backend falhou, mas continuando..."
-fi
-
-# Voltar para o diretório raiz
-cd ..
-
-# ========================================
-# CONFIGURAÇÃO DO NGINX
-# ========================================
-
+# Configurar Nginx
 log "🌐 Configurando Nginx..."
-
-# Configurar Nginx para frontend e backend
 sudo cp nginx.conf /etc/nginx/sites-available/leadflow
 sudo ln -sf /etc/nginx/sites-available/leadflow /etc/nginx/sites-enabled/
 
@@ -162,108 +155,163 @@ sudo nginx -t
 log "🔄 Reiniciando Nginx..."
 sudo systemctl restart nginx
 
-# ========================================
-# CONFIGURAÇÃO DO PM2
-# ========================================
+# Configurar PM2 para gerenciamento de processos
+log "⚡ Configurando PM2..."
 
-log "⚡ Configurando PM2 para o backend..."
+# Criar arquivo de configuração do PM2
+cat > ecosystem.config.js << EOF
+module.exports = {
+  apps: [{
+    name: 'leadflow',
+    script: 'npm',
+    args: 'start',
+    cwd: '$DEPLOY_DIR',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    error_file: '/var/log/pm2/leadflow-error.log',
+    out_file: '/var/log/pm2/leadflow-out.log',
+    log_file: '/var/log/pm2/leadflow-combined.log',
+    time: true
+  }]
+}
+EOF
 
-# Navegar para o diretório backend
-cd backend
+# Criar diretório de logs do PM2
+sudo mkdir -p /var/log/pm2
+sudo chown -R $USER:$USER /var/log/pm2
 
-# Parar processos PM2 existentes
-pm2 stop leadflow-evolution-api 2>/dev/null || true
-pm2 delete leadflow-evolution-api 2>/dev/null || true
-
-# Iniciar o backend com PM2
-log "🚀 Iniciando backend com PM2..."
-pm2 start ecosystem.config.js --env production
-
-# Salvar configuração do PM2
+# Iniciar PM2
+pm2 start ecosystem.config.js
 pm2 save
-
-# Configurar PM2 para iniciar com o sistema
 pm2 startup
 
-# Voltar para o diretório raiz
-cd ..
+# Configurar logrotate para PM2
+pm2 install pm2-logrotate
+pm2 set pm2-logrotate:max_size 10M
+pm2 set pm2-logrotate:retain 7
+pm2 save
 
-# ========================================
-# CONFIGURAÇÕES DE SEGURANÇA
-# ========================================
-
-log "🛡️ Configurando firewall..."
-sudo ufw allow 22    # SSH
-sudo ufw allow 80    # HTTP
-sudo ufw allow 443   # HTTPS
-sudo ufw allow 3001  # Backend API
-
-# ========================================
-# TESTES FINAIS
-# ========================================
-
-log "🧪 Executando testes finais..."
-
-# Testar se o frontend está acessível
-if curl -s http://localhost > /dev/null; then
-    log "✅ Frontend acessível em http://localhost"
-else
-    warn "⚠️ Frontend não está respondendo em http://localhost"
-fi
-
-# Testar se o backend está acessível
-if curl -s http://localhost:3001/health > /dev/null 2>&1; then
-    log "✅ Backend acessível em http://localhost:3001"
-else
-    warn "⚠️ Backend não está respondendo em http://localhost:3001"
-fi
-
-# Verificar status do PM2
-log "📊 Status do PM2:"
-pm2 status
-
-# ========================================
-# CONFIGURAÇÃO DE BACKUP
-# ========================================
-
+# Configurar backup automático
 log "💾 Configurando backup automático..."
+sudo mkdir -p /backup/leadflow
 
-# Criar script de backup
-cat > /root/backup-leadflow-full.sh << 'EOF'
+cat > /root/backup-leadflow.sh << 'EOF'
 #!/bin/bash
 BACKUP_DIR="/backup/leadflow"
 DATE=$(date +%Y%m%d_%H%M%S)
 
 mkdir -p $BACKUP_DIR
-
-# Backup do frontend
-tar -czf $BACKUP_DIR/frontend_$DATE.tar.gz /var/www/leadflow
-
-# Backup do backend
-tar -czf $BACKUP_DIR/backend_$DATE.tar.gz /var/www/leadflow/backend
+tar -czf $BACKUP_DIR/leadflow_$DATE.tar.gz /var/www/leadflow
 
 # Manter apenas últimos 7 backups
-find $BACKUP_DIR -name "*.tar.gz" -mtime +7 -delete
+find $BACKUP_DIR -name "leadflow_*.tar.gz" -mtime +7 -delete
+
+# Log do backup
+echo "$(date): Backup realizado - leadflow_$DATE.tar.gz" >> /var/log/leadflow-backup.log
 EOF
 
-chmod +x /root/backup-leadflow-full.sh
+sudo chmod +x /root/backup-leadflow.sh
 
 # Adicionar ao crontab (backup diário às 2h)
-(crontab -l 2>/dev/null; echo "0 2 * * * /root/backup-leadflow-full.sh") | crontab -
+(crontab -l 2>/dev/null; echo "0 2 * * * /root/backup-leadflow.sh") | crontab -
 
-log "✅ Deploy completo concluído com sucesso!"
-log "🌐 Frontend: http://$(hostname -I | awk '{print $1}')"
-log "🔗 Backend API: http://$(hostname -I | awk '{print $1}'):3001"
-log "📊 Status do PM2: pm2 status"
-log "📊 Status do Nginx: sudo systemctl status nginx"
+# Configurar monitoramento
+log "📊 Configurando monitoramento..."
 
+# Criar script de monitoramento
+cat > /root/monitor-leadflow.sh << 'EOF'
+#!/bin/bash
+
+# Verificar se Nginx está rodando
+if ! systemctl is-active --quiet nginx; then
+    echo "$(date): Nginx parou. Reiniciando..." >> /var/log/leadflow-monitor.log
+    systemctl restart nginx
+fi
+
+# Verificar se PM2 está rodando
+if ! pm2 list | grep -q "leadflow.*online"; then
+    echo "$(date): LeadFlow parou. Reiniciando..." >> /var/log/leadflow-monitor.log
+    pm2 restart leadflow
+fi
+
+# Verificar uso de disco
+DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ $DISK_USAGE -gt 90 ]; then
+    echo "$(date): Uso de disco alto: ${DISK_USAGE}%" >> /var/log/leadflow-monitor.log
+fi
+EOF
+
+sudo chmod +x /root/monitor-leadflow.sh
+
+# Adicionar monitoramento ao crontab (a cada 5 minutos)
+(crontab -l 2>/dev/null; echo "*/5 * * * * /root/monitor-leadflow.sh") | crontab -
+
+# Configurar SSL se solicitado
+if [ "$1" = "--ssl" ]; then
+    log "🔒 Configurando SSL..."
+    
+    # Verificar se Certbot está instalado
+    if ! command -v certbot &> /dev/null; then
+        warn "Certbot não está instalado. Instalando..."
+        apt update && apt install -y certbot python3-certbot-nginx
+    fi
+    
+    read -p "Digite seu domínio (ex: leadflow.com): " DOMAIN
+    sudo certbot --nginx -d $DOMAIN
+    
+    # Configurar renovação automática
+    (crontab -l 2>/dev/null; echo "0 12 * * * /usr/bin/certbot renew --quiet") | crontab -
+fi
+
+# Verificar status final
+log "🔍 Verificando status final..."
+
+# Verificar Nginx
+if systemctl is-active --quiet nginx; then
+    success "Nginx está rodando"
+else
+    error "Nginx não está rodando"
+fi
+
+# Verificar PM2
+if pm2 list | grep -q "leadflow.*online"; then
+    success "PM2 está rodando"
+else
+    error "PM2 não está rodando"
+fi
+
+# Verificar firewall
+if ufw status | grep -q "Status: active"; then
+    success "Firewall está ativo"
+else
+    warn "Firewall não está ativo"
+fi
+
+# Obter IP do servidor
+SERVER_IP=$(hostname -I | awk '{print $1}')
+
+success "Deploy concluído com sucesso!"
 echo ""
-echo "🎉 LeadFlow está rodando completamente na Servla!"
+echo "🎉 LeadFlow está rodando na Servla!"
+echo "🌐 Acesse: http://$SERVER_IP"
+echo "📊 Status do Nginx: sudo systemctl status nginx"
+echo "📊 Status do PM2: pm2 status"
+echo "📊 Logs do PM2: pm2 logs leadflow"
+echo ""
+echo "🔧 Comandos úteis:"
+echo "   - Reiniciar aplicação: pm2 restart leadflow"
+echo "   - Ver logs: pm2 logs leadflow --lines 100"
+echo "   - Backup manual: /root/backup-leadflow.sh"
+echo "   - Monitoramento: /root/monitor-leadflow.sh"
+echo ""
 echo "📧 Suporte: contato@mindflowdigital.com.br"
 echo "📱 WhatsApp: 31 97266-1278"
 echo ""
-echo "📋 Próximos passos:"
-echo "1. Configure as variáveis de ambiente do backend em backend/config.env"
-echo "2. Teste a integração com Evolution API"
-echo "3. Configure SSL se necessário"
-echo "4. Monitore os logs: pm2 logs leadflow-evolution-api"
+echo "✅ Deploy finalizado em $(date)"
+

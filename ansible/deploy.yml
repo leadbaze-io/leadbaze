@@ -1,0 +1,221 @@
+---
+- name: 🚀 Deploy LeadFlow na Servla
+  hosts: servla_servers
+  become: yes
+  vars:
+    app_name: leadflow
+    app_user: www-data
+    app_dir: /var/www/leadflow
+    node_version: "18"
+    
+  tasks:
+    - name: 📋 Atualizar cache de pacotes
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+        
+    - name: 📦 Instalar dependências do sistema
+      apt:
+        name:
+          - curl
+          - wget
+          - git
+          - unzip
+          - software-properties-common
+          - nginx
+          - ufw
+          - certbot
+          - python3-certbot-nginx
+        state: present
+        
+    - name: 🟢 Instalar Node.js {{ node_version }}
+      block:
+        - name: Adicionar repositório NodeSource
+          shell: curl -fsSL https://deb.nodesource.com/setup_{{ node_version }}.x | sudo -E bash -
+          
+        - name: Instalar Node.js
+          apt:
+            name: nodejs
+            state: present
+            
+    - name: 📦 Instalar PM2 globalmente
+      npm:
+        name: pm2
+        global: yes
+        
+    - name: 🔧 Configurar firewall
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop:
+        - "22"
+        - "80"
+        - "443"
+        
+    - name: 🔧 Habilitar firewall
+      ufw:
+        state: enabled
+        
+    - name: 📁 Criar diretório da aplicação
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+        
+    - name: 📥 Clonar repositório
+      git:
+        repo: https://github.com/mindflowai1/leadflow.git
+        dest: "{{ app_dir }}"
+        version: main
+        force: yes
+        
+    - name: 📋 Copiar arquivo de variáveis de ambiente
+      copy:
+        src: env.example
+        dest: "{{ app_dir }}/.env"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0644'
+        
+    - name: 📦 Instalar dependências Node.js
+      npm:
+        path: "{{ app_dir }}"
+        production: false
+        
+    - name: 🔍 Verificar TypeScript
+      command: npm run type-check
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 🏗️ Build de produção
+      command: npm run build:prod
+      args:
+        chdir: "{{ app_dir }}"
+      environment:
+        VITE_SUPABASE_URL: "{{ vault_vite_supabase_url }}"
+        VITE_SUPABASE_ANON_KEY: "{{ vault_vite_supabase_anon_key }}"
+        VITE_N8N_WEBHOOK_URL: "{{ vault_vite_n8n_webhook_url }}"
+        VITE_APP_ENV: production
+        VITE_DEBUG_MODE: false
+        
+    - name: 🔧 Configurar Nginx
+      template:
+        src: nginx-servla.conf
+        dest: /etc/nginx/sites-available/{{ app_name }}
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart nginx
+        
+    - name: 🔗 Habilitar site Nginx
+      file:
+        src: /etc/nginx/sites-available/{{ app_name }}
+        dest: /etc/nginx/sites-enabled/{{ app_name }}
+        state: link
+      notify: restart nginx
+        
+    - name: 🗑️ Remover site padrão Nginx
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
+        
+    - name: 📊 Configurar PM2
+      template:
+        src: ecosystem.config.js
+        dest: "{{ app_dir }}/ecosystem.config.js"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0644'
+        
+    - name: ⚡ Iniciar aplicação com PM2
+      command: pm2 start ecosystem.config.js
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 💾 Salvar configuração PM2
+      command: pm2 save
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 🔄 Configurar PM2 para iniciar com sistema
+      command: pm2 startup
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 📊 Configurar logrotate PM2
+      command: pm2 install pm2-logrotate
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: ⚙️ Configurar logrotate
+      command: pm2 set pm2-logrotate:max_size 10M
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 🔄 Configurar retenção de logs
+      command: pm2 set pm2-logrotate:retain 7
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 💾 Salvar configurações PM2
+      command: pm2 save
+      args:
+        chdir: "{{ app_dir }}"
+        
+    - name: 📁 Criar diretório de backup
+      file:
+        path: /backup/{{ app_name }}
+        state: directory
+        mode: '0755'
+        
+    - name: 🔧 Configurar script de backup
+      template:
+        src: backup-leadflow.sh
+        dest: /root/backup-leadflow.sh
+        mode: '0755'
+        
+    - name: ⏰ Configurar cron para backup
+      cron:
+        name: "Backup LeadFlow"
+        hour: "2"
+        minute: "0"
+        job: "/root/backup-leadflow.sh"
+        
+    - name: 🔧 Configurar script de monitoramento
+      template:
+        src: monitor-leadflow.sh
+        dest: /root/monitor-leadflow.sh
+        mode: '0755'
+        
+    - name: ⏰ Configurar cron para monitoramento
+      cron:
+        name: "Monitor LeadFlow"
+        minute: "*/5"
+        job: "/root/monitor-leadflow.sh"
+        
+    - name: 🔍 Verificar status dos serviços
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - nginx
+        
+    - name: ✅ Verificar se aplicação está rodando
+      uri:
+        url: http://localhost/health
+        method: GET
+      register: health_check
+      retries: 3
+      delay: 10
+      until: health_check.status == 200
+        
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

@@ -148,3 +148,4 @@ echo ""
 echo "🎉 LeadFlow está rodando na Servla!"
 echo "📧 Suporte: contato@mindflowdigital.com.br"
 echo "📱 WhatsApp: 31 97266-1278"
+

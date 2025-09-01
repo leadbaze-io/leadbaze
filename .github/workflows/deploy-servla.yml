@@ -1,0 +1,105 @@
+name: 🚀 Deploy LeadFlow na Servla
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de deploy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Type check
+      run: npm run type-check
+      
+    - name: 🏗️ Build application
+      run: npm run build:prod
+      env:
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        VITE_N8N_WEBHOOK_URL: ${{ secrets.VITE_N8N_WEBHOOK_URL }}
+        VITE_APP_ENV: production
+        VITE_DEBUG_MODE: false
+        
+    - name: 📁 Create deployment package
+      run: |
+        tar -czf leadflow-deploy.tar.gz dist/ deploy-full-servla.sh check-deployment.sh nginx-servla.conf env.example
+        
+    - name: 🚀 Deploy to Servla
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVLA_HOST }}
+        username: ${{ secrets.SERVLA_USERNAME }}
+        key: ${{ secrets.SERVLA_SSH_KEY }}
+        port: ${{ secrets.SERVLA_PORT }}
+        script: |
+          # Criar diretório temporário
+          mkdir -p /tmp/leadflow-deploy
+          cd /tmp/leadflow-deploy
+          
+          # Baixar arquivo de deploy
+          wget -O leadflow-deploy.tar.gz ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
+          
+          # Extrair arquivos
+          tar -xzf leadflow-deploy.tar.gz
+          
+          # Executar deploy automatizado
+          chmod +x deploy-full-servla.sh
+          ./deploy-full-servla.sh --auto
+          
+          # Verificar deploy
+          chmod +x check-deployment.sh
+          ./check-deployment.sh
+          
+          # Limpar arquivos temporários
+          cd /
+          rm -rf /tmp/leadflow-deploy
+          
+    - name: ✅ Deploy verification
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVLA_HOST }}
+        username: ${{ secrets.SERVLA_USERNAME }}
+        key: ${{ secrets.SERVLA_SSH_KEY }}
+        port: ${{ secrets.SERVLA_PORT }}
+        script: |
+          # Verificar se a aplicação está rodando
+          if curl -s http://localhost/health | grep -q "healthy"; then
+            echo "✅ Deploy successful!"
+            exit 0
+          else
+            echo "❌ Deploy failed!"
+            exit 1
+          fi
+          
+    - name: 📧 Notify deployment status
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
