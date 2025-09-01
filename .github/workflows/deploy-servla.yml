@@ -47,50 +47,45 @@ jobs:
       run: |
         tar -czf leadflow-deploy.tar.gz dist/ deploy-full-servla.sh check-deployment.sh nginx-servla.conf env.example
         
+    - name: 🔑 Setup SSH key
+      run: |
+        echo "${{ secrets.SERVLA_SSH_KEY }}" > ~/.ssh/servla_key
+        chmod 600 ~/.ssh/servla_key
+        ssh-keyscan -H ${{ secrets.SERVLA_HOST }} >> ~/.ssh/known_hosts
+        
     - name: 🚀 Deploy to Servla
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVLA_HOST }}
-        username: ${{ secrets.SERVLA_USERNAME }}
-        key: ${{ secrets.SERVLA_SSH_KEY }}
-        port: ${{ secrets.SERVLA_PORT }}
-        script: |
-          # Criar diretório temporário
+      run: |
+        # Criar diretório temporário
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
           mkdir -p /tmp/leadflow-deploy
           cd /tmp/leadflow-deploy
-          
-          # Baixar arquivo de deploy
-          wget -O leadflow-deploy.tar.gz ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
-          
-          # Extrair arquivos
+        "
+        
+        # Enviar arquivo de deploy
+        scp -i ~/.ssh/servla_key -P ${{ secrets.SERVLA_PORT }} leadflow-deploy.tar.gz ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }}:/tmp/leadflow-deploy/
+        
+        # Executar deploy
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+          cd /tmp/leadflow-deploy
           tar -xzf leadflow-deploy.tar.gz
-          
-          # Executar deploy automatizado
           chmod +x deploy-full-servla.sh
           ./deploy-full-servla.sh --auto
-          
-          # Verificar deploy
           chmod +x check-deployment.sh
           ./check-deployment.sh
-          
-          # Limpar arquivos temporários
           cd /
           rm -rf /tmp/leadflow-deploy
+        "
           
     - name: ✅ Deploy verification
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVLA_HOST }}
-        username: ${{ secrets.SERVLA_USERNAME }}
-        key: ${{ secrets.SERVLA_SSH_KEY }}
-        port: ${{ secrets.SERVLA_PORT }}
-        script: |
-          # Verificar se a aplicação está rodando
-          if curl -s http://localhost/health | grep -q "healthy"; then
-            echo "✅ Deploy successful!"
+      run: |
+        # Verificar se a aplicação está rodando
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+          if curl -s http://localhost/health | grep -q 'healthy'; then
+            echo '✅ Deploy successful!'
             exit 0
           else
-            echo "❌ Deploy failed!"
+            echo '❌ Deploy failed!'
             exit 1
           fi
+        "
 
