@@ -38,13 +38,35 @@ export default function WhatsAppConnection({
           console.log('🔍 Verificando instância existente no banco...')
           const instance = await WhatsAppInstanceService.getUserInstance(userId)
           if (instance && instance.status === 'connected') {
-            console.log('✅ Instância conectada encontrada:', instance.instance_name)
-            setInstanceName(instance.instance_name)
-            setConnectionState({
-              instanceName: instance.instance_name,
-              state: 'open',
-              message: 'WhatsApp já conectado!'
-            })
+            console.log('✅ Instância conectada encontrada no banco:', instance.instance_name)
+            
+            // Verificar se a instância ainda existe na Evolution API
+            try {
+              const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
+              console.log('🔍 Estado na Evolution API:', evolutionState)
+              
+              if (evolutionState.state === 'open') {
+                // Instância ainda está ativa na Evolution
+                setInstanceName(instance.instance_name)
+                setConnectionState({
+                  instanceName: instance.instance_name,
+                  state: 'open',
+                  message: 'WhatsApp já conectado!'
+                })
+              } else {
+                // Instância não está mais ativa na Evolution
+                console.log('⚠️ Instância não está mais ativa na Evolution, atualizando banco...')
+                await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
+                setConnectionState(null)
+                setInstanceName('')
+              }
+            } catch (evolutionError) {
+              console.log('⚠️ Erro ao verificar Evolution API, instância pode ter sido deletada:', evolutionError)
+              // Se não conseguir verificar na Evolution, marcar como desconectada
+              await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
+              setConnectionState(null)
+              setInstanceName('')
+            }
           } else {
             console.log('ℹ️ Nenhuma instância conectada encontrada')
           }
@@ -56,6 +78,44 @@ export default function WhatsAppConnection({
 
     checkExistingInstance()
   }, [userId])
+
+  // Verificar periodicamente se a instância ainda está ativa
+  useEffect(() => {
+    if (connectionState && connectionState.state === 'open' && instanceName) {
+      const interval = setInterval(async () => {
+        try {
+          const evolutionState = await EvolutionApiService.getConnectionState(instanceName)
+          if (evolutionState.state !== 'open') {
+            console.log('⚠️ Instância não está mais ativa na Evolution, atualizando...')
+            // Atualizar banco e estado local
+            if (userId) {
+              await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
+            }
+            setConnectionState(null)
+            setInstanceName('')
+            setQrCode('')
+            
+            toast({
+              title: 'WhatsApp Desconectado',
+              description: 'Sua instância foi desconectada da Evolution API.',
+              variant: 'destructive'
+            })
+          }
+        } catch (error) {
+          console.log('⚠️ Erro ao verificar status da instância:', error)
+          // Se não conseguir verificar, marcar como desconectada
+          if (userId) {
+            await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
+          }
+          setConnectionState(null)
+          setInstanceName('')
+          setQrCode('')
+        }
+      }, 30000) // Verificar a cada 30 segundos
+
+      return () => clearInterval(interval)
+    }
+  }, [connectionState, instanceName, userId])
 
   // Limpar polling quando componente for desmontado
   useEffect(() => {
@@ -77,11 +137,22 @@ export default function WhatsAppConnection({
       console.log('🔄 Desconectando WhatsApp...')
 
       // 1. Deletar instância na Evolution API
-      await EvolutionApiService.deleteInstance(instanceName)
+      try {
+        await EvolutionApiService.deleteInstance(instanceName)
+        console.log('✅ Instância deletada na Evolution API')
+      } catch (evolutionError) {
+        console.log('⚠️ Erro ao deletar na Evolution API (pode já ter sido deletada):', evolutionError)
+        // Continua mesmo se der erro na Evolution (pode já ter sido deletada)
+      }
 
       // 2. Atualizar status no banco de dados
       if (userId) {
-        await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
+        try {
+          await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
+          console.log('✅ Status atualizado no banco')
+        } catch (dbError) {
+          console.error('❌ Erro ao atualizar banco:', dbError)
+        }
       }
 
       // 3. Limpar estado local
