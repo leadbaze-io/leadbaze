@@ -47,25 +47,23 @@ jobs:
       run: |
         tar -czf leadflow-deploy.tar.gz dist/ deploy-full-servla.sh check-deployment.sh nginx-servla.conf env.example
         
-    - name: 🔑 Setup SSH key
+    - name: 🔑 Setup SSH connection
       run: |
-        echo "${{ secrets.SERVLA_SSH_KEY }}" > ~/.ssh/servla_key
-        chmod 600 ~/.ssh/servla_key
         ssh-keyscan -H ${{ secrets.SERVLA_HOST }} >> ~/.ssh/known_hosts
         
     - name: 🚀 Deploy to Servla
       run: |
         # Criar diretório temporário
-        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+        sshpass -p '${{ secrets.SERVLA_PASSWORD }}' ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
           mkdir -p /tmp/leadflow-deploy
           cd /tmp/leadflow-deploy
         "
         
         # Enviar arquivo de deploy
-        scp -i ~/.ssh/servla_key -P ${{ secrets.SERVLA_PORT }} leadflow-deploy.tar.gz ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }}:/tmp/leadflow-deploy/
+        sshpass -p '${{ secrets.SERVLA_PASSWORD }}' scp -o StrictHostKeyChecking=no -P ${{ secrets.SERVLA_PORT }} leadflow-deploy.tar.gz ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }}:/tmp/leadflow-deploy/
         
         # Executar deploy
-        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+        sshpass -p '${{ secrets.SERVLA_PASSWORD }}' ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
           cd /tmp/leadflow-deploy
           tar -xzf leadflow-deploy.tar.gz
           chmod +x deploy-full-servla.sh
@@ -79,7 +77,7 @@ jobs:
     - name: ✅ Deploy verification
       run: |
         # Verificar se a aplicação está rodando
-        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+        sshpass -p '${{ secrets.SERVLA_PASSWORD }}' ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
           if curl -s http://localhost/health | grep -q 'healthy'; then
             echo '✅ Deploy successful!'
             exit 0
