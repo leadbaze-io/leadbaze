@@ -80,8 +80,8 @@ jobs:
           tar -xzf leadflow-deploy.tar.gz
           chmod +x deploy-leadflow-servla.sh
           
-          # Executar deploy e verificar se funcionou
-          if ./deploy-leadflow-servla.sh; then
+          # Executar deploy no diretório correto
+          if cd ~/leadbaze && ./deploy-leadflow-servla.sh; then
             echo '✅ Deploy executado com sucesso!'
             
             # Verificar se os arquivos foram copiados
