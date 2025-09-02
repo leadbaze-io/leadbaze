@@ -72,34 +72,42 @@ export default function MagicHero() {
           <AnimatedBeam delay={1.0}>
             <div className="flex justify-center mb-8">
               <motion.div
-                initial={{ scale: 0, rotate: -180, opacity: 0 }}
-                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                initial={{ scale: 0, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 0.8, 
+                  duration: 1.2, 
                   delay: 1.0,
                   type: "spring",
-                  stiffness: 200,
-                  damping: 15
+                  stiffness: 100,
+                  damping: 20
                 }}
                 whileHover={{ 
-                  scale: 1.1, 
-                  rotate: 5,
-                  transition: { duration: 0.3 }
+                  scale: 1.05,
+                  y: -5,
+                  transition: { duration: 0.4, ease: "easeOut" }
                 }}
                 className="relative group cursor-pointer"
               >
-                <img 
-                  src={LGPDImage} 
-                  alt="LGPD Compliant" 
-                  className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300"
-                />
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.8, duration: 0.5 }}
-                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-md border border-gray-200"
+                  animate={{ 
+                    boxShadow: [
+                      "0 10px 25px -3px rgba(0, 0, 0, 0.1)",
+                      "0 20px 40px -3px rgba(0, 0, 0, 0.15)",
+                      "0 10px 25px -3px rgba(0, 0, 0, 0.1)"
+                    ]
+                  }}
+                  transition={{ 
+                    duration: 3, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                  className="p-2 rounded-full bg-gradient-to-br from-white via-gray-50 to-white"
                 >
-                  LGPD Compliant
+                  <img 
+                    src={LGPDImage} 
+                    alt="LGPD Compliant" 
+                    className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-2xl group-hover:drop-shadow-3xl transition-all duration-500"
+                  />
                 </motion.div>
               </motion.div>
             </div>
