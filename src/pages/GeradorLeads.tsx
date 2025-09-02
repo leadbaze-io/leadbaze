@@ -42,6 +42,15 @@ export default function GeradorLeads() {
     // Callback quando leads são gerados - pode ser usado para analytics, etc.
   }
 
+  const handleLeadsSaved = () => {
+    // Navegar para o dashboard após salvar leads
+    navigate('/dashboard')
+    // Scroll para o topo após navegação
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 100)
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -91,6 +100,7 @@ export default function GeradorLeads() {
         {/* Gerador de Leads Principal */}
         <LeadGeneratorPro 
           onLeadsGenerated={handleLeadsGenerated}
+          onLeadsSaved={handleLeadsSaved}
           existingLists={existingLists}
         />
 

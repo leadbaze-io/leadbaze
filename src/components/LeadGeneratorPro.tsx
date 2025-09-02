@@ -33,6 +33,7 @@ import { Label } from "./ui/label"
 import { Badge } from "./ui/badge"
 import type { Lead, LeadList } from "../types"
 import { motion, AnimatePresence } from "framer-motion"
+import SuccessModal from './SuccessModal'
 
 const urlFormSchema = z.object({
   searchUrl: z
@@ -43,10 +44,11 @@ const urlFormSchema = z.object({
 
 interface LeadGeneratorProProps {
   onLeadsGenerated?: (leads: Lead[]) => void
+  onLeadsSaved?: () => void
   existingLists?: LeadList[]
 }
 
-export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadGeneratorProProps) {
+export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists = [] }: LeadGeneratorProProps) {
   const [quantity, setQuantity] = useState("10")
   const [generatedLeads, setGeneratedLeads] = useState<Lead[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -60,6 +62,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
   const [newLeads, setNewLeads] = useState<Lead[]>([])
   const [showDuplicateInfo, setShowDuplicateInfo] = useState(false)
+  
+  // Estados para modal de sucesso
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [successData, setSuccessData] = useState<{
+    listName: string
+    leadsCount: number
+    isNewList: boolean
+  } | null>(null)
   
   // Filtros
   const [searchTerm, setSearchTerm] = useState("")
@@ -337,19 +347,20 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
         await LeadService.addLeadsToList(selectedListId, leadsToSave)
       }
 
-      // Mostrar feedback baseado no resultado
-      if (duplicates.length > 0) {
-        toast({
-          title: "Leads Salvos com Sucesso!",
-          description: `${leadsToSave.length} leads novos adicionados. ${duplicates.length} leads duplicados ignorados.`,
-        })
-      } else {
-        toast({
-          title: "Leads Salvos com Sucesso!",
-          description: `${selectedLeads.length} leads foram salvos na lista.`,
-        })
-      }
+      // Preparar dados para o modal de sucesso
+      const finalListName = saveMode === 'new' ? newListName : 
+        existingLists.find(list => list.id === selectedListId)?.name || 'Lista'
       
+      setSuccessData({
+        listName: finalListName,
+        leadsCount: leadsToSave.length,
+        isNewList: saveMode === 'new'
+      })
+      
+      // Mostrar modal de sucesso
+      setShowSuccessModal(true)
+      
+      // Limpar estados
       setShowSaveOptions(false)
       setShowDuplicateInfo(false)
       setGeneratedLeads([])
@@ -371,6 +382,21 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
 
   const onUrlSubmit = (values: z.infer<typeof urlFormSchema>) => {
     handleLeadGeneration(values.searchUrl, parseInt(quantity))
+  }
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false)
+    setSuccessData(null)
+  }
+
+  const handleGoToDashboard = () => {
+    // Emitir evento para o componente pai navegar para o dashboard
+    if (onLeadsSaved) {
+      onLeadsSaved()
+    }
+    // Fechar modal
+    setShowSuccessModal(false)
+    setSuccessData(null)
   }
 
   // Verificar duplicatas quando lista existente é selecionada
@@ -974,6 +1000,18 @@ export function LeadGeneratorPro({ onLeadsGenerated, existingLists = [] }: LeadG
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Modal de Sucesso */}
+      {successData && (
+        <SuccessModal
+          isOpen={showSuccessModal}
+          onClose={handleCloseSuccessModal}
+          onGoToDashboard={handleGoToDashboard}
+          listName={successData.listName}
+          leadsCount={successData.leadsCount}
+          isNewList={successData.isNewList}
+        />
+      )}
     </div>
   )
 }
