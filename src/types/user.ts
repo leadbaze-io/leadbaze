@@ -3,9 +3,9 @@ export interface User {
   email: string
   user_metadata?: {
     name?: string
-    [key: string]: any
+    [key: string]: unknown
   }
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export type UserOrNull = User | null

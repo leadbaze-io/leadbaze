@@ -9,9 +9,10 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000, // 10 minutes (novo nome para cacheTime)
       
       // Retry inteligente
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Não retry em erros de autenticação
-        if (error?.status === 401 || error?.status === 403) {
+        const errorWithStatus = error as { status?: number }
+        if (errorWithStatus?.status === 401 || errorWithStatus?.status === 403) {
           return false
         }
         // Máximo 3 tentativas
@@ -145,7 +146,7 @@ export const optimisticUpdates = {
   updateLeadCount: (listId: string, increment: number) => {
     queryClient.setQueryData(
       CACHE_KEYS.LEAD_LIST(listId),
-      (oldData: any) => oldData ? {
+      (oldData: LeadList | undefined) => oldData ? {
         ...oldData,
         total_leads: oldData.total_leads + increment
       } : oldData
@@ -153,10 +154,10 @@ export const optimisticUpdates = {
   },
   
   // Adicionar nova lista otimisticamente
-  addNewList: (newList: any) => {
+  addNewList: (newList: LeadList) => {
     queryClient.setQueryData(
       CACHE_KEYS.LEAD_LISTS,
-      (oldData: any[]) => oldData ? [newList, ...oldData] : [newList]
+      (oldData: LeadList[] | undefined) => oldData ? [newList, ...oldData] : [newList]
     )
   },
 }

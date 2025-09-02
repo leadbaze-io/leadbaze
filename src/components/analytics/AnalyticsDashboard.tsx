@@ -16,6 +16,7 @@ import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
+import type { LeadList } from '../../types'
 
 interface AnalyticsData {
   totalLeads: number
@@ -353,7 +354,7 @@ function getActivityIcon(type: string) {
   }
 }
 
-function generateMockAnalytics(leadLists: any[], timeRange: string): AnalyticsData {
+function generateMockAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
   const totalLeads = leadLists.reduce((sum, list) => sum + (list.total_leads || 0), 0)
   const totalLists = leadLists.length
 

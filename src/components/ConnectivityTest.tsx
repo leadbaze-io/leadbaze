@@ -51,10 +51,11 @@ export function ConnectivityTest({
           variant: "destructive",
         })
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro no teste de conectividade:', error)
       
-      if (error.name === 'TypeError' && error.message.includes('CORS')) {
+      const err = error as Error
+      if (err.name === 'TypeError' && err.message.includes('CORS')) {
         setConnectionStatus('cors_error')
         setErrorDetails('Erro de CORS - N8N não configurado para aceitar requisições do frontend')
         toast({

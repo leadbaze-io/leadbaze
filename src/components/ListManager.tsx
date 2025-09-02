@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -37,7 +37,7 @@ interface ListManagerProps {
   onSelectList?: (list: LeadList) => void
 }
 
-export function ListManager({ }: ListManagerProps) {
+export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
   const [lists, setLists] = useState<LeadList[]>([])
   const [filteredLists, setFilteredLists] = useState<LeadList[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -55,7 +55,7 @@ export function ListManager({ }: ListManagerProps) {
 
   useEffect(() => {
     filterAndSortLists()
-  }, [lists, searchTerm, sortBy, sortOrder, filterStatus])
+  }, [lists, searchTerm, sortBy, sortOrder, filterStatus, filterAndSortLists])
 
   const loadLists = async () => {
     try {
@@ -71,7 +71,7 @@ export function ListManager({ }: ListManagerProps) {
     }
   }
 
-  const filterAndSortLists = () => {
+  const filterAndSortLists = useCallback(() => {
     let filtered = [...lists]
 
     // Filtrar por busca
@@ -92,7 +92,7 @@ export function ListManager({ }: ListManagerProps) {
 
     // Ordenar
     filtered.sort((a, b) => {
-      let valueA: any, valueB: any
+      let valueA: string | number, valueB: string | number
 
       switch (sortBy) {
         case 'name':
@@ -116,7 +116,7 @@ export function ListManager({ }: ListManagerProps) {
     })
 
     setFilteredLists(filtered)
-  }
+  }, [lists, searchTerm, sortBy, sortOrder, filterStatus])
 
   const handleDeleteList = async (listId: string, listName: string) => {
     if (!confirm(`Tem certeza que deseja deletar a lista "${listName}"? Esta ação não pode ser desfeita.`)) {
@@ -283,7 +283,7 @@ export function ListManager({ }: ListManagerProps) {
             </div>
 
             {/* Filtro por Status */}
-            <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+            <Select value={filterStatus} onValueChange={(value: string) => setFilterStatus(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>

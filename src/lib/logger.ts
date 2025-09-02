@@ -3,7 +3,7 @@ interface LogEntry {
   timestamp: string
   level: 'debug' | 'info' | 'warn' | 'error'
   message: string
-  context?: Record<string, any>
+  context?: Record<string, unknown>
   userId?: string
   sessionId: string
   userAgent: string
@@ -34,7 +34,7 @@ class Logger {
   private createLogEntry(
     level: LogEntry['level'],
     message: string,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ): LogEntry {
     return {
       timestamp: new Date().toISOString(),
@@ -123,7 +123,7 @@ class Logger {
           },
           body: JSON.stringify({ logs }),
         })
-      } catch (error) {
+      } catch {
         // Fallback: armazenar localmente se servidor não disponível
         this.storeLogsLocally(logs)
       }
@@ -237,10 +237,10 @@ export function useLogger() {
 }
 
 // Decorator para log automático de funções
-export function logExecutionTime(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+export function logExecutionTime(target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value
 
-  descriptor.value = async function (...args: any[]) {
+  descriptor.value = async function (...args: unknown[]) {
     const start = performance.now()
     
     try {

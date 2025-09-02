@@ -113,7 +113,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         title: "Leads deletados",
         description: `${selectedLeads.size} lead(s) foram deletado(s) com sucesso.`,
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro ao deletar",
         description: "Ocorreu um erro ao deletar os leads selecionados.",

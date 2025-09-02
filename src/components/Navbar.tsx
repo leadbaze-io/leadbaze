@@ -4,9 +4,10 @@ import { User, LogOut, Menu, X } from 'lucide-react'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
 import ThemeToggle from './ThemeToggle'
+import type { User as UserType } from '../types'
 
 export default function Navbar() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<UserType | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 
