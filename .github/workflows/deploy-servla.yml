@@ -114,7 +114,7 @@ jobs:
       run: |
         # Verificar se a aplicação está rodando
         ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
-          if curl -s http://localhost/health | grep -q 'healthy'; then
+          if curl -s https://leadbaze.io/health | grep -q 'healthy'; then
             echo '✅ Deploy successful!'
             echo '🌐 Site disponível em: https://leadbaze.io'
             exit 0
