@@ -5,7 +5,6 @@ import { lazy, Suspense } from 'react'
 import { queryClient } from './lib/queryClient'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Navbar from './components/Navbar'
-import MobileNavbar from './components/mobile/MobileNavbar'
 import Footer from './components/Footer'
 import FaviconImage from './components/FaviconImage'
 import LoadingScreen from './components/LoadingScreen'
@@ -25,10 +24,7 @@ function App() {
         <Router>
                   <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
           <FaviconImage />
-          <div className="hidden lg:block">
-            <Navbar />
-          </div>
-          <MobileNavbar />
+          <Navbar />
           
           <main className="flex-1">
               <Suspense fallback={<LoadingScreen />}>

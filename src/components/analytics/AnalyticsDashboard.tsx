@@ -89,17 +89,17 @@ export default function AnalyticsDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-bold text-foreground">
             Analytics Dashboard
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Última atualização: {lastUpdated.toLocaleTimeString()}
           </p>
         </div>
         
         <div className="flex items-center space-x-3">
           {/* Time Range Selector */}
-          <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
             {(['7d', '30d', '90d'] as const).map((range) => (
               <Button
                 key={range}
@@ -277,10 +277,10 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400',
-    green: 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400',
-    purple: 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400',
-    orange: 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-400',
+    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-green-100 text-green-600',
+    purple: 'bg-purple-100 text-purple-600',
+    orange: 'bg-orange-100 text-orange-600',
   }
 
   return (
@@ -294,10 +294,10 @@ function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCa
         <CardContent className="p-3 md:p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
             <div className="flex-1">
-              <p className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">
+              <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">
                 {title}
               </p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-lg md:text-2xl font-bold text-foreground">
                 {value}
               </p>
               <div className="flex items-center mt-1 md:mt-2">

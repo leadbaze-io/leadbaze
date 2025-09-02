@@ -44,7 +44,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
@@ -86,8 +86,8 @@ export default function Navbar() {
                 <div className="flex items-center space-x-4">
                   <ThemeToggle />
                   <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{user.user_metadata?.name || user.email}</span>
+                    <User className="w-4 h-4 text-gray-600" />
+                    <span className="text-sm text-gray-600">{user.user_metadata?.name || user.email}</span>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -112,7 +112,8 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center space-x-3">
+            <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-blue-600 transition-colors"
