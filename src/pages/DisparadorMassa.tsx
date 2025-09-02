@@ -591,7 +591,7 @@ export default function DisparadorMassa() {
             {!showCampaignDetails && (
               <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                 <h2 className="text-xl font-semibold mb-6 flex items-center">
-                  <FolderOpen className="w-5 h-5 mr-2 text-blue-600" />
+                  <FolderOpen className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                   Gerenciar Campanhas
                 </h2>
 
@@ -738,14 +738,14 @@ export default function DisparadorMassa() {
                    {/* Seleção de Listas */}
                    <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                     <h3 className="text-xl font-semibold mb-4 flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-blue-600" />
+                      <Users className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                       Adicionar Listas
                     </h3>
                     
                     {lists.length === 0 ? (
                       <div className="text-center py-8">
-                        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-500 mb-4">
+                        <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground mb-4">
                           Você ainda não possui listas de leads
                         </p>
                         <Button 
@@ -834,17 +834,17 @@ export default function DisparadorMassa() {
                    {/* Leads da Campanha */}
                    <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                      <h3 className="text-xl font-semibold mb-4 flex items-center">
-                       <Users className="w-5 h-5 mr-2 text-green-600" />
+                       <Users className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
                        Leads da Campanha
                      </h3>
                      
                      {campaignLeads.length === 0 ? (
                        <div className="text-center py-8">
-                         <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                         <p className="text-gray-500 mb-4">
+                         <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                         <p className="text-muted-foreground mb-4">
                            Nenhum lead adicionado ainda
                          </p>
-                         <p className="text-sm text-gray-400">
+                         <p className="text-sm text-muted-foreground">
                            Selecione listas para adicionar leads
                          </p>
                        </div>
@@ -877,13 +877,13 @@ export default function DisparadorMassa() {
                    {/* Configuração da Mensagem */}
                    <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                     <h3 className="text-xl font-semibold mb-4 flex items-center">
-                      <MessageSquare className="w-5 h-5 mr-2 text-purple-600" />
+                      <MessageSquare className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" />
                       Mensagem da Campanha
                     </h3>
                     
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="message" className="text-gray-700 font-medium">Mensagem</Label>
+                        <Label htmlFor="message" className="text-foreground font-medium">Mensagem</Label>
                         <textarea
                           id="message"
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none mt-1"
@@ -955,14 +955,14 @@ export default function DisparadorMassa() {
             {/* Configuração Manual (Opcional) */}
             <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Settings className="w-5 h-5 mr-2 text-blue-600" />
+                <Settings className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                 Configuração Manual (Opcional)
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="apiUrl" className="text-gray-700 font-medium">URL da API</Label>
+                    <Label htmlFor="apiUrl" className="text-foreground font-medium">URL da API</Label>
                     <Input
                       id="apiUrl"
                       placeholder="https://api.evolutionapi.com"
@@ -972,7 +972,7 @@ export default function DisparadorMassa() {
                   </div>
 
                   <div>
-                    <Label htmlFor="apiKey" className="text-gray-700 font-medium">Chave da API</Label>
+                    <Label htmlFor="apiKey" className="text-foreground font-medium">Chave da API</Label>
                     <Input
                       id="apiKey"
                       type="password"
@@ -983,7 +983,7 @@ export default function DisparadorMassa() {
                   </div>
 
                   <div>
-                    <Label htmlFor="instanceName" className="text-gray-700 font-medium">Nome da Instância</Label>
+                    <Label htmlFor="instanceName" className="text-foreground font-medium">Nome da Instância</Label>
                     <Input
                       id="instanceName"
                       placeholder="minha-instancia"
@@ -995,7 +995,7 @@ export default function DisparadorMassa() {
 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="whatsappNumber" className="text-gray-700 font-medium">Número do WhatsApp</Label>
+                    <Label htmlFor="whatsappNumber" className="text-foreground font-medium">Número do WhatsApp</Label>
                     <Input
                       id="whatsappNumber"
                       placeholder="5531999887766"

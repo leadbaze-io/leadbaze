@@ -282,19 +282,19 @@ export default function Dashboard() {
             </h3>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
                 <p>Seja específico nas buscas do Google Maps para obter leads mais qualificados</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
                 <p>Priorize estabelecimentos com 4+ estrelas para melhor taxa de conversão</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
                 <p>Use os filtros nas listas para encontrar leads com telefone e website</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
                 <p>Organize seus leads em listas temáticas para melhor gestão</p>
               </div>
             </div>

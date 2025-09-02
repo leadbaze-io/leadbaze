@@ -27,7 +27,7 @@ export default function ThemeToggle() {
         <Button
           variant="ghost"
           size="sm"
-          className="w-9 h-9 p-0 relative overflow-hidden"
+          className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -38,7 +38,11 @@ export default function ThemeToggle() {
               transition={{ duration: 0.2 }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <CurrentIcon className="h-4 w-4" />
+              <CurrentIcon className={`h-4 w-4 ${
+                theme === 'light' ? 'text-yellow-500' : 
+                theme === 'dark' ? 'text-blue-400' : 
+                'text-gray-600 dark:text-gray-300'
+              }`} />
             </motion.div>
           </AnimatePresence>
           <span className="sr-only">Alternar tema</span>
@@ -54,16 +58,24 @@ export default function ThemeToggle() {
             <DropdownMenuItem
               key={themeOption.value}
               onClick={() => setTheme(themeOption.value)}
-              className={`cursor-pointer ${isActive ? 'bg-blue-50 text-blue-600' : ''}`}
+              className={`cursor-pointer transition-colors ${
+                isActive 
+                  ? 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300' 
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+              }`}
             >
-              <div className="flex items-center space-x-2">
-                <Icon className="h-4 w-4" />
-                <span>{themeOption.label}</span>
+              <div className="flex items-center space-x-2 w-full">
+                <Icon className={`h-4 w-4 ${
+                  themeOption.value === 'light' ? 'text-yellow-500' :
+                  themeOption.value === 'dark' ? 'text-blue-400' :
+                  'text-gray-600 dark:text-gray-300'
+                }`} />
+                <span className="flex-1">{themeOption.label}</span>
                 {isActive && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="ml-auto w-2 h-2 bg-blue-600 rounded-full"
+                    className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full"
                   />
                 )}
               </div>
