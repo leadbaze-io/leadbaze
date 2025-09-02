@@ -2,10 +2,9 @@ import React from 'react'
 
 interface LogoImageProps {
   className?: string
-  alt?: string
 }
 
-export const LogoImage: React.FC<LogoImageProps> = ({ className = '', alt = 'LeadBaze' }) => {
+export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
       {/* Ícone de localização estilizado */}
