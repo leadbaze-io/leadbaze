@@ -1,7 +1,6 @@
 import MagicHero from '../components/MagicHero'
 import MagicSteps from '../components/MagicSteps'
 import MagicBenefits from '../components/MagicBenefits'
-import MagicTestimonials from '../components/MagicTestimonials'
 import MagicCTA from '../components/MagicCTA'
 
 export default function LandingPage() {
@@ -15,9 +14,6 @@ export default function LandingPage() {
       
       {/* Benefícios */}
       <MagicBenefits />
-      
-      {/* Depoimentos */}
-      <MagicTestimonials />
       
       {/* CTA Final */}
       <MagicCTA />

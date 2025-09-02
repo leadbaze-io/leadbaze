@@ -178,18 +178,7 @@ export default function MagicBenefits() {
           })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <Link to="/login">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 text-lg"
-            >
-              Comece a Gerar Leads
-            </motion.button>
-          </Link>
-        </div>
+
       </div>
     </section>
   )
