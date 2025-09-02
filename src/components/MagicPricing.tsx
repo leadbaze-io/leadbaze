@@ -139,7 +139,7 @@ export default function MagicPricing() {
             <div className="text-white">
               <div className="text-2xl font-semibold mb-2">Preço por Lead</div>
               <div className="text-6xl md:text-7xl font-bold mb-2">
-                R$ <AnimatedCounter value={0.30} decimals={2} className="text-white" delay={1000} />
+                                 R$ <AnimatedCounter value={0.30} className="text-white" delay={1000} />
               </div>
               <div className="text-lg opacity-90">vs. R$ 15+ em outras plataformas</div>
             </div>

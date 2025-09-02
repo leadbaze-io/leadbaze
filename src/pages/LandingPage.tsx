@@ -16,11 +16,11 @@ export default function LandingPage() {
       {/* Benefícios */}
       <MagicBenefits />
       
-      {/* Preços e Benefícios */}
-      <MagicPricing />
-      
       {/* CTA Final */}
       <MagicCTA />
+      
+      {/* Desejo vs Dor */}
+      <MagicPricing />
     </div>
   )
 }
