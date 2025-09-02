@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles, TrendingUp, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { AnimatedBeam } from './magicui/animated-beam'
