@@ -39,15 +39,11 @@ export default function MagicHero() {
           <AnimatedBeam delay={0.4}>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-                Transforme
+                Gere mais de 1000 Leads B2B
               </span>
               <br />
               <span className="text-gray-900">
-                Mapas em
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Oportunidades
+                em menos de 5 minutos
               </span>
             </h1>
           </AnimatedBeam>
@@ -55,25 +51,34 @@ export default function MagicHero() {
           {/* Subtítulo */}
           <AnimatedBeam delay={0.6}>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Gere leads qualificados automaticamente usando dados do Google Maps. 
-              <span className="text-blue-600 font-semibold"> Rápido, preciso e eficiente.</span>
+              Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
             </p>
           </AnimatedBeam>
 
           {/* CTA Centralizado */}
           <AnimatedBeam delay={0.8}>
             <div className="flex justify-center mb-12">
-              <Link to="/login">
+              <Link to="/pricing">
                 <ShimmerButton className="px-8 py-4 text-lg">
-                  <span>Começar Agora</span>
+                  <span>Ver Planos</span>
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </ShimmerButton>
               </Link>
             </div>
           </AnimatedBeam>
 
-          {/* Stats */}
+          {/* Selo LGPD */}
           <AnimatedBeam delay={1.0}>
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span>LGPD Compliant</span>
+              </div>
+            </div>
+          </AnimatedBeam>
+
+          {/* Stats */}
+          <AnimatedBeam delay={1.2}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="relative group">
                 <BorderBeam delay={0.2} className="text-center p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300">

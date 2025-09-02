@@ -38,3 +38,4 @@ Write-Host ""
 Write-Host "📞 Suporte: contato@mindflowdigital.com.br" -ForegroundColor Yellow
 
 
+
