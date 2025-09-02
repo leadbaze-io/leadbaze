@@ -54,7 +54,7 @@ export class LeadService {
       }
       
       // Parser flexível - tenta extrair leads de diferentes estruturas
-      let leads: any[] = []
+      let leads: unknown[] = []
       
       if (Array.isArray(data)) {
         // Caso 1: Resposta é diretamente um array de leads
@@ -106,23 +106,28 @@ export class LeadService {
       console.log(`✅ ${leads.length} leads encontrados`)
 
       // Normalizar dados dos leads vindos do N8N
-      const normalizedLeads: Lead[] = leads.map((lead: any, index: number) => ({
-        id: lead.id || `temp_${Date.now()}_${index}`,
-        name: lead.title || lead.name || 'Nome não disponível',
-        address: lead.city || lead.address || 'Cidade não disponível',
-        phone: LeadService.formatPhoneFromN8N(lead.phoneUnformatted || lead.phone),
-        rating: this.normalizeRating(lead.totalScore || lead.rating),
-        totalScore: lead.totalScore || lead.rating || 0,
-        website: lead.website || lead.url,
-        business_type: lead.business_type || lead.category || 'Estabelecimento',
-        google_maps_url: lead.google_maps_url || lead.url,
-        place_id: lead.place_id || lead.placeId,
-        reviews_count: lead.reviewsCount || lead.reviews_count || lead.review_count,
-        price_level: lead.price_level || lead.priceLevel,
-        opening_hours: lead.opening_hours || lead.openingHours || lead.hours,
-        photos: lead.photos || lead.images || [],
-        selected: false
-      }))
+      const normalizedLeads: Lead[] = leads.map((lead, index: number) => {
+        const leadData = lead as Record<string, unknown>
+        return {
+          id: (leadData.id as string) || `temp_${Date.now()}_${index}`,
+          name: (leadData.title as string) || (leadData.name as string) || 'Nome não disponível',
+          address: (leadData.city as string) || (leadData.address as string) || 'Cidade não disponível',
+          phone: LeadService.formatPhoneFromN8N((leadData.phoneUnformatted as string) || (leadData.phone as string)),
+          rating: this.normalizeRating((leadData.totalScore as number) || (leadData.rating as number)),
+          totalScore: (leadData.totalScore as number) || (leadData.rating as number) || 0,
+          website: (leadData.website as string) || (leadData.url as string),
+          business_type: (leadData.business_type as string) || (leadData.category as string) || 'Estabelecimento',
+          google_maps_url: (leadData.google_maps_url as string) || (leadData.url as string),
+          place_id: (leadData.place_id as string) || (leadData.placeId as string),
+          reviews_count: (leadData.reviewsCount as number) || (leadData.reviews_count as number) || (leadData.review_count as number),
+          price_level: (leadData.price_level as number) || (leadData.priceLevel as number),
+          opening_hours: Array.isArray(leadData.opening_hours) ? (leadData.opening_hours as string[]) : 
+                         Array.isArray(leadData.openingHours) ? (leadData.openingHours as string[]) : 
+                         Array.isArray(leadData.hours) ? (leadData.hours as string[]) : [],
+          photos: (leadData.photos as string[]) || (leadData.images as string[]) || [],
+          selected: false
+        }
+      })
 
       console.log(`✅ ${normalizedLeads.length} leads normalizados com sucesso`)
 
@@ -136,18 +141,22 @@ export class LeadService {
         processing_time: data?.processing_time || 2.0
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Erro ao conectar com N8N:', error)
       
       // Se houver erro de conectividade, usar dados demo
-      if (error.code === 'ERR_NETWORK' || 
-          error.message.includes('Network Error') || 
-          error.message.includes('CORS') || 
-          error.code === 'ERR_CORS' ||
-          error.code === 'ECONNABORTED' ||
-          error.response?.status === 404 ||
-          error.message.includes('resposta vazia') ||
-          error.message.includes('N8N não está respondendo')) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorCode = (error as any)?.code
+      const errorResponse = (error as any)?.response
+      
+      if (errorCode === 'ERR_NETWORK' || 
+          errorMessage.includes('Network Error') || 
+          errorMessage.includes('CORS') || 
+          errorCode === 'ERR_CORS' ||
+          errorCode === 'ECONNABORTED' ||
+          errorResponse?.status === 404 ||
+          errorMessage.includes('resposta vazia') ||
+          errorMessage.includes('N8N não está respondendo')) {
         
         console.log('🎭 N8N indisponível, usando dados de demonstração')
         

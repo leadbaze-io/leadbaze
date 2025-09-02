@@ -25,7 +25,7 @@ export class EvolutionApiService {
   /**
    * Dispara campanha para o backend encaminhar ao N8N
    */
-  static async dispatchCampaignToWebhook(payload: any[]): Promise<{ success: boolean; data?: any; error?: string }>{
+  static async dispatchCampaignToWebhook(payload: unknown[]): Promise<{ success: boolean; data?: unknown; error?: string }>{
     try {
       const response = await fetch(`${BACKEND_URL}/api/dispatch-campaign`, {
         method: 'POST',
@@ -41,7 +41,7 @@ export class EvolutionApiService {
       const data = await response.json()
       console.log('✅ Resposta do backend:', data)
       return data
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Erro ao enviar campanha ao backend:', error)
       return { success: false, error: error.message || 'Erro desconhecido' }
     }
