@@ -243,8 +243,10 @@ export default function AnalyticsDashboard() {
                 className="flex items-center justify-between p-3 bg-muted rounded-lg"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    {getActivityIcon(activity.type)}
+                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600 dark:text-blue-300">
+                      {getActivityIcon(activity.type)}
+                    </span>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">{activity.description}</p>

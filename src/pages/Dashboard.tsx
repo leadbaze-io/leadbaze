@@ -87,8 +87,11 @@ export default function Dashboard() {
             
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="space-y-3">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                  Bem-vindo de volta! 👋
+                <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2">
+                  <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                    Bem-vindo de volta!
+                  </span>
+                  <span className="text-yellow-300 filter drop-shadow-sm">👋</span>
                 </h1>
                 <p className="text-blue-100 text-lg max-w-md">
                   Gerencie suas listas de leads e maximize suas conversões com nossa plataforma inteligente

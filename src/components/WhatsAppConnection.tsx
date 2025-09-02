@@ -449,10 +449,10 @@ export default function WhatsAppConnection({
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+    <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center">
-          <Smartphone className="w-5 h-5 mr-2 text-green-600" />
+        <h2 className="text-xl font-semibold flex items-center text-foreground">
+          <Smartphone className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
           Conectar WhatsApp
         </h2>
         
@@ -482,7 +482,7 @@ export default function WhatsAppConnection({
             Conectar meu WhatsApp
           </Button>
           
-          <p className="text-sm text-gray-500 mt-3">
+          <p className="text-sm text-muted-foreground mt-3">
             Clique para gerar um QR Code e conectar sua conta WhatsApp
           </p>
         </motion.div>
@@ -498,8 +498,8 @@ export default function WhatsAppConnection({
             className="text-center py-8"
           >
             <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Criando instância...</p>
-            <p className="text-sm text-gray-500 mt-2">Aguarde um momento</p>
+            <p className="text-foreground font-medium">Criando instância...</p>
+            <p className="text-sm text-muted-foreground mt-2">Aguarde um momento</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -513,7 +513,7 @@ export default function WhatsAppConnection({
             exit={{ opacity: 0, scale: 0.9 }}
             className="text-center py-6"
           >
-            <div className="bg-gray-50 rounded-xl p-6 inline-block">
+            <div className="bg-muted rounded-xl p-6 inline-block">
               <img
                 src={qrCode}
                 alt="QR Code para conectar WhatsApp"
@@ -524,7 +524,7 @@ export default function WhatsAppConnection({
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-center space-x-2">
                 {isPolling && <Loader2 className="w-4 h-4 animate-spin text-blue-600" />}
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   {isPolling ? 'Verificando conexão...' : 'QR Code gerado'}
                 </span>
               </div>
@@ -551,9 +551,9 @@ export default function WhatsAppConnection({
                 </Button>
               </div>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
-                <h3 className="font-medium text-blue-800 mb-2">Como conectar:</h3>
-                <ol className="text-sm text-blue-700 space-y-1 text-left">
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4 max-w-md mx-auto">
+                <h3 className="font-medium text-blue-800 dark:text-blue-200 mb-2">Como conectar:</h3>
+                <ol className="text-sm text-blue-700 dark:text-blue-300 space-y-1 text-left">
                   <li>1. Abra o WhatsApp no seu celular</li>
                   <li>2. Vá em Configurações → Aparelhos conectados</li>
                   <li>3. Toque em "Conectar um aparelho"</li>
@@ -571,20 +571,20 @@ export default function WhatsAppConnection({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg"
+            className="mt-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+                <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                 <div>
-                  <h3 className="font-medium text-green-800">
+                  <h3 className="font-medium text-green-800 dark:text-green-200">
                     WhatsApp Conectado com Sucesso!
                   </h3>
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-green-700 dark:text-green-300">
                     Sua conta está pronta para enviar mensagens.
                   </p>
                   {instanceName && (
-                    <p className="text-xs text-green-600 mt-1">
+                    <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                       Instância: {instanceName}
                     </p>
                   )}
