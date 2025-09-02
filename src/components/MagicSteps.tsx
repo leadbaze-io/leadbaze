@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link2, Zap, Database, TrendingUp } from 'lucide-react'
+import { Link2, Zap, TrendingUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function MagicSteps() {
@@ -50,8 +50,7 @@ export default function MagicSteps() {
     const colors = {
       blue: "bg-blue-100 text-blue-600 border-blue-200",
       purple: "bg-purple-100 text-purple-600 border-purple-200",
-      green: "bg-green-100 text-green-600 border-green-200",
-      orange: "bg-orange-100 text-orange-600 border-orange-200"
+      green: "bg-green-100 text-green-600 border-green-200"
     }
     return colors[color as keyof typeof colors] || colors.blue
   }
