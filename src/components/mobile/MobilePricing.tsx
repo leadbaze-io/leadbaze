@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, Star, Zap, TrendingUp, Crown } from 'lucide-react'
+import { Check, Zap, TrendingUp, Crown } from 'lucide-react'
 import { getCurrentUser } from '../../lib/supabaseClient'
 
 export default function MobilePricing() {

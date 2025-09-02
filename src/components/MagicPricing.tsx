@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { DollarSign, TrendingUp, Clock, Users } from 'lucide-react'
+import { TrendingUp, Clock, Users } from 'lucide-react'
 import { AnimatedCounter } from './magicui/animated-counter'
 
 export default function MagicPricing() {

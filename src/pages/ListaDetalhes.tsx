@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Calendar, Users, Loader, AlertCircle, Download, Share2 } from 'lucide-react'
 import { supabase, getCurrentUser } from '../lib/supabaseClient'
-import type { LeadList } from '../types'
+import type { LeadList, Lead } from '../types'
 import LeadTableWithActions from '../components/LeadTableWithActions'
 
 export default function ListaDetalhes() {

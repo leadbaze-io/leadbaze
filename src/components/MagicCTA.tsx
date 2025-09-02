@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { ShimmerButton } from './magicui/shimmer-button'

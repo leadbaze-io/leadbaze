@@ -35,28 +35,6 @@ export default function DisparadorMassa() {
   const [newLeads, setNewLeads] = useState<Lead[]>([])
   const [showCampaignDetails, setShowCampaignDetails] = useState(false)
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const currentUser = await getCurrentUser()
-      if (!currentUser) {
-        navigate('/login')
-        return
-      }
-      setUser(currentUser)
-      setLoading(false)
-    }
-    checkAuth()
-  }, [navigate])
-
-  // Carregar dados quando o usuário estiver disponível
-  useEffect(() => {
-    if (user && !loading) {
-      loadData().catch(error => {
-        console.error('Erro ao carregar dados:', error)
-      })
-    }
-  }, [user, loading, loadData])
-
   const loadData = useCallback(async () => {
     try {
       console.log('🚀 Iniciando loadData para usuário:', user?.id)
@@ -101,6 +79,28 @@ export default function DisparadorMassa() {
     }
   }, [user])
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const currentUser = await getCurrentUser()
+      if (!currentUser) {
+        navigate('/login')
+        return
+      }
+      setUser(currentUser)
+      setLoading(false)
+    }
+    checkAuth()
+  }, [navigate])
+
+  // Carregar dados quando o usuário estiver disponível
+  useEffect(() => {
+    if (user && !loading) {
+      loadData().catch(error => {
+        console.error('Erro ao carregar dados:', error)
+      })
+    }
+  }, [user, loading, loadData])
+
   // Carregar campanhas do usuário
   const loadUserCampaigns = async (): Promise<BulkCampaign[]> => {
     try {
@@ -124,7 +124,7 @@ export default function DisparadorMassa() {
 
     try {
       const newCampaign = await CampaignService.createCampaign({
-        user_id: user.id,
+        user_id: user!.id,
         name: campaignName,
         message: '',
         selected_lists: [],
@@ -490,7 +490,7 @@ export default function DisparadorMassa() {
               <div className="mt-4 md:mt-0">
                 <div className="text-right">
                   <div className="text-sm text-purple-200">Logado como</div>
-                  <div className="font-semibold">{user.user_metadata?.name || user.email}</div>
+                  <div className="font-semibold">{user?.user_metadata?.name || user?.email}</div>
                 </div>
               </div>
             </div>

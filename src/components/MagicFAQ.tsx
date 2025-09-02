@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, HelpCircle, Shield, Users, Clock, MessageCircle, Zap } from 'lucide-react'
+import { ChevronDown, Shield, Users, Clock, MessageCircle, Zap } from 'lucide-react'
 
 export default function MagicFAQ() {
   const [isVisible, setIsVisible] = useState(false)
