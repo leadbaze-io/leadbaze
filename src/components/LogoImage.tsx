@@ -1,4 +1,5 @@
 import React from 'react'
+import logoImage from '../assets/lblogo5.png'
 
 interface LogoImageProps {
   className?: string
@@ -6,21 +7,28 @@ interface LogoImageProps {
 
 export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
-      {/* Ícone de localização estilizado */}
-      <div className="relative">
-        <div className="w-8 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-          <div className="w-3 h-3 bg-white rounded-full"></div>
-        </div>
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></div>
-      </div>
-      
-      {/* Texto LeadBaze */}
-      <span className="text-2xl font-bold">
-        <span className="text-blue-600">Lead</span>
-        <span className="text-pink-600">Baze</span>
-      </span>
-    </div>
+    <img 
+      src={logoImage}
+      alt="LeadBaze"
+      className={className}
+      onLoad={() => console.log('✅ Logo LeadBaze carregada com sucesso')}
+      onError={(e) => {
+        console.error('❌ Erro ao carregar logo:', e)
+        // Fallback se a imagem não carregar
+        const target = e.target as HTMLImageElement
+        target.style.display = 'none'
+        
+        // Criar um span com texto como fallback
+        const fallback = document.createElement('span')
+        fallback.textContent = 'LeadBaze'
+        fallback.className = 'text-2xl font-bold'
+        fallback.innerHTML = '<span class="text-blue-600">Lead</span><span class="text-pink-600">Baze</span>'
+        
+        if (target.parentNode) {
+          target.parentNode.insertBefore(fallback, target)
+        }
+      }}
+    />
   )
 }
 
