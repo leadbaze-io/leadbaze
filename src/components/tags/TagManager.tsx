@@ -220,7 +220,7 @@ export default function TagManager({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800"
+              className="p-4 border border-border rounded-lg bg-muted"
             >
               <div className="space-y-3">
                 <Input

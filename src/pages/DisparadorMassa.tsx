@@ -454,17 +454,17 @@ export default function DisparadorMassa() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-muted-foreground">Carregando...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div 
@@ -472,30 +472,54 @@ export default function DisparadorMassa() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800 rounded-2xl p-6 text-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-3">
+          <div className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800 rounded-2xl p-8 text-white shadow-2xl">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-white/5">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+                backgroundSize: '24px 24px',
+                opacity: 0.1
+              }}></div>
+            </div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="space-y-4">
+                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
                   <Send className="w-4 h-4" />
                   <span>Disparador em Massa</span>
                 </div>
                 
-                <h1 className="text-3xl md:text-4xl font-bold mb-3">
-                  Envie mensagens para suas listas de Leads
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                  Envie mensagens para suas listas de 
+                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent ml-2">
+                    Leads
+                  </span>
                 </h1>
-                <p className="text-purple-100 text-base max-w-2xl font-medium">
-                  Envie mensagens personalizadas para todos os seus Leads de uma só vez!
+                <p className="text-purple-100 text-lg max-w-2xl">
+                  Envie mensagens personalizadas para todos os seus leads via WhatsApp de uma só vez!
                 </p>
               </div>
-              <div className="mt-4 md:mt-0">
-                <div className="text-right">
-                  <div className="text-sm text-purple-200">Logado como</div>
-                  <div className="font-semibold">{user?.user_metadata?.name || user?.email}</div>
+              <div className="mt-6 md:mt-0">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-sm text-purple-200 mb-1">Status</div>
+                  <div className="text-lg font-semibold">{connectedInstance ? 'WhatsApp Conectado' : 'Aguardando Conexão'}</div>
+                  <div className="text-xs text-purple-300 mt-1">{connectedInstance || 'Configure sua instância'}</div>
                 </div>
               </div>
             </div>
           </div>
         </motion.div>
+
+        {/* Voltar para Dashboard */}
+        <div className="mb-6">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Voltar para Dashboard</span>
+          </Link>
+        </div>
 
         {/* Tabs */}
         <div className="flex space-x-1 mb-8">
@@ -504,7 +528,7 @@ export default function DisparadorMassa() {
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
               activeTab === 'campaign'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white text-gray-600 hover:text-blue-600 hover:shadow-md border border-gray-200'
+                : 'bg-card text-muted-foreground hover:text-foreground hover:shadow-md border border-border'
             }`}
           >
             <MessageSquare className="w-4 h-4 inline mr-2" />
@@ -515,7 +539,7 @@ export default function DisparadorMassa() {
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
               activeTab === 'config'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                : 'bg-white text-gray-600 hover:text-blue-600 hover:shadow-md border border-gray-200'
+                : 'bg-card text-muted-foreground hover:text-foreground hover:shadow-md border border-border'
             }`}
           >
             <Settings className="w-4 h-4 inline mr-2" />
@@ -526,7 +550,7 @@ export default function DisparadorMassa() {
         {activeTab === 'campaign' && (
           <div className="space-y-6">
             {/* Status da Configuração */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+            <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
               <div className="flex items-center space-x-3">
                 {(() => {
                   console.log('🔍 Verificando estado na interface:', { connectedInstance, whatsappConfig: !!whatsappConfig })
@@ -564,7 +588,7 @@ export default function DisparadorMassa() {
 
             {/* Seleção/Criação de Campanha */}
             {!showCampaignDetails && (
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+              <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                 <h2 className="text-xl font-semibold mb-6 flex items-center">
                   <FolderOpen className="w-5 h-5 mr-2 text-blue-600" />
                   Gerenciar Campanhas
@@ -590,7 +614,7 @@ export default function DisparadorMassa() {
                     >
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="newCampaignName" className="text-gray-700 font-medium">Nome da Campanha</Label>
+                          <Label htmlFor="newCampaignName" className="text-foreground font-medium">Nome da Campanha</Label>
                           <Input
                             id="newCampaignName"
                             placeholder="Ex: Promoção de Natal 2024"
@@ -624,7 +648,7 @@ export default function DisparadorMassa() {
 
                 {/* Lista de Campanhas Existentes */}
                 <div>
-                  <h3 className="text-lg font-medium mb-4 text-gray-700">Campanhas Existentes</h3>
+                  <h3 className="text-lg font-medium mb-4 text-foreground">Campanhas Existentes</h3>
                   
                   {campaigns.length === 0 ? (
                     <div className="text-center py-8">
@@ -711,7 +735,7 @@ export default function DisparadorMassa() {
 
                                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                    {/* Seleção de Listas */}
-                   <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                     <h3 className="text-xl font-semibold mb-4 flex items-center">
                       <Users className="w-5 h-5 mr-2 text-blue-600" />
                       Adicionar Listas
@@ -807,7 +831,7 @@ export default function DisparadorMassa() {
                    </div>
 
                    {/* Leads da Campanha */}
-                   <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                      <h3 className="text-xl font-semibold mb-4 flex items-center">
                        <Users className="w-5 h-5 mr-2 text-green-600" />
                        Leads da Campanha
@@ -850,7 +874,7 @@ export default function DisparadorMassa() {
                    </div>
 
                    {/* Configuração da Mensagem */}
-                   <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
                     <h3 className="text-xl font-semibold mb-4 flex items-center">
                       <MessageSquare className="w-5 h-5 mr-2 text-purple-600" />
                       Mensagem da Campanha
@@ -928,7 +952,7 @@ export default function DisparadorMassa() {
             />
 
             {/* Configuração Manual (Opcional) */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+            <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
                 <Settings className="w-5 h-5 mr-2 text-blue-600" />
                 Configuração Manual (Opcional)

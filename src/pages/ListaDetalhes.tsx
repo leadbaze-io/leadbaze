@@ -151,10 +151,10 @@ export default function ListaDetalhes() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Carregando lista de leads...</p>
+          <p className="text-muted-foreground">Carregando lista de leads...</p>
         </div>
       </div>
     )
@@ -162,11 +162,11 @@ export default function ListaDetalhes() {
 
   if (error || !leadList) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Ops! Algo deu errado</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-2">Ops! Algo deu errado</h2>
+          <p className="text-muted-foreground mb-6">
             {error || 'Lista não encontrada'}
           </p>
           <div className="space-y-2">
@@ -189,14 +189,14 @@ export default function ListaDetalhes() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-6">
             <Link
               to="/dashboard"
-              className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
+              className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Voltar ao Dashboard</span>
@@ -240,7 +240,7 @@ export default function ListaDetalhes() {
 
                 <Link
                   to="/gerador"
-                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-border rounded-lg text-muted-foreground hover:bg-muted transition-colors"
                 >
                   Criar Nova Lista
                 </Link>
