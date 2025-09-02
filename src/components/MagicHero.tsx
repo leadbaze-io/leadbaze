@@ -59,12 +59,19 @@ export default function MagicHero() {
           {/* CTA Centralizado */}
           <AnimatedBeam delay={0.8}>
             <div className="flex justify-center mb-12">
-              <Link to="/pricing">
+              <button
+                onClick={() => {
+                  document.getElementById('pricing-plans-section')?.scrollIntoView({ 
+                    behavior: 'smooth' 
+                  })
+                }}
+                className="px-8 py-4 text-lg"
+              >
                 <ShimmerButton className="px-8 py-4 text-lg">
                   <span>Ver Planos</span>
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </ShimmerButton>
-              </Link>
+              </button>
             </div>
           </AnimatedBeam>
 
