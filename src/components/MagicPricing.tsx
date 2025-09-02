@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { DollarSign, TrendingUp, Clock, Users, Zap, Target, CheckCircle } from 'lucide-react'
+import { DollarSign, TrendingUp, Clock, Users } from 'lucide-react'
 import { AnimatedCounter } from './magicui/animated-counter'
 
 export default function MagicPricing() {
@@ -146,35 +146,7 @@ export default function MagicPricing() {
           </div>
         </motion.div>
 
-        {/* Additional Features */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16 text-center"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {[
-              { icon: Zap, text: "Processamento em tempo real" },
-              { icon: Target, text: "Leads 100% qualificados" },
-              { icon: CheckCircle, text: "Sem contratos longos" },
-              { icon: Users, text: "Suporte especializado" }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isVisible ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                className="flex items-center gap-3 text-gray-700"
-              >
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white">
-                  <feature.icon className="w-4 h-4" />
-                </div>
-                <span className="font-medium">{feature.text}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+
       </div>
     </section>
   )

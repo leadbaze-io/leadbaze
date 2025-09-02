@@ -3,6 +3,7 @@ import MagicSteps from '../components/MagicSteps'
 import MagicBenefits from '../components/MagicBenefits'
 import MagicPricing from '../components/MagicPricing'
 import MagicCTA from '../components/MagicCTA'
+import MagicGuarantee from '../components/MagicGuarantee'
 
 export default function LandingPage() {
   return (
@@ -21,6 +22,9 @@ export default function LandingPage() {
       
       {/* Desejo vs Dor */}
       <MagicPricing />
+      
+      {/* 6º Dobra - GARANTIA */}
+      <MagicGuarantee />
     </div>
   )
 }
