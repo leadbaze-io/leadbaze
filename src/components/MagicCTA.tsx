@@ -90,7 +90,7 @@ export default function MagicCTA() {
             <div className="flex flex-wrap items-center justify-center gap-8 text-gray-300">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-400" />
-                <span>✨ Teste grátis por 7 dias</span>
+                <span>✨ Teste grátis por 30 dias</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-400" />
