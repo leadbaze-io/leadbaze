@@ -251,56 +251,56 @@ export default function ListaDetalhes() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <div className="bg-card p-6 rounded-2xl shadow-lg border border-border">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{leadList.total_leads}</p>
-                <p className="text-gray-600 text-sm">Total de Leads</p>
+                <p className="text-2xl font-bold text-foreground">{leadList.total_leads}</p>
+                <p className="text-muted-foreground text-sm">Total de Leads</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <div className="bg-card p-6 rounded-2xl shadow-lg border border-border">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-green-600 dark:text-green-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold text-foreground">
                   {leadList.leads.filter((lead: Lead) => lead.phone).length}
                 </p>
-                <p className="text-gray-600 text-sm">Com Telefone</p>
+                <p className="text-muted-foreground text-sm">Com Telefone</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <div className="bg-card p-6 rounded-2xl shadow-lg border border-border">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold text-foreground">
                   {leadList.leads.filter((lead: Lead) => lead.rating && lead.rating >= 4).length}
                 </p>
-                <p className="text-gray-600 text-sm">4+ Estrelas</p>
+                <p className="text-muted-foreground text-sm">4+ Estrelas</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <div className="bg-card p-6 rounded-2xl shadow-lg border border-border">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-orange-600" />
+              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-orange-600 dark:text-orange-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold text-foreground">
                   {leadList.leads.filter((lead: Lead) => lead.website).length}
                 </p>
-                <p className="text-gray-600 text-sm">Com Website</p>
+                <p className="text-muted-foreground text-sm">Com Website</p>
               </div>
             </div>
           </div>

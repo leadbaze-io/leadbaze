@@ -211,12 +211,12 @@ export function ListManager({ onSelectList }: ListManagerProps) {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{getTotalLeads()}</p>
-                <p className="text-gray-600">Total de Leads</p>
+                <p className="text-2xl font-bold text-foreground">{getTotalLeads()}</p>
+                <p className="text-muted-foreground">Total de Leads</p>
               </div>
             </div>
           </CardContent>
@@ -225,12 +225,12 @@ export function ListManager({ onSelectList }: ListManagerProps) {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-green-600 dark:text-green-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{lists.length}</p>
-                <p className="text-gray-600">Listas Criadas</p>
+                <p className="text-2xl font-bold text-foreground">{lists.length}</p>
+                <p className="text-muted-foreground">Listas Criadas</p>
               </div>
             </div>
           </CardContent>
@@ -239,14 +239,14 @@ export function ListManager({ onSelectList }: ListManagerProps) {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <Users className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-purple-600 dark:text-purple-300" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-2xl font-bold text-foreground">
                   {lists.length > 0 ? Math.round(getTotalLeads() / lists.length) : 0}
                 </p>
-                <p className="text-gray-600">Média por Lista</p>
+                <p className="text-muted-foreground">Média por Lista</p>
               </div>
             </div>
           </CardContent>
@@ -375,10 +375,10 @@ export function ListManager({ onSelectList }: ListManagerProps) {
                       <CardContent className="pt-0">
                         <div className="space-y-3">
                           {/* Estatísticas */}
-                          <div className="flex items-center justify-between text-sm text-gray-600">
+                          <div className="flex items-center justify-between text-sm text-muted-foreground">
                             <div className="flex items-center space-x-1">
                               <Users className="w-4 h-4" />
-                              <span>{list.total_leads} leads</span>
+                              <span className="text-foreground font-medium">{list.total_leads} leads</span>
                             </div>
                             <div className="flex items-center space-x-1">
                               <Calendar className="w-4 h-4" />
@@ -390,12 +390,12 @@ export function ListManager({ onSelectList }: ListManagerProps) {
                           {list.tags && list.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1">
                               {list.tags.slice(0, 3).map((tag, i) => (
-                                <span key={i} className="inline-block bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">
+                                <span key={i} className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs px-2 py-1 rounded">
                                   {tag}
                                 </span>
                               ))}
                               {list.tags.length > 3 && (
-                                <span className="text-xs text-gray-500">+{list.tags.length - 3}</span>
+                                <span className="text-xs text-muted-foreground">+{list.tags.length - 3}</span>
                               )}
                             </div>
                           )}
