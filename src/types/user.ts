@@ -9,3 +9,4 @@ export interface User {
 }
 
 export type UserOrNull = User | null
+

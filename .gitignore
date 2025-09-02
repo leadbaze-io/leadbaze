@@ -7,50 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Build outputs
-dist/
-dist-ssr/
-build/
-*.local
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-config.env
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
 # Runtime data
 pids
 *.pid
@@ -58,20 +14,42 @@ pids
 *.pid.lock
 
 # Coverage directory used by tools like istanbul
-coverage/
+coverage
 *.lcov
 
 # nyc test coverage
 .nyc_output
 
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
 # Dependency directories
+node_modules/
 jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
 
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
+
+# Optional stylelint cache
+.stylelintcache
 
 # Microbundle cache
 .rpt2_cache/
@@ -88,40 +66,106 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
 
 # Next.js build output
 .next
+out
 
 # Nuxt.js build / generate output
 .nuxt
+dist
 
 # Gatsby files
 .cache/
+# Comment in the public line in if your project uses Gatsby and not Next.js
+# https://nextjs.org/blog/next-9-1#public-directory-support
+# public
 
-# Storybook build outputs
-.out
-.storybook-out
+# vuepress build output
+.vuepress/dist
 
-# Temporary folders
-tmp/
-temp/
+# vuepress v2.x temp and cache directory
+.temp
+.cache
 
-# Vercel
-.vercel
+# Docusaurus cache and generated files
+.docusaurus
 
-# Servla deployment files
-ecosystem.config.js
-backup-leadflow.sh
+# Serverless directories
+.serverless/
 
-# Supabase
-.supabase/
+# FuseBox cache
+.fusebox/
 
-# Testing
-coverage/
-*.lcov
+# DynamoDB Local files
+.dynamodb/
 
-# Misc
-*.tsbuildinfo
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backend configuration files (sensitive)
+backend/config.env
+backend/.env
+
+# Deployment files
+deploy/
+.deployment/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Local development
+.local/
+
+# Supabase (if using local development)
+supabase/.branches
+supabase/.temp
+
+# Custom logs
+logs/
+*.local.log
+
+# Package manager lock files (keep one, remove others)
+# yarn.lock
+# pnpm-lock.yaml

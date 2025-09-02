@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Loader, Send, Plus } from 'lucide-react'
+import { Loader, Send, Plus, BarChart3, Users } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
+import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
+
+import { motion, AnimatePresence } from 'framer-motion'
 import type { LeadList, User } from '../types'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'overview' | 'analytics'>('overview')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -66,11 +70,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Boas-vindas */}
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl p-8 text-white dark:from-blue-700 dark:via-purple-700 dark:to-blue-900">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-3xl font-bold mb-2">
@@ -90,10 +94,69 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Gerenciador de Listas */}
-        <ListManager 
-          onSelectList={handleSelectList}
-        />
+        {/* Navigation Tabs */}
+        <div className="mb-8">
+          <div className="border-b border-gray-200 dark:border-gray-700">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'overview'
+                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                }`}
+              >
+                <div className="flex items-center space-x-2">
+                  <Users className="w-4 h-4" />
+                  <span>Visão Geral</span>
+                </div>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'analytics'
+                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                }`}
+              >
+                <div className="flex items-center space-x-2">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>Analytics</span>
+                </div>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'overview' ? (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Gerenciador de Listas */}
+              <ListManager 
+                onSelectList={handleSelectList}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="analytics"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Analytics Dashboard */}
+              <AnalyticsDashboard />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Ações Rápidas */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">

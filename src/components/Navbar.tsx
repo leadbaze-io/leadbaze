@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { User, LogOut, Menu, X } from 'lucide-react'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
@@ -43,7 +44,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
+    <nav className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
@@ -83,9 +84,10 @@ export default function Navbar() {
                   Disparador
                 </Link>
                 <div className="flex items-center space-x-4">
+                  <ThemeToggle />
                   <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm text-gray-600">{user.user_metadata?.name || user.email}</span>
+                    <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{user.user_metadata?.name || user.email}</span>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -97,12 +99,15 @@ export default function Navbar() {
                 </div>
               </>
             ) : (
-              <Link 
-                to="/login" 
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Entrar
-              </Link>
+              <div className="flex items-center space-x-4">
+                <ThemeToggle />
+                <Link 
+                  to="/login" 
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Entrar
+                </Link>
+              </div>
             )}
           </div>
 

@@ -2,13 +2,74 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(express.json());
+// Security middleware
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:"],
+    },
+  },
+}));
+
+// Rate limiting middleware
+const createRateLimit = (windowMs, max, message) => {
+  return rateLimit({
+    windowMs,
+    max,
+    message: {
+      success: false,
+      error: message,
+      retryAfter: Math.ceil(windowMs / 1000),
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+      console.log(`🚨 Rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`);
+      res.status(429).json({
+        success: false,
+        error: message,
+        retryAfter: Math.ceil(windowMs / 1000),
+      });
+    },
+  });
+};
+
+// Rate limits específicos
+const generalLimit = createRateLimit(
+  15 * 60 * 1000, // 15 minutos
+  100, // 100 requests por IP
+  'Muitas requisições. Tente novamente em 15 minutos.'
+);
+
+const campaignLimit = createRateLimit(
+  60 * 60 * 1000, // 1 hora
+  10, // 10 campanhas por hora
+  'Limite de campanhas atingido. Tente novamente em 1 hora.'
+);
+
+const qrCodeLimit = createRateLimit(
+  5 * 60 * 1000, // 5 minutos
+  20, // 20 tentativas de QR code
+  'Muitas tentativas de QR code. Aguarde 5 minutos.'
+);
+
+// Aplicar rate limiting geral
+app.use(generalLimit);
+
+// Middleware básico
+app.use(express.json({ limit: '10mb' }));
 
 // Configuração CORS dinâmica
 const corsOrigins = process.env.CORS_ORIGIN 
@@ -64,7 +125,7 @@ app.use((req, res, next) => {
  * Recebe a campanha do frontend e repassa para o webhook do N8N
  * Body esperado: Array de objetos no formato solicitado
  */
-app.post('/api/dispatch-campaign', async (req, res) => {
+app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
   try {
     console.log('🔄 Recebendo requisição dispatch-campaign...');
     console.log('📍 N8N_WEBHOOK_URL configurada:', N8N_WEBHOOK_URL);
@@ -202,7 +263,7 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
  * GET /api/qrcode/:instanceName
  * Busca o QR Code de uma instância específica
  */
-app.get('/api/qrcode/:instanceName', async (req, res) => {
+app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
   try {
     const { instanceName } = req.params;
     
@@ -403,12 +464,122 @@ app.post('/webhook/:instanceName', (req, res) => {
  * GET /api/health
  * Endpoint de saúde do servidor
  */
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    // Verificar conectividade com serviços externos
+    const healthChecks = {
+      server: {
+        status: 'healthy',
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        version: process.version,
+        platform: process.platform,
+      },
+      evolution_api: {
+        status: 'unknown',
+        url: EVOLUTION_API_URL,
+        response_time: null,
+      },
+      n8n_webhook: {
+        status: 'unknown',
+        url: N8N_WEBHOOK_URL,
+        response_time: null,
+      },
+    };
+
+    // Testar Evolution API
+    if (EVOLUTION_API_URL && EVOLUTION_API_KEY) {
+      try {
+        const start = Date.now();
+        const response = await axios.get(`${EVOLUTION_API_URL}/manager/findInstances`, {
+          headers: evolutionHeaders,
+          timeout: 5000,
+        });
+        
+        healthChecks.evolution_api.status = response.status === 200 ? 'healthy' : 'unhealthy';
+        healthChecks.evolution_api.response_time = Date.now() - start;
+      } catch (error) {
+        healthChecks.evolution_api.status = 'unhealthy';
+        healthChecks.evolution_api.error = error.message;
+      }
+    } else {
+      healthChecks.evolution_api.status = 'not_configured';
+    }
+
+    // Testar N8N Webhook
+    if (N8N_WEBHOOK_URL) {
+      try {
+        const start = Date.now();
+        // Teste básico de conectividade (pode retornar erro, mas conectou)
+        await axios.get(N8N_WEBHOOK_URL, { timeout: 3000 });
+        healthChecks.n8n_webhook.status = 'healthy';
+        healthChecks.n8n_webhook.response_time = Date.now() - start;
+      } catch (error) {
+        // N8N pode retornar 405 (Method Not Allowed) para GET, isso é normal
+        if (error.response?.status === 405) {
+          healthChecks.n8n_webhook.status = 'healthy';
+          healthChecks.n8n_webhook.response_time = Date.now() - start;
+        } else {
+          healthChecks.n8n_webhook.status = 'unhealthy';
+          healthChecks.n8n_webhook.error = error.message;
+        }
+      }
+    } else {
+      healthChecks.n8n_webhook.status = 'not_configured';
+    }
+
+    const totalResponseTime = Date.now() - startTime;
+    const overallStatus = Object.values(healthChecks).every(
+      check => check.status === 'healthy' || check.status === 'not_configured'
+    ) ? 'healthy' : 'degraded';
+
+    res.json({
+      success: true,
+      status: overallStatus,
+      timestamp: new Date().toISOString(),
+      response_time: totalResponseTime,
+      environment: process.env.NODE_ENV || 'development',
+      checks: healthChecks,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      response_time: Date.now() - startTime,
+      error: error.message,
+    });
+  }
+});
+
+/**
+ * GET /api/metrics
+ * Métricas básicas do servidor
+ */
+app.get('/api/metrics', (req, res) => {
+  const startTime = process.hrtime();
+  
   res.json({
     success: true,
-    message: 'Evolution API Backend está funcionando',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    metrics: {
+      uptime: process.uptime(),
+      memory: {
+        ...process.memoryUsage(),
+        free: process.memoryUsage().heapTotal - process.memoryUsage().heapUsed,
+      },
+      cpu: process.cpuUsage(),
+      load_average: process.platform !== 'win32' ? require('os').loadavg() : null,
+      platform: {
+        node_version: process.version,
+        platform: process.platform,
+        arch: process.arch,
+      },
+      environment: process.env.NODE_ENV || 'development',
+    },
   });
 });
 

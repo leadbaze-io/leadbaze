@@ -1,0 +1,112 @@
+import { Sun, Moon, Monitor } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useTheme } from '../contexts/ThemeContext'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu'
+import { Button } from './ui/button'
+
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+
+  const themes = [
+    { value: 'light', label: 'Claro', icon: Sun },
+    { value: 'dark', label: 'Escuro', icon: Moon },
+    { value: 'system', label: 'Sistema', icon: Monitor },
+  ] as const
+
+  const currentTheme = themes.find(t => t.value === theme)
+  const CurrentIcon = currentTheme?.icon || Monitor
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-9 h-9 p-0 relative overflow-hidden"
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={theme}
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <CurrentIcon className="h-4 w-4" />
+            </motion.div>
+          </AnimatePresence>
+          <span className="sr-only">Alternar tema</span>
+        </Button>
+      </DropdownMenuTrigger>
+      
+      <DropdownMenuContent align="end" className="w-36">
+        {themes.map((themeOption) => {
+          const Icon = themeOption.icon
+          const isActive = theme === themeOption.value
+          
+          return (
+            <DropdownMenuItem
+              key={themeOption.value}
+              onClick={() => setTheme(themeOption.value)}
+              className={`cursor-pointer ${isActive ? 'bg-blue-50 text-blue-600' : ''}`}
+            >
+              <div className="flex items-center space-x-2">
+                <Icon className="h-4 w-4" />
+                <span>{themeOption.label}</span>
+                {isActive && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="ml-auto w-2 h-2 bg-blue-600 rounded-full"
+                  />
+                )}
+              </div>
+            </DropdownMenuItem>
+          )
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+// Versão compacta para mobile/navbar
+export function ThemeToggleCompact() {
+  const { isDark, setTheme } = useTheme()
+
+  const toggleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark')
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleTheme}
+      className="w-9 h-9 p-0 relative overflow-hidden"
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={isDark ? 'dark' : 'light'}
+          initial={{ rotate: -180, opacity: 0 }}
+          animate={{ rotate: 0, opacity: 1 }}
+          exit={{ rotate: 180, opacity: 0 }}
+          transition={{ duration: 0.3, type: "spring" }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          {isDark ? (
+            <Sun className="h-4 w-4 text-yellow-500" />
+          ) : (
+            <Moon className="h-4 w-4 text-blue-600" />
+          )}
+        </motion.div>
+      </AnimatePresence>
+      <span className="sr-only">Alternar tema</span>
+    </Button>
+  )
+}
