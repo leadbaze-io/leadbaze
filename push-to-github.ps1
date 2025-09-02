@@ -37,3 +37,4 @@ Write-Host "🌐 Acesse: https://github.com/leadbaze-io/leadbaze" -ForegroundCol
 Write-Host ""
 Write-Host "📞 Suporte: contato@mindflowdigital.com.br" -ForegroundColor Yellow
 
+

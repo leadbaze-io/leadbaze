@@ -5,7 +5,7 @@
 
 // Configuração do backend
 const BACKEND_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadflow-dtev.onrender.com' // Backend deployado no Render
+  ? 'https://leadbaze-backend.onrender.com' // Backend deployado no Render
   : 'http://localhost:3001';
 
 export interface EvolutionInstance {
