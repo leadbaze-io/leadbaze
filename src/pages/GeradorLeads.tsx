@@ -4,7 +4,8 @@ import { Zap, ArrowLeft } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { LeadService } from '../lib/leadService'
 import { LeadGeneratorPro } from '../components/LeadGeneratorPro'
-import type { LeadList, User, Lead } from '../types'
+import type { LeadList, Lead } from '../types'
+import type { User } from '@supabase/supabase-js'
 
 export default function GeradorLeads() {
   const [user, setUser] = useState<User | null>(null)

@@ -247,7 +247,7 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
       const result = await originalMethod.apply(this, args)
       const duration = performance.now() - start
       
-      logger.logPerformance(`${target.constructor.name}.${propertyKey}`, duration, {
+      logger.logPerformance(`${(target as any).constructor.name}.${propertyKey}`, duration, {
         args: args.length,
         success: true,
       })
@@ -256,7 +256,7 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
     } catch (error) {
       const duration = performance.now() - start
       
-      logger.error(`Error in ${target.constructor.name}.${propertyKey}`, {
+      logger.error(`Error in ${(target as any).constructor.name}.${propertyKey}`, {
         duration,
         args: args.length,
       }, error as Error)

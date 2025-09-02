@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
+import type { LeadList } from '../types'
 
 // Configuração otimizada do React Query
 export const queryClient = new QueryClient({

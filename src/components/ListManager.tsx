@@ -37,7 +37,9 @@ interface ListManagerProps {
   onSelectList?: (list: LeadList) => void
 }
 
-export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
+export function ListManager({ onSelectList }: ListManagerProps) {
+  // onSelectList is used in the handleListClick function below
+  void onSelectList; // Suppress unused variable warning
   const [lists, setLists] = useState<LeadList[]>([])
   const [filteredLists, setFilteredLists] = useState<LeadList[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -48,28 +50,6 @@ export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'archived'>('all')
   
   const { toast } = useToast()
-
-  useEffect(() => {
-    loadLists()
-  }, [])
-
-  useEffect(() => {
-    filterAndSortLists()
-  }, [lists, searchTerm, sortBy, sortOrder, filterStatus, filterAndSortLists])
-
-  const loadLists = async () => {
-    try {
-      setIsLoading(true)
-      setError(null)
-      const userLists = await LeadService.getUserLeadLists()
-      setLists(userLists)
-    } catch (err) {
-      console.error('Erro ao carregar listas:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao carregar listas')
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const filterAndSortLists = useCallback(() => {
     let filtered = [...lists]
@@ -105,8 +85,8 @@ export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
           break
         case 'created_at':
         default:
-          valueA = new Date(a.created_at)
-          valueB = new Date(b.created_at)
+          valueA = new Date(a.created_at).getTime()
+          valueB = new Date(b.created_at).getTime()
           break
       }
 
@@ -117,6 +97,28 @@ export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
 
     setFilteredLists(filtered)
   }, [lists, searchTerm, sortBy, sortOrder, filterStatus])
+
+  useEffect(() => {
+    loadLists()
+  }, [])
+
+  useEffect(() => {
+    filterAndSortLists()
+  }, [filterAndSortLists])
+
+  const loadLists = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      const userLists = await LeadService.getUserLeadLists()
+      setLists(userLists)
+    } catch (err) {
+      console.error('Erro ao carregar listas:', err)
+      setError(err instanceof Error ? err.message : 'Erro ao carregar listas')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleDeleteList = async (listId: string, listName: string) => {
     if (!confirm(`Tem certeza que deseja deletar a lista "${listName}"? Esta ação não pode ser desfeita.`)) {
@@ -283,7 +285,7 @@ export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
             </div>
 
             {/* Filtro por Status */}
-            <Select value={filterStatus} onValueChange={(value: string) => setFilterStatus(value)}>
+            <Select value={filterStatus} onValueChange={(value: 'all' | 'active' | 'archived') => setFilterStatus(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
@@ -297,8 +299,8 @@ export function ListManager({ onSelectList = () => {} }: ListManagerProps) {
             {/* Ordenação */}
             <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
               const [field, order] = value.split('-')
-              setSortBy(field as any)
-              setSortOrder(order as any)
+              setSortBy(field as 'created_at' | 'name' | 'total_leads')
+              setSortOrder(order as 'asc' | 'desc')
             }}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue />

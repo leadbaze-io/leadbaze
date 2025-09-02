@@ -6,7 +6,8 @@ import { ListManager } from '../components/ListManager'
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import type { LeadList, User } from '../types'
+import type { LeadList } from '../types'
+import type { User } from '@supabase/supabase-js'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)

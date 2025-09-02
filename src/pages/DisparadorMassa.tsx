@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Send, MessageSquare, Settings, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from '../hooks/use-toast'
@@ -12,7 +12,8 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
 import { EvolutionApiService } from '../lib/evolutionApiService'
-import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, User } from '../types'
+import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead } from '../types'
+import type { User } from '@supabase/supabase-js'
 
 export default function DisparadorMassa() {
   const navigate = useNavigate()
@@ -945,7 +946,7 @@ export default function DisparadorMassa() {
             {/* Componente de Conexão WhatsApp */}
             <WhatsAppConnection
               userId={user?.id}
-              userName={user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+              userName={user?.user_metadata?.full_name as string || user?.email?.split('@')[0]}
               onConnectionSuccess={handleConnectionSuccess}
               onConnectionError={handleConnectionError}
               onDisconnect={handleDisconnect}

@@ -65,10 +65,10 @@ export function ConnectivityTest({
         })
       } else {
         setConnectionStatus('error')
-        setErrorDetails(error.message || 'Erro de conexão desconhecido')
+        setErrorDetails(err.message || 'Erro de conexão desconhecido')
         toast({
           title: "Erro de Conexão",
-          description: error.message || "Não foi possível conectar ao N8N",
+          description: err.message || "Não foi possível conectar ao N8N",
           variant: "destructive",
         })
       }
