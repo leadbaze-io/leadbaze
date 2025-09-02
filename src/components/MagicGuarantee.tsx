@@ -151,18 +151,7 @@ export default function MagicGuarantee() {
           </motion.div>
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-16"
-        >
-          <div className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-semibold text-lg shadow-lg">
-            <CheckCircle className="w-5 h-5" />
-            Comece hoje mesmo com garantia total
-          </div>
-        </motion.div>
+
       </div>
     </section>
   )
