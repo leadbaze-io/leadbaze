@@ -172,20 +172,20 @@ export class LeadService {
       }
       
       // Para outros erros, retornar erro específico
-      let errorMessage = 'Erro interno no serviço de extração'
+      let finalErrorMessage = 'Erro interno no serviço de extração'
       
-      if (error.message.includes('timeout')) {
-        errorMessage = 'Timeout: A extração está demorando mais que o esperado. Tente novamente com menos leads.'
-      } else if (error.response?.status >= 500) {
-        errorMessage = 'Erro no servidor de extração. Tente novamente em alguns minutos.'
-      } else if (error.message.includes('URL do Google Maps inválida')) {
-        errorMessage = 'URL inválida. Cole uma URL de busca ou lugar do Google Maps (ex: https://www.google.com/maps/search/restaurantes+sp)'
-      } else if (error.message.includes('resposta vazia')) {
-        errorMessage = 'N8N não está respondendo corretamente. Verifique se o webhook está ativo e configurado.'
-      } else if (error.message.includes('Nenhum lead encontrado')) {
-        errorMessage = 'N8N não retornou dados válidos. Verifique se o workflow está funcionando corretamente.'
-      } else if (error.message) {
-        errorMessage = error.message
+      if (errorMessage.includes('timeout')) {
+        finalErrorMessage = 'Timeout: A extração está demorando mais que o esperado. Tente novamente com menos leads.'
+      } else if ((error as any)?.response?.status >= 500) {
+        finalErrorMessage = 'Erro no servidor de extração. Tente novamente em alguns minutos.'
+      } else if (errorMessage.includes('URL do Google Maps inválida')) {
+        finalErrorMessage = 'URL inválida. Cole uma URL de busca ou lugar do Google Maps (ex: https://www.google.com/maps/search/restaurantes+sp)'
+      } else if (errorMessage.includes('resposta vazia')) {
+        finalErrorMessage = 'N8N não está respondendo corretamente. Verifique se o webhook está ativo e configurado.'
+      } else if (errorMessage.includes('Nenhum lead encontrado')) {
+        finalErrorMessage = 'N8N não retornou dados válidos. Verifique se o workflow está funcionando corretamente.'
+      } else if (errorMessage) {
+        finalErrorMessage = errorMessage
       }
 
       return {
@@ -193,7 +193,7 @@ export class LeadService {
         leads: [],
         total_found: 0,
         search_url: searchUrl,
-        error: errorMessage
+        error: finalErrorMessage
       }
     }
   }

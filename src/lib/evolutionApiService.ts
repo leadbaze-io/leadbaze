@@ -43,7 +43,8 @@ export class EvolutionApiService {
       return data
     } catch (error: unknown) {
       console.error('❌ Erro ao enviar campanha ao backend:', error)
-      return { success: false, error: error.message || 'Erro desconhecido' }
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      return { success: false, error: errorMessage || 'Erro desconhecido' }
     }
   }
   /**

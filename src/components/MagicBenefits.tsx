@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Building2, MessageCircle, Users } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 export default function MagicBenefits() {
   const [currentLogoIndex, setCurrentLogoIndex] = useState(0)
