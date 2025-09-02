@@ -61,7 +61,7 @@ export default function MagicCTA() {
               </span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Junte-se a milhares de empresas que já transformaram sua prospecção com o LeadBaze
+              Junte-se a mais de 1532 empresas que impulsionam sua prospecção com o LeadBaze
             </p>
           </motion.div>
 
@@ -75,7 +75,7 @@ export default function MagicCTA() {
             <Link to="/login">
               <ShimmerButton className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 <ArrowRight className="w-5 h-5 mr-2" />
-                Contratar
+                Começar Agora
               </ShimmerButton>
             </Link>
           </motion.div>
