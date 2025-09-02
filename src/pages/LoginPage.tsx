@@ -45,6 +45,10 @@ export default function LoginPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         navigate('/dashboard')
+        // Scroll para o topo após navegação
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
       }
     }
     checkUser()
@@ -54,6 +58,10 @@ export default function LoginPage() {
       async (event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
           navigate('/dashboard')
+          // Scroll para o topo após navegação
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
         }
       }
     )
@@ -78,6 +86,10 @@ export default function LoginPage() {
         // Aguardar um pouco para o listener processar
         setTimeout(() => {
           navigate('/dashboard')
+          // Scroll para o topo após navegação
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
         }, 1000)
       }
     } catch {

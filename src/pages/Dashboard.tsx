@@ -16,12 +16,20 @@ export default function Dashboard() {
         const currentUser = await getCurrentUser()
         if (!currentUser) {
           navigate('/login')
+          // Scroll para o topo após navegação
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
           return
         }
         setUser(currentUser)
       } catch (error) {
         console.error('Erro ao verificar usuário:', error)
         navigate('/login')
+        // Scroll para o topo após navegação
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
       } finally {
         setIsLoading(false)
       }
@@ -91,7 +99,13 @@ export default function Dashboard() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div 
             className="bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition-all transform hover:-translate-y-1"
-            onClick={() => navigate('/gerador')}
+            onClick={() => {
+              navigate('/gerador')
+              // Scroll para o topo após navegação
+              setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }, 100)
+            }}
           >
             <div className="flex items-center justify-between">
               <div>
@@ -104,7 +118,13 @@ export default function Dashboard() {
 
           <div 
             className="bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-6 text-white cursor-pointer hover:shadow-lg transition-all transform hover:-translate-y-1"
-            onClick={() => navigate('/disparador')}
+            onClick={() => {
+              navigate('/disparador')
+              // Scroll para o topo após navegação
+              setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }, 100)
+            }}
           >
             <div className="flex items-center justify-between">
               <div>

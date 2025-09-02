@@ -19,12 +19,24 @@ export default function MagicPricingPlans() {
       const user = await getCurrentUser()
       if (user) {
         navigate('/dashboard')
+        // Scroll para o topo após navegação
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
       } else {
         navigate('/login')
+        // Scroll para o topo após navegação
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
       }
     } catch (error) {
       console.error('Error checking user:', error)
       navigate('/login')
+      // Scroll para o topo após navegação
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 100)
     }
   }
 

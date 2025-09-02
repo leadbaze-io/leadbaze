@@ -17,6 +17,10 @@ export default function GeradorLeads() {
       const currentUser = await getCurrentUser()
       if (!currentUser) {
         navigate('/login')
+        // Scroll para o topo após navegação
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
         return
       }
       setUser(currentUser)

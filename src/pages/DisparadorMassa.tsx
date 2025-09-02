@@ -1009,7 +1009,13 @@ export default function DisparadorMassa() {
         {/* Navigation */}
         <div className="text-center mt-8">
           <button 
-            onClick={() => navigate('/dashboard')}
+            onClick={() => {
+              navigate('/dashboard')
+              // Scroll para o topo após navegação
+              setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }, 100)
+            }}
             className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 hover:shadow-md"
           >
             <ArrowLeft className="w-4 h-4" />
