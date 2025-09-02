@@ -495,7 +495,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectContent className="bg-popover border border-border shadow-lg">
                     <SelectItem value="10">10 Leads</SelectItem>
                     <SelectItem value="20">20 Leads</SelectItem>
                     <SelectItem value="30">30 Leads</SelectItem>
@@ -569,7 +569,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     <CardDescription className="flex items-center space-x-2">
                       <span>Selecione os leads que deseja salvar</span>
                       {!showSaveOptions && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                           💾 Opções de salvar disponíveis
                         </span>
                       )}
@@ -596,9 +596,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 </div>
 
                 {/* Filtros */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 p-4 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 p-4 bg-muted rounded-lg">
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Buscar</Label>
+                    <Label className="text-xs font-medium text-foreground">Buscar</Label>
                     <Input
                       placeholder="Nome ou endereço..."
                       value={searchTerm}
@@ -611,7 +611,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Cidade</Label>
+                    <Label className="text-xs font-medium text-foreground">Cidade</Label>
                     <Input
                       placeholder="Filtrar por cidade..."
                       value={cityFilter}
@@ -624,7 +624,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Avaliação Mínima</Label>
+                    <Label className="text-xs font-medium text-foreground">Avaliação Mínima</Label>
                     <Select 
                       value={ratingFilter} 
                       onValueChange={(value) => {
@@ -635,7 +635,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       <SelectTrigger className="h-8 text-sm">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                      <SelectContent className="bg-popover border border-border shadow-lg">
                         <SelectItem value="all">Todas</SelectItem>
                         <SelectItem value="4">4+ estrelas</SelectItem>
                         <SelectItem value="3">3+ estrelas</SelectItem>
@@ -645,7 +645,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Avaliações</Label>
+                    <Label className="text-xs font-medium text-foreground">Avaliações</Label>
                     <Select 
                       value={reviewsFilter} 
                       onValueChange={(value) => {
@@ -656,7 +656,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       <SelectTrigger className="h-8 text-sm">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                      <SelectContent className="bg-popover border border-border shadow-lg">
                         <SelectItem value="all">Todas</SelectItem>
                                                  <SelectItem value="10">10+ Avaliações</SelectItem>
                          <SelectItem value="25">25+ Avaliações</SelectItem>
@@ -669,7 +669,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-gray-700">Website</Label>
+                    <Label className="text-xs font-medium text-foreground">Website</Label>
                                          <Select 
                        value={websiteFilter} 
                        onValueChange={(value) => {
@@ -680,7 +680,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                        <SelectTrigger className="h-8 text-sm">
                          <SelectValue />
                        </SelectTrigger>
-                       <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                       <SelectContent className="bg-popover border border-border shadow-lg">
                          <SelectItem value="all">Todos</SelectItem>
                          <SelectItem value="with">Com website</SelectItem>
                          <SelectItem value="without">Sem website</SelectItem>
@@ -689,7 +689,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                                      <div>
-                     <Label className="text-xs font-medium text-gray-700">Leads por Página</Label>
+                     <Label className="text-xs font-medium text-foreground">Leads por Página</Label>
                      <Select 
                        value={leadsPerPage} 
                        onValueChange={(value) => {
@@ -700,7 +700,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                        <SelectTrigger className="h-8 text-sm">
                          <SelectValue />
                        </SelectTrigger>
-                       <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                       <SelectContent className="bg-popover border border-border shadow-lg">
                          <SelectItem value="9">9 leads</SelectItem>
                          <SelectItem value="18">18 leads</SelectItem>
                          <SelectItem value="27">27 leads</SelectItem>
@@ -721,8 +721,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       transition={{ delay: index * 0.05 }}
                       className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 rounded-lg p-4 ${
                         lead.selected 
-                          ? 'border-blue-500 bg-blue-50 shadow-lg' 
-                          : 'border-gray-200 hover:border-blue-300 bg-white'
+                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 shadow-lg' 
+                          : 'border-border hover:border-blue-300 bg-card'
                       }`}
                       onClick={() => toggleLeadSelectionByFilteredIndex(index)}
                     >
@@ -743,8 +743,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
                       {/* Nome do estabelecimento */}
                       <div className="mb-3">
-                        <h3 className="font-semibold text-gray-900 text-sm truncate mb-1">{lead.name}</h3>
-                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <h3 className="font-semibold text-foreground text-sm truncate mb-1">{lead.name}</h3>
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           <MapPin className="w-3 h-3" />
                           <span className="truncate">{lead.address}</span>
                         </div>
@@ -765,7 +765,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           </div>
                         )}
                         {!lead.phone && !lead.website && (
-                          <div className="flex items-center space-x-2 text-xs text-gray-400">
+                          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                             <Eye className="w-3 h-3" />
                             <span>Contato não disponível</span>
                           </div>
@@ -792,7 +792,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 {/* Paginação */}
                 {totalPages > 1 && (
                   <div className="flex items-center justify-between mt-6 pt-4 border-t">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-muted-foreground">
                       Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
                     </div>
                     <div className="flex space-x-2">
@@ -888,7 +888,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione uma lista..." />
                         </SelectTrigger>
-                        <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                        <SelectContent className="bg-popover border border-border shadow-lg">
                           {existingLists.map((list) => (
                             <SelectItem key={list.id} value={list.id}>
                               {list.name} ({list.total_leads} leads)
