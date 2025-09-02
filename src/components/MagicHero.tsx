@@ -5,6 +5,7 @@ import { AnimatedBeam } from './magicui/animated-beam'
 import { BorderBeam } from './magicui/border-beam'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { AnimatedCounter } from './magicui/animated-counter'
+import LGPDImage from '../assets/LGPD2.png'
 
 export default function MagicHero() {
   return (
@@ -70,10 +71,37 @@ export default function MagicHero() {
           {/* Selo LGPD */}
           <AnimatedBeam delay={1.0}>
             <div className="flex justify-center mb-8">
-              <div className="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span>LGPD Compliant</span>
-              </div>
+              <motion.div
+                initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: 1.0,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15
+                }}
+                whileHover={{ 
+                  scale: 1.1, 
+                  rotate: 5,
+                  transition: { duration: 0.3 }
+                }}
+                className="relative group cursor-pointer"
+              >
+                <img 
+                  src={LGPDImage} 
+                  alt="LGPD Compliant" 
+                  className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300"
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.8, duration: 0.5 }}
+                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-md border border-gray-200"
+                >
+                  LGPD Compliant
+                </motion.div>
+              </motion.div>
             </div>
           </AnimatedBeam>
 
