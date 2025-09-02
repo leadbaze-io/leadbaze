@@ -18,7 +18,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
 
   // Filtrar e ordenar leads
   const filteredAndSortedLeads = useMemo(() => {
-    let filtered = leads.filter(lead => {
+    const filtered = leads.filter(lead => {
       const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            lead.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (lead.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) || false)

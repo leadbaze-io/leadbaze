@@ -146,8 +146,8 @@ export class LeadService {
       
       // Se houver erro de conectividade, usar dados demo
       const errorMessage = error instanceof Error ? error.message : String(error)
-      const errorCode = (error as any)?.code
-      const errorResponse = (error as any)?.response
+      const errorCode = (error as { code?: string })?.code
+      const errorResponse = (error as { response?: { status?: number } })?.response
       
       if (errorCode === 'ERR_NETWORK' || 
           errorMessage.includes('Network Error') || 
@@ -176,7 +176,7 @@ export class LeadService {
       
       if (errorMessage.includes('timeout')) {
         finalErrorMessage = 'Timeout: A extração está demorando mais que o esperado. Tente novamente com menos leads.'
-      } else if ((error as any)?.response?.status >= 500) {
+      } else if (errorResponse?.status && errorResponse.status >= 500) {
         finalErrorMessage = 'Erro no servidor de extração. Tente novamente em alguns minutos.'
       } else if (errorMessage.includes('URL do Google Maps inválida')) {
         finalErrorMessage = 'URL inválida. Cole uma URL de busca ou lugar do Google Maps (ex: https://www.google.com/maps/search/restaurantes+sp)'
@@ -274,7 +274,7 @@ export class LeadService {
     const combinedLeads = [...existingLeads]
     
     cleanNewLeads.forEach(newLead => {
-      const isDuplicate = existingLeads.some((existing: any) => 
+      const isDuplicate = existingLeads.some((existing: Lead) => 
         existing.name.toLowerCase() === newLead.name.toLowerCase() &&
         existing.address.toLowerCase() === newLead.address.toLowerCase()
       )
@@ -465,10 +465,10 @@ export class LeadService {
     return LeadService.normalizePhone(phoneUnformatted)
   }
 
-  private static normalizeRating(rating?: any): number | undefined {
+  private static normalizeRating(rating?: unknown): number | undefined {
     if (!rating) return undefined
     
-    const num = parseFloat(rating)
+    const num = parseFloat(String(rating))
     if (isNaN(num)) return undefined
     
     // Garantir que está entre 0 e 5
