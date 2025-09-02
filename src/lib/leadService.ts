@@ -214,7 +214,7 @@ export class LeadService {
 
     // Remover propriedades temporárias dos leads
     const cleanLeads = leads.map(lead => {
-      const { selected, ...cleanLead } = lead
+      const { selected: _selected, ...cleanLead } = lead
       return cleanLead
     })
 
@@ -266,7 +266,7 @@ export class LeadService {
     // Combinar leads existentes com novos
     const existingLeads = existingList.leads || []
     const cleanNewLeads = newLeads.map(lead => {
-      const { selected, ...cleanLead } = lead
+      const { selected: _selected, ...cleanLead } = lead
       return cleanLead
     })
 

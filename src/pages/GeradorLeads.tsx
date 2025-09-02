@@ -4,11 +4,11 @@ import { Zap, ArrowLeft } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { LeadService } from '../lib/leadService'
 import { LeadGeneratorPro } from '../components/LeadGeneratorPro'
-import type { LeadList } from '../types'
+import type { LeadList, User, Lead } from '../types'
 
 
 export default function GeradorLeads() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [existingLists, setExistingLists] = useState<LeadList[]>([])
   const navigate = useNavigate()
 
@@ -33,7 +33,7 @@ export default function GeradorLeads() {
     initializePage()
   }, [navigate])
 
-  const handleLeadsGenerated = (leads: any[]) => {
+  const handleLeadsGenerated = (leads: Lead[]) => {
     console.log('Leads gerados:', leads.length)
     // Callback quando leads são gerados - pode ser usado para analytics, etc.
   }

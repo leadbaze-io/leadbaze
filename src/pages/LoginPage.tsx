@@ -1,29 +1,22 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { Eye, EyeOff, Loader, Mail, Lock, User } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LogoImage from '../components/LogoImage'
 
-// Schemas de validação
-const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres')
-})
+// Tipos para os formulários
+type LoginForm = {
+  email: string
+  password: string
+}
 
-const registerSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Senhas não coincidem",
-  path: ["confirmPassword"]
-})
-
-type LoginForm = z.infer<typeof loginSchema>
-type RegisterForm = z.infer<typeof registerSchema>
+type RegisterForm = {
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
+}
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -87,7 +80,7 @@ export default function LoginPage() {
           navigate('/dashboard')
         }, 1000)
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Erro interno. Tente novamente.' })
     } finally {
       setIsLoading(false)
@@ -118,7 +111,7 @@ export default function LoginPage() {
         })
         // O redirecionamento será feito pelo listener de sessão
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Erro interno. Tente novamente.' })
     } finally {
       setIsLoading(false)

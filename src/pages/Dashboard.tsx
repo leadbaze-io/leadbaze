@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { Loader, Send, Plus } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
-import type { LeadList } from '../types'
+import type { LeadList, User } from '../types'
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
 

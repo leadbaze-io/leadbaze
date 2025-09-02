@@ -10,7 +10,7 @@ export interface LeadList {
   id: string
   user_id: string
   name: string
-  leads: any[] // JSON array de leads
+  leads: Lead[] // JSON array de leads
   total_leads: number
   created_at: string
 }

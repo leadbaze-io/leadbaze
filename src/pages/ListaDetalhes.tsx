@@ -266,7 +266,7 @@ export default function ListaDetalhes() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {leadList.leads.filter((lead: any) => lead.phone).length}
+                  {leadList.leads.filter((lead: Lead) => lead.phone).length}
                 </p>
                 <p className="text-gray-600 text-sm">Com Telefone</p>
               </div>
@@ -280,7 +280,7 @@ export default function ListaDetalhes() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {leadList.leads.filter((lead: any) => lead.rating && lead.rating >= 4).length}
+                  {leadList.leads.filter((lead: Lead) => lead.rating && lead.rating >= 4).length}
                 </p>
                 <p className="text-gray-600 text-sm">4+ Estrelas</p>
               </div>
@@ -294,7 +294,7 @@ export default function ListaDetalhes() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  {leadList.leads.filter((lead: any) => lead.website).length}
+                  {leadList.leads.filter((lead: Lead) => lead.website).length}
                 </p>
                 <p className="text-gray-600 text-sm">Com Website</p>
               </div>

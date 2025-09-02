@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Send, MessageSquare, Settings, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -12,11 +12,11 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
 import { EvolutionApiService } from '../lib/evolutionApiService'
-import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead } from '../types'
+import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, User } from '../types'
 
 export default function DisparadorMassa() {
   const navigate = useNavigate()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [lists, setLists] = useState<LeadList[]>([])
   const [selectedLists, setSelectedLists] = useState<string[]>([])
@@ -55,9 +55,9 @@ export default function DisparadorMassa() {
         console.error('Erro ao carregar dados:', error)
       })
     }
-  }, [user, loading])
+  }, [user, loading, loadData])
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       console.log('🚀 Iniciando loadData para usuário:', user?.id)
       const userLists = await LeadService.getUserLeadLists()
@@ -99,7 +99,7 @@ export default function DisparadorMassa() {
         variant: 'destructive'
       })
     }
-  }
+  }, [user])
 
   // Carregar campanhas do usuário
   const loadUserCampaigns = async (): Promise<BulkCampaign[]> => {
