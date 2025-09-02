@@ -58,16 +58,7 @@ export default function MagicFAQ() {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold text-sm shadow-lg mb-8"
-          >
-            <HelpCircle className="w-4 h-4" />
-            ❓ 8º Dobra - FAQ: Quebra de Objeções
-          </motion.div>
+
 
           {/* Main Heading */}
           <motion.div
@@ -176,3 +167,4 @@ export default function MagicFAQ() {
     </section>
   )
 }
+

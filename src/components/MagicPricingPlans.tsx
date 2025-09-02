@@ -1,15 +1,32 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Star, Zap, TrendingUp, Crown } from 'lucide-react'
+import { getCurrentUser } from '../lib/supabaseClient'
 
 export default function MagicPricingPlans() {
   const [isVisible, setIsVisible] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<'start' | 'scale' | 'enterprise'>('scale')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100)
     return () => clearTimeout(timer)
   }, [])
+
+  const handleStartNow = async () => {
+    try {
+      const user = await getCurrentUser()
+      if (user) {
+        navigate('/dashboard')
+      } else {
+        navigate('/login')
+      }
+    } catch (error) {
+      console.error('Error checking user:', error)
+      navigate('/login')
+    }
+  }
 
   const plans = [
     {
@@ -69,7 +86,7 @@ export default function MagicPricingPlans() {
   ]
 
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-br from-gray-50 via-white to-blue-50 overflow-hidden">
+    <section id="pricing-plans-section" className="relative py-24 md:py-32 bg-gradient-to-br from-gray-50 via-white to-blue-50 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-3xl"></div>
@@ -78,16 +95,7 @@ export default function MagicPricingPlans() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-sm shadow-lg mb-8"
-          >
-            <Star className="w-4 h-4" />
-            🚀 7º Dobra - OFERTA
-          </motion.div>
+
 
           {/* Main Heading */}
           <motion.div
@@ -208,7 +216,10 @@ export default function MagicPricingPlans() {
             <p className="text-gray-600 mb-6">
               Escolha seu plano e comece a gerar leads hoje mesmo com nossa garantia de 30 dias.
             </p>
-            <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg">
+            <button 
+              onClick={handleStartNow}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg"
+            >
               Começar Agora
             </button>
           </div>
@@ -217,3 +228,4 @@ export default function MagicPricingPlans() {
     </section>
   )
 }
+

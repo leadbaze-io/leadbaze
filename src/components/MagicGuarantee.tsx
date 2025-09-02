@@ -21,16 +21,7 @@ export default function MagicGuarantee() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold text-sm shadow-lg mb-8"
-          >
-            <Shield className="w-4 h-4" />
-            🛡️ 6º Dobra - GARANTIA
-          </motion.div>
+
 
           {/* Main Heading */}
           <motion.div
