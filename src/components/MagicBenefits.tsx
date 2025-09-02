@@ -1,80 +1,51 @@
 import { useState, useEffect, useRef } from 'react'
-import { Clock, Target, TrendingUp, Shield, Zap, DollarSign } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Building2, MessageCircle, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function MagicBenefits() {
-  const [visibleItems, setVisibleItems] = useState(new Set())
+  const [currentLogoIndex, setCurrentLogoIndex] = useState(0)
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const itemIndex = parseInt(entry.target.getAttribute('data-benefit') || '0')
-            setVisibleItems(prev => new Set([...prev, itemIndex]))
-          }
-        })
-      },
-      { threshold: 0.2 }
-    )
+  // Logos das empresas B2B (placeholders - você pode substituir por logos reais)
+  const companyLogos = [
+    { name: "TechCorp", color: "from-blue-500 to-blue-600" },
+    { name: "DataFlow", color: "from-purple-500 to-purple-600" },
+    { name: "InnovateLab", color: "from-green-500 to-green-600" },
+    { name: "FutureTech", color: "from-orange-500 to-orange-600" },
+    { name: "SmartSolutions", color: "from-red-500 to-red-600" },
+    { name: "DigitalCore", color: "from-indigo-500 to-indigo-600" }
+  ]
 
-    const benefitElements = sectionRef.current?.querySelectorAll('[data-benefit]')
-    benefitElements?.forEach(el => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
-
+  // Benefícios principais
   const benefits = [
     {
-      icon: Clock,
-      title: "Economia de Tempo",
-      description: "Automatize o processo de prospecção que levaria horas para ser feito manualmente. Gere centenas de leads em minutos.",
-      stat: "90%",
-      statLabel: "Menos Tempo",
+      icon: Building2,
+      title: "Mais de 2MM de contatos B2B mapeados",
+      description: "Base de dados massiva com empresas de todos os segmentos e regiões do Brasil.",
       color: "blue"
     },
     {
-      icon: Target,
-      title: "Maior Precisão",
-      description: "Dados extraídos diretamente do Google Maps garantem informações atualizadas e precisas dos estabelecimentos.",
-      stat: "95%",
-      statLabel: "Precisão",
+      icon: MessageCircle,
+      title: "87% de Entrega no WhatsApp",
+      description: "Taxa de entrega excepcional garantindo que suas mensagens cheguem aos leads.",
       color: "green"
     },
     {
-      icon: TrendingUp,
-      title: "Escalabilidade",
-      description: "Processe milhares de leads simultaneamente, sem limitações de volume ou região geográfica.",
-      stat: "1000+",
-      statLabel: "Leads/hora",
+      icon: Users,
+      title: "23% Taxa de resposta dos leads",
+      description: "Percentual acima da média do mercado, indicando qualidade dos contatos gerados.",
       color: "purple"
-    },
-    {
-      icon: DollarSign,
-      title: "Maior ROI",
-      description: "Invista menos em prospecção e obtenha mais resultados com leads de alta qualidade.",
-      stat: "300%",
-      statLabel: "Aumento ROI",
-      color: "orange"
-    },
-    {
-      icon: Shield,
-      title: "Dados Seguros",
-      description: "Todas as informações são processadas com segurança e armazenadas de forma criptografada.",
-      stat: "100%",
-      statLabel: "Segurança",
-      color: "red"
-    },
-    {
-      icon: Zap,
-      title: "Integração Fácil",
-      description: "Conecte facilmente com seu CRM ou ferramenta de vendas através de nossa API ou exports.",
-      stat: "5min",
-      statLabel: "Setup",
-      color: "yellow"
     }
   ]
+
+  // Rotação automática dos logos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLogoIndex((prev) => (prev + 1) % companyLogos.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [companyLogos.length])
 
   const getColorClasses = (color: string) => {
     const colors = {
@@ -95,24 +66,6 @@ export default function MagicBenefits() {
         icon: "text-purple-600",
         border: "border-purple-200",
         gradient: "from-purple-500 to-purple-600"
-      },
-      orange: {
-        bg: "bg-orange-50",
-        icon: "text-orange-600",
-        border: "border-orange-200",
-        gradient: "from-orange-500 to-orange-600"
-      },
-      red: {
-        bg: "bg-red-50",
-        icon: "text-red-600",
-        border: "border-red-200",
-        gradient: "from-red-500 to-red-600"
-      },
-      yellow: {
-        bg: "bg-yellow-50",
-        icon: "text-yellow-600",
-        border: "border-yellow-200",
-        gradient: "from-yellow-500 to-yellow-600"
       }
     }
     return colors[color as keyof typeof colors] || colors.blue
@@ -123,93 +76,119 @@ export default function MagicBenefits() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <TrendingUp className="w-4 h-4" />
-            <span>Por que escolher o LeadBaze?</span>
-          </div>
-          
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Benefícios que 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Transformam</span>
-            <br />
-            seu Negócio
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+            Líderes de Vendas confiam na <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LeadBaze</span>!
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Descubra como o LeadBaze pode revolucionar sua estratégia de prospecção e acelerar o crescimento da sua empresa
-          </p>
+          
+          {/* Carrossel de Logos */}
+          <div className="relative overflow-hidden mb-12">
+            <div className="flex justify-center">
+              <motion.div
+                key={currentLogoIndex}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="flex items-center space-x-8"
+              >
+                {companyLogos.map((logo, index) => (
+                  <motion.div
+                    key={logo.name}
+                    initial={{ opacity: 0.3, scale: 0.9 }}
+                    animate={{ 
+                      opacity: index === currentLogoIndex ? 1 : 0.3,
+                      scale: index === currentLogoIndex ? 1 : 0.9
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col items-center space-y-2"
+                  >
+                    <div className={`w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br ${logo.color} rounded-xl flex items-center justify-center text-white font-bold text-sm md:text-base shadow-lg`}>
+                      {logo.name.charAt(0)}
+                    </div>
+                    <span className="text-xs md:text-sm text-gray-600 font-medium">{logo.name}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+            
+            {/* Indicadores */}
+            <div className="flex justify-center space-x-2 mt-6">
+              {companyLogos.map((_, index) => (
+                <motion.button
+                  key={index}
+                  onClick={() => setCurrentLogoIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentLogoIndex ? 'bg-blue-600 w-6' : 'bg-gray-300'
+                  }`}
+                  whileHover={{ scale: 1.2 }}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => {
             const colorClasses = getColorClasses(benefit.color)
             
             return (
-              <div
+              <motion.div
                 key={index}
-                data-benefit={index}
-                className={`group relative bg-white p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-700 transform ${
-                  visibleItems.has(index) 
-                    ? 'translate-y-0 opacity-100 scale-100' 
-                    : 'translate-y-8 opacity-0 scale-95'
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: index * 0.2,
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20
+                }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.3 }
+                }}
+                className="group relative bg-white p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-500"
               >
                 {/* Background Gradient Effect */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${colorClasses.bg} rounded-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-300`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${colorClasses.bg} rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}></div>
                 
                 {/* Content */}
                 <div className="relative z-10">
                   {/* Icon */}
-                  <div className={`inline-flex items-center justify-center w-16 h-16 ${colorClasses.bg} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    <benefit.icon className={`w-8 h-8 ${colorClasses.icon}`} />
+                  <div className={`inline-flex items-center justify-center w-20 h-20 ${colorClasses.bg} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <benefit.icon className={`w-10 h-10 ${colorClasses.icon}`} />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors leading-tight">
                     {benefit.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed mb-6">
+                  <p className="text-gray-600 leading-relaxed text-lg">
                     {benefit.description}
                   </p>
-
-                  {/* Stat */}
-                  <div className="flex items-center space-x-3">
-                    <div className={`text-2xl font-bold bg-gradient-to-r ${colorClasses.gradient} bg-clip-text text-transparent`}>
-                      {benefit.stat}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {benefit.statLabel}
-                    </div>
-                  </div>
                 </div>
 
                 {/* Hover Border Effect */}
-                <div className={`absolute inset-0 border-2 ${colorClasses.border} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-              </div>
+                <div className={`absolute inset-0 border-2 ${colorClasses.border} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+              </motion.div>
             )
           })}
         </div>
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <div className="bg-white p-8 rounded-2xl shadow-lg max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Pronto para acelerar seus resultados?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Junte-se a centenas de empresas que já transformaram sua prospecção com o LeadBaze
-            </p>
-            <div className="flex justify-center">
-              <Link to="/login">
-                <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                  Cadastre-se Agora
-                </button>
-              </Link>
-            </div>
-          </div>
+          <Link to="/login">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 text-lg"
+            >
+              Comece a Gerar Leads
+            </motion.button>
+          </Link>
         </div>
       </div>
     </section>
