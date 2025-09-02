@@ -203,13 +203,13 @@ export default function ListaDetalhes() {
             </Link>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+          <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
               <div className="mb-4 lg:mb-0">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-foreground mb-2">
                   {leadList.name}
                 </h1>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-gray-600">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-muted-foreground">
                   <div className="flex items-center space-x-2 mb-2 sm:mb-0">
                     <Calendar className="w-4 h-4" />
                     <span>Criado em {formatDate(leadList.created_at)}</span>
@@ -316,13 +316,13 @@ export default function ListaDetalhes() {
         </div>
 
         {/* Tips */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-100 dark:border-blue-800">
+          <h3 className="text-lg font-semibold text-foreground mb-3">
             💡 Dicas para usar estes leads
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
             <div>
-              <h4 className="font-medium mb-2">Qualificação:</h4>
+              <h4 className="font-medium mb-2 text-foreground">Qualificação:</h4>
               <ul className="space-y-1">
                 <li>• Priorize estabelecimentos com 4+ estrelas</li>
                 <li>• Leads com telefone têm maior taxa de conversão</li>
@@ -330,7 +330,7 @@ export default function ListaDetalhes() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Abordagem:</h4>
+              <h4 className="font-medium mb-2 text-foreground">Abordagem:</h4>
               <ul className="space-y-1">
                 <li>• Mencione que encontrou no Google Maps</li>
                 <li>• Personalize a mensagem por tipo de negócio</li>

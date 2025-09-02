@@ -653,11 +653,11 @@ export default function DisparadorMassa() {
                   
                   {campaigns.length === 0 ? (
                     <div className="text-center py-8">
-                      <FolderOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500 mb-4">
+                      <FolderOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">
                         Você ainda não possui campanhas
                       </p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-muted-foreground">
                         Crie sua primeira campanha para começar
                       </p>
                     </div>
@@ -666,29 +666,29 @@ export default function DisparadorMassa() {
                       {campaigns.map((campaign) => (
                         <div
                           key={campaign.id}
-                          className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all cursor-pointer"
+                          className="p-4 border border-border rounded-lg hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all cursor-pointer"
                           onClick={() => handleSelectCampaign(campaign)}
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <h4 className="font-medium text-gray-900">{campaign.name}</h4>
-                              <p className="text-sm text-gray-500">
-                                {campaign.total_leads} leads • Status: {campaign.status}
+                              <h4 className="font-medium text-foreground">{campaign.name}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                <span className="text-foreground font-medium">{campaign.total_leads} leads</span> • Status: {campaign.status}
                               </p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-xs text-muted-foreground">
                                 Criada em: {new Date(campaign.created_at).toLocaleDateString()}
                               </p>
                             </div>
                             <div className="flex items-center space-x-2">
                               <span className={`px-2 py-1 text-xs rounded-full ${
-                                campaign.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
-                                campaign.status === 'sending' ? 'bg-blue-100 text-blue-800' :
-                                campaign.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                'bg-gray-100 text-gray-800'
+                                campaign.status === 'draft' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
+                                campaign.status === 'sending' ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' :
+                                campaign.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
+                                'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
                               }`}>
                                 {campaign.status}
                               </span>
-                              <FolderOpen className="w-4 h-4 text-gray-400" />
+                              <FolderOpen className="w-4 h-4 text-muted-foreground" />
                             </div>
                           </div>
                         </div>
