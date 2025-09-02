@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Eye, EyeOff, Loader, Mail, Lock, User } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LogoImage from '../components/LogoImage'
+import ThemeToggle from '../components/ThemeToggle'
 
 // Tipos para os formulários
 type LoginForm = {
@@ -138,7 +139,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
+      
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -146,10 +152,10 @@ export default function LoginPage() {
             <LogoImage className="h-8 w-auto" />
           </Link>
           
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-foreground">
             {isLogin ? 'Faça seu login' : 'Crie sua conta'}
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-muted-foreground">
             {isLogin 
               ? 'Acesse sua conta e continue gerando leads' 
               : 'Comece a gerar leads qualificados hoje mesmo'
@@ -158,7 +164,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100">
+        <div className="bg-card py-8 px-6 shadow-xl rounded-2xl border border-border">
           {/* Message */}
           {message && (
             <div className={`mb-6 p-4 rounded-lg ${

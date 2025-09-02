@@ -85,11 +85,11 @@ export default function AnalyticsDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="space-y-1">
+          <h2 className="text-3xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Analytics Dashboard
           </h2>
           <p className="text-muted-foreground">
@@ -131,7 +131,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <MetricCard
           title="Total de Leads"
           value={analytics.totalLeads.toLocaleString()}
@@ -239,15 +239,15 @@ export default function AnalyticsDashboard() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                className="flex items-center justify-between p-3 bg-muted rounded-lg"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     {getActivityIcon(activity.type)}
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{activity.description}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm font-medium text-foreground">{activity.description}</p>
+                    <p className="text-xs text-muted-foreground">
                       {new Date(activity.timestamp).toLocaleString()}
                     </p>
                   </div>
