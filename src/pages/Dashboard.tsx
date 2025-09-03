@@ -71,7 +71,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="app-page min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Boas-vindas */}
         <div className="mb-8">

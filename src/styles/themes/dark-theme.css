@@ -1,82 +1,131 @@
-/* TEMA ESCURO - Todas as cores específicas para modo escuro */
+/* TEMA ESCURO - Aplicado apenas em páginas específicas da aplicação */
 
-/* Cores de texto - modo escuro */
-.text-blue-700 { color: #93c5fd !important; }
-.text-blue-600 { color: #60a5fa !important; }
-.text-green-700 { color: #86efac !important; }
-.text-green-600 { color: #4ade80 !important; }
-.text-purple-600 { color: #c084fc !important; }
-.text-yellow-600 { color: #facc15 !important; }
+/* Aplicar apenas em páginas de dashboard/aplicação - não na landing */
+.app-page .text-blue-700 { color: #93c5fd !important; }
+.app-page .text-blue-600 { color: #60a5fa !important; }
+.app-page .text-green-700 { color: #86efac !important; }
+.app-page .text-green-600 { color: #4ade80 !important; }
+.app-page .text-purple-600 { color: #c084fc !important; }
+.app-page .text-yellow-600 { color: #facc15 !important; }
 
-/* Bordas - modo escuro */
-.border-blue-300 { border-color: #2563eb !important; }
-.border-gray-300 { border-color: #4b5563 !important; }
+/* Bordas específicas da aplicação */
+.app-page .border-blue-300 { border-color: #2563eb !important; }
+.app-page .border-gray-300 { border-color: #4b5563 !important; }
 
-/* Backgrounds - modo escuro */
-.bg-blue-50 { background-color: #1e3a8a !important; }
-.bg-blue-100 { background-color: #1e40af !important; }
+/* Backgrounds específicos da aplicação */
+.app-page .bg-blue-50 { background-color: #1e3a8a !important; }
+.app-page .bg-blue-100 { background-color: #1e40af !important; }
 
-/* Badges - modo escuro */
-.bg-blue-100.text-blue-800 {
+/* Badges específicos da aplicação */
+.app-page .bg-blue-100.text-blue-800 {
   background-color: #1e3a8a !important;
   color: #93c5fd !important;
 }
 
-.bg-green-100.text-green-800 {
+.app-page .bg-green-100.text-green-800 {
   background-color: #14532d !important;
   color: #86efac !important;
 }
 
-.bg-purple-100.text-purple-800 {
+.app-page .bg-purple-100.text-purple-800 {
   background-color: #581c87 !important;
   color: #c084fc !important;
 }
 
-/* Hover states - modo escuro */
-.hover\:bg-blue-100:hover { background-color: #1e40af !important; }
-.hover\:border-blue-200:hover { border-color: #3b82f6 !important; }
-.hover\:border-blue-300:hover { border-color: #2563eb !important; }
-.hover\:border-blue-600:hover { border-color: #2563eb !important; }
+/* Hover states específicos da aplicação */
+.app-page .hover\:bg-blue-100:hover { background-color: #1e40af !important; }
+.app-page .hover\:border-blue-200:hover { border-color: #3b82f6 !important; }
+.app-page .hover\:border-blue-300:hover { border-color: #2563eb !important; }
+.app-page .hover\:border-blue-600:hover { border-color: #2563eb !important; }
 
-/* Focus states - modo escuro */
-.focus\:ring-blue-500:focus { 
+/* Focus states específicos da aplicação */
+.app-page .focus\:ring-blue-500:focus { 
   --tw-ring-color: #60a5fa !important;
   box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
 }
 
-.focus\:ring-blue-400:focus { 
+.app-page .focus\:ring-blue-400:focus { 
   --tw-ring-color: #60a5fa !important;
   box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
 }
 
-/* Seleção de leads - modo escuro */
-.lead-selected {
+/* Seleção de leads específicos da aplicação */
+.app-page .lead-selected {
   border-color: #3b82f6 !important;
   background-color: #1e3a8a !important;
 }
 
-.lead-unselected:hover {
+.app-page .lead-unselected:hover {
   border-color: #2563eb !important;
   background-color: #1f2937 !important;
 }
 
-/* Específicos para elementos que não respondem */
-input[type="checkbox"] {
+/* Específicos para elementos que não respondem na aplicação */
+.app-page input[type="checkbox"] {
   color: #60a5fa !important;
   border-color: #4b5563 !important;
 }
 
-input[type="checkbox"]:focus {
+.app-page input[type="checkbox"]:focus {
   --tw-ring-color: #60a5fa !important;
 }
 
-/* Stars vazias */
-.text-gray-300 { color: #6b7280 !important; }
+/* Stars vazias na aplicação */
+.app-page .text-gray-300 { color: #6b7280 !important; }
 
-/* Textos específicos que precisam de override */
-span.text-blue-700,
-span.text-green-700,
-span.text-blue-600,
-span.text-green-600 {
+/* Textos específicos que precisam de override na aplicação */
+.app-page span.text-blue-700,
+.app-page span.text-green-700,
+.app-page span.text-blue-600,
+.app-page span.text-green-600 {
   color: inherit !important;
+}
+
+/* Elementos específicos que podem estar brancos no dark mode */
+.app-page .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.app-page .text-white {
+  color: #f3f4f6 !important;
+}
+
+.app-page .border-white {
+  border-color: #374151 !important;
+}
+
+/* Cards e containers que podem estar brancos */
+.app-page .bg-card {
+  background-color: #1f2937 !important;
+}
+
+.app-page .bg-background {
+  background-color: #111827 !important;
+}
+
+/* Elementos de formulário */
+.app-page .bg-input {
+  background-color: #1f2937 !important;
+}
+
+/* Dropdowns e selects */
+.app-page .bg-popover {
+  background-color: #1f2937 !important;
+}
+
+/* Badges adicionais que podem estar problemáticos */
+.app-page .bg-gray-100 {
+  background-color: #374151 !important;
+}
+
+.app-page .text-gray-900 {
+  color: #f3f4f6 !important;
+}
+
+.app-page .text-gray-800 {
+  color: #e5e7eb !important;
+}
+
+.app-page .text-gray-700 {
+  color: #d1d5db !important;
 }
