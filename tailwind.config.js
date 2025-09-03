@@ -84,41 +84,5 @@ export default {
     require('@tailwindcss/forms')({
       strategy: 'class',
     }),
-    // Plugin personalizado para dark mode
-    function({ addUtilities, theme }) {
-      const newUtilities = {
-        '.text-primary': {
-          color: theme('colors.primary.600'),
-          '.dark &': {
-            color: theme('colors.primary.400'),
-          },
-        },
-        '.bg-card': {
-          backgroundColor: theme('colors.white'),
-          '.dark &': {
-            backgroundColor: theme('colors.gray.800'),
-          },
-        },
-        '.bg-background': {
-          backgroundColor: theme('colors.gray.50'),
-          '.dark &': {
-            backgroundColor: theme('colors.gray.900'),
-          },
-        },
-        '.border-primary': {
-          borderColor: theme('colors.primary.200'),
-          '.dark &': {
-            borderColor: theme('colors.primary.700'),
-          },
-        },
-      }
-      
-      addUtilities(newUtilities)
-    },
   ],
-  // Garantir que o dark mode funcione corretamente
-  important: false, // Remover se estiver como true
-  corePlugins: {
-    preflight: true,
-  },
 }
