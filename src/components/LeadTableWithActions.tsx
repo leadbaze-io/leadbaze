@@ -132,7 +132,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
           <Star
             key={i}
             className={`w-3 h-3 ${
-              i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300 dark:text-gray-600'
             }`}
           />
         ))}
@@ -145,8 +145,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
     if (!reviewsCount) return null
     return (
       <div className="flex items-center space-x-1">
-        <div className="flex items-center justify-center w-5 h-5 bg-blue-100 rounded-full">
-          <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
+        <div className="flex items-center justify-center w-5 h-5 bg-blue-100 dark:bg-blue-900 rounded-full">
+          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">{reviewsCount}</span>
         </div>
         <span className="text-xs text-muted-foreground">Avaliações</span>
       </div>
@@ -156,14 +156,14 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
   return (
     <div className="space-y-6">
       {/* Header com estatísticas */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl p-6 border border-blue-100 dark:border-blue-800">
         <div className="flex items-center justify-between mb-4">
           <div>
                     <h2 className="text-3xl font-bold text-foreground">{title}</h2>
         <p className="text-muted-foreground mt-1">
               {filteredLeads.length} leads encontrados
               {selectedLeads.size > 0 && (
-                <span className="ml-2 text-blue-600 font-medium">
+                <span className="ml-2 text-blue-600 dark:text-blue-400 font-medium">
                   • {selectedLeads.size} selecionado(s)
                 </span>
               )}
@@ -188,14 +188,14 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span className="text-sm font-medium text-muted-foreground">Total</span>
             </div>
             <p className="text-2xl font-bold text-foreground">{filteredLeads.length}</p>
           </div>
           <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
-              <Phone className="w-4 h-4 text-green-600" />
+              <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-medium text-muted-foreground">Com Telefone</span>
             </div>
             <p className="text-2xl font-bold text-foreground">
@@ -204,7 +204,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
           </div>
           <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
-              <Globe className="w-4 h-4 text-purple-600" />
+              <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span className="text-sm font-medium text-muted-foreground">Com Website</span>
             </div>
             <p className="text-2xl font-bold text-foreground">
@@ -213,7 +213,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
           </div>
           <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
-              <Star className="w-4 h-4 text-yellow-600" />
+              <Star className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
               <span className="text-sm font-medium text-muted-foreground">4+ Estrelas</span>
             </div>
             <p className="text-2xl font-bold text-foreground">
@@ -322,13 +322,13 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       </Card>
 
       {/* Controles de seleção */}
-      <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border border-blue-200">
+      <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 p-4 rounded-xl border border-blue-200 dark:border-blue-800">
         <div className="flex items-center space-x-4">
           <Button
             variant="outline"
             size="sm"
             onClick={toggleSelectAll}
-            className="flex items-center space-x-2 border-blue-300 text-blue-700 hover:bg-blue-100"
+            className="flex items-center space-x-2 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900"
           >
             {selectedLeads.size === filteredLeads.length ? (
               <CheckSquare className="w-4 h-4" />
@@ -341,7 +341,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
           </Button>
           
           {selectedLeads.size > 0 && (
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
               {selectedLeads.size} de {filteredLeads.length} leads selecionados
             </Badge>
           )}
@@ -376,8 +376,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             key={lead.id || index} 
             className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 ${
               selectedLeads.has(lead.id || '') 
-                ? 'border-blue-500 bg-blue-50 shadow-lg' 
-                : 'border-gray-200 hover:border-blue-300'
+                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 shadow-lg' 
+                : 'border-border hover:border-blue-300 dark:hover:border-blue-600'
             }`}
             onClick={() => toggleLeadSelection(lead.id || '')}
           >
@@ -392,7 +392,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                       e.stopPropagation()
                       toggleLeadSelection(lead.id || '')
                     }}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                    className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 flex-shrink-0"
                   />
                   {renderReviewsCount(lead.reviews_count)}
                 </div>
@@ -412,14 +412,14 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               <div className="space-y-2 mb-3">
                 {lead.phone && (
                   <div className="flex items-center space-x-2 text-xs">
-                    <Phone className="w-3 h-3 text-green-600" />
-                    <span className="text-green-700 font-medium">{lead.phone}</span>
+                    <Phone className="w-3 h-3 text-green-600 dark:text-green-400" />
+                    <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
                   </div>
                 )}
                 {lead.website && (
                   <div className="flex items-center space-x-2 text-xs">
-                    <Globe className="w-3 h-3 text-blue-600" />
-                    <span className="text-blue-700 font-medium">Website disponível</span>
+                    <Globe className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                    <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
                   </div>
                 )}
                 {!lead.phone && !lead.website && (
@@ -433,12 +433,12 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               {/* Tags e badges */}
               <div className="flex flex-wrap gap-1">
                 {lead.rating && lead.rating >= 4 && (
-                  <Badge className="bg-green-100 text-green-800 text-xs">
+                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs">
                     ⭐ Premium
                   </Badge>
                 )}
                 {lead.reviews_count && lead.reviews_count >= 100 && (
-                  <Badge className="bg-purple-100 text-purple-800 text-xs">
+                  <Badge className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs">
                     🔥 Popular
                   </Badge>
                 )}
