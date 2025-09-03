@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { User, LogOut, Menu, X } from 'lucide-react'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
@@ -10,6 +10,12 @@ export default function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Páginas onde o ThemeToggle deve aparecer
+  const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador'].some(path => 
+    location.pathname.startsWith(path)
+  ) || location.pathname.startsWith('/lista/')
 
   useEffect(() => {
     // Verificar usuário logado inicialmente
@@ -85,7 +91,7 @@ export default function Navbar() {
                   Disparador
                 </Link>
                 <div className="flex items-center space-x-4">
-                  <ThemeToggle />
+                  {showThemeToggle && <ThemeToggle />}
                   <div className="flex items-center space-x-2">
                     <User className="w-4 h-4 text-gray-600" />
                     <span className="text-sm text-gray-600">{user.user_metadata?.name || user.email}</span>
@@ -113,7 +119,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-3">
-            {user && <ThemeToggle />}
+            {user && showThemeToggle && <ThemeToggle />}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-blue-600 transition-colors"

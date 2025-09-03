@@ -49,7 +49,7 @@ export default function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-36">
+      <DropdownMenuContent align="end" className="w-36 !bg-white !border-gray-200 shadow-xl">
         {themes.map((themeOption) => {
           const Icon = themeOption.icon
           const isActive = theme === themeOption.value
@@ -58,10 +58,10 @@ export default function ThemeToggle() {
             <DropdownMenuItem
               key={themeOption.value}
               onClick={() => setTheme(themeOption.value)}
-              className={`cursor-pointer transition-colors ${
+              className={`cursor-pointer transition-colors !text-gray-900 ${
                 isActive 
-                  ? 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300' 
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  ? '!bg-blue-50 !text-blue-700' 
+                  : 'hover:!bg-gray-50'
               }`}
             >
               <div className="flex items-center space-x-2 w-full">
@@ -75,7 +75,7 @@ export default function ThemeToggle() {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full"
+                    className="w-2 h-2 bg-blue-600 rounded-full"
                   />
                 )}
               </div>
