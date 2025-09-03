@@ -143,7 +143,7 @@ build/
 *.temp
 
 # Backend configuration files (sensitive)
-backend/config.env
+# backend/config.env - Now tracked for deployment
 backend/.env
 
 # Deployment files
