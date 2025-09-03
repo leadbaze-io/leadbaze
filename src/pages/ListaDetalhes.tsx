@@ -153,7 +153,7 @@ export default function ListaDetalhes() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <Loader className="w-8 h-8 animate-spin text-blue-600 dark:text-blue-400 mx-auto mb-4" />
           <p className="text-muted-foreground">Carregando lista de leads...</p>
         </div>
       </div>
@@ -164,7 +164,7 @@ export default function ListaDetalhes() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <AlertCircle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground mb-6">
             {error || 'Lista não encontrada'}
@@ -172,13 +172,13 @@ export default function ListaDetalhes() {
           <div className="space-y-2">
             <Link
               to="/dashboard"
-              className="block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="block bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               Voltar ao Dashboard
             </Link>
             <Link
               to="/gerador"
-              className="block text-blue-600 hover:text-blue-700 transition-colors"
+              className="block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
             >
               Criar Nova Lista
             </Link>
@@ -224,7 +224,7 @@ export default function ListaDetalhes() {
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                 <button
                   onClick={exportToCSV}
-                  className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
                 >
                   <Download className="w-4 h-4" />
                   <span>Exportar CSV</span>
@@ -232,7 +232,7 @@ export default function ListaDetalhes() {
                 
                 <button
                   onClick={shareList}
-                  className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   <Share2 className="w-4 h-4" />
                   <span>Compartilhar</span>
@@ -316,7 +316,7 @@ export default function ListaDetalhes() {
         </div>
 
         {/* Tips */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-200 dark:border-blue-800 !bg-gradient-to-r !from-blue-50 !to-purple-50 dark:!from-blue-950 dark:!to-purple-950">
+        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
           <h3 className="text-lg font-semibold text-foreground mb-3">
             💡 Dicas para usar estes leads
           </h3>

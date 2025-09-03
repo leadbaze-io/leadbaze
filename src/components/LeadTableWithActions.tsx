@@ -136,7 +136,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             }`}
           />
         ))}
-        <span className="text-xs text-gray-600 ml-1">{rating}</span>
+        <span className="text-xs text-muted-foreground ml-1">{rating}</span>
       </div>
     )
   }
@@ -148,7 +148,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         <div className="flex items-center justify-center w-5 h-5 bg-blue-100 rounded-full">
           <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
         </div>
-        <span className="text-xs text-gray-600">Avaliações</span>
+        <span className="text-xs text-muted-foreground">Avaliações</span>
       </div>
     )
   }
@@ -159,8 +159,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
-            <p className="text-gray-600 mt-1">
+                    <h2 className="text-3xl font-bold text-foreground">{title}</h2>
+        <p className="text-muted-foreground mt-1">
               {filteredLeads.length} leads encontrados
               {selectedLeads.size > 0 && (
                 <span className="ml-2 text-blue-600 font-medium">
@@ -228,7 +228,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div>
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">Buscar</Label>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Buscar</Label>
               <Input
                 placeholder="Nome ou endereço..."
                 value={searchTerm}
@@ -241,7 +241,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             </div>
             
             <div>
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">Cidade</Label>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Cidade</Label>
               <Input
                 placeholder="Filtrar por cidade..."
                 value={cityFilter}
@@ -254,7 +254,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             </div>
             
             <div>
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">Avaliação Mínima</Label>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Avaliação Mínima</Label>
               <Select 
                 value={ratingFilter} 
                 onValueChange={(value) => {
@@ -275,7 +275,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             </div>
             
             <div>
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">Avaliações</Label>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Avaliações</Label>
               <Select 
                 value={reviewsFilter} 
                 onValueChange={(value) => {
@@ -299,7 +299,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             </div>
             
             <div>
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">Website</Label>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Website</Label>
               <Select 
                 value={websiteFilter} 
                 onValueChange={(value) => {
@@ -401,8 +401,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
 
               {/* Nome do estabelecimento */}
               <div className="mb-3">
-                <h3 className="font-semibold text-gray-900 text-sm truncate mb-1">{lead.name}</h3>
-                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <h3 className="font-semibold text-foreground text-sm truncate mb-1">{lead.name}</h3>
+        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                   <MapPin className="w-3 h-3" />
                   <span className="truncate">{lead.address}</span>
                 </div>
@@ -423,7 +423,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                   </div>
                 )}
                 {!lead.phone && !lead.website && (
-                  <div className="flex items-center space-x-2 text-xs text-gray-400">
+                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                     <Eye className="w-3 h-3" />
                     <span>Contato não disponível</span>
                   </div>
@@ -491,9 +491,9 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       {/* Estado vazio */}
       {filteredLeads.length === 0 && (
         <div className="text-center py-16">
-          <Filter className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-gray-900 mb-2">Nenhum lead encontrado</h3>
-          <p className="text-gray-500 max-w-md mx-auto">
+                  <Filter className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+        <h3 className="text-xl font-medium text-foreground mb-2">Nenhum lead encontrado</h3>
+        <p className="text-muted-foreground max-w-md mx-auto">
             Tente ajustar os filtros ou realizar uma nova busca para encontrar leads que correspondam aos seus critérios.
           </p>
         </div>
