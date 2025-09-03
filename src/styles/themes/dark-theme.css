@@ -1,0 +1,82 @@
+/* TEMA ESCURO - Todas as cores específicas para modo escuro */
+
+/* Cores de texto - modo escuro */
+.text-blue-700 { color: #93c5fd !important; }
+.text-blue-600 { color: #60a5fa !important; }
+.text-green-700 { color: #86efac !important; }
+.text-green-600 { color: #4ade80 !important; }
+.text-purple-600 { color: #c084fc !important; }
+.text-yellow-600 { color: #facc15 !important; }
+
+/* Bordas - modo escuro */
+.border-blue-300 { border-color: #2563eb !important; }
+.border-gray-300 { border-color: #4b5563 !important; }
+
+/* Backgrounds - modo escuro */
+.bg-blue-50 { background-color: #1e3a8a !important; }
+.bg-blue-100 { background-color: #1e40af !important; }
+
+/* Badges - modo escuro */
+.bg-blue-100.text-blue-800 {
+  background-color: #1e3a8a !important;
+  color: #93c5fd !important;
+}
+
+.bg-green-100.text-green-800 {
+  background-color: #14532d !important;
+  color: #86efac !important;
+}
+
+.bg-purple-100.text-purple-800 {
+  background-color: #581c87 !important;
+  color: #c084fc !important;
+}
+
+/* Hover states - modo escuro */
+.hover\:bg-blue-100:hover { background-color: #1e40af !important; }
+.hover\:border-blue-200:hover { border-color: #3b82f6 !important; }
+.hover\:border-blue-300:hover { border-color: #2563eb !important; }
+.hover\:border-blue-600:hover { border-color: #2563eb !important; }
+
+/* Focus states - modo escuro */
+.focus\:ring-blue-500:focus { 
+  --tw-ring-color: #60a5fa !important;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+}
+
+.focus\:ring-blue-400:focus { 
+  --tw-ring-color: #60a5fa !important;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+}
+
+/* Seleção de leads - modo escuro */
+.lead-selected {
+  border-color: #3b82f6 !important;
+  background-color: #1e3a8a !important;
+}
+
+.lead-unselected:hover {
+  border-color: #2563eb !important;
+  background-color: #1f2937 !important;
+}
+
+/* Específicos para elementos que não respondem */
+input[type="checkbox"] {
+  color: #60a5fa !important;
+  border-color: #4b5563 !important;
+}
+
+input[type="checkbox"]:focus {
+  --tw-ring-color: #60a5fa !important;
+}
+
+/* Stars vazias */
+.text-gray-300 { color: #6b7280 !important; }
+
+/* Textos específicos que precisam de override */
+span.text-blue-700,
+span.text-green-700,
+span.text-blue-600,
+span.text-green-600 {
+  color: inherit !important;
+}

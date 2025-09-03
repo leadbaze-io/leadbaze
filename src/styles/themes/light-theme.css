@@ -1,0 +1,55 @@
+/* TEMA CLARO - Todas as cores específicas para modo claro */
+
+/* Cores de texto - modo claro */
+.text-blue-700 { color: #1d4ed8; }
+.text-blue-600 { color: #2563eb; }
+.text-green-700 { color: #15803d; }
+.text-green-600 { color: #16a34a; }
+.text-purple-600 { color: #9333ea; }
+.text-yellow-600 { color: #ca8a04; }
+
+/* Bordas - modo claro */
+.border-blue-300 { border-color: #93c5fd; }
+.border-gray-300 { border-color: #d1d5db; }
+
+/* Backgrounds - modo claro */
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-blue-100 { background-color: #dbeafe; }
+
+/* Badges - modo claro */
+.bg-blue-100.text-blue-800 {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.bg-green-100.text-green-800 {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.bg-purple-100.text-purple-800 {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+}
+
+/* Hover states - modo claro */
+.hover\:bg-blue-100:hover { background-color: #dbeafe; }
+.hover\:border-blue-200:hover { border-color: #bfdbfe; }
+.hover\:border-blue-300:hover { border-color: #93c5fd; }
+
+/* Focus states - modo claro */
+.focus\:ring-blue-500:focus { 
+  --tw-ring-color: #3b82f6;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+}
+
+/* Seleção de leads - modo claro */
+.lead-selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.lead-unselected:hover {
+  border-color: #93c5fd;
+  background-color: #f9fafb;
+}

@@ -18,6 +18,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const [isDark, setIsDark] = useState(false)
 
+  // Função para carregar CSS do tema dinamicamente
+  const loadThemeCSS = async (themeName: 'light' | 'dark') => {
+    try {
+      // Importar o CSS do tema dinamicamente
+      if (themeName === 'dark') {
+        await import('../styles/themes/dark-theme.css')
+      } else {
+        await import('../styles/themes/light-theme.css')
+      }
+    } catch (error) {
+      console.warn(`Erro ao carregar tema ${themeName}:`, error)
+    }
+  }
+
   useEffect(() => {
     const updateTheme = () => {
       let shouldBeDark = false
@@ -33,11 +47,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
       setIsDark(shouldBeDark)
       
-      // Aplicar classe ao documento
+      // Aplicar classe ao documento e carregar CSS do tema
       if (shouldBeDark) {
         document.documentElement.classList.add('dark')
+        loadThemeCSS('dark')
       } else {
         document.documentElement.classList.remove('dark')
+        loadThemeCSS('light')
       }
 
       // Atualizar meta theme-color para mobile

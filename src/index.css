@@ -85,57 +85,5 @@ body {
   animation: shimmer 2s linear infinite;
 }
 
-/* SOLUÇÃO FINAL: CSS com máxima especificidade */
-
-/* Texto azul em dark mode - máxima prioridade */
-html.dark .text-blue-700,
-html.dark [class*="text-blue-700"] {
-  color: #93c5fd !important;
-}
-
-html.dark .text-blue-600,
-html.dark [class*="text-blue-600"] {
-  color: #60a5fa !important;
-}
-
-html.dark .text-green-700,
-html.dark [class*="text-green-700"] {
-  color: #86efac !important;
-}
-
-html.dark .text-green-600,
-html.dark [class*="text-green-600"] {
-  color: #4ade80 !important;
-}
-
-html.dark .text-purple-600,
-html.dark [class*="text-purple-600"] {
-  color: #c084fc !important;
-}
-
-html.dark .text-yellow-600,
-html.dark [class*="text-yellow-600"] {
-  color: #facc15 !important;
-}
-
-/* Bordas em dark mode */
-html.dark .border-blue-300,
-html.dark [class*="border-blue-300"] {
-  border-color: #2563eb !important;
-}
-
-html.dark .border-gray-300,
-html.dark [class*="border-gray-300"] {
-  border-color: #4b5563 !important;
-}
-
-/* Backgrounds em dark mode */
-html.dark .bg-blue-50,
-html.dark [class*="bg-blue-50"] {
-  background-color: #1e3a8a !important;
-}
-
-html.dark .bg-blue-100,
-html.dark [class*="bg-blue-100"] {
-  background-color: #1e40af !important;
-}
+/* CSS limpo - sem conflitos de temas */
+/* Os temas específicos são carregados dinamicamente */
