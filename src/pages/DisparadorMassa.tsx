@@ -58,7 +58,7 @@ export default function DisparadorMassa() {
           setWhatsappConfig({
             id: instance.id,
             user_id: instance.user_id,
-            api_url: process.env.NODE_ENV === 'production' ? 'https://leadbaze-backend.onrender.com' : 'http://localhost:3001',
+            api_url: process.env.NODE_ENV === 'production' ? 'https://leadbaze.io' : 'http://localhost:3001',
             api_key: '***',
             instance_name: instance.instance_name,
             whatsapp_number: instance.whatsapp_number || 'Conectado via QR Code',
@@ -443,7 +443,7 @@ export default function DisparadorMassa() {
           setWhatsappConfig({
             id: instance.id,
             user_id: instance.user_id,
-            api_url: process.env.NODE_ENV === 'production' ? 'https://leadbaze-backend.onrender.com' : 'http://localhost:3001',
+            api_url: process.env.NODE_ENV === 'production' ? 'https://leadbaze.io' : 'http://localhost:3001',
             api_key: '***',
             instance_name: instance.instance_name,
             whatsapp_number: instance.whatsapp_number || 'Conectado via QR Code',

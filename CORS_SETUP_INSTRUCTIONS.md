@@ -67,3 +67,4 @@ Se o problema persistir:
 2. Confirme se o serviço foi reiniciado
 3. Teste em navegador anônimo
 4. Verifique os logs do backend no Render
+

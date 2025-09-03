@@ -5,7 +5,7 @@
 
 // Configuração do backend
 const BACKEND_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadbaze-backend.onrender.com' // Backend deployado no Render
+  ? 'https://leadbaze.io' // Backend deployado no Servla
   : 'http://localhost:3001';
 
 export interface EvolutionInstance {
