@@ -175,7 +175,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               <Button
                 onClick={handleDeleteSelected}
                 disabled={isDeleting}
-                className="flex items-center space-x-2 bg-white text-red-600 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all duration-200 transform hover:scale-105"
+                className="flex items-center space-x-2 bg-card text-red-600 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 hover:bg-red-50 dark:hover:bg-red-950 hover:border-red-300 transition-all duration-200 transform hover:scale-105"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Deletar {selectedLeads.size} Lead{selectedLeads.size > 1 ? 's' : ''}</span>
@@ -186,37 +186,37 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
 
         {/* Estatísticas rápidas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg p-3 border border-blue-200">
+          <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
               <Users className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-gray-700">Total</span>
+              <span className="text-sm font-medium text-muted-foreground">Total</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{filteredLeads.length}</p>
+            <p className="text-2xl font-bold text-foreground">{filteredLeads.length}</p>
           </div>
-          <div className="bg-white rounded-lg p-3 border border-green-200">
+          <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
               <Phone className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-gray-700">Com Telefone</span>
+              <span className="text-sm font-medium text-muted-foreground">Com Telefone</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-foreground">
               {filteredLeads.filter(lead => lead.phone).length}
             </p>
           </div>
-          <div className="bg-white rounded-lg p-3 border border-purple-200">
+          <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
               <Globe className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-medium text-gray-700">Com Website</span>
+              <span className="text-sm font-medium text-muted-foreground">Com Website</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-foreground">
               {filteredLeads.filter(lead => lead.website).length}
             </p>
           </div>
-          <div className="bg-white rounded-lg p-3 border border-yellow-200">
+          <div className="bg-card rounded-lg p-3 border border-border">
             <div className="flex items-center space-x-2">
               <Star className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm font-medium text-gray-700">4+ Estrelas</span>
+              <span className="text-sm font-medium text-muted-foreground">4+ Estrelas</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-2xl font-bold text-foreground">
               {filteredLeads.filter(lead => lead.rating && lead.rating >= 4).length}
             </p>
           </div>
@@ -265,7 +265,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 <SelectTrigger className="h-10 text-sm">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                <SelectContent className="bg-popover border border-border shadow-lg">
                   <SelectItem value="all">Todas</SelectItem>
                   <SelectItem value="4">4+ estrelas</SelectItem>
                   <SelectItem value="3">3+ estrelas</SelectItem>
@@ -286,7 +286,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 <SelectTrigger className="h-10 text-sm">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                <SelectContent className="bg-popover border border-border shadow-lg">
                   <SelectItem value="all">Todas</SelectItem>
                   <SelectItem value="10">10+ Avaliações</SelectItem>
                   <SelectItem value="25">25+ Avaliações</SelectItem>
@@ -310,7 +310,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 <SelectTrigger className="h-10 text-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                <SelectContent className="bg-popover border border-border shadow-lg">
                   <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="with">Com website</SelectItem>
                   <SelectItem value="without">Sem website</SelectItem>
@@ -348,7 +348,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         </div>
 
         <div className="flex items-center space-x-3">
-          <Label className="text-sm font-medium text-gray-700">Leads por Página</Label>
+          <Label className="text-sm font-medium text-muted-foreground">Leads por Página</Label>
           <Select 
             value={leadsPerPage} 
             onValueChange={(value) => {
@@ -359,7 +359,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
             <SelectTrigger className="h-8 text-sm w-20">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-white border border-gray-200 shadow-lg">
+            <SelectContent className="bg-popover border border-border shadow-lg">
               <SelectItem value="12">12</SelectItem>
               <SelectItem value="24">24</SelectItem>
               <SelectItem value="48">48</SelectItem>

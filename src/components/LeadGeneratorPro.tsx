@@ -443,10 +443,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     
     return (
       <div className="flex items-center space-x-1">
-        <div className="flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full">
-          <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
+        <div className="flex items-center justify-center w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full">
+          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">{reviewsCount}</span>
         </div>
-        <span className="text-xs text-gray-600">Avaliações</span>
+        <span className="text-xs text-muted-foreground">Avaliações</span>
       </div>
     )
   }
@@ -755,13 +755,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         {lead.phone && (
                           <div className="flex items-center space-x-2 text-xs">
                             <Phone className="w-3 h-3 text-green-600" />
-                            <span className="text-green-700 font-medium">{lead.phone}</span>
+                            <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
                           </div>
                         )}
                         {lead.website && (
                           <div className="flex items-center space-x-2 text-xs">
                             <Globe className="w-3 h-3 text-blue-600" />
-                            <span className="text-blue-700 font-medium">Website disponível</span>
+                            <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
                           </div>
                         )}
                         {!lead.phone && !lead.website && (
