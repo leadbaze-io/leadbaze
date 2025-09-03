@@ -721,7 +721,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       transition={{ delay: index * 0.05 }}
                       className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 rounded-lg p-4 ${
                         lead.selected 
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 shadow-lg' 
+                          ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950 shadow-lg' 
                           : 'border-border hover:border-blue-200 bg-card'
                       }`}
                       onClick={() => toggleLeadSelectionByFilteredIndex(index)}

@@ -316,7 +316,7 @@ export default function ListaDetalhes() {
         </div>
 
         {/* Tips */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-200 dark:border-blue-800 !bg-gradient-to-r !from-blue-50 !to-purple-50 dark:!from-blue-950 dark:!to-purple-950">
           <h3 className="text-lg font-semibold text-foreground mb-3">
             💡 Dicas para usar estes leads
           </h3>

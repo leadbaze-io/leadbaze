@@ -762,7 +762,7 @@ export default function DisparadorMassa() {
                             key={list.id}
                             className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                               selectedLists.includes(list.id)
-                                ? 'border-blue-500 bg-blue-50'
+                                ? 'border-blue-500 bg-blue-50/50'
                                 : 'border-border hover:border-blue-200 hover:bg-muted'
                             }`}
                             onClick={() => handleListToggle(list.id)}
