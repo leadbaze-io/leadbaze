@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Mail, Phone } from 'lucide-react'
 import LogoImage from './LogoImage'
 
