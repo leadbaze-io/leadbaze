@@ -17,8 +17,7 @@ export default function Navbar() {
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
 
-  // Landing Page sempre será clara
-  const isLandingPage = location.pathname === '/'
+
 
   useEffect(() => {
     // Verificar usuário logado inicialmente
