@@ -102,6 +102,17 @@ export default function DisparadorMassa() {
     }
   }, [user, loading, loadData])
 
+  // Salvar mensagem automaticamente com debounce inteligente
+  useEffect(() => {
+    if (!selectedCampaign || !message.trim()) return;
+
+    const timeoutId = setTimeout(() => {
+      handleSaveMessage(false);
+    }, 800);
+
+    return () => clearTimeout(timeoutId);
+  }, [message, selectedCampaign]);
+
   // Carregar campanhas do usuário
   const loadUserCampaigns = async (): Promise<BulkCampaign[]> => {
     try {
@@ -285,7 +296,7 @@ export default function DisparadorMassa() {
   }
 
   // Salvar mensagem da campanha
-  const handleSaveMessage = async () => {
+  const handleSaveMessage = async (showToast = true) => {
     if (!selectedCampaign) return
 
     try {
@@ -297,13 +308,17 @@ export default function DisparadorMassa() {
         setSelectedCampaign(updatedCampaign)
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
 
-        toast({
-          title: 'Mensagem salva!',
-          description: 'Mensagem da campanha foi salva com sucesso.',
-        })
+        // Só mostra toast se solicitado (para evitar spam quando salva automaticamente)
+        if (showToast) {
+          toast({
+            title: 'Mensagem salva!',
+            description: 'Mensagem da campanha foi salva com sucesso.',
+          })
+        }
       }
     } catch (error) {
       console.error('Erro ao salvar mensagem:', error)
+      // Sempre mostra erro
       toast({
         title: 'Erro',
         description: 'Erro ao salvar mensagem da campanha. Tente novamente.',
@@ -1108,12 +1123,12 @@ export default function DisparadorMassa() {
                       </div>
                       
                       <div className="p-6 space-y-6">
-                        {/* Editor de Mensagem Profissional */}
-                        <div className="space-y-3">
-                          <Label htmlFor="message" className="text-gray-700 dark:text-gray-200 font-semibold text-sm">
-                            Mensagem Personalizada
-                          </Label>
-                          <div className="relative">
+                                                 {/* Editor de Mensagem Profissional */}
+                         <div className="space-y-4">
+                           <Label htmlFor="message" className="text-gray-700 dark:text-white font-semibold text-base block mb-3">
+                             Mensagem Personalizada
+                           </Label>
+                           <div className="relative">
                             <textarea
                               id="message"
                               className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 dark:focus:border-purple-400 resize-none transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
@@ -1124,7 +1139,15 @@ Estamos oferecendo condições exclusivas para novos clientes.
 
 Entre em contato conosco para mais detalhes!"
                               value={message}
-                              onChange={(e) => setMessage(e.target.value)}
+                              onChange={(e) => {
+                                setMessage(e.target.value);
+                              }}
+                              onBlur={() => {
+                                // Salvar quando o campo perder o foco (usuário terminar de digitar)
+                                if (selectedCampaign && message.trim()) {
+                                  handleSaveMessage(false);
+                                }
+                              }}
                             />
                             {/* Contador de Caracteres Elegante */}
                             <div className="absolute bottom-3 right-3">
@@ -1147,7 +1170,7 @@ Entre em contato conosco para mais detalhes!"
                                 <span className="text-white font-bold text-xs">💡</span>
                               </div>
                               <div>
-                                <p className="font-semibold text-blue-800 dark:text-blue-200 text-sm mb-2">
+                                <p className="font-semibold text-blue-800 dark:text-white text-sm mb-2">
                                   Dicas de Personalização
                                 </p>
                                 <div className="space-y-1 text-xs text-blue-700 dark:text-blue-100">
@@ -1163,7 +1186,7 @@ Entre em contato conosco para mais detalhes!"
                         {/* Botões de Ação Profissionais */}
                         <div className="space-y-4 pt-4">
                           <Button 
-                            onClick={handleSaveMessage}
+                            onClick={() => handleSaveMessage(true)}
                             variant="outline"
                             className="w-full border-2 border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-600 py-3 rounded-xl font-semibold transition-all duration-300"
                             disabled={!message.trim()}
