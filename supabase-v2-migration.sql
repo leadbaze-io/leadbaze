@@ -229,3 +229,4 @@ ANALYZE user_tags;
 -- AND column_name IN ('tags', 'status', 'updated_at', 'description');
 
 
+

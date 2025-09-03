@@ -68,3 +68,4 @@ Se o problema persistir:
 3. Teste em navegador anônimo
 4. Verifique os logs do backend no Render
 
+

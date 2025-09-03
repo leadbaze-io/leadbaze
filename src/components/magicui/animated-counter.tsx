@@ -34,7 +34,16 @@ export function AnimatedCounter({
         
         // Easing function for smooth animation
         const easeOutCubic = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.floor(easeOutCubic * value))
+        const currentValue = easeOutCubic * value
+        
+        // Handle decimal values properly
+        if (value % 1 !== 0) {
+          // For decimal values, use toFixed(2) to maintain precision
+          setCount(parseFloat(currentValue.toFixed(2)))
+        } else {
+          // For integer values, use Math.floor
+          setCount(Math.floor(currentValue))
+        }
         
         if (progress < 1) {
           requestAnimationFrame(animateCount)
@@ -57,7 +66,7 @@ export function AnimatedCounter({
         className
       )}
     >
-      {prefix}{count.toLocaleString('pt-BR')}{suffix}
+      {prefix}{value % 1 !== 0 ? count.toFixed(2) : count.toLocaleString('pt-BR')}{suffix}
     </span>
   )
 }

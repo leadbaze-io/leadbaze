@@ -15,20 +15,38 @@ export default function MagicPricing() {
     {
       icon: Users,
       title: "Agende 6x mais reuniões",
-      description: "para seus vendedores",
-      color: "from-blue-500 to-cyan-500"
+      subtitle: "para seus vendedores",
+      description: "Transforme sua equipe de vendas com leads qualificados e segmentados. Aumente a produtividade e feche mais negócios.",
+      metrics: [
+        { label: "Taxa de conversão", value: "+180%", color: "text-blue-600" },
+        { label: "Leads qualificados", value: "95%", color: "text-cyan-600" }
+      ],
+      color: "from-blue-500 to-cyan-500",
+      gradient: "from-blue-50 to-cyan-50"
     },
     {
       icon: Clock,
       title: "Economia de 60%",
-      description: "do tempo gasto com criação de listas",
-      color: "from-purple-500 to-pink-500"
+      subtitle: "do tempo gasto com criação de listas",
+      description: "Automatize todo o processo de prospecção. De horas para minutos na criação de listas de leads qualificados.",
+      metrics: [
+        { label: "Tempo economizado", value: "60%", color: "text-purple-600" },
+        { label: "Eficiência", value: "+400%", color: "text-pink-600" }
+      ],
+      color: "from-purple-500 to-pink-500",
+      gradient: "from-purple-50 to-pink-50"
     },
     {
       icon: TrendingUp,
       title: "Aumente em 40%",
-      description: "suas vendas em 3 meses",
-      color: "from-green-500 to-emerald-500"
+      subtitle: "suas vendas em 3 meses",
+      description: "Pipeline sempre abastecido com leads de alta qualidade. Resultados mensuráveis e crescimento sustentável.",
+      metrics: [
+        { label: "Crescimento", value: "+40%", color: "text-green-600" },
+        { label: "ROI", value: "8.5x", color: "text-emerald-600" }
+      ],
+      color: "from-green-500 to-emerald-500",
+      gradient: "from-green-50 to-emerald-50"
     }
   ]
 
@@ -55,7 +73,7 @@ export default function MagicPricing() {
               Cada <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">LEAD</span> sai por
               <br />
               <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-                MENOS de 30 CENTAVOS
+                MENOS <span className="text-black">de</span> 30 CENTAVOS
               </span>
             </h2>
           </motion.div>
@@ -79,7 +97,7 @@ export default function MagicPricing() {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 items-stretch"
         >
           {benefits.map((benefit, index) => (
             <motion.div
@@ -88,32 +106,66 @@ export default function MagicPricing() {
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
               whileHover={{ 
-                y: -10,
-                transition: { duration: 0.3 }
+                y: -12,
+                scale: 1.02,
+                transition: { duration: 0.4, ease: "easeOut" }
               }}
-              className="group relative"
+              className="group relative h-full flex flex-col"
             >
-              <div className="relative bg-white rounded-3xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-500 overflow-hidden">
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+              <div className={`relative bg-gradient-to-br ${benefit.gradient} rounded-3xl p-6 shadow-xl border border-gray-100/50 hover:shadow-2xl transition-all duration-500 overflow-hidden backdrop-blur-sm h-full flex flex-col`}>
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gray-400 to-transparent rounded-full blur-2xl"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-gray-300 to-transparent rounded-full blur-xl"></div>
+                </div>
                 
-                {/* Icon */}
-                <div className={`relative mb-6 w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500`}>
-                  <benefit.icon className="w-8 h-8" />
+                {/* Header with Icon */}
+                <div className="relative mb-6">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110`}>
+                    <benefit.icon className="w-8 h-8" />
+                  </div>
                 </div>
 
-                {/* Content */}
-                <div className="relative">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300">
-                    {benefit.title}
-                  </h3>
+                {/* Main Content */}
+                <div className="relative space-y-4 flex-1 flex flex-col">
+                  {/* Title and Subtitle */}
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors duration-300">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-gray-600 font-medium text-xl">
+                      {benefit.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Description */}
                   <p className="text-gray-600 text-lg leading-relaxed">
                     {benefit.description}
                   </p>
+
+                  {/* Metrics Grid */}
+                  <div className="grid grid-cols-2 gap-4 pt-2 mt-auto">
+                    {benefit.metrics.map((metric, metricIndex) => (
+                      <div key={metricIndex} className="bg-white/60 backdrop-blur-sm rounded-xl p-3 text-center border border-white/20">
+                        <div className={`text-lg font-bold ${metric.color}`}>
+                          {metric.value}
+                        </div>
+                        <div className="text-xs text-gray-600 font-medium">
+                          {metric.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+
                 </div>
 
-                {/* Hover Effect */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Enhanced Hover Effects */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/5 transition-all duration-500 rounded-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Corner Accent */}
+                <div className={`absolute top-0 right-0 w-0 h-0 border-l-[20px] border-l-transparent border-t-[20px] border-t-${benefit.color.split('-')[1]}-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
               </div>
             </motion.div>
           ))}

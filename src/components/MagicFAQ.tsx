@@ -49,7 +49,7 @@ export default function MagicFAQ() {
   }
 
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
+    <section id="faq-section-desktop" className="relative py-24 md:py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-black" style={{ scrollMarginTop: '80px' }}>
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>

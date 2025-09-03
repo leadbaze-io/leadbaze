@@ -1,37 +1,46 @@
 import MobileHero from '../components/mobile/MobileHero'
-import MobileProcess from '../components/mobile/MobileProcess'
+import MobileSteps from '../components/mobile/MobileSteps'
+import MobileBenefits from '../components/mobile/MobileBenefits'
 import MobilePricing from '../components/mobile/MobilePricing'
-import MobileBonus from '../components/mobile/MobileBonus'
+import MobileCTA from '../components/mobile/MobileCTA'
 import MobileGuarantee from '../components/mobile/MobileGuarantee'
-import MobileComparison from '../components/mobile/MobileComparison'
-import MobileLGPD from '../components/mobile/MobileLGPD'
+import MobilePricingPlans from '../components/mobile/MobilePricingPlans'
+import MobileFAQ from '../components/mobile/MobileFAQ'
+import MobileFooter from '../components/mobile/MobileFooter'
 
 export default function MobileLandingPage() {
   return (
     <div className="md:hidden min-h-screen">
-      {/* Mobile Hero - Leads B2B qualificados em 24h */}
+      {/* Mobile Hero Section */}
       <MobileHero />
       
-      {/* Mobile Process - Map→Match→Message™ */}
-      <MobileProcess />
+      {/* Mobile Como Funciona */}
+      <MobileSteps />
       
-      {/* Mobile Pricing - Planos START/GROWTH/SCALE */}
+      {/* Mobile Benefícios */}
+      <MobileBenefits />
+      
+      {/* Mobile CTA Final */}
+      <MobileCTA />
+      
+      {/* Mobile Desejo vs Dor */}
       <MobilePricing />
       
-      {/* Mobile Bonus - Bônus inclusos */}
-      <MobileBonus />
-      
-      {/* Mobile Guarantee - 30 dias sem risco */}
+      {/* Mobile 6º Dobra - GARANTIA */}
       <MobileGuarantee />
       
-      {/* Mobile Comparison - SDR vs Agência vs LeadBaze */}
-      <MobileComparison />
+      {/* Mobile 7º Dobra - OFERTA */}
+      <MobilePricingPlans />
       
-      {/* Mobile LGPD - Conformidade legal */}
-      <MobileLGPD />
+      {/* Mobile 8º Dobra - FAQ: Quebra de Objeções */}
+      <MobileFAQ />
+      
+      {/* Mobile Footer */}
+      <MobileFooter />
     </div>
   )
 }
+
 
 
 

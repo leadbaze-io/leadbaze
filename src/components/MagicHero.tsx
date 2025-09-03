@@ -43,7 +43,7 @@ export default function MagicHero() {
               </span>
               <br />
               <span className="text-gray-900">
-                em menos de 5 minutos
+                em menos de 7 dias
               </span>
             </h1>
           </AnimatedBeam>
@@ -58,7 +58,7 @@ export default function MagicHero() {
           {/* CTA Centralizado */}
           <AnimatedBeam delay={0.8}>
             <div className="flex justify-center mb-12">
-              <button
+              <ShimmerButton 
                 onClick={() => {
                   document.getElementById('pricing-plans-section')?.scrollIntoView({ 
                     behavior: 'smooth' 
@@ -66,11 +66,9 @@ export default function MagicHero() {
                 }}
                 className="px-8 py-4 text-lg"
               >
-                <ShimmerButton className="px-8 py-4 text-lg">
-                  <span>Ver Planos</span>
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </ShimmerButton>
-              </button>
+                <span>Ver Planos</span>
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </ShimmerButton>
             </div>
           </AnimatedBeam>
 
@@ -156,8 +154,8 @@ export default function MagicHero() {
                   <div className="text-4xl font-black mb-3">
                     <AnimatedCounter value={1000} suffix="+" className="text-green-600" delay={900} />
                   </div>
-                  <div className="text-gray-700 font-semibold text-lg">Leads/hora</div>
-                  <div className="text-gray-500 text-sm mt-2">capacidade máxima</div>
+                  <div className="text-gray-700 font-semibold text-lg">Leads/semana</div>
+                  <div className="text-gray-500 text-sm mt-2">plano Start</div>
                 </BorderBeam>
               </div>
             </div>

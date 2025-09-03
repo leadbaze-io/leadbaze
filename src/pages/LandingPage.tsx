@@ -6,6 +6,7 @@ import MagicCTA from '../components/MagicCTA'
 import MagicGuarantee from '../components/MagicGuarantee'
 import MagicPricingPlans from '../components/MagicPricingPlans'
 import MagicFAQ from '../components/MagicFAQ'
+import Footer from '../components/Footer'
 import MobileLandingPage from './MobileLandingPage'
 
 export default function LandingPage() {
@@ -39,6 +40,9 @@ export default function LandingPage() {
         
         {/* 8º Dobra - FAQ: Quebra de Objeções */}
         <MagicFAQ />
+        
+        {/* Footer */}
+        <Footer />
       </div>
     </div>
   )

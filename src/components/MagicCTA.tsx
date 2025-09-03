@@ -71,19 +71,18 @@ export default function MagicCTA() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex justify-center mb-16"
           >
-            <button
+            <ShimmerButton 
               onClick={() => {
                 const pricingSection = document.getElementById('pricing-plans-section');
                 if (pricingSection) {
                   pricingSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
+              className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
-              <ShimmerButton className="px-12 py-4 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                <ArrowRight className="w-5 h-5 mr-2" />
-                Começar Agora
-              </ShimmerButton>
-            </button>
+              <ArrowRight className="w-5 h-5 mr-2" />
+              Começar Agora
+            </ShimmerButton>
           </motion.div>
 
           {/* Features */}

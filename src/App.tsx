@@ -5,7 +5,6 @@ import { lazy, Suspense, useEffect } from 'react'
 import { queryClient } from './lib/queryClient'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import Navbar from './components/Navbar'
-import Footer from './components/Footer'
 import FaviconImage from './components/FaviconImage'
 import LoadingScreen from './components/LoadingScreen'
 
@@ -60,8 +59,6 @@ function AppContent() {
           </Routes>
         </Suspense>
       </main>
-      
-      <Footer />
     </div>
   )
 }
