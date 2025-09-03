@@ -12,10 +12,13 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Páginas onde o ThemeToggle deve aparecer
+  // Páginas onde o ThemeToggle deve aparecer (APENAS páginas da aplicação)
   const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador'].some(path => 
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
+
+  // Landing Page sempre será clara
+  const isLandingPage = location.pathname === '/'
 
   useEffect(() => {
     // Verificar usuário logado inicialmente

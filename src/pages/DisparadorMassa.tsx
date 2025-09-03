@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Send, MessageSquare, Settings, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen } from 'lucide-react'
+import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from '../hooks/use-toast'
 import { getCurrentUser } from '../lib/supabaseClient'
@@ -158,6 +158,36 @@ export default function DisparadorMassa() {
       })
     }
   }
+
+  // Deletar campanha
+  const handleDeleteCampaign = async (campaignId: string) => {
+    if (!window.confirm('Tem certeza que deseja deletar esta campanha? Esta ação não pode ser desfeita.')) {
+      return;
+    }
+
+    try {
+      await CampaignService.deleteCampaign(campaignId);
+      setCampaigns(prev => prev.filter(c => c.id !== campaignId));
+      toast({
+        title: 'Campanha deletada!',
+        description: 'A campanha foi deletada com sucesso.',
+      });
+      setSelectedCampaign(null);
+      setSelectedLists([]);
+      setMessage('');
+      setCampaignLeads([]);
+      setNewLeads([]);
+      setDuplicateLeads([]);
+      setShowCampaignDetails(false);
+    } catch (error) {
+      console.error('Erro ao deletar campanha:', error);
+      toast({
+        title: 'Erro ao deletar campanha',
+        description: 'Erro ao deletar a campanha. Tente novamente.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   // Selecionar campanha existente
   const handleSelectCampaign = (campaign: BulkCampaign) => {
@@ -400,13 +430,7 @@ export default function DisparadorMassa() {
     }
   }
 
-  const handleSaveWhatsAppConfig = async () => {
-    // TODO: Implementar salvamento da configuração do WhatsApp
-    toast({
-      title: 'Configuração Salva!',
-      description: 'Sua configuração do WhatsApp foi salva com sucesso.',
-    })
-  }
+
 
   const handleConnectionSuccess = async (instanceName: string) => {
     setConnectedInstance(instanceName)
@@ -433,6 +457,13 @@ export default function DisparadorMassa() {
       console.error('Erro ao buscar dados da instância:', error)
     }
     
+    // Mensagem de sucesso profissional
+    toast({
+      title: '🎉 WhatsApp Conectado com Sucesso!',
+      description: `Sua instância "${instanceName}" está ativa e pronta para enviar campanhas.`,
+      className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+    })
+    
     // Mudar para a aba de campanha após conectar
     setActiveTab('campaign')
   }
@@ -441,6 +472,14 @@ export default function DisparadorMassa() {
     console.error('Erro na conexão WhatsApp:', error)
     setConnectedInstance(null)
     setWhatsappConfig(null)
+    
+    // Mensagem de erro profissional e encorajadora
+    toast({
+      title: '⚠️ Falha na Conexão WhatsApp',
+      description: 'Não foi possível conectar ao WhatsApp. Tente novamente em alguns minutos ou verifique sua conexão.',
+      variant: 'destructive',
+      className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
+    })
   }
 
   const handleDisconnect = () => {
@@ -448,8 +487,9 @@ export default function DisparadorMassa() {
     setConnectedInstance(null)
     setWhatsappConfig(null)
     toast({
-      title: 'WhatsApp Desconectado',
-      description: 'Você pode conectar um novo número agora.',
+      title: '🔄 WhatsApp Desconectado',
+      description: 'Sua instância foi desconectada. Você pode conectar um novo número agora.',
+      className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
     })
   }
 
@@ -543,7 +583,6 @@ export default function DisparadorMassa() {
                 : 'bg-card text-muted-foreground hover:text-foreground hover:shadow-md border border-border'
             }`}
           >
-            <Settings className="w-4 h-4 inline mr-2" />
             Configuração WhatsApp
           </button>
         </div>
@@ -578,7 +617,7 @@ export default function DisparadorMassa() {
                       variant="outline" 
                       size="sm"
                       onClick={() => setActiveTab('config')}
-                      className="ml-auto"
+                      className="ml-auto bg-green-500 hover:bg-green-600 text-white border-green-600 hover:border-green-700 shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       Conectar WhatsApp
                     </Button>
@@ -653,7 +692,7 @@ export default function DisparadorMassa() {
                   
                   {campaigns.length === 0 ? (
                     <div className="text-center py-8">
-                      <FolderOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-4">
                         Você ainda não possui campanhas
                       </p>
@@ -662,33 +701,81 @@ export default function DisparadorMassa() {
                       </p>
                     </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {campaigns.map((campaign) => (
                         <div
                           key={campaign.id}
-                          className="p-4 border border-border rounded-lg hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all cursor-pointer"
+                          className="group p-5 border-2 border-gray-200 dark:border-border rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all duration-200 cursor-pointer bg-card hover:bg-muted/30"
                           onClick={() => handleSelectCampaign(campaign)}
                         >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium text-foreground">{campaign.name}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                <span className="text-foreground font-medium">{campaign.total_leads} leads</span> • Status: {campaign.status}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Criada em: {new Date(campaign.created_at).toLocaleDateString()}
-                              </p>
+                          {/* Header do Card */}
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                <MessageSquare className="w-5 h-5 text-white" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-foreground text-base leading-tight">{campaign.name}</h4>
+                                <p className="text-xs text-muted-foreground">
+                                  {new Date(campaign.created_at).toLocaleDateString('pt-BR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                  })}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <span className={`px-2 py-1 text-xs rounded-full ${
-                                campaign.status === 'draft' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
-                                campaign.status === 'sending' ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' :
-                                campaign.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
-                                'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
+                            
+                            {/* Botão Deletar - SEMPRE VISÍVEL */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteCampaign(campaign.id)
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-all duration-200"
+                              title="Deletar campanha"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          {/* Informações da Campanha */}
+                          <div className="space-y-3">
+                            {/* Estatísticas */}
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border border-border">
+                              <div className="flex items-center space-x-2">
+                                <Users className="w-4 h-4 text-blue-600" />
+                                <span className="text-sm font-medium text-foreground">{campaign.total_leads}</span>
+                                <span className="text-xs text-muted-foreground">leads</span>
+                              </div>
+                              
+                              {/* Status Badge - FORMATO ESPECÍFICO SOLICITADO */}
+                              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                campaign.status === 'draft' ? 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800' :
+                                campaign.status === 'sending' ? 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800' :
+                                campaign.status === 'completed' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800' :
+                                'bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800'
                               }`}>
-                                {campaign.status}
-                              </span>
-                              <FolderOpen className="w-4 h-4 text-muted-foreground" />
+                                {campaign.status === 'draft' ? '📝 Em Preparação' :
+                                 campaign.status === 'sending' ? '📤 Enviando' :
+                                 campaign.status === 'completed' ? '✅ Concluída' : '❓ Desconhecido'}
+                              </div>
+                            </div>
+
+                            {/* Mensagem Preview */}
+                            {campaign.message && (
+                              <div className="p-3 bg-muted/30 rounded-lg border border-border">
+                                <p className="text-xs text-muted-foreground mb-1">Mensagem:</p>
+                                <p className="text-sm text-foreground line-clamp-2 leading-relaxed">
+                                  {campaign.message}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Indicador de Interação */}
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                              <span>Clique para editar</span>
+                              <div className="w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                             </div>
                           </div>
                         </div>
@@ -704,217 +791,399 @@ export default function DisparadorMassa() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
+                className="space-y-8"
               >
-                {/* Header da Campanha */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-2xl font-bold mb-2">{selectedCampaign.name}</h2>
-                      <p className="text-blue-100">
-                        {campaignLeads.length} leads na campanha • Status: {selectedCampaign.status}
-                      </p>
+                {/* Header da Campanha - Design Profissional */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 dark:from-slate-800 dark:via-blue-800 dark:to-slate-800 rounded-3xl shadow-2xl">
+                  {/* Padrão de Fundo Sutil */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-30"></div>
+                  
+                  <div className="relative p-8">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-4">
+                        {/* Nome da Campanha com Ícone */}
+                        <div className="flex items-center space-x-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <MessageSquare className="w-8 h-8 text-white" />
+                          </div>
+                          <div>
+                            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
+                              {selectedCampaign.name}
+                            </h1>
+                            <div className="flex items-center space-x-4 text-blue-100 dark:text-blue-200">
+                              <div className="flex items-center space-x-2">
+                                <Users className="w-5 h-5" />
+                                <span className="font-semibold">{campaignLeads.length} leads</span>
+                              </div>
+                              <div className="w-2 h-2 bg-blue-300 dark:bg-blue-400 rounded-full"></div>
+                              <span className="capitalize">{selectedCampaign.status}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Estatísticas Rápidas */}
+                        <div className="grid grid-cols-3 gap-6 pt-4">
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-white">{campaignLeads.length}</div>
+                            <div className="text-blue-200 dark:text-blue-300 text-sm">Total de Leads</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-white">{selectedLists.length}</div>
+                            <div className="text-blue-200 dark:text-blue-300 text-sm">Listas Selecionadas</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-white">{message.length}</div>
+                            <div className="text-blue-200 dark:text-blue-300 text-sm">Caracteres</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Botão Voltar Elegante */}
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowCampaignDetails(false)
+                          setSelectedCampaign(null)
+                          setSelectedLists([])
+                          setMessage('')
+                          setCampaignLeads([])
+                          setNewLeads([])
+                          setDuplicateLeads([])
+                        }}
+                        className="border-border text-foreground hover:bg-muted hover:text-foreground transition-all duration-300"
+                      >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Voltar
+                      </Button>
                     </div>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setShowCampaignDetails(false)
-                        setSelectedCampaign(null)
-                        setSelectedLists([])
-                        setMessage('')
-                        setCampaignLeads([])
-                        setNewLeads([])
-                        setDuplicateLeads([])
-                      }}
-                      className="text-white border-white hover:bg-white hover:text-blue-600"
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Voltar
-                    </Button>
                   </div>
                 </div>
 
-                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                   {/* Seleção de Listas */}
-                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-                    <h3 className="text-xl font-semibold mb-4 flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
-                      Adicionar Listas
-                    </h3>
-                    
-                    {lists.length === 0 ? (
-                      <div className="text-center py-8">
-                        <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-muted-foreground mb-4">
-                          Você ainda não possui listas de leads
+                {/* Grid Principal - Layout Profissional */}
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                  {/* Coluna 1: Gestão de Listas */}
+                  <div className="xl:col-span-1 space-y-6">
+                    {/* Seleção de Listas - Card Elegante */}
+                    <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
+                      <div className="bg-blue-50 dark:bg-blue-800 p-6 border-b-2 border-gray-200 dark:border-blue-600">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                          <Users className="w-6 h-6 mr-3 text-blue-600 dark:text-blue-400" />
+                          Gestão de Listas
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                          Selecione as listas de leads para sua campanha
                         </p>
-                        <Button 
-                          onClick={() => navigate('/gerador')}
-                          className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
-                        >
-                          Criar primeira lista
-                        </Button>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
-                        {lists.map((list) => (
-                          <div
-                            key={list.id}
-                            className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                              selectedLists.includes(list.id)
-                                ? 'border-blue-500 bg-blue-50/50'
-                                : 'border-border hover:border-blue-200 hover:bg-muted'
-                            }`}
-                            onClick={() => handleListToggle(list.id)}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h4 className="font-medium text-gray-900">{list.name}</h4>
-                                <p className="text-sm text-gray-500">
-                                  {list.total_leads} leads
-                                </p>
-                                {list.description && (
-                                  <p className="text-xs text-gray-400 mt-1">
-                                    {list.description}
-                                  </p>
-                                )}
-                              </div>
-                              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                                selectedLists.includes(list.id)
-                                  ? 'border-blue-500 bg-blue-500'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedLists.includes(list.id) && (
-                                  <CheckCircle className="w-3 h-3 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                        
-                        {selectedLists.length > 0 && (
-                          <div className="mt-4 space-y-3">
-                            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                              <p className="text-blue-800 font-medium">
-                                {calculateTotalLeads()} leads selecionados
-                              </p>
-                            </div>
-                            <Button
-                              onClick={handleUpdateCampaignLists}
-                              className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
+                      
+                      <div className="p-6">
+                        {lists.length === 0 ? (
+                          <div className="text-center py-8">
+                            <Users className="w-16 h-16 text-gray-300 dark:text-gray-500 mx-auto mb-4" />
+                            <p className="text-gray-600 dark:text-gray-300 mb-4 font-medium">
+                              Você ainda não possui listas de leads
+                            </p>
+                            <Button 
+                              onClick={() => navigate('/gerador')}
+                              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                             >
-                              Adicionar à Campanha
+                              Criar Primeira Lista
                             </Button>
                           </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Feedback de Leads */}
-                    {(newLeads.length > 0 || duplicateLeads.length > 0) && (
-                      <div className="mt-4 space-y-2">
-                        {newLeads.length > 0 && (
-                          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                            <p className="text-green-800 text-sm">
-                              ✅ {newLeads.length} novos leads adicionados
-                            </p>
+                        ) : (
+                          <div className="space-y-4">
+                            {lists.map((list) => (
+                              <div
+                                key={list.id}
+                                className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+                                  selectedLists.includes(list.id)
+                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 shadow-lg scale-105' 
+                                    : 'border-gray-200 dark:border-border hover:border-blue-300 dark:hover:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                }`}
+                                onClick={() => handleListToggle(list.id)}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <h4 className="font-semibold text-gray-900 dark:text-white text-lg mb-1">
+                                      {list.name}
+                                    </h4>
+                                    <p className="text-gray-600 dark:text-gray-300 font-medium">
+                                      {list.total_leads} leads
+                                    </p>
+                                    {list.description && (
+                                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
+                                        {list.description}
+                                      </p>
+                                    )}
+                                  </div>
+                                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                                    selectedLists.includes(list.id)
+                                      ? 'border-blue-500 bg-blue-500 scale-110' 
+                                      : 'border-gray-300 dark:border-gray-600'
+                                  }`}>
+                                    {selectedLists.includes(list.id) && (
+                                      <CheckCircle className="w-4 h-4 text-white" />
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            
+                            {/* Resumo de Seleção */}
+                            {selectedLists.length > 0 && (
+                              <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-xl border-2 border-blue-200 dark:border-blue-800"
+                              >
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center space-x-2">
+                                    <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                    <span className="font-semibold text-blue-800 dark:text-white">
+                                      {calculateTotalLeads()} leads selecionados
+                                    </span>
+                                  </div>
+                                </div>
+                                <Button
+                                  onClick={handleUpdateCampaignLists}
+                                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                                >
+                                  <Users className="w-4 h-4 mr-2" />
+                                  Adicionar à Campanha
+                                </Button>
+                              </motion.div>
+                            )}
                           </div>
                         )}
-                        {duplicateLeads.length > 0 && (
-                          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                            <p className="text-yellow-800 text-sm">
-                              ⚠️ {duplicateLeads.length} leads duplicados ignorados
-                            </p>
-                          </div>
+
+                        {/* Feedback de Leads - Design Elegante */}
+                        {(newLeads.length > 0 || duplicateLeads.length > 0) && (
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-6 space-y-3"
+                          >
+                            {newLeads.length > 0 && (
+                              <div className="p-4 bg-green-50 dark:bg-green-900 border-2 border-green-200 dark:border-green-800 rounded-xl">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold text-sm">✓</span>
+                                  </div>
+                                  <div>
+                                    <p className="font-semibold text-green-800 dark:text-green-200">
+                                      {newLeads.length} novos leads adicionados
+                                    </p>
+                                    <p className="text-sm text-green-600 dark:text-green-300">
+                                      Sucesso na importação
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            {duplicateLeads.length > 0 && (
+                              <div className="p-4 bg-amber-50 dark:bg-amber-900 border-2 border-amber-200 dark:border-amber-800 rounded-xl">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold text-sm">!</span>
+                                  </div>
+                                  <div>
+                                    <p className="font-semibold text-amber-800 dark:text-amber-200">
+                                      {duplicateLeads.length} leads duplicados ignorados
+                                    </p>
+                                    <p className="text-sm text-amber-600 dark:text-amber-300">
+                                      Evitando duplicação
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </motion.div>
                         )}
                       </div>
-                                         )}
-                   </div>
+                    </div>
+                  </div>
 
-                   {/* Leads da Campanha */}
-                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-                     <h3 className="text-xl font-semibold mb-4 flex items-center">
-                       <Users className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
-                       Leads da Campanha
-                     </h3>
-                     
-                     {campaignLeads.length === 0 ? (
-                       <div className="text-center py-8">
-                         <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                         <p className="text-muted-foreground mb-4">
-                           Nenhum lead adicionado ainda
-                         </p>
-                         <p className="text-sm text-muted-foreground">
-                           Selecione listas para adicionar leads
-                         </p>
-                       </div>
-                     ) : (
-                       <div className="space-y-3">
-                         <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                           <p className="text-green-800 font-medium">
-                             {campaignLeads.length} leads na campanha
-                           </p>
-                         </div>
-                         
-                         <div className="max-h-64 overflow-y-auto space-y-2">
-                           {campaignLeads.slice(0, 10).map((lead, index) => (
-                             <div key={index} className="p-2 bg-gray-50 rounded border border-gray-200">
-                               <p className="font-medium text-sm text-gray-900">{lead.name}</p>
-                               <p className="text-xs text-gray-500">{lead.phone}</p>
-                               <p className="text-xs text-gray-400">{lead.address}</p>
-                             </div>
-                           ))}
-                           {campaignLeads.length > 10 && (
-                             <p className="text-xs text-gray-500 text-center">
-                               ... e mais {campaignLeads.length - 10} leads
-                             </p>
-                           )}
-                         </div>
-                       </div>
-                     )}
-                   </div>
-
-                   {/* Configuração da Mensagem */}
-                   <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-                    <h3 className="text-xl font-semibold mb-4 flex items-center">
-                      <MessageSquare className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" />
-                      Mensagem da Campanha
-                    </h3>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="message" className="text-foreground font-medium">Mensagem</Label>
-                        <textarea
-                          id="message"
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none mt-1"
-                          rows={6}
-                          placeholder="Ex: Olá {nome}, temos uma proposta especial para você!"
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                          {message.length}/1000 caracteres • Use {"{nome}"} para personalizar com o nome do lead
+                  {/* Coluna 2: Leads da Campanha */}
+                  <div className="xl:col-span-1 space-y-6">
+                    {/* Leads da Campanha - Card Profissional */}
+                    <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
+                      <div className="bg-green-50 dark:bg-gray-900 p-6 border-b-2 border-gray-200 dark:border-green-600">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                          <Users className="w-6 h-6 mr-3 text-green-600 dark:text-green-300" />
+                          Leads da Campanha
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                          Visualize e gerencie os leads selecionados
                         </p>
                       </div>
+                      
+                      <div className="p-6">
+                        {campaignLeads.length === 0 ? (
+                          <div className="text-center py-12">
+                            <Users className="w-16 h-16 text-gray-300 dark:text-gray-500 mx-auto mb-4" />
+                            <p className="text-gray-600 dark:text-gray-300 mb-2 font-medium">
+                              Nenhum lead adicionado ainda
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Selecione listas para adicionar leads à campanha
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            {/* Resumo Estatístico */}
+                            <div className="p-4 bg-green-50 dark:bg-green-900 border-2 border-green-200 dark:border-green-800 rounded-xl">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                    <Users className="w-5 h-5 text-white" />
+                                  </div>
+                                  <div>
+                                    <p className="text-2xl font-bold text-green-800 dark:text-green-200">
+                                      {campaignLeads.length}
+                                    </p>
+                                    <p className="text-sm text-green-600 dark:text-green-300">
+                                      leads na campanha
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-sm text-green-600 dark:text-green-300">
+                                    Pronto para envio
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Lista de Leads com Scroll Elegante */}
+                            <div className="max-h-80 overflow-y-auto space-y-3 pr-2">
+                              {campaignLeads.slice(0, 15).map((lead, index) => (
+                                <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <p className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
+                                        {lead.name}
+                                      </p>
+                                      {lead.phone && (
+                                        <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                                          📱 {lead.phone}
+                                        </p>
+                                      )}
+                                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                                        📍 {lead.address}
+                                      </p>
+                                    </div>
+                                    <div className="text-xs text-gray-400 dark:text-gray-500 font-mono">
+                                      #{index + 1}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              {campaignLeads.length > 15 && (
+                                <div className="text-center py-4">
+                                  <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full">
+                                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                                      ... e mais {campaignLeads.length - 15} leads
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-                      <div className="pt-4 space-y-3">
-                        <Button 
-                          onClick={handleSaveMessage}
-                          variant="outline"
-                          className="w-full border-blue-300 text-blue-600 hover:bg-blue-50"
-                          disabled={!message.trim()}
-                        >
-                          Salvar Mensagem
-                        </Button>
-                        
-                        <Button 
-                          onClick={handleSendCampaign}
-                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                          disabled={!message || campaignLeads.length === 0 || (!whatsappConfig && !connectedInstance)}
-                        >
-                          <Send className="w-4 h-4 mr-2" />
-                          Enviar Campanha ({campaignLeads.length} leads)
-                        </Button>
+                  {/* Coluna 3: Configuração da Mensagem */}
+                  <div className="xl:col-span-1 space-y-6">
+                    {/* Configuração da Mensagem - Card Elegante */}
+                    <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
+                      <div className="bg-purple-50 dark:bg-gray-900 p-6 border-b-2 border-gray-200 dark:border-purple-600">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                          <MessageSquare className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-300" />
+                          Mensagem da Campanha
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                          Configure sua mensagem personalizada
+                        </p>
+                      </div>
+                      
+                      <div className="p-6 space-y-6">
+                        {/* Editor de Mensagem Profissional */}
+                        <div className="space-y-3">
+                          <Label htmlFor="message" className="text-gray-700 dark:text-gray-200 font-semibold text-sm">
+                            Mensagem Personalizada
+                          </Label>
+                          <div className="relative">
+                            <textarea
+                              id="message"
+                              className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 dark:focus:border-purple-400 resize-none transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                              rows={8}
+                              placeholder="Ex: Olá {nome}, temos uma proposta especial para você! 🚀
+
+Estamos oferecendo condições exclusivas para novos clientes.
+
+Entre em contato conosco para mais detalhes!"
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                            />
+                            {/* Contador de Caracteres Elegante */}
+                            <div className="absolute bottom-3 right-3">
+                              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                message.length > 800 
+                                  ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' 
+                                  : message.length > 600 
+                                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+                                    : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                              }`}>
+                                {message.length}/1000
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Dicas de Personalização */}
+                          <div className="p-4 bg-blue-50 dark:bg-blue-900 border-2 border-blue-200 dark:border-blue-800 rounded-xl">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white font-bold text-xs">💡</span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-blue-800 dark:text-blue-200 text-sm mb-2">
+                                  Dicas de Personalização
+                                </p>
+                                <div className="space-y-1 text-xs text-blue-700 dark:text-blue-100">
+                                  <p>• Use <code>{"{nome}"}</code> para incluir o nome do lead</p>
+                                  <p>• Mantenha a mensagem clara e objetiva</p>
+                                  <p>• Inclua uma chamada para ação</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Botões de Ação Profissionais */}
+                        <div className="space-y-4 pt-4">
+                          <Button 
+                            onClick={handleSaveMessage}
+                            variant="outline"
+                            className="w-full border-2 border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-600 py-3 rounded-xl font-semibold transition-all duration-300"
+                            disabled={!message.trim()}
+                          >
+                            <MessageSquare className="w-4 h-4 mr-2" />
+                            Salvar Mensagem
+                          </Button>
+                          
+                          <Button 
+                            onClick={handleSendCampaign}
+                            className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:from-purple-700 hover:via-pink-700 hover:to-purple-800 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            disabled={!message || campaignLeads.length === 0 || (!whatsappConfig && !connectedInstance)}
+                          >
+                            <Send className="w-5 h-5 mr-3" />
+                            Enviar Campanha
+                            <span className="ml-2 px-3 py-1 bg-white/20 rounded-full text-sm">
+                              {campaignLeads.length} leads
+                            </span>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -952,82 +1221,8 @@ export default function DisparadorMassa() {
               onDisconnect={handleDisconnect}
             />
 
-            {/* Configuração Manual (Opcional) */}
-            <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Settings className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
-                Configuração Manual (Opcional)
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="apiUrl" className="text-foreground font-medium">URL da API</Label>
-                    <Input
-                      id="apiUrl"
-                      placeholder="https://api.evolutionapi.com"
-                      defaultValue={whatsappConfig?.api_url || ''}
-                      className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
 
-                  <div>
-                    <Label htmlFor="apiKey" className="text-foreground font-medium">Chave da API</Label>
-                    <Input
-                      id="apiKey"
-                      type="password"
-                      placeholder="Sua chave da Evolution API"
-                      defaultValue={whatsappConfig?.api_key || ''}
-                      className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
 
-                  <div>
-                    <Label htmlFor="instanceName" className="text-foreground font-medium">Nome da Instância</Label>
-                    <Input
-                      id="instanceName"
-                      placeholder="minha-instancia"
-                      defaultValue={whatsappConfig?.instance_name || ''}
-                      className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="whatsappNumber" className="text-foreground font-medium">Número do WhatsApp</Label>
-                    <Input
-                      id="whatsappNumber"
-                      placeholder="5531999887766"
-                      defaultValue={whatsappConfig?.whatsapp_number || ''}
-                      className="mt-1 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Digite apenas números (DDI + DDD + Número)
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <h3 className="font-medium text-yellow-800 mb-2">
-                      Como configurar manualmente:
-                    </h3>
-                    <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>1. Tenha uma instância ativa da Evolution API</li>
-                      <li>2. Obtenha a URL e chave da API</li>
-                      <li>3. Configure uma instância no painel</li>
-                      <li>4. Conecte seu WhatsApp via QR Code</li>
-                    </ul>
-                  </div>
-
-                  <Button 
-                    onClick={handleSaveWhatsAppConfig} 
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                  >
-                    Salvar Configuração Manual
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 

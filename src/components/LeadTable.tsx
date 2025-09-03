@@ -97,20 +97,20 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
       {/* Header */}
-      <div className="p-6 border-b border-gray-100">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-            <p className="text-gray-600 mt-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">
               {filteredAndSortedLeads.length} de {leads.length} leads
             </p>
           </div>
           
           <button
             onClick={exportToCSV}
-            className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center space-x-2 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             <Download className="w-4 h-4" />
             <span>Exportar CSV</span>
@@ -119,17 +119,17 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
       </div>
 
       {/* Filtros */}
-      <div className="p-6 border-b border-gray-100 bg-gray-50">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Busca */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
             <input
               type="text"
               placeholder="Buscar leads..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
             <select
               value={maxLeads}
               onChange={(e) => setMaxLeads(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value={10}>10 leads</option>
               <option value={20}>20 leads</option>
@@ -154,7 +154,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
             <select
               value={minRating}
               onChange={(e) => setMinRating(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value={0}>Qualquer avaliação</option>
               <option value={3}>3+ estrelas</option>
@@ -168,15 +168,15 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
             <select
               value={minReviews}
               onChange={(e) => setMinReviews(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value={0}>Qualquer quantidade</option>
-                             <option value={10}>10+ Avaliações</option>
-               <option value={25}>25+ Avaliações</option>
-               <option value={50}>50+ Avaliações</option>
-               <option value={100}>100+ Avaliações</option>
-               <option value={250}>250+ Avaliações</option>
-               <option value={500}>500+ Avaliações</option>
+              <option value={10}>10+ Avaliações</option>
+              <option value={25}>25+ Avaliações</option>
+              <option value={50}>50+ Avaliações</option>
+              <option value={100}>100+ Avaliações</option>
+              <option value={250}>250+ Avaliações</option>
+              <option value={500}>500+ Avaliações</option>
             </select>
           </div>
 
@@ -189,7 +189,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 setSortBy(field as 'name' | 'rating' | 'address')
                 setSortOrder(order as 'asc' | 'desc')
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             >
               <option value="name-asc">Nome (A-Z)</option>
               <option value="name-desc">Nome (Z-A)</option>
@@ -204,92 +204,98 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
       {/* Tabela */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => handleSort('name')}
               >
                 Estabelecimento & Cidade
               </th>
               <th 
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => handleSort('rating')}
               >
                 Avaliação
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 Contato
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 Ações
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredAndSortedLeads.map((lead, index) => (
-          <tr key={index} className="hover:bg-gray-50 transition-colors">
-            <td className="px-6 py-4">
-              <div className="flex items-start space-x-3">
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-900 mb-1">{lead.name}</div>
-                  
-                  {/* Cidade abaixo do nome */}
-                  <div className="flex items-start space-x-2 mb-2">
-                    <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 leading-relaxed">{lead.address || 'Cidade não disponível'}</span>
-                  </div>
-
-                  {lead.business_type && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      {lead.business_type}
-                    </span>
-                  )}
-
-                  {/* Horário de funcionamento */}
-                  {lead.opening_hours && lead.opening_hours.length > 0 && (
-                    <div className="flex items-start space-x-2 mt-2">
-                      <Clock className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                      <div className="text-xs text-gray-500">
-                        {lead.opening_hours.slice(0, 2).map((hour, i) => (
-                          <div key={i}>{hour}</div>
-                        ))}
-                        {lead.opening_hours.length > 2 && (
-                          <div className="text-blue-600">+{lead.opening_hours.length - 2} mais</div>
-                        )}
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            {filteredAndSortedLeads.map((lead, index) => (
+              <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <td className="px-6 py-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">{lead.name}</div>
+                      
+                      {/* Cidade abaixo do nome */}
+                      <div className="flex items-start space-x-2 mb-2">
+                        <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{lead.address || 'Cidade não disponível'}</span>
                       </div>
+
+                      {lead.business_type && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                          {lead.business_type}
+                        </span>
+                      )}
+
+                      {/* Horário de funcionamento */}
+                      {lead.opening_hours && lead.opening_hours.length > 0 && (
+                        <div className="flex items-start space-x-2 mt-2">
+                          <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" />
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {lead.opening_hours.slice(0, 2).map((hour, i) => (
+                              <div key={i}>{hour}</div>
+                            ))}
+                            {lead.opening_hours.length > 2 && (
+                              <div className="text-blue-600 dark:text-blue-400">+{lead.opening_hours.length - 2} mais</div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap">
-              <div className="space-y-2">
-                {/* Avaliação com Badge e Star */}
-                <div className="text-center">
-                  <Badge
-                    variant="outline"
-                    className="flex items-center justify-center gap-1.5 whitespace-nowrap bg-white border-amber-200"
-                  >
-                    <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                    {lead.totalScore ? `${lead.totalScore} / 5` : 'N/A'}
-                  </Badge>
-                  {lead.reviews_count && (
-                                         <div className="text-xs text-gray-500 mt-1">
-                       {lead.reviews_count} Avaliações
-                     </div>
-                  )}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="space-y-2">
+                    {/* Avaliação com Badge e Star */}
+                    <div className="text-center">
+                      <Badge
+                        variant="outline"
+                        className="flex items-center justify-center gap-1.5 whitespace-nowrap bg-white dark:bg-gray-800 border-amber-200 dark:border-amber-600"
+                      >
+                        <Star className="h-3 w-3 text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400" />
+                        {lead.totalScore ? `${lead.totalScore} / 5` : 'N/A'}
+                      </Badge>
+                      {/* Número de Avaliações com Destaque Especial */}
+                      {lead.reviews_count && (
+                        <div className="mt-2">
+                          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                            {lead.reviews_count}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+                            Avaliações
+                          </div>
+                        </div>
+                      )}
                 </div>
 
                 {/* Nível de preço */}
                 {lead.price_level && (
                   <div className="flex items-center space-x-1">
-                    <DollarSign className="w-3 h-3 text-gray-400" />
+                    <DollarSign className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                     <div className="flex">
                       {Array.from({ length: 4 }, (_, i) => (
                         <span 
                           key={i} 
-                          className={`text-xs ${i < lead.price_level! ? 'text-green-600' : 'text-gray-300'}`}
+                          className={`text-xs ${i < lead.price_level! ? 'text-green-600 dark:text-green-400' : 'text-gray-300 dark:text-gray-600'}`}
                         >
                           $
                         </span>
@@ -304,10 +310,10 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 {/* Telefone */}
                 {lead.phone && (
                   <div className="flex items-center space-x-2">
-                    <Phone className="w-4 h-4 text-gray-400" />
+                    <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     <a 
                       href={`tel:${lead.phone}`}
-                      className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                     >
                       {lead.phone}
                     </a>
@@ -317,12 +323,12 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 {/* Website */}
                 {lead.website && (
                   <div className="flex items-center space-x-2">
-                    <Globe className="w-4 h-4 text-gray-400" />
+                    <Globe className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     <a 
                       href={lead.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                     >
                       Website
                     </a>
@@ -331,7 +337,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
 
                 {/* Se não tem telefone nem website */}
                 {!lead.phone && !lead.website && (
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-gray-400 dark:text-gray-500">
                     Contato não disponível
                   </div>
                 )}
@@ -345,9 +351,9 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
 
         {filteredAndSortedLeads.length === 0 && (
           <div className="text-center py-12">
-            <Filter className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum lead encontrado</h3>
-            <p className="text-gray-500">
+            <Filter className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Nenhum lead encontrado</h3>
+            <p className="text-gray-500 dark:text-gray-400">
               Tente ajustar os filtros ou realizar uma nova busca.
             </p>
           </div>

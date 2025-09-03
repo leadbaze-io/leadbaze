@@ -18,20 +18,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const [isDark, setIsDark] = useState(false)
 
-  // Função para carregar CSS do tema dinamicamente
-  const loadThemeCSS = async (themeName: 'light' | 'dark') => {
-    try {
-      // Importar o CSS do tema dinamicamente
-      if (themeName === 'dark') {
-        await import('../styles/themes/dark-theme.css')
-      } else {
-        await import('../styles/themes/light-theme.css')
-      }
-    } catch (error) {
-      console.warn(`Erro ao carregar tema ${themeName}:`, error)
-    }
-  }
-
   useEffect(() => {
     const updateTheme = () => {
       let shouldBeDark = false
@@ -45,17 +31,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       }
 
+      console.log('🎨 ThemeContext - Tema:', theme, 'shouldBeDark:', shouldBeDark)
       setIsDark(shouldBeDark)
       
-      // Aplicar classe ao documento e carregar CSS do tema
+      // Aplicar classe ao documento diretamente
       if (shouldBeDark) {
         document.documentElement.classList.add('dark')
-        loadThemeCSS('dark')
+        console.log('✅ ThemeContext - Classe dark adicionada')
       } else {
         document.documentElement.classList.remove('dark')
-        loadThemeCSS('light')
+        console.log('✅ ThemeContext - Classe dark removida')
       }
-
+      
       // Atualizar meta theme-color para mobile
       const metaThemeColor = document.querySelector('meta[name="theme-color"]')
       if (metaThemeColor) {
@@ -63,6 +50,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Aplicar tema imediatamente na inicialização
     updateTheme()
 
     // Listener para mudanças no sistema
@@ -78,8 +66,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme])
 
   const handleSetTheme = (newTheme: Theme) => {
+    console.log('🔄 Mudando tema para:', newTheme)
     setTheme(newTheme)
     localStorage.setItem('leadbaze-theme', newTheme)
+    
+    // Aplicar tema imediatamente
+    let shouldBeDark = false
+    if (newTheme === 'dark') {
+      shouldBeDark = true
+    } else if (newTheme === 'light') {
+      shouldBeDark = false
+    } else {
+      shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark')
+      console.log('✅ Tema aplicado imediatamente: dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      console.log('✅ Tema aplicado imediatamente: light')
+    }
   }
 
   return (

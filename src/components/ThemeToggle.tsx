@@ -21,13 +21,18 @@ export default function ThemeToggle() {
   const currentTheme = themes.find(t => t.value === theme)
   const CurrentIcon = currentTheme?.icon || Monitor
 
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    console.log('🎯 ThemeToggle - Mudando para:', newTheme)
+    setTheme(newTheme)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -49,7 +54,7 @@ export default function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-36 !bg-white !border-gray-200 shadow-xl">
+      <DropdownMenuContent align="end" className="w-36 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-xl">
         {themes.map((themeOption) => {
           const Icon = themeOption.icon
           const isActive = theme === themeOption.value
@@ -57,11 +62,11 @@ export default function ThemeToggle() {
           return (
             <DropdownMenuItem
               key={themeOption.value}
-              onClick={() => setTheme(themeOption.value)}
-              className={`cursor-pointer transition-colors !text-gray-900 ${
+              onClick={() => handleThemeChange(themeOption.value)}
+              className={`cursor-pointer transition-colors text-gray-900 dark:text-gray-100 ${
                 isActive 
-                  ? '!bg-blue-50 !text-blue-700' 
-                  : 'hover:!bg-gray-50'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
+                  : 'hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               <div className="flex items-center space-x-2 w-full">
@@ -75,7 +80,7 @@ export default function ThemeToggle() {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="w-2 h-2 bg-blue-600 rounded-full"
+                    className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full"
                   />
                 )}
               </div>
@@ -92,7 +97,9 @@ export function ThemeToggleCompact() {
   const { isDark, setTheme } = useTheme()
 
   const toggleTheme = () => {
-    setTheme(isDark ? 'light' : 'dark')
+    const newTheme = isDark ? 'light' : 'dark'
+    console.log('🎯 ThemeToggleCompact - Mudando para:', newTheme)
+    setTheme(newTheme)
   }
 
   return (
@@ -100,7 +107,7 @@ export function ThemeToggleCompact() {
       variant="ghost"
       size="sm"
       onClick={toggleTheme}
-      className="w-9 h-9 p-0 relative overflow-hidden"
+      className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
     >
       <AnimatePresence mode="wait">
         <motion.div

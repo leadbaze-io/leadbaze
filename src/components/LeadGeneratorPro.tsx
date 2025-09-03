@@ -439,14 +439,17 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   const renderReviewsCount = (reviewsCount?: number) => {
-    if (!reviewsCount) return null
+    // Sempre mostrar, mesmo quando não há avaliações
+    const count = reviewsCount || 0
     
     return (
-      <div className="flex items-center space-x-1">
-        <div className="flex items-center justify-center w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full">
-          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">{reviewsCount}</span>
+      <div className="flex items-center space-x-2">
+        <div className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+          {count}
         </div>
-        <span className="text-xs text-muted-foreground">Avaliações</span>
+        <div className="text-xs text-muted-foreground">
+          Avaliações
+        </div>
       </div>
     )
   }
@@ -712,77 +715,134 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {paginatedLeads.map((lead, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 rounded-lg p-4 ${
+                      className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200 dark:border-border rounded-lg overflow-hidden bg-card ${
                         lead.selected 
-                          ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-950 shadow-lg' 
-                          : 'border-border hover:border-blue-200 bg-card'
+                          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md' 
+                          : 'hover:border-blue-300 dark:hover:border-blue-200'
                       }`}
                       onClick={() => toggleLeadSelectionByFilteredIndex(index)}
                     >
                       {/* Header do Card */}
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center space-x-2 flex-1 min-w-0">
-                          <input
-                            type="checkbox"
-                            checked={lead.selected}
-                            onChange={() => toggleLeadSelectionByFilteredIndex(index)}
-                            onClick={(e) => e.stopPropagation()}
-                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
-                          />
-                          {renderReviewsCount(lead.reviews_count)}
+                      <div className="p-4 border-b-2 border-gray-200 dark:border-border bg-muted/30">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <input
+                              type="checkbox"
+                              checked={lead.selected}
+                              onChange={() => toggleLeadSelectionByFilteredIndex(index)}
+                              onClick={(e) => e.stopPropagation()}
+                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                            />
+                            <div className="flex items-center space-x-2">
+                              {renderReviewsCount(lead.reviews_count)}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            {renderStars(lead.rating)}
+                          </div>
                         </div>
-                        {renderStars(lead.rating)}
-                      </div>
-
-                      {/* Nome do estabelecimento */}
-                      <div className="mb-3">
-                        <h3 className="font-semibold text-foreground text-sm truncate mb-1">{lead.name}</h3>
-                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                          <MapPin className="w-3 h-3" />
-                          <span className="truncate">{lead.address}</span>
+                        
+                        {/* Nome do estabelecimento */}
+                        <h3 className="font-semibold text-foreground text-base mb-2 leading-tight">
+                          {lead.name}
+                        </h3>
+                        
+                        {/* Endereço */}
+                        <div className="flex items-center space-x-2 text-muted-foreground">
+                          <MapPin className="w-4 h-4" />
+                          <span className="text-sm">{lead.address}</span>
                         </div>
                       </div>
 
-                      {/* Informações de contato */}
-                      <div className="space-y-2 mb-3">
-                        {lead.phone && (
-                          <div className="flex items-center space-x-2 text-xs">
-                            <Phone className="w-3 h-3 text-green-600" />
-                            <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
-                          </div>
-                        )}
-                        {lead.website && (
-                          <div className="flex items-center space-x-2 text-xs">
-                            <Globe className="w-3 h-3 text-blue-600" />
-                            <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
-                          </div>
-                        )}
-                        {!lead.phone && !lead.website && (
-                          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                            <Eye className="w-3 h-3" />
-                            <span>Contato não disponível</span>
-                          </div>
-                        )}
-                      </div>
+                      {/* Conteúdo do Card */}
+                      <div className="p-4 space-y-3">
+                        {/* Informações de contato */}
+                        <div className="space-y-2">
+                          {lead.phone && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Phone className="w-4 h-4 text-green-600" />
+                              <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
+                            </div>
+                          )}
+                          {lead.website && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Globe className="w-4 h-4 text-blue-600" />
+                              <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
+                            </div>
+                          )}
+                          {!lead.phone && !lead.website && (
+                            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                              <Eye className="w-4 h-4" />
+                              <span>Contato não disponível</span>
+                            </div>
+                          )}
+                        </div>
 
-                      {/* Tags e badges */}
-                      <div className="flex flex-wrap gap-1">
-                        {lead.rating && lead.rating >= 4 && (
-                          <Badge className="bg-green-100 text-green-800 text-xs">
-                            ⭐ Premium
-                          </Badge>
-                        )}
-                        {lead.reviews_count && lead.reviews_count >= 100 && (
-                          <Badge className="bg-purple-100 text-purple-800 text-xs">
-                            🔥 Popular
-                          </Badge>
+                        {/* Badges Profissionais - Máximo 3 por card */}
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {/* Badge de Qualidade (Baseado na avaliação) */}
+                          {lead.rating && lead.rating >= 4.5 && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 font-medium">
+                              ⭐ Alta Qualidade
+                            </Badge>
+                          )}
+                          {lead.rating && lead.rating >= 4 && lead.rating < 4.5 && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+                              ⭐ Boa Qualidade
+                            </Badge>
+                          )}
+                          
+                          {/* Badge de Reputação (Baseado no número de avaliações) */}
+                                                     {lead.reviews_count && lead.reviews_count >= 500 && (
+                             <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-600 dark:text-white dark:border-purple-500 font-medium">
+                               🏆 Estabelecido
+                             </Badge>
+                           )}
+                          {lead.reviews_count && lead.reviews_count >= 100 && lead.reviews_count < 500 && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 font-medium">
+                              🔥 Consolidado
+                            </Badge>
+                          )}
+                          {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 font-medium">
+                              📈 Em Crescimento
+                            </Badge>
+                          )}
+                          
+                          {/* Badge de Contato (Baseado na disponibilidade de informações) */}
+                          {lead.phone && lead.website && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300 dark:border-cyan-800 font-medium">
+                              🌐 Contato Completo
+                            </Badge>
+                          )}
+                          
+                          {!lead.phone && lead.website && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+                              🌐 Online
+                            </Badge>
+                          )}
+                          {!lead.phone && !lead.website && (
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800 font-medium">
+                              📋 Informações Básicas
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Indicador de Seleção */}
+                        {lead.selected && (
+                          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/50 rounded-md border border-blue-200 dark:border-blue-800">
+                            <div className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span className="text-sm font-medium">Selecionado para salvar</span>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </motion.div>

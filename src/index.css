@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Estilos base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 /* Variáveis CSS personalizadas */
 :root {
   --background: 0 0% 100%;
@@ -46,15 +57,222 @@
   --ring: 224.3 76.3% 94.1%;
 }
 
-/* Estilos base */
-* {
+/* Teste de tema - cores básicas */
+.test-light {
+  background-color: white;
+  color: black;
+}
+
+.test-dark {
+  background-color: #1f2937;
+  color: white;
+}
+
+/* Dark Mode Customizado para Tailwind v4 */
+html.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+html.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* Classes dark: customizadas */
+html.dark .dark\:bg-gray-900 {
+  background-color: #111827 !important;
+}
+
+html.dark .dark\:bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+html.dark .dark\:text-white {
+  color: #ffffff !important;
+}
+
+html.dark .dark\:text-gray-100 {
+  color: #f3f4f6 !important;
+}
+
+html.dark .dark\:text-gray-300 {
+  color: #d1d5db !important;
+}
+
+html.dark .dark\:border-gray-700 {
+  border-color: #374151 !important;
+}
+
+html.dark .dark\:hover\:bg-gray-800:hover {
+  background-color: #1f2937 !important;
+}
+
+html.dark .dark\:hover\:bg-gray-700:hover {
+  background-color: #374151 !important;
+}
+
+/* Gradientes e cores específicas para modo escuro - NOVAS CORES MAIS ELEGANTES */
+html.dark .from-blue-50 {
+  background: linear-gradient(to right, #2d3748, #4a5568) !important;
+}
+
+html.dark .to-purple-50 {
+  background: linear-gradient(to right, #2d3748, #553c9a) !important;
+}
+
+html.dark .to-indigo-50 {
+  background: linear-gradient(to right, #2d3748, #434190) !important;
+}
+
+html.dark .from-blue-50.to-purple-50 {
+  background: linear-gradient(to right, #2d3748, #553c9a) !important;
+}
+
+html.dark .from-blue-50.to-indigo-50 {
+  background: linear-gradient(to right, #2d3748, #434190) !important;
+}
+
+/* Cores de fundo específicas para modo escuro - NOVAS CORES MAIS ELEGANTES */
+html.dark .bg-blue-50 {
+  background-color: #2d3748 !important;
+}
+
+html.dark .bg-purple-50 {
+  background-color: #553c9a !important;
+}
+
+html.dark .bg-indigo-50 {
+  background-color: #434190 !important;
+}
+
+/* Bordas específicas para modo escuro - CONTORNOS MAIS BRANCOS PARA DESTAQUE */
+html.dark .border-blue-100 {
+  border-color: #718096 !important;
+}
+
+html.dark .border-blue-200 {
+  border-color: #a0aec0 !important;
+}
+
+html.dark .border-blue-800 {
+  border-color: #2d3748 !important;
+}
+
+/* CORREÇÃO PARA OS CARDS SELECIONADOS - CORES DE TEXTO NO DARK MODE */
+html.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+html.dark .text-blue-500 {
+  color: #3b82f6 !important;
+}
+
+html.dark .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+html.dark .text-blue-300 {
+  color: #93c5fd !important;
+}
+
+/* CORREÇÃO PARA O BOTÃO "SELECIONAR TODOS" - TEXTO BRANCO NO DARK MODE */
+html.dark .text-blue-700 {
+  color: #ffffff !important;
+}
+
+html.dark .border-blue-300 {
+  border-color: #a0aec0 !important;
+}
+
+html.dark .hover\:bg-blue-100:hover {
+  background-color: #4a5568 !important;
+}
+
+/* CORREÇÃO PARA CONTORNOS DOS CARDS - MAIS BRANCOS NO DARK MODE */
+html.dark .border-border {
+  border-color: #718096 !important;
+}
+
+html.dark .border-input {
+  border-color: #718096 !important;
+}
+
+/* Aplicação das variáveis CSS customizadas */
+.bg-background {
+  background-color: hsl(var(--background));
+}
+
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+
+.bg-card {
+  background-color: hsl(var(--card));
+}
+
+.text-card-foreground {
+  color: hsl(var(--card-foreground));
+}
+
+.bg-popover {
+  background-color: hsl(var(--popover));
+}
+
+.text-popover-foreground {
+  color: hsl(var(--popover-foreground));
+}
+
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+
+.bg-secondary {
+  background-color: hsl(var(--secondary));
+}
+
+.text-secondary-foreground {
+  color: hsl(var(--secondary-foreground));
+}
+
+.bg-muted {
+  background-color: hsl(var(--muted));
+}
+
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+
+.bg-accent {
+  background-color: hsl(var(--accent));
+}
+
+.text-accent-foreground {
+  color: hsl(var(--accent-foreground));
+}
+
+.bg-destructive {
+  background-color: hsl(var(--destructive));
+}
+
+.text-destructive-foreground {
+  color: hsl(var(--destructive-foreground));
+}
+
+.border-border {
   border-color: hsl(var(--border));
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+.border-input {
+  border-color: hsl(var(--input));
+}
+
+.ring-ring {
+  --tw-ring-color: hsl(var(--ring));
 }
 
 /* Animações personalizadas */
@@ -85,5 +303,20 @@ body {
   animation: shimmer 2s linear infinite;
 }
 
-/* CSS limpo - sem conflitos de temas */
-/* Os temas específicos são carregados dinamicamente */
+/* Utilitários de texto */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Código inline personalizado para modo escuro */
+html.dark code {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', monospace !important;
+}
+

@@ -142,13 +142,16 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
   }
 
   const renderReviewsCount = (reviewsCount?: number) => {
-    if (!reviewsCount) return null
+    // Sempre mostrar, mesmo quando não há avaliações
+    const count = reviewsCount || 0
     return (
-      <div className="flex items-center space-x-1">
-        <div className="flex items-center justify-center w-5 h-5 bg-blue-100 dark:bg-blue-900 rounded-full">
-          <span className="text-xs font-semibold text-blue-700">{reviewsCount}</span>
+      <div className="flex items-center space-x-2">
+        <div className="text-base font-bold text-blue-600 dark:text-blue-400">
+          {count}
         </div>
-        <span className="text-xs text-muted-foreground">Avaliações</span>
+        <div className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+          Avaliações
+        </div>
       </div>
     )
   }
@@ -175,7 +178,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               <Button
                 onClick={handleDeleteSelected}
                 disabled={isDeleting}
-                className="flex items-center space-x-2 bg-card text-red-600 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 hover:bg-red-50 dark:hover:bg-red-950 hover:border-red-300 transition-all duration-200 transform hover:scale-105"
+                className="flex items-center space-x-2 bg-card text-red-600 dark:text-red-400 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 dark:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 hover:border-red-300 dark:hover:border-red-400 transition-all duration-200 transform hover:scale-105"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Deletar {selectedLeads.size} Lead{selectedLeads.size > 1 ? 's' : ''}</span>
@@ -374,17 +377,17 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         {paginatedLeads.map((lead, index) => (
           <Card 
             key={lead.id || index} 
-            className={`cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 ${
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200 dark:border-border rounded-lg overflow-hidden bg-card ${
               selectedLeads.has(lead.id || '') 
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-950 shadow-lg' 
-                : 'border-border hover:border-blue-300 dark:hover:border-blue-600'
+                ? 'ring-2 ring-blue-500 border-blue-500 shadow-md' 
+                : 'hover:border-blue-300 dark:hover:border-blue-200'
             }`}
             onClick={() => toggleLeadSelection(lead.id || '')}
           >
-            <CardContent className="p-4">
-              {/* Header do Card */}
+            {/* Header do Card */}
+            <div className="p-4 border-b-2 border-gray-200 dark:border-border bg-muted/30">
               <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2 flex-1 min-w-0">
+                <div className="flex items-center space-x-3">
                   <input 
                     type="checkbox" 
                     checked={selectedLeads.has(lead.id || '')}
@@ -392,58 +395,110 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                       e.stopPropagation()
                       toggleLeadSelection(lead.id || '')
                     }}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0 w-4 h-4"
                   />
-                  {renderReviewsCount(lead.reviews_count)}
+                  <div className="flex items-center space-x-2">
+                    {renderReviewsCount(lead.reviews_count)}
+                  </div>
                 </div>
-                {renderStars(lead.rating)}
+                <div className="flex items-center space-x-1">
+                  {renderStars(lead.rating)}
+                </div>
               </div>
-
+              
               {/* Nome do estabelecimento */}
               <div className="mb-3">
-                        <h3 className="font-semibold text-foreground text-sm truncate mb-1">{lead.name}</h3>
-        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                  <MapPin className="w-3 h-3" />
-                  <span className="truncate">{lead.address}</span>
+                <h3 className="font-semibold text-foreground text-base truncate mb-2 leading-tight">{lead.name}</h3>
+                <div className="flex items-start space-x-2 text-sm text-muted-foreground">
+                  <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span className="leading-relaxed">{lead.address}</span>
                 </div>
               </div>
+            </div>
 
+            {/* Conteúdo do Card */}
+            <div className="p-4 space-y-3">
               {/* Informações de contato */}
-              <div className="space-y-2 mb-3">
+              <div className="space-y-2">
                 {lead.phone && (
-                  <div className="flex items-center space-x-2 text-xs">
-                    <Phone className="w-3 h-3 text-green-600" />
-                    <span className="text-green-700 font-medium">{lead.phone}</span>
+                  <div className="flex items-center space-x-2 text-sm">
+                    <Phone className="w-4 h-4 text-green-600" />
+                    <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
                   </div>
                 )}
                 {lead.website && (
-                  <div className="flex items-center space-x-2 text-xs">
-                    <Globe className="w-3 h-3 text-blue-600" />
-                    <span className="text-blue-700 font-medium">Website disponível</span>
+                  <div className="flex items-center space-x-2 text-sm">
+                    <Globe className="w-4 h-4 text-blue-600" />
+                    <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
                   </div>
                 )}
                 {!lead.phone && !lead.website && (
-                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                    <Eye className="w-3 h-3" />
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Eye className="w-4 h-4" />
                     <span>Contato não disponível</span>
                   </div>
                 )}
               </div>
 
-              {/* Tags e badges */}
-              <div className="flex flex-wrap gap-1">
-                {lead.rating && lead.rating >= 4 && (
-                  <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs">
-                    ⭐ Premium
+              {/* Badges Profissionais - Máximo 3 por card */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                {/* Badge de Qualidade (Baseado na avaliação) */}
+                {lead.rating && lead.rating >= 4.5 && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 font-medium">
+                    ⭐ Alta Qualidade
                   </Badge>
                 )}
-                {lead.reviews_count && lead.reviews_count >= 100 && (
-                  <Badge className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs">
-                    🔥 Popular
+                {lead.rating && lead.rating >= 4 && lead.rating < 4.5 && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+                    ⭐ Boa Qualidade
+                  </Badge>
+                )}
+                
+                {/* Badge de Reputação (Baseado no número de avaliações) */}
+                {lead.reviews_count && lead.reviews_count >= 500 && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-600 dark:text-white dark:border-purple-500 font-medium">
+                    🏆 Estabelecido
+                  </Badge>
+                )}
+                {lead.reviews_count && lead.reviews_count >= 100 && lead.reviews_count < 500 && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 font-medium">
+                    🔥 Consolidado
+                  </Badge>
+                )}
+                {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 font-medium">
+                    📈 Em Crescimento
+                  </Badge>
+                )}
+                
+                {/* Badge de Contato (Baseado na disponibilidade de informações) */}
+                {lead.phone && lead.website && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300 dark:border-cyan-800 font-medium">
+                    🌐 Contato Completo
+                  </Badge>
+                )}
+                {!lead.phone && lead.website && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+                    🌐 Online
+                  </Badge>
+                )}
+                {!lead.phone && !lead.website && (
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800 font-medium">
+                    📋 Informações Básicas
                   </Badge>
                 )}
               </div>
-            </CardContent>
+
+              {/* Indicador de Seleção */}
+              {selectedLeads.has(lead.id || '') && (
+                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/50 rounded-md border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm font-medium">Selecionado</span>
+                  </div>
+                </div>
+              )}
+            </div>
           </Card>
         ))}
       </div>

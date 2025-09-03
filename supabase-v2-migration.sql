@@ -227,3 +227,4 @@ ANALYZE user_tags;
 -- FROM information_schema.columns 
 -- WHERE table_name = 'lead_lists' 
 -- AND column_name IN ('tags', 'status', 'updated_at', 'description');
+

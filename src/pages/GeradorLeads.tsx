@@ -66,7 +66,7 @@ export default function GeradorLeads() {
 
   return (
     <div className="app-page min-h-screen bg-background py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl">
@@ -119,7 +119,7 @@ export default function GeradorLeads() {
         </div>
 
         {/* Gerador Component */}
-        <div className="bg-card rounded-2xl shadow-xl border border-border p-6">
+        <div className="bg-card rounded-2xl shadow-xl border border-border p-8">
           <LeadGeneratorPro
             onLeadsGenerated={handleLeadsGenerated}
             onLeadsSaved={handleLeadsSaved}
