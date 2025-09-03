@@ -116,4 +116,9 @@ export default {
       addUtilities(newUtilities)
     },
   ],
+  // Garantir que o dark mode funcione corretamente
+  important: false, // Remover se estiver como true
+  corePlugins: {
+    preflight: true,
+  },
 }
