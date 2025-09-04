@@ -108,7 +108,7 @@ export default function BlogPostCard({
       <article className="group">
         <Link 
           to={`/blog/${post.slug}`}
-          className="flex items-start space-x-4 p-4 bg-white dark:bg-gray-800 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="flex items-start space-x-4 p-4 bg-white  rounded-xl hover:bg-gray-50  transition-colors"
         >
           {/* Thumbnail */}
           <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
@@ -121,10 +121,10 @@ export default function BlogPostCard({
           
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2">
+            <h3 className="font-semibold text-gray-900  group-hover:text-purple-600  transition-colors line-clamp-2">
               {post.title}
             </h3>
-            <div className="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400 space-x-3">
+            <div className="flex items-center mt-2 text-xs text-gray-500  space-x-3">
               <span>{formattedDate}</span>
               <span>{post.readTime} min</span>
               {showStats && post.views && (

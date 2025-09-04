@@ -134,15 +134,15 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
              {/* Header */}
-       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+       <div className="bg-white  border-b border-gray-200 ">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="flex items-center justify-between py-8">
              <div className="flex items-center space-x-4">
                <Link
                  to="/"
-                 className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                 className="flex items-center text-gray-600  hover:text-gray-900  transition-colors"
                >
                  <ArrowLeft className="w-5 h-5 mr-2" />
                  Voltar ao LeadBaze
@@ -156,7 +156,7 @@ export default function BlogPage() {
                     setShowSearch(!showSearch);
                     setShowFilters(false);
                   }}
-                  className="search-dropdown p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                  className="search-dropdown p-2 text-gray-600  hover:text-purple-600  transition-colors"
                 >
                   <Search className="w-5 h-5" />
                 </button>
@@ -168,7 +168,7 @@ export default function BlogPage() {
                        setShowFilters(!showFilters);
                        setShowSearch(false);
                      }}
-                     className="flex items-center space-x-2 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400"
+                     className="flex items-center space-x-2 px-3 py-2 text-gray-600  hover:text-blue-600  transition-colors border border-gray-300  rounded-lg hover:border-blue-500 "
                    >
                     <Filter className="w-4 h-4" />
                     <span className="text-sm font-medium">Filtros</span>
@@ -180,11 +180,11 @@ export default function BlogPage() {
 
                   {/* Dropdown Menu */}
                   {showFilters && (
-                    <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                    <div className="absolute right-0 top-full mt-2 w-64 bg-white  border border-gray-200  rounded-lg shadow-lg z-50">
                       <div className="p-4 space-y-4">
                         {/* Categories */}
                         <div>
-                          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
+                          <h3 className="text-sm font-semibold text-gray-700  mb-3 uppercase tracking-wide">
                             Categorias
                           </h3>
                           <div className="space-y-2">
@@ -196,7 +196,7 @@ export default function BlogPage() {
                                                              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                  !filters.category
                                    ? 'bg-blue-600 text-white'
-                                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                   : 'text-gray-700  hover:bg-gray-100 '
                                }`}
                             >
                               Todas as Categorias
@@ -211,7 +211,7 @@ export default function BlogPage() {
                                                                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                    filters.category === category.slug
                                      ? 'bg-blue-600 text-white'
-                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                     : 'text-gray-700  hover:bg-gray-100 '
                                  }`}
                               >
                                 {category.name}
@@ -227,7 +227,7 @@ export default function BlogPage() {
 
                         {/* Sort Options */}
                         <div>
-                          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
+                          <h3 className="text-sm font-semibold text-gray-700  mb-3 uppercase tracking-wide">
                             Ordenar por
                           </h3>
                           <div className="space-y-2">
@@ -245,7 +245,7 @@ export default function BlogPage() {
                                                                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                    filters.sortBy === option.value
                                      ? 'bg-blue-600 text-white'
-                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                     : 'text-gray-700  hover:bg-gray-100 '
                                  }`}
                               >
                                 {option.label}
@@ -256,13 +256,13 @@ export default function BlogPage() {
 
                         {/* Clear Filters */}
                         {(filters.category || filters.sortBy !== 'newest') && (
-                          <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                          <div className="pt-3 border-t border-gray-200 ">
                             <button
                               onClick={() => {
                                 handleFiltersChange({});
                                 setShowFilters(false);
                               }}
-                              className="w-full text-left px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors text-sm"
+                              className="w-full text-left px-3 py-2 text-red-600  hover:bg-red-50  rounded-md transition-colors text-sm"
                             >
                               Limpar Filtros
                             </button>
@@ -273,7 +273,7 @@ export default function BlogPage() {
                   )}
                 </div>
                 
-                <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 ">
                   <BookOpen className="w-4 h-4" />
                   <span>{pagination?.totalPosts || 0} artigos</span>
                 </div>
@@ -284,7 +284,7 @@ export default function BlogPage() {
 
         {/* Search Bar */}
         {showSearch && (
-          <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="bg-white  border-b border-gray-200 ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -294,7 +294,7 @@ export default function BlogPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchTerm)}
-                  className="w-full pl-12 pr-16 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:focus:border-purple-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors"
+                  className="w-full pl-12 pr-16 py-3 border border-gray-300  rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500  bg-white  text-gray-900  placeholder-gray-500  transition-colors"
                   autoFocus
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center space-x-2 pr-4">
@@ -309,7 +309,7 @@ export default function BlogPage() {
                       setShowSearch(false);
                       setSearchTerm('');
                     }}
-                    className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    className="p-1 text-gray-400 hover:text-gray-600  transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -320,7 +320,7 @@ export default function BlogPage() {
         )}
 
                           {/* Hero Section - Professional */}
-          <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-blue-900/20 dark:to-indigo-900/20">
+          <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
               <div className="text-center max-w-4xl mx-auto">
                                  {/* Título Principal */}
@@ -328,19 +328,19 @@ export default function BlogPage() {
                    <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
                      LeadBaze
                    </span>
-                   <span className="text-gray-900 dark:text-white ml-4">
+                   <span className="text-gray-900  ml-4">
                      Blog
                    </span>
                  </h1>
                  
                  {/* Texto de Impacto */}
-                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-4 font-medium">
+                 <p className="text-lg text-gray-600  mb-4 font-medium">
                    Sua fonte definitiva de informação e prospecção B2B
                  </p>
                 
                 {/* Estatísticas */}
                 {getPageDescription() && (
-                  <div className="text-base font-medium text-blue-600 dark:text-blue-400">
+                  <div className="text-base font-medium text-blue-600 ">
                     {getPageDescription()}
                   </div>
                 )}
@@ -413,8 +413,8 @@ export default function BlogPage() {
                         disabled={!pagination.hasPrevPage}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           pagination.hasPrevPage
-                            ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                            ? 'bg-white  text-gray-700  hover:bg-gray-50  border border-gray-300 '
+                            : 'bg-gray-100  text-gray-400  cursor-not-allowed'
                         }`}
                       >
                         Anterior
@@ -428,7 +428,7 @@ export default function BlogPage() {
                           className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                             page === currentPage
                               ? 'bg-purple-600 text-white'
-                              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
+                              : 'bg-white  text-gray-700  hover:bg-gray-50  border border-gray-300 '
                           }`}
                         >
                           {page}
@@ -441,8 +441,8 @@ export default function BlogPage() {
                         disabled={!pagination.hasNextPage}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           pagination.hasNextPage
-                            ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                            ? 'bg-white  text-gray-700  hover:bg-gray-50  border border-gray-300 '
+                            : 'bg-gray-100  text-gray-400  cursor-not-allowed'
                         }`}
                       >
                         Próximo
