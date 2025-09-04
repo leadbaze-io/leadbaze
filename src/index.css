@@ -244,6 +244,7 @@ html:not(.dark) textarea.disparador-texto-claro {
   text-fill-color: #000000 !important;
 }
 
+
 /* SOLUÇÃO PARA FUNDO BRANCO NO MODO CLARO - MÁXIMA PRIORIDADE */
 /* Forçar fundo branco no modo claro */
 html:not(.dark) .disparador-fundo-claro {
@@ -525,5 +526,97 @@ html.dark .lista-dicas-texto-escuro {
   color: hsl(var(--foreground)) !important;
   -webkit-text-fill-color: hsl(var(--foreground)) !important;
   text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* ============================================== */
+/* TOAST MESSAGES - FORÇAR CORES COM TAILWIND */
+/* ============================================== */
+
+/* Forçar cores dos toasts para funcionar em ambos os modos */
+.bg-green-50 {
+  background-color: #f0fdf4 !important;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+.border-green-200 {
+  border-color: #bbf7d0 !important;
+}
+
+.border-red-200 {
+  border-color: #fecaca !important;
+}
+
+.text-black {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* ============================================== */
+/* ANIMAÇÕES SUAVES PARA TOAST */
+/* ============================================== */
+
+/* Melhorar as animações padrão do Radix */
+[data-state="open"] {
+  animation: slideIn 0.3s ease-out;
+}
+
+[data-state="closed"] {
+  animation: slideOut 0.2s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+/* ============================================== */
+/* BOTÃO SALVAR MENSAGEM - SEPARAÇÃO DE MODO CLARO/ESCURO */
+/* ============================================== */
+
+/* Modo Claro - Botão Salvando */
+html:not(.dark) .btn-salvando-claro {
+  background-color: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .btn-salvando-claro * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Escuro - Botão Salvando */
+html.dark .btn-salvando-escuro {
+  background-color: rgba(20, 83, 45, 0.2) !important;
+  border-color: #166534 !important;
+  color: #bbf7d0 !important;
+}
+
+html.dark .btn-salvando-escuro * {
+  color: #bbf7d0 !important;
+  -webkit-text-fill-color: #bbf7d0 !important;
+  text-fill-color: #bbf7d0 !important;
 }
 

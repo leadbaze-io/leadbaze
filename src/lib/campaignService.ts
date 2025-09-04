@@ -60,21 +60,34 @@ export class CampaignService {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Usuário não autenticado')
 
+      // Log de debug removido
+
+      // Usar uma abordagem mais segura para evitar conflitos com triggers
+      const updateData = {
+        ...updates,
+        updated_at: new Date().toISOString()
+      }
+      
+      // Log de debug removido
+      
       const { data, error } = await supabase
         .from('bulk_campaigns')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', campaignId)
         .eq('user_id', user.id)
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro na atualização:', error)
+        throw error
+      }
+
+      // Log de debug removido
+
       return data
     } catch (error) {
-      console.error('Erro ao atualizar campanha:', error)
+      console.error('❌ Erro ao atualizar campanha:', error)
       return null
     }
   }
@@ -109,6 +122,8 @@ export class CampaignService {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Usuário não autenticado')
 
+      // Log de debug removido
+
       const { data, error } = await supabase
         .from('bulk_campaigns')
         .select('*')
@@ -116,10 +131,16 @@ export class CampaignService {
         .eq('user_id', user.id)
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Erro na query:', error)
+        throw error
+      }
+
+      // Log de debug removido
+
       return data
     } catch (error) {
-      console.error('Erro ao buscar campanha:', error)
+      console.error('❌ Erro ao buscar campanha:', error)
       return null
     }
   }

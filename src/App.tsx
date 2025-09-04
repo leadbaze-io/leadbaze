@@ -7,6 +7,7 @@ import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import Navbar from './components/Navbar'
 import FaviconImage from './components/FaviconImage'
 import LoadingScreen from './components/LoadingScreen'
+import { Toaster } from './components/ui/toaster'
 
 // Lazy loading das páginas para code splitting
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -80,6 +81,9 @@ function App() {
         
         {/* DevTools apenas em desenvolvimento */}
         {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        
+        {/* Toaster para notificações */}
+        <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
   )

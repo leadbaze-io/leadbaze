@@ -30,12 +30,6 @@ export default function DisparadorMassa() {
   const [activeTab, setActiveTab] = useState<'campaign' | 'config'>('campaign')
   const [connectedInstance, setConnectedInstance] = useState<string | null>(null)
   
-  // Mensagem de exemplo para restaurar quando o campo estiver vazio
-  const defaultMessage = `Ex: Olá {nome}, temos uma proposta especial para você! 🚀
-
-Estamos oferecendo condições exclusivas para novos clientes.
-
-Entre em contato conosco para mais detalhes!`
   
   
   
@@ -122,17 +116,11 @@ Entre em contato conosco para mais detalhes!`
   // Carregar dados quando o usuário estiver disponível
   useEffect(() => {
     if (user && !loading && !selectedCampaign) {
-      console.log('🔄 useEffect loadData chamado:', {
-        hasUser: !!user,
-        loading,
-        hasSelectedCampaign: !!selectedCampaign,
-        selectedCampaignId: selectedCampaign?.id
-      })
       loadData().catch(error => {
         console.error('Erro ao carregar dados:', error)
       })
     }
-  }, [user, loading])
+  }, [user, loading, loadData, selectedCampaign])
 
   // Removido salvamento automático para evitar conflitos
   // A mensagem será salva apenas quando o usuário clicar no botão ou sair do campo

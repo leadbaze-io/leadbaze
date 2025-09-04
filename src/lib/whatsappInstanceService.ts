@@ -69,7 +69,7 @@ export class WhatsAppInstanceService {
     whatsappNumber?: string
   ): Promise<void> {
     try {
-      const updateData: Record<string, any> = {
+      const updateData: Record<string, unknown> = {
         status,
         updated_at: new Date().toISOString()
       }

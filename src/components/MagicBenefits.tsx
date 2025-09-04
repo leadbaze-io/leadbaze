@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 
 export default function MagicBenefits() {
@@ -139,7 +139,7 @@ export default function MagicBenefits() {
   }
 
   // Carrossel infinito verdadeiro - sem delays
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentLogoIndex((prev) => {
       const next = prev + 1
       // Se chegar ao final do array infinito, volta ao início dos cards originais
@@ -148,7 +148,7 @@ export default function MagicBenefits() {
       }
       return next
     })
-  }
+  }, [infiniteTestimonials.length, testimonials.length])
 
   const prevSlide = () => {
     setCurrentLogoIndex((prev) => {
@@ -167,7 +167,7 @@ export default function MagicBenefits() {
       nextSlide()
     }, 4000)
     return () => clearInterval(interval)
-  }, [])
+  }, [nextSlide])
 
 
 

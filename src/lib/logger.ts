@@ -48,7 +48,7 @@ class Logger {
     }
   }
 
-  debug(message: string, context?: Record<string, any>) {
+  debug(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('debug', message, context)
     this.addToBuffer(entry)
     
@@ -57,21 +57,21 @@ class Logger {
     }
   }
 
-  info(message: string, context?: Record<string, any>) {
+  info(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('info', message, context)
     this.addToBuffer(entry)
     
     console.info(`ℹ️ [INFO] ${message}`, context)
   }
 
-  warn(message: string, context?: Record<string, any>) {
+  warn(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('warn', message, context)
     this.addToBuffer(entry)
     
     console.warn(`⚠️ [WARN] ${message}`, context)
   }
 
-  error(message: string, context?: Record<string, any>, error?: Error) {
+  error(message: string, context?: Record<string, unknown>, error?: Error) {
     const entry = this.createLogEntry('error', message, {
       ...context,
       error: error ? {
@@ -188,15 +188,15 @@ class Logger {
       if (event.target !== window) {
         this.error('Resource Loading Error', {
           tagName: (event.target as HTMLElement)?.tagName,
-          src: (event.target as any)?.src,
-          href: (event.target as any)?.href,
+          src: (event.target as HTMLImageElement)?.src,
+          href: (event.target as HTMLLinkElement)?.href,
         })
       }
     }, true)
   }
 
   // Métricas de performance
-  logPerformance(name: string, duration: number, context?: Record<string, any>) {
+  logPerformance(name: string, duration: number, context?: Record<string, unknown>) {
     this.info(`Performance: ${name}`, {
       duration,
       ...context,
@@ -204,12 +204,12 @@ class Logger {
   }
 
   // Log de interações do usuário
-  logUserAction(action: string, context?: Record<string, any>) {
+  logUserAction(action: string, context?: Record<string, unknown>) {
     this.info(`User Action: ${action}`, context)
   }
 
   // Log de eventos de negócio
-  logBusinessEvent(event: string, context?: Record<string, any>) {
+  logBusinessEvent(event: string, context?: Record<string, unknown>) {
     this.info(`Business Event: ${event}`, context)
   }
 
@@ -247,7 +247,7 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
       const result = await originalMethod.apply(this, args)
       const duration = performance.now() - start
       
-      logger.logPerformance(`${(target as any).constructor.name}.${propertyKey}`, duration, {
+      logger.logPerformance(`${(target as object).constructor.name}.${propertyKey}`, duration, {
         args: args.length,
         success: true,
       })
@@ -256,7 +256,7 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
     } catch (error) {
       const duration = performance.now() - start
       
-      logger.error(`Error in ${(target as any).constructor.name}.${propertyKey}`, {
+      logger.error(`Error in ${(target as object).constructor.name}.${propertyKey}`, {
         duration,
         args: args.length,
       }, error as Error)
@@ -271,7 +271,7 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
 // Utilitários para contextos específicos
 export const LoggerUtils = {
   // Log de API calls
-  logApiCall: (method: string, url: string, status: number, duration: number, context?: Record<string, any>) => {
+  logApiCall: (method: string, url: string, status: number, duration: number, context?: Record<string, unknown>) => {
     const level = status >= 400 ? 'error' : status >= 300 ? 'warn' : 'info'
     logger[level](`API Call: ${method} ${url}`, {
       status,
@@ -286,7 +286,7 @@ export const LoggerUtils = {
   },
 
   // Log de lead generation
-  logLeadGeneration: (success: boolean, count: number, source: string, context?: Record<string, any>) => {
+  logLeadGeneration: (success: boolean, count: number, source: string, context?: Record<string, unknown>) => {
     logger.logBusinessEvent('Lead Generation', {
       success,
       count,
@@ -296,7 +296,7 @@ export const LoggerUtils = {
   },
 
   // Log de autenticação
-  logAuth: (action: 'login' | 'logout' | 'register', success: boolean, context?: Record<string, any>) => {
+  logAuth: (action: 'login' | 'logout' | 'register', success: boolean, context?: Record<string, unknown>) => {
     logger.logBusinessEvent(`Auth ${action}`, {
       success,
       ...context,

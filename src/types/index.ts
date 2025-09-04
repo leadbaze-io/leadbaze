@@ -106,16 +106,86 @@ export interface BulkCampaign {
   updated_at: string
 }
 
+// ==============================================
+// NOVOS TIPOS PARA RASTREAMENTO ROBUSTO
+// ==============================================
+
+// Lead dentro de uma campanha com rastreamento completo
+export interface CampaignLead {
+  id: string
+  campaign_id: string
+  list_id: string
+  lead_data: Lead // Dados completos do lead
+  lead_hash: string // Hash único para evitar duplicatas
+  added_at: string
+  
+  // Campos adicionais para UI
+  list_name?: string
+  list_total_leads?: number
+  campaign_name?: string
+  campaign_status?: string
+}
+
+// Resumo de lista utilizada em uma campanha
+export interface UsedListSummary {
+  list_id: string
+  list_name: string
+  total_leads: number
+  leads_in_campaign: number
+  added_at: string
+}
+
+// Resposta de operação com leads da campanha
+export interface CampaignLeadsOperation {
+  success: boolean
+  message: string
+  added_leads: number
+  removed_leads: number
+  duplicate_leads: number
+  total_campaign_leads: number
+  error?: string
+}
+
+// ==============================================
+// TIPOS PARA EVOLUTION API
+// ==============================================
+
 export interface EvolutionAPIConfig {
   id: string
   user_id: string
   api_url: string
   api_key: string
   instance_name: string
-  whatsapp_number: string
+  whatsapp_number?: string
   status: 'active' | 'inactive' | 'error'
-  last_test_at?: string
-  error_message?: string
   created_at: string
   updated_at: string
+}
+
+export interface EvolutionAPIResponse {
+  success: boolean
+  error?: string
+  data?: unknown
+}
+
+// ==============================================
+// TIPOS PARA WEBHOOK N8N
+// ==============================================
+
+export interface WebhookPayload {
+  instance_name: string
+  mensagem: string
+  itens: WebhookItem[]
+}
+
+export interface WebhookItem {
+  nome: string
+  telefone: string
+  cidade: string
+}
+
+export interface WebhookResponse {
+  success: boolean
+  error?: string
+  message?: string
 }
