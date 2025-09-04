@@ -32,7 +32,7 @@ export default function ThemeToggle() {
         <Button
           variant="ghost"
           size="sm"
-          className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          className="w-10 h-10 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -43,9 +43,9 @@ export default function ThemeToggle() {
               transition={{ duration: 0.2 }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <CurrentIcon className={`h-4 w-4 ${
-                theme === 'light' ? 'text-yellow-500' : 
-                theme === 'dark' ? 'text-blue-400' : 
+              <CurrentIcon className={`h-5 w-5 ${
+                theme === 'light' ? 'text-yellow-500 drop-shadow-sm' : 
+                theme === 'dark' ? 'text-blue-400 drop-shadow-sm' : 
                 'text-gray-600 dark:text-gray-300'
               }`} />
             </motion.div>
@@ -70,9 +70,9 @@ export default function ThemeToggle() {
               }`}
             >
               <div className="flex items-center space-x-2 w-full">
-                <Icon className={`h-4 w-4 ${
-                  themeOption.value === 'light' ? 'text-yellow-500' :
-                  themeOption.value === 'dark' ? 'text-blue-400' :
+                <Icon className={`h-5 w-5 ${
+                  themeOption.value === 'light' ? 'text-yellow-500 drop-shadow-sm' :
+                  themeOption.value === 'dark' ? 'text-blue-400 drop-shadow-sm' :
                   'text-gray-600 dark:text-gray-300'
                 }`} />
                 <span className="flex-1">{themeOption.label}</span>
@@ -107,7 +107,7 @@ export function ThemeToggleCompact() {
       variant="ghost"
       size="sm"
       onClick={toggleTheme}
-      className="w-9 h-9 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+      className="w-10 h-10 p-0 relative overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -119,9 +119,9 @@ export function ThemeToggleCompact() {
           className="absolute inset-0 flex items-center justify-center"
         >
           {isDark ? (
-            <Sun className="h-4 w-4 text-yellow-500" />
+            <Sun className="h-5 w-5 text-yellow-500 drop-shadow-sm" />
           ) : (
-            <Moon className="h-4 w-4 text-blue-600" />
+            <Moon className="h-5 w-5 text-blue-600 drop-shadow-sm" />
           )}
         </motion.div>
       </AnimatePresence>

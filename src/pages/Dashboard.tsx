@@ -98,10 +98,22 @@ export default function Dashboard() {
                 </p>
               </div>
               <div className="mt-6 md:mt-0">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-sm text-blue-200 mb-1">Logado como</div>
-                  <div className="text-lg font-semibold truncate max-w-48">{user.user_metadata?.name || user.email}</div>
-                  <div className="text-xs text-blue-300 mt-1">Plano: Professional</div>
+                <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 border border-white/30">
+                  <div className="text-sm text-white font-bold mb-3">
+                    Plano Start
+                  </div>
+                  
+                  <div className="text-sm font-semibold text-white mb-3 truncate">
+                    {user.user_metadata?.name || user.email}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-white/80">
+                    <span className="text-white font-medium">Leads: 1.000 restantes</span>
+                    <div className="flex items-center space-x-1 ml-4">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+                      <span className="text-white font-medium">Ativo</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

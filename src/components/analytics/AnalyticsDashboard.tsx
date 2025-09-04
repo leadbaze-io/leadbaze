@@ -243,8 +243,8 @@ export default function AnalyticsDashboard() {
                 className="flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900 rounded-xl flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-800">
-                    <span className="text-blue-600 dark:text-blue-300 text-lg">
+                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-800 rounded-xl flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-700">
+                    <span className="text-blue-600 dark:text-blue-200 text-lg">
                       {getActivityIcon(activity.type)}
                     </span>
                   </div>
@@ -256,9 +256,26 @@ export default function AnalyticsDashboard() {
                   </div>
                 </div>
                 {activity.count && (
-                  <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 border-0">
-                    {activity.count}
-                  </Badge>
+                  <div 
+                    className="inline-flex items-center rounded-full text-xs font-bold px-3 py-1 shadow-lg border-0"
+                    style={{
+                      backgroundColor: 'rgb(59, 130, 246)',
+                      minWidth: '32px',
+                      height: '24px',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <span 
+                      className="text-xs font-bold"
+                      style={{
+                        color: 'rgb(255, 255, 255)',
+                        textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
+                        lineHeight: '1'
+                      }}
+                    >
+                      {activity.count}
+                    </span>
+                  </div>
                 )}
               </motion.div>
             ))}
@@ -280,10 +297,10 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-100 text-blue-600',
-    green: 'bg-green-100 text-green-600',
-    purple: 'bg-purple-100 text-purple-600',
-    orange: 'bg-orange-100 text-orange-600',
+    blue: 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200',
+    green: 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-200',
+    purple: 'bg-purple-100 dark:bg-purple-800 text-purple-600 dark:text-purple-200',
+    orange: 'bg-orange-100 dark:bg-orange-800 text-orange-600 dark:text-orange-200',
   }
 
   return (
@@ -308,7 +325,7 @@ function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCa
                   trend === 'up' ? 'text-green-500' : 'text-red-500'
                 }`} />
                 <span className={`text-xs md:text-sm font-medium ${
-                  trend === 'up' ? 'text-green-600' : 'text-red-600'
+                  trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                 }`}>
                   {change}
                 </span>

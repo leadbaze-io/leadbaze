@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Eye, EyeOff, Loader, Mail, Lock, User } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LogoImage from '../components/LogoImage'
+import { useTheme } from '../contexts/ThemeContext'
 
 // Tipos para os formulários
 type LoginForm = {
@@ -24,6 +25,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
   const navigate = useNavigate()
+  const { forceLightMode } = useTheme()
 
   const {
     register: registerLogin,
@@ -38,6 +40,12 @@ export default function LoginPage() {
     formState: { errors: signupErrors },
     reset: resetSignup
   } = useForm<RegisterForm>()
+
+  // Forçar modo claro na página de Login
+  useEffect(() => {
+    forceLightMode()
+    console.log('✅ Página de Login - modo claro forçado via ThemeContext')
+  }, [forceLightMode])
 
   // Verificar se usuário já está logado e configurar listener de sessão
   useEffect(() => {

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Loader, ArrowLeft, Search, BookOpen, X, Filter, ChevronDown, Mail, Phone } from 'lucide-react';
 import LogoImage from '../components/LogoImage';
 import * as BlogTypes from '../types/blog';
@@ -21,6 +21,10 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [categories, setCategories] = useState<BlogTypes.BlogCategory[]>([]);
+  
+  // Estados para controlar a navbar
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Extract filters from URL params
   const filters: BlogFilters = {
@@ -29,6 +33,24 @@ export default function BlogPage() {
     search: searchParams.get('search') || undefined,
     sortBy: (searchParams.get('sortBy') as BlogFilters['sortBy']) || 'newest'
   };
+
+  // Função para controlar a visibilidade da navbar baseada no scroll
+  const controlNavbar = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      const currentScrollY = window.scrollY;
+      
+      // Se está scrollando para baixo e a navbar está visível, esconde
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsNavbarVisible(false);
+      }
+      // Se está scrollando para cima, mostra a navbar
+      else if (currentScrollY < lastScrollY) {
+        setIsNavbarVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    }
+  }, [lastScrollY]);
 
   const currentPage = parseInt(searchParams.get('page') || '1');
 
@@ -60,6 +82,17 @@ export default function BlogPage() {
     console.log('✅ Blog - modo claro forçado');
   }, []);
 
+  // Adicionar listener de scroll para controlar a navbar
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar, { passive: true });
+      
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [controlNavbar]);
+
   // Load categories for filter dropdown
   useEffect(() => {
     const loadCategories = async () => {
@@ -78,15 +111,22 @@ export default function BlogPage() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      if (!target.closest('.filters-dropdown') && !target.closest('.search-dropdown')) {
+      
+      // Para filtros - fechar se clicar fora do dropdown
+      if (!target.closest('.filters-dropdown')) {
         setShowFilters(false);
+      }
+      
+      // Para busca - fechar apenas se clicar fora da barra de pesquisa expandida
+      if (showSearch && !target.closest('.search-bar-expanded')) {
         setShowSearch(false);
+        setSearchTerm('');
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [showSearch]);
 
   const handleFiltersChange = (newFilters: BlogFilters) => {
     const params = new URLSearchParams();
@@ -135,156 +175,166 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-             {/* Header */}
-       <div className="bg-white  border-b border-gray-200 ">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="flex items-center justify-between py-8">
-             <div className="flex items-center space-x-4">
-               <Link
-                 to="/"
-                 className="flex items-center text-gray-600  hover:text-gray-900  transition-colors"
-               >
-                 <ArrowLeft className="w-5 h-5 mr-2" />
-                 Voltar ao LeadBaze
-               </Link>
-             </div>
-             
-                           <div className="flex items-center space-x-4">
-                {/* Search Icon */}
-                <button
-                  onClick={() => {
-                    setShowSearch(!showSearch);
-                    setShowFilters(false);
-                  }}
-                  className="search-dropdown p-2 text-gray-600  hover:text-purple-600  transition-colors"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
+             {/* Header com AnimatePresence para mostrar/esconder */}
+             <AnimatePresence>
+               {isNavbarVisible && (
+                 <motion.div
+                   initial={{ y: -100, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
+                   exit={{ y: -100, opacity: 0 }}
+                   transition={{ duration: 0.3, ease: "easeInOut" }}
+                   className="fixed top-16 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-lg"
+                 >
+                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                     <div className="flex items-center justify-between py-4">
+                       <div className="flex items-center space-x-4">
+                         <Link
+                           to="/"
+                           className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-medium"
+                         >
+                           <ArrowLeft className="w-5 h-5 mr-2" />
+                           Voltar ao LeadBaze
+                         </Link>
+                       </div>
+                       
+                       <div className="flex items-center space-x-4">
+                         {/* Search Icon */}
+                         <button
+                           onClick={() => {
+                             setShowSearch(!showSearch);
+                             setShowFilters(false);
+                           }}
+                           className="search-dropdown p-2 text-gray-600 hover:text-purple-600 transition-colors"
+                         >
+                           <Search className="w-5 h-5" />
+                         </button>
 
-                {/* Filters Dropdown */}
-                <div className="relative filters-dropdown">
+                         {/* Filters Dropdown */}
+                         <div className="relative filters-dropdown">
+                           <button
+                             onClick={() => {
+                               setShowFilters(!showFilters);
+                               setShowSearch(false);
+                             }}
+                             className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-blue-600 transition-colors border border-gray-300 rounded-lg hover:border-blue-500"
+                           >
+                             <Filter className="w-4 h-4" />
+                             <span className="text-sm font-medium">Filtros</span>
+                             <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                             {(filters.category || filters.sortBy !== 'newest') && (
+                               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                             )}
+                           </button>
+
+                           {/* Dropdown Menu */}
+                           {showFilters && (
+                             <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                               <div className="p-4 space-y-4">
+                                 {/* Categories */}
+                                 <div>
+                                   <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+                                     Categorias
+                                   </h3>
+                                   <div className="space-y-2">
                                      <button
-                     onClick={() => {
-                       setShowFilters(!showFilters);
-                       setShowSearch(false);
-                     }}
-                     className="flex items-center space-x-2 px-3 py-2 text-gray-600  hover:text-blue-600  transition-colors border border-gray-300  rounded-lg hover:border-blue-500 "
-                   >
-                    <Filter className="w-4 h-4" />
-                    <span className="text-sm font-medium">Filtros</span>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-                                         {(filters.category || filters.sortBy !== 'newest') && (
-                       <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                     )}
-                  </button>
+                                       onClick={() => {
+                                         handleFiltersChange({ ...filters, category: undefined });
+                                         setShowFilters(false);
+                                       }}
+                                       className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                         !filters.category
+                                           ? 'bg-blue-600 text-white'
+                                           : 'text-gray-700 hover:bg-gray-100'
+                                       }`}
+                                     >
+                                       Todas as Categorias
+                                     </button>
+                                     {categories.map(category => (
+                                       <button
+                                         key={category.id}
+                                         onClick={() => {
+                                           handleFiltersChange({ ...filters, category: category.slug });
+                                           setShowFilters(false);
+                                         }}
+                                         className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                           filters.category === category.slug
+                                             ? 'bg-blue-600 text-white'
+                                             : 'text-gray-700 hover:bg-gray-100'
+                                         }`}
+                                       >
+                                         {category.name}
+                                         {category.postCount && (
+                                           <span className="ml-2 text-xs opacity-75">
+                                             ({category.postCount})
+                                           </span>
+                                         )}
+                                       </button>
+                                     ))}
+                                   </div>
+                                 </div>
 
-                  {/* Dropdown Menu */}
-                  {showFilters && (
-                    <div className="absolute right-0 top-full mt-2 w-64 bg-white  border border-gray-200  rounded-lg shadow-lg z-50">
-                      <div className="p-4 space-y-4">
-                        {/* Categories */}
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-700  mb-3 uppercase tracking-wide">
-                            Categorias
-                          </h3>
-                          <div className="space-y-2">
-                            <button
-                              onClick={() => {
-                                handleFiltersChange({ ...filters, category: undefined });
-                                setShowFilters(false);
-                              }}
-                                                             className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                                 !filters.category
-                                   ? 'bg-blue-600 text-white'
-                                   : 'text-gray-700  hover:bg-gray-100 '
-                               }`}
-                            >
-                              Todas as Categorias
-                            </button>
-                            {categories.map(category => (
-                              <button
-                                key={category.id}
-                                onClick={() => {
-                                  handleFiltersChange({ ...filters, category: category.slug });
-                                  setShowFilters(false);
-                                }}
-                                                                 className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                                   filters.category === category.slug
-                                     ? 'bg-blue-600 text-white'
-                                     : 'text-gray-700  hover:bg-gray-100 '
-                                 }`}
-                              >
-                                {category.name}
-                                {category.postCount && (
-                                  <span className="ml-2 text-xs opacity-75">
-                                    ({category.postCount})
-                                  </span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
+                                 {/* Sort Options */}
+                                 <div>
+                                   <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+                                     Ordenar por
+                                   </h3>
+                                   <div className="space-y-2">
+                                     {[
+                                       { value: 'newest', label: 'Mais Recentes' },
+                                       { value: 'popular', label: 'Mais Populares' },
+                                       { value: 'oldest', label: 'Mais Antigos' }
+                                     ].map(option => (
+                                       <button
+                                         key={option.value}
+                                         onClick={() => {
+                                           handleFiltersChange({ ...filters, sortBy: option.value as BlogFilters['sortBy'] });
+                                           setShowFilters(false);
+                                         }}
+                                         className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                                           filters.sortBy === option.value
+                                             ? 'bg-blue-600 text-white'
+                                             : 'text-gray-700 hover:bg-gray-100'
+                                         }`}
+                                       >
+                                         {option.label}
+                                       </button>
+                                     ))}
+                                   </div>
+                                 </div>
 
-                        {/* Sort Options */}
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-700  mb-3 uppercase tracking-wide">
-                            Ordenar por
-                          </h3>
-                          <div className="space-y-2">
-                            {[
-                              { value: 'newest', label: 'Mais Recentes' },
-                              { value: 'popular', label: 'Mais Populares' },
-                              { value: 'oldest', label: 'Mais Antigos' }
-                            ].map(option => (
-                              <button
-                                key={option.value}
-                                onClick={() => {
-                                  handleFiltersChange({ ...filters, sortBy: option.value as BlogFilters['sortBy'] });
-                                  setShowFilters(false);
-                                }}
-                                                                 className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                                   filters.sortBy === option.value
-                                     ? 'bg-blue-600 text-white'
-                                     : 'text-gray-700  hover:bg-gray-100 '
-                                 }`}
-                              >
-                                {option.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
+                                 {/* Clear Filters */}
+                                 {(filters.category || filters.sortBy !== 'newest') && (
+                                   <div className="pt-3 border-t border-gray-200">
+                                     <button
+                                       onClick={() => {
+                                         handleFiltersChange({});
+                                         setShowFilters(false);
+                                       }}
+                                       className="w-full text-left px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors text-sm"
+                                     >
+                                       Limpar Filtros
+                                     </button>
+                                   </div>
+                                 )}
+                               </div>
+                             </div>
+                           )}
+                         </div>
+                         
 
-                        {/* Clear Filters */}
-                        {(filters.category || filters.sortBy !== 'newest') && (
-                          <div className="pt-3 border-t border-gray-200 ">
-                            <button
-                              onClick={() => {
-                                handleFiltersChange({});
-                                setShowFilters(false);
-                              }}
-                              className="w-full text-left px-3 py-2 text-red-600  hover:bg-red-50  rounded-md transition-colors text-sm"
-                            >
-                              Limpar Filtros
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500 ">
-                  <BookOpen className="w-4 h-4" />
-                  <span>{pagination?.totalPosts || 0} artigos</span>
-                </div>
-              </div>
-           </div>
-         </div>
-               </div>
+                       </div>
+                     </div>
+                   </div>
+                 </motion.div>
+               )}
+             </AnimatePresence>
+
+             {/* Espaçador para compensar a navbar fixa */}
+             <div className="h-36"></div>
 
         {/* Search Bar */}
         {showSearch && (
-          <div className="bg-white  border-b border-gray-200 ">
+          <div className="search-bar-expanded bg-white border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
