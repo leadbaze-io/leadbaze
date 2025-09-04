@@ -196,8 +196,8 @@ export function ListManager({ onSelectList }: ListManagerProps) {
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Erro ao carregar listas</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
+                      <h3 className="text-lg font-semibold disparador-texto-claro dark:text-gray-900 mb-2">Erro ao carregar listas</h3>
+                        <p className="disparador-texto-claro dark:text-gray-600 mb-4">{error}</p>
           <Button onClick={loadLists}>Tentar novamente</Button>
         </div>
       </div>
@@ -322,10 +322,10 @@ export function ListManager({ onSelectList }: ListManagerProps) {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium disparador-texto-claro dark:text-gray-900 mb-2">
                 {lists.length === 0 ? 'Nenhuma lista criada ainda' : 'Nenhuma lista encontrada'}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="disparador-texto-claro dark:text-gray-600 mb-6">
                 {lists.length === 0 
                   ? 'Comece criando sua primeira lista de leads usando links do Google Maps'
                   : 'Tente ajustar os filtros para encontrar suas listas'
@@ -355,9 +355,9 @@ export function ListManager({ onSelectList }: ListManagerProps) {
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
-                            <CardTitle className="text-lg truncate">{list.name}</CardTitle>
+                            <CardTitle className="text-lg truncate disparador-texto-claro dark:text-foreground">{list.name}</CardTitle>
                             {list.description && (
-                              <CardDescription className="mt-1 line-clamp-2">
+                              <CardDescription className="mt-1 line-clamp-2 disparador-texto-claro dark:text-muted-foreground">
                                 {list.description}
                               </CardDescription>
                             )}
@@ -378,11 +378,11 @@ export function ListManager({ onSelectList }: ListManagerProps) {
                           <div className="flex items-center justify-between text-sm text-muted-foreground">
                             <div className="flex items-center space-x-1">
                               <Users className="w-4 h-4" />
-                              <span className="text-foreground font-medium">{list.total_leads} leads</span>
+                              <span className="text-foreground font-medium disparador-texto-claro dark:text-foreground">{list.total_leads} leads</span>
                             </div>
                             <div className="flex items-center space-x-1">
                               <Calendar className="w-4 h-4" />
-                              <span>{formatDate(list.created_at)}</span>
+                              <span className="disparador-texto-claro dark:text-muted-foreground">{formatDate(list.created_at)}</span>
                             </div>
                           </div>
 
@@ -395,7 +395,7 @@ export function ListManager({ onSelectList }: ListManagerProps) {
                                 </span>
                               ))}
                               {list.tags.length > 3 && (
-                                <span className="text-xs text-muted-foreground">+{list.tags.length - 3}</span>
+                                <span className="text-xs disparador-texto-claro dark:text-muted-foreground">+{list.tags.length - 3}</span>
                               )}
                             </div>
                           )}

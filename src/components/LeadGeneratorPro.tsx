@@ -433,7 +433,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             }`}
           />
         ))}
-        <span className="text-xs text-gray-600 ml-1">{rating}</span>
+        <span className="text-xs disparador-texto-claro dark:text-gray-600 ml-1">{rating}</span>
       </div>
     )
   }
@@ -444,10 +444,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     
     return (
       <div className="flex items-center space-x-2">
-        <div className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+        <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 disparador-texto-claro">
           {count}
         </div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs disparador-texto-claro dark:text-muted-foreground">
           Avaliações
         </div>
       </div>
@@ -722,15 +722,21 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200 dark:border-border rounded-lg overflow-hidden bg-card ${
+                      className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
                         lead.selected 
-                          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md' 
-                          : 'hover:border-blue-300 dark:hover:border-blue-200'
+                          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md card-selecionado-claro card-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
+                          : 'border-gray-200 dark:border-border bg-card hover:border-blue-300 dark:hover:border-blue-200'
                       }`}
+                      data-debug={`selected: ${lead.selected}, classes: ${lead.selected ? 'selected' : 'not-selected'}`}
                       onClick={() => toggleLeadSelectionByFilteredIndex(index)}
                     >
                       {/* Header do Card */}
-                      <div className="p-4 border-b-2 border-gray-200 dark:border-border bg-muted/30">
+                      <div className={`p-4 border-b-2 rounded-b-none ${
+                        lead.selected 
+                          ? 'border-blue-200 dark:border-blue-700 card-header-selecionado-claro card-header-selecionado-escuro' 
+                          : 'border-gray-200 dark:border-border bg-muted/30'
+                      }`}
+                      >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center space-x-3">
                             <input
@@ -738,7 +744,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               checked={lead.selected}
                               onChange={() => toggleLeadSelectionByFilteredIndex(index)}
                               onClick={(e) => e.stopPropagation()}
-                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                              className={`rounded w-4 h-4 focus:ring-2 focus:ring-blue-500 ${
+                                lead.selected 
+                                  ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white' 
+                                  : 'border-gray-300 text-blue-600 dark:border-gray-600'
+                              }`}
                             />
                             <div className="flex items-center space-x-2">
                               {renderReviewsCount(lead.reviews_count)}
@@ -750,14 +760,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         </div>
                         
                         {/* Nome do estabelecimento */}
-                        <h3 className="font-semibold text-foreground text-base mb-2 leading-tight">
+                        <h3 className="font-semibold disparador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
                           {lead.name}
                         </h3>
                         
                         {/* Endereço */}
                         <div className="flex items-center space-x-2 text-muted-foreground">
                           <MapPin className="w-4 h-4" />
-                          <span className="text-sm">{lead.address}</span>
+                          <span className="text-sm disparador-texto-claro dark:text-muted-foreground">{lead.address}</span>
                         </div>
                       </div>
 
@@ -768,19 +778,19 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           {lead.phone && (
                             <div className="flex items-center space-x-2 text-sm">
                               <Phone className="w-4 h-4 text-green-600" />
-                              <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
+                              <span className="text-green-700 dark:text-green-300 font-medium disparador-texto-claro">{lead.phone}</span>
                             </div>
                           )}
                           {lead.website && (
                             <div className="flex items-center space-x-2 text-sm">
                               <Globe className="w-4 h-4 text-blue-600" />
-                              <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
+                              <span className="text-blue-700 dark:text-blue-300 font-medium disparador-texto-claro">Website disponível</span>
                             </div>
                           )}
                           {!lead.phone && !lead.website && (
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                               <Eye className="w-4 h-4" />
-                              <span>Contato não disponível</span>
+                              <span className="disparador-texto-claro dark:text-muted-foreground">Contato não disponível</span>
                             </div>
                           )}
                         </div>
@@ -835,15 +845,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           )}
                         </div>
 
-                        {/* Indicador de Seleção */}
-                        {lead.selected && (
-                          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/50 rounded-md border border-blue-200 dark:border-blue-800">
-                            <div className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                              <span className="text-sm font-medium">Selecionado para salvar</span>
-                            </div>
-                          </div>
-                        )}
+
                       </div>
                     </motion.div>
                   ))}
@@ -852,7 +854,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 {/* Paginação */}
                 {totalPages > 1 && (
                   <div className="flex items-center justify-between mt-6 pt-4 border-t">
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm disparador-texto-claro dark:text-muted-foreground">
                       Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
                     </div>
                     <div className="flex space-x-2">
@@ -864,7 +866,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       >
                         Anterior
                       </Button>
-                      <span className="flex items-center px-3 text-sm">
+                      <span className="flex items-center px-3 text-sm disparador-texto-claro dark:text-foreground">
                         Página {currentPage} de {totalPages}
                       </span>
                       <Button
@@ -915,7 +917,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           setDuplicateLeads([])
                         }}
                       />
-                      <span>Criar nova lista</span>
+                      <span className="disparador-texto-claro dark:text-foreground">Criar nova lista</span>
                     </label>
                     <label className="flex items-center space-x-2">
                       <input
@@ -930,7 +932,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         }}
                         disabled={existingLists.length === 0}
                       />
-                      <span>Adicionar à lista existente</span>
+                      <span className="disparador-texto-claro dark:text-foreground">Adicionar à lista existente</span>
                     </label>
                   </div>
 

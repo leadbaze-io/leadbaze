@@ -208,6 +208,103 @@ html.dark .border-input {
   background-color: hsl(var(--background));
 }
 
+/* Garantir que o body tenha fundo branco no modo claro */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Garantir que o html tenha fundo branco no modo claro */
+html {
+  background-color: hsl(var(--background));
+}
+
+/* SOLUÇÃO DEFINITIVA PARA TEXTO NO MODO CLARO - MÁXIMA PRIORIDADE */
+/* Forçar texto preto no modo claro usando seletores específicos */
+html:not(.dark) .disparador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Sobrescrever qualquer outra regra CSS para texto no modo claro */
+html:not(.dark) p.disparador-texto-claro,
+html:not(.dark) h1.disparador-texto-claro,
+html:not(.dark) h2.disparador-texto-claro,
+html:not(.dark) h3.disparador-texto-claro,
+html:not(.dark) h4.disparador-texto-claro,
+html:not(.dark) h5.disparador-texto-claro,
+html:not(.dark) h6.disparador-texto-claro,
+html:not(.dark) span.disparador-texto-claro,
+html:not(.dark) div.disparador-texto-claro,
+html:not(.dark) label.disparador-texto-claro,
+html:not(.dark) textarea.disparador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* SOLUÇÃO PARA FUNDO BRANCO NO MODO CLARO - MÁXIMA PRIORIDADE */
+/* Forçar fundo branco no modo claro */
+html:not(.dark) .disparador-fundo-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Sobrescrever qualquer outra regra para fundo branco no modo claro */
+html:not(.dark) textarea.disparador-fundo-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* SOLUÇÃO PARA TEXTO BRANCO NO HOVER E SELEÇÃO - MODO CLARO */
+/* Forçar texto branco no hover e seleção para melhor legibilidade */
+html:not(.dark) .disparador-texto-hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Sobrescrever qualquer outra regra para texto branco no hover e seleção */
+html:not(.dark) h4.disparador-texto-hover,
+html:not(.dark) p.disparador-texto-hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* SOLUÇÃO ROBUSTA PARA HOVER NO MODO CLARO */
+/* Aplicar texto branco quando o container pai tem hover:bg-blue-500 */
+html:not(.dark) .hover\:bg-blue-500:hover h4,
+html:not(.dark) .hover\:bg-blue-500:hover p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Aplicar texto branco quando o container pai tem bg-blue-500 (selecionado) */
+html:not(.dark) .bg-blue-500 h4,
+html:not(.dark) .bg-blue-500 p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Garantir que o hover funcione mesmo com classes dinâmicas */
+html:not(.dark) [class*="hover:bg-blue-500"]:hover h4,
+html:not(.dark) [class*="hover:bg-blue-500"]:hover p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Garantir que o modo escuro mantenha suas cores */
+html.dark .disparador-texto-escuro {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  text-fill-color: inherit !important;
+}
+
 .text-foreground {
   color: hsl(var(--foreground));
 }
@@ -323,5 +420,110 @@ html.dark code {
   padding: 2px 4px !important;
   border-radius: 4px !important;
   font-family: 'Courier New', monospace !important;
+}
+
+/* SOLUÇÃO DEFINITIVA PARA CARDS SELECIONADOS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Card Selecionado */
+html:not(.dark) .card-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Modo Claro - Header do Card Selecionado */
+html:not(.dark) .card-header-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Modo Escuro - Card Selecionado */
+html.dark .card-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(30, 58, 138, 0.3) !important;
+}
+
+/* Modo Escuro - Header do Card Selecionado */
+html.dark .card-header-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  background: rgba(30, 58, 138, 0.4) !important;
+}
+
+/* SOLUÇÃO PARA LISTA DETALHES - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Header de Estatísticas */
+html:not(.dark) .lista-detalhes-header-claro {
+  background: linear-gradient(to right, #eff6ff, #e0e7ff) !important;
+  border-color: #dbeafe !important;
+}
+
+/* Modo Claro - Cards de Estatísticas */
+html:not(.dark) .lista-detalhes-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .lista-detalhes-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Escuro - Header de Estatísticas */
+html.dark .lista-detalhes-header-escuro {
+  background: linear-gradient(to right, #1e3a8a, #1e1b4b) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Cards de Estatísticas */
+html.dark .lista-detalhes-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .lista-detalhes-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* SOLUÇÃO PARA CONTROLES E DICAS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Área de Controles */
+html:not(.dark) .lista-controles-claro {
+  background: linear-gradient(to right, #eff6ff, #e0e7ff) !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Modo Claro - Área de Dicas */
+html:not(.dark) .lista-dicas-claro {
+  background: linear-gradient(to right, #eff6ff, #f3e8ff) !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Modo Claro - Textos das Dicas */
+html:not(.dark) .lista-dicas-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Escuro - Área de Controles */
+html.dark .lista-controles-escuro {
+  background: linear-gradient(to right, #1e3a8a, #1e1b4b) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Área de Dicas */
+html.dark .lista-dicas-escuro {
+  background: linear-gradient(to right, #1e3a8a, #581c87) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Textos das Dicas */
+html.dark .lista-dicas-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
 }
 

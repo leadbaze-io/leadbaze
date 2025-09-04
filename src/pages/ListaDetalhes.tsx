@@ -316,13 +316,13 @@ export default function ListaDetalhes() {
         </div>
 
         {/* Tips */}
-        <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
-          <h3 className="text-lg font-semibold text-foreground mb-3">
+        <div className="mt-8 lista-dicas-claro lista-dicas-escuro rounded-2xl p-6 border">
+          <h3 className="text-lg font-semibold lista-dicas-texto-claro dark:text-foreground mb-3">
             💡 Dicas para usar estes leads
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm lista-dicas-texto-claro dark:text-muted-foreground">
             <div>
-              <h4 className="font-medium mb-2 text-foreground">Qualificação:</h4>
+              <h4 className="font-medium mb-2 lista-dicas-texto-claro dark:text-foreground">Qualificação:</h4>
               <ul className="space-y-1">
                 <li>• Priorize estabelecimentos com 4+ estrelas</li>
                 <li>• Leads com telefone têm maior taxa de conversão</li>
@@ -330,7 +330,7 @@ export default function ListaDetalhes() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium mb-2 text-foreground">Abordagem:</h4>
+              <h4 className="font-medium mb-2 lista-dicas-texto-claro dark:text-foreground">Abordagem:</h4>
               <ul className="space-y-1">
                 <li>• Mencione que encontrou no Google Maps</li>
                 <li>• Personalize a mensagem por tipo de negócio</li>

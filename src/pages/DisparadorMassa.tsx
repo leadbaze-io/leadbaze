@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2 } from 'lucide-react'
+import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2, Eye, ChevronUp, ChevronDown, List, Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from '../hooks/use-toast'
 import { getCurrentUser } from '../lib/supabaseClient'
@@ -27,6 +27,15 @@ export default function DisparadorMassa() {
   const [activeTab, setActiveTab] = useState<'campaign' | 'config'>('campaign')
   const [connectedInstance, setConnectedInstance] = useState<string | null>(null)
   
+  // Mensagem de exemplo para restaurar quando o campo estiver vazio
+  const defaultMessage = `Ex: Olá {nome}, temos uma proposta especial para você! 🚀
+
+Estamos oferecendo condições exclusivas para novos clientes.
+
+Entre em contato conosco para mais detalhes!`
+  
+  
+  
   // Novos estados para gerenciamento de campanhas
   const [campaigns, setCampaigns] = useState<BulkCampaign[]>([])
   const [selectedCampaign, setSelectedCampaign] = useState<BulkCampaign | null>(null)
@@ -35,6 +44,10 @@ export default function DisparadorMassa() {
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
   const [newLeads, setNewLeads] = useState<Lead[]>([])
   const [showCampaignDetails, setShowCampaignDetails] = useState(false)
+  
+  // Estado para controlar listas utilizadas
+  const [usedLists, setUsedLists] = useState<string[]>([])
+  const [showUsedLists, setShowUsedLists] = useState(false)
 
   const loadData = useCallback(async () => {
     try {
@@ -152,6 +165,8 @@ export default function DisparadorMassa() {
         setCampaignName('')
         setIsCreatingCampaign(false)
         setShowCampaignDetails(true)
+        // Limpar seleção de listas para nova campanha
+        clearListSelection()
 
         toast({
           title: 'Campanha criada!',
@@ -184,11 +199,8 @@ export default function DisparadorMassa() {
         description: 'A campanha foi deletada com sucesso.',
       });
       setSelectedCampaign(null);
-      setSelectedLists([]);
+      clearListSelection();
       setMessage('');
-      setCampaignLeads([]);
-      setNewLeads([]);
-      setDuplicateLeads([]);
       setShowCampaignDetails(false);
     } catch (error) {
       console.error('Erro ao deletar campanha:', error);
@@ -204,7 +216,9 @@ export default function DisparadorMassa() {
   const handleSelectCampaign = (campaign: BulkCampaign) => {
     setSelectedCampaign(campaign)
     setMessage(campaign.message || '')
-    setSelectedLists(campaign.selected_lists || [])
+    // Não carregar listas selecionadas - usuário deve escolher novamente
+    setSelectedLists([])
+    setUsedLists([])
     setShowCampaignDetails(true)
     setIsCreatingCampaign(false)
   }
@@ -270,8 +284,13 @@ export default function DisparadorMassa() {
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
       }
 
-      // Limpar seleção após adicionar
+      // Adicionar listas utilizadas ao estado
+      setUsedLists(prev => [...new Set([...prev, ...selectedLists])])
+      
+      // Limpar apenas a seleção de listas, mas manter os leads na campanha
       setSelectedLists([])
+      setNewLeads([])
+      setDuplicateLeads([])
 
       // Mostrar feedback
       if (duplicateLeads.length > 0) {
@@ -337,6 +356,15 @@ export default function DisparadorMassa() {
     // Limpar feedbacks quando seleção mudar
     setNewLeads([])
     setDuplicateLeads([])
+  }
+  
+  // Função para limpar seleção de listas quando sair da edição
+  const clearListSelection = () => {
+    setSelectedLists([])
+    setNewLeads([])
+    setDuplicateLeads([])
+    setUsedLists([])
+    // NÃO limpar campaignLeads aqui - eles devem permanecer na campanha
   }
 
   const calculateTotalLeads = () => {
@@ -433,7 +461,7 @@ export default function DisparadorMassa() {
 
       // Reset form
       setMessage('')
-      setSelectedLists([])
+      clearListSelection()
       setShowCampaignDetails(false)
     } catch (error) {
       console.error('Erro ao enviar campanha:', error)
@@ -654,7 +682,7 @@ export default function DisparadorMassa() {
                   <div className="flex items-center space-x-4">
                     <Button
                       onClick={() => setIsCreatingCampaign(true)}
-                      className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Nova Campanha
@@ -682,7 +710,7 @@ export default function DisparadorMassa() {
                           <Button
                             onClick={handleCreateCampaign}
                             disabled={!campaignName.trim()}
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                           >
                             Criar Campanha
                           </Button>
@@ -766,8 +794,8 @@ export default function DisparadorMassa() {
                               
                               {/* Status Badge - FORMATO ESPECÍFICO SOLICITADO */}
                               <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                campaign.status === 'draft' ? 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800' :
-                                campaign.status === 'sending' ? 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800' :
+                                campaign.status === 'draft' ? 'bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800' :
+                                campaign.status === 'sending' ? 'bg-pink-50 text-pink-700 border border-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800' :
                                 campaign.status === 'completed' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800' :
                                 'bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800'
                               }`}>
@@ -808,71 +836,62 @@ export default function DisparadorMassa() {
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-8"
               >
-                {/* Header da Campanha - Design Profissional */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 dark:from-slate-800 dark:via-blue-800 dark:to-slate-800 rounded-3xl shadow-2xl">
-                  {/* Padrão de Fundo Sutil */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-30"></div>
-                  
-                  <div className="relative p-8">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-4">
-                        {/* Nome da Campanha com Ícone */}
-                        <div className="flex items-center space-x-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
-                            <MessageSquare className="w-8 h-8 text-white" />
-                          </div>
-                          <div>
-                            <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
-                              {selectedCampaign.name}
-                            </h1>
-                            <div className="flex items-center space-x-4 text-blue-100 dark:text-blue-200">
-                              <div className="flex items-center space-x-2">
-                                <Users className="w-5 h-5" />
-                                <span className="font-semibold">{campaignLeads.length} leads</span>
+                                 {/* Header da Campanha - Design Clean e Compacto */}
+                 <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-600 to-purple-800 dark:from-purple-700 dark:via-pink-700 dark:to-purple-900 rounded-2xl shadow-xl border border-purple-200/20 dark:border-purple-700/30">
+                   {/* Padrão de Fundo Sutil */}
+                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-30"></div>
+                   
+                   <div className="relative p-6">
+                     <div className="flex items-center justify-between">
+                       {/* Lado Esquerdo - Nome e Status */}
+                       <div className="flex items-center space-x-4">
+                         <div className="w-12 h-12 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
+                           <MessageSquare className="w-6 h-6 text-white" />
+                         </div>
+                         <div className="space-y-1">
+                           <h1 className="text-2xl font-bold text-white tracking-tight drop-shadow-sm">
+                             {selectedCampaign.name}
+                           </h1>
+                                                       <div className="flex items-center space-x-3 text-white/90">
+                              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                                <Users className="w-4 h-4" />
+                                <span className="text-sm font-medium">{campaignLeads.length} Leads</span>
                               </div>
-                              <div className="w-2 h-2 bg-blue-300 dark:bg-blue-400 rounded-full"></div>
-                              <span className="capitalize">{selectedCampaign.status}</span>
+                              <div className="w-1.5 h-1.5 bg-white/60 rounded-full"></div>
+                              <div className="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                                <span className="text-sm font-medium">
+                                  {selectedCampaign.status === 'draft' ? 'Rascunho' : 
+                                   selectedCampaign.status === 'sending' ? 'Enviando' : 
+                                   selectedCampaign.status === 'completed' ? 'Concluída' : 
+                                   selectedCampaign.status}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        
-                        {/* Estatísticas Rápidas */}
-                        <div className="grid grid-cols-3 gap-6 pt-4">
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-white">{campaignLeads.length}</div>
-                            <div className="text-blue-200 dark:text-blue-300 text-sm">Total de Leads</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-white">{selectedLists.length}</div>
-                            <div className="text-blue-200 dark:text-blue-300 text-sm">Listas Selecionadas</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-3xl font-bold text-white">{message.length}</div>
-                            <div className="text-blue-200 dark:text-blue-300 text-sm">Caracteres</div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Botão Voltar Elegante */}
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setShowCampaignDetails(false)
-                          setSelectedCampaign(null)
-                          setSelectedLists([])
-                          setMessage('')
-                          setCampaignLeads([])
-                          setNewLeads([])
-                          setDuplicateLeads([])
-                        }}
-                        className="border-border text-foreground hover:bg-muted hover:text-foreground transition-all duration-300"
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Voltar
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                         </div>
+                       </div>
+                       
+                                                                       {/* Lado Direito - Botão Voltar (apenas desktop) */}
+                         <div className="hidden md:flex items-center">
+                           <Button
+                             variant="outline"
+                             onClick={() => {
+                               setShowCampaignDetails(false)
+                               setSelectedCampaign(null)
+                               setSelectedLists([])
+                               setMessage('')
+                               setCampaignLeads([])
+                               setNewLeads([])
+                               setDuplicateLeads([])
+                             }}
+                             className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg"
+                           >
+                             <ArrowLeft className="w-4 h-4 mr-2" />
+                             Voltar
+                           </Button>
+                         </div>
+                     </div>
+                   </div>
+                 </div>
 
                 {/* Grid Principal - Layout Profissional */}
                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -880,12 +899,12 @@ export default function DisparadorMassa() {
                   <div className="xl:col-span-1 space-y-6">
                     {/* Seleção de Listas - Card Elegante */}
                     <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
-                      <div className="bg-blue-50 dark:bg-blue-800 p-6 border-b-2 border-gray-200 dark:border-blue-600">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                          <Users className="w-6 h-6 mr-3 text-blue-600 dark:text-blue-400" />
+                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-800 dark:to-pink-800 p-6 border-b-2 border-purple-200 dark:border-purple-600">
+                        <h3 className="text-xl font-bold text-purple-900 dark:text-white flex items-center">
+                          <Users className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" />
                           Gestão de Listas
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                        <p className="text-purple-700 dark:text-purple-200 mt-2">
                           Selecione as listas de leads para sua campanha
                         </p>
                       </div>
@@ -894,73 +913,97 @@ export default function DisparadorMassa() {
                         {lists.length === 0 ? (
                           <div className="text-center py-8">
                             <Users className="w-16 h-16 text-gray-300 dark:text-gray-500 mx-auto mb-4" />
-                            <p className="text-gray-600 dark:text-gray-300 mb-4 font-medium">
-                              Você ainda não possui listas de leads
-                            </p>
+                                                         <p className="text-black dark:text-gray-300 mb-4 font-medium">
+                               Você ainda não possui listas de leads
+                             </p>
                             <Button 
                               onClick={() => navigate('/gerador')}
-                              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                             >
                               Criar Primeira Lista
                             </Button>
                           </div>
-                        ) : (
-                          <div className="space-y-4">
-                            {lists.map((list) => (
-                              <div
-                                key={list.id}
-                                className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
-                                  selectedLists.includes(list.id)
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 shadow-lg scale-105' 
-                                    : 'border-gray-200 dark:border-border hover:border-blue-300 dark:hover:border-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800'
-                                }`}
-                                onClick={() => handleListToggle(list.id)}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1">
-                                    <h4 className="font-semibold text-gray-900 dark:text-white text-lg mb-1">
-                                      {list.name}
-                                    </h4>
-                                    <p className="text-gray-600 dark:text-gray-300 font-medium">
-                                      {list.total_leads} leads
-                                    </p>
-                                    {list.description && (
-                                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
-                                        {list.description}
+                                                 ) : (
+                           <div className="space-y-4">
+                             {/* Filtrar apenas listas não utilizadas */}
+                             {lists
+                               .filter(list => !usedLists.includes(list.id))
+                               .map((list) => {
+                               const isSelected = selectedLists.includes(list.id);
+                               return (
+                                <div
+                                  key={list.id}
+                                  className={`p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+                                    isSelected
+                                      ? 'border-blue-500 bg-blue-500 dark:bg-blue-900 shadow-lg scale-105' 
+                                      : 'border-gray-200 dark:border-border hover:border-blue-300 hover:bg-blue-500 dark:hover:border-blue-600 dark:hover:bg-blue-800'
+                                  }`}
+                                  onClick={() => handleListToggle(list.id)}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1">
+                                      <h4 
+                                        className={`font-semibold text-lg mb-1 ${
+                                          isSelected 
+                                            ? 'disparador-texto-hover' 
+                                            : 'disparador-texto-claro dark:text-white'
+                                        }`}
+                                      >
+                                        {list.name}
+                                      </h4>
+                                      <p 
+                                        className={`font-medium ${
+                                          isSelected 
+                                            ? 'disparador-texto-hover' 
+                                            : 'disparador-texto-claro dark:text-gray-300'
+                                        }`}
+                                      >
+                                        {list.total_leads} leads
                                       </p>
-                                    )}
-                                  </div>
-                                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                                    selectedLists.includes(list.id)
-                                      ? 'border-blue-500 bg-blue-500 scale-110' 
-                                      : 'border-gray-300 dark:border-gray-600'
-                                  }`}>
-                                    {selectedLists.includes(list.id) && (
-                                      <CheckCircle className="w-4 h-4 text-white" />
-                                    )}
+                                      {list.description && (
+                                        <p 
+                                          className={`text-sm mt-2 leading-relaxed ${
+                                            isSelected 
+                                              ? 'disparador-texto-hover' 
+                                              : 'disparador-texto-claro dark:text-gray-400'
+                                          }`}
+                                        >
+                                          {list.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                                      isSelected
+                                        ? 'border-blue-500 bg-blue-500 scale-110' 
+                                        : 'border-gray-300 dark:border-gray-600'
+                                    }`}>
+                                      {isSelected && (
+                                        <CheckCircle className="w-4 h-4 text-white" />
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                             
                             {/* Resumo de Seleção */}
                             {selectedLists.length > 0 && (
                               <motion.div 
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-xl border-2 border-blue-200 dark:border-blue-800"
+                                className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 rounded-xl border-2 border-purple-200 dark:border-purple-800"
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center space-x-2">
-                                    <CheckCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                                    <span className="font-semibold text-blue-800 dark:text-white">
+                                    <CheckCircle className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                    <span className="font-semibold text-purple-800 dark:text-white">
                                       {calculateTotalLeads()} leads selecionados
                                     </span>
                                   </div>
                                 </div>
                                 <Button
                                   onClick={handleUpdateCampaignLists}
-                                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                   <Users className="w-4 h-4 mr-2" />
                                   Adicionar à Campanha
@@ -978,16 +1021,16 @@ export default function DisparadorMassa() {
                             className="mt-6 space-y-3"
                           >
                             {newLeads.length > 0 && (
-                              <div className="p-4 bg-green-50 dark:bg-green-900 border-2 border-green-200 dark:border-green-800 rounded-xl">
+                              <div className="p-4 bg-purple-50 dark:bg-purple-900 border-2 border-purple-200 dark:border-purple-800 rounded-xl">
                                 <div className="flex items-center space-x-3">
-                                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
                                     <span className="text-white font-bold text-sm">✓</span>
                                   </div>
                                   <div>
-                                    <p className="font-semibold text-green-800 dark:text-green-200">
+                                    <p className="font-semibold text-purple-800 dark:text-purple-200">
                                       {newLeads.length} novos leads adicionados
                                     </p>
-                                    <p className="text-sm text-green-600 dark:text-green-300">
+                                    <p className="text-sm text-purple-600 dark:text-purple-300">
                                       Sucesso na importação
                                     </p>
                                   </div>
@@ -995,16 +1038,16 @@ export default function DisparadorMassa() {
                               </div>
                             )}
                             {duplicateLeads.length > 0 && (
-                              <div className="p-4 bg-amber-50 dark:bg-amber-900 border-2 border-amber-200 dark:border-amber-800 rounded-xl">
+                              <div className="p-4 bg-pink-50 dark:bg-pink-900 border-2 border-pink-200 dark:border-pink-800 rounded-xl">
                                 <div className="flex items-center space-x-3">
-                                  <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
+                                  <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
                                     <span className="text-white font-bold text-sm">!</span>
                                   </div>
                                   <div>
-                                    <p className="font-semibold text-amber-800 dark:text-amber-200">
+                                    <p className="font-semibold text-pink-800 dark:text-pink-200">
                                       {duplicateLeads.length} leads duplicados ignorados
                                     </p>
-                                    <p className="text-sm text-amber-600 dark:text-amber-300">
+                                    <p className="text-sm text-pink-600 dark:text-pink-300">
                                       Evitando duplicação
                                     </p>
                                   </div>
@@ -1021,12 +1064,12 @@ export default function DisparadorMassa() {
                   <div className="xl:col-span-1 space-y-6">
                     {/* Leads da Campanha - Card Profissional */}
                     <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
-                      <div className="bg-green-50 dark:bg-gray-900 p-6 border-b-2 border-gray-200 dark:border-green-600">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                          <Users className="w-6 h-6 mr-3 text-green-600 dark:text-green-300" />
+                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-800 dark:to-pink-800 p-6 border-b-2 border-purple-200 dark:border-purple-600">
+                        <h3 className="text-xl font-bold text-purple-900 dark:text-white flex items-center">
+                          <Users className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" />
                           Leads da Campanha
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                        <p className="text-purple-700 dark:text-purple-200 mt-2">
                           Visualize e gerencie os leads selecionados
                         </p>
                       </div>
@@ -1035,73 +1078,127 @@ export default function DisparadorMassa() {
                         {campaignLeads.length === 0 ? (
                           <div className="text-center py-12">
                             <Users className="w-16 h-16 text-gray-300 dark:text-gray-500 mx-auto mb-4" />
-                            <p className="text-gray-600 dark:text-gray-300 mb-2 font-medium">
+                            <p className="mb-2 font-medium disparador-texto-claro dark:text-gray-300">
                               Nenhum lead adicionado ainda
                             </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-sm disparador-texto-claro dark:text-gray-400">
                               Selecione listas para adicionar leads à campanha
                             </p>
+                            
+                            
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            {/* Resumo Estatístico */}
-                            <div className="p-4 bg-green-50 dark:bg-green-900 border-2 border-green-200 dark:border-green-800 rounded-xl">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                    <Users className="w-5 h-5 text-white" />
+                                                                                       {/* Resumo Estatístico - Design Compacto e Responsivo */}
+                              <div className="p-2 sm:p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 border border-purple-200 dark:border-purple-800 rounded-lg">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-1 sm:space-x-2">
+                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                      <Users className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                                    </div>
+                                    <div className="flex items-center space-x-1">
+                                      <p className="text-base sm:text-lg font-bold text-purple-800 dark:text-purple-200">
+                                        {campaignLeads.length}
+                                      </p>
+                                      <p className="text-xs text-purple-600 dark:text-purple-300">
+                                        Leads
+                                      </p>
+                                    </div>
                                   </div>
-                                  <div>
-                                    <p className="text-2xl font-bold text-green-800 dark:text-green-200">
-                                      {campaignLeads.length}
-                                    </p>
-                                    <p className="text-sm text-green-600 dark:text-green-300">
-                                      leads na campanha
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="text-right">
-                                  <div className="text-sm text-green-600 dark:text-green-300">
-                                    Pronto para envio
+                                  <div className="text-right">
+                                    <div className="text-xs text-purple-600 dark:text-purple-300 font-medium">
+                                      ✓ Pronto
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
                             
                             {/* Lista de Leads com Scroll Elegante */}
                             <div className="max-h-80 overflow-y-auto space-y-3 pr-2">
-                              {campaignLeads.slice(0, 15).map((lead, index) => (
-                                <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                                  <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                      <p className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
-                                        {lead.name}
-                                      </p>
-                                      {lead.phone && (
-                                        <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
-                                          📱 {lead.phone}
-                                        </p>
-                                      )}
-                                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                                        📍 {lead.address}
-                                      </p>
-                                    </div>
-                                    <div className="text-xs text-gray-400 dark:text-gray-500 font-mono">
-                                      #{index + 1}
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                              {campaignLeads.length > 15 && (
-                                <div className="text-center py-4">
-                                  <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full">
-                                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                                      ... e mais {campaignLeads.length - 15} leads
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
+                                                                                            {campaignLeads.slice(0, 15).map((lead, index) => (
+                                 <div key={index} className="p-4 disparador-fundo-claro dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                   <div className="flex items-start justify-between">
+                                     <div className="flex-1">
+                                       <p className="font-semibold disparador-texto-claro dark:text-white text-sm mb-1">
+                                         {lead.name}
+                                       </p>
+                                       {lead.phone && (
+                                         <p className="text-xs disparador-texto-claro dark:text-gray-300 mb-1">
+                                           📱 {lead.phone}
+                                         </p>
+                                       )}
+                                       <p className="text-xs disparador-texto-claro dark:text-gray-400 leading-relaxed">
+                                         📍 {lead.address}
+                                       </p>
+                                     </div>
+                                     <div className="text-xs disparador-texto-claro dark:text-gray-500 font-mono">
+                                       #{index + 1}
+                                     </div>
+                                   </div>
+                                 </div>
+                               ))}
+                               {campaignLeads.length > 15 && (
+                                 <div className="text-center py-4">
+                                   <div className="inline-flex items-center space-x-2 px-4 py-2 disparador-fundo-claro dark:bg-gray-800 rounded-full">
+                                     <span className="text-sm disparador-texto-claro dark:text-gray-300">
+                                       ... e mais {campaignLeads.length - 15} leads
+                                     </span>
+                                   </div>
+                                 </div>
+                               )}
                             </div>
+                          </div>
+                        )}
+                        
+                        {/* Botão Listas Utilizadas */}
+                        {usedLists.length > 0 && (
+                          <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+                            <Button
+                              onClick={() => setShowUsedLists(!showUsedLists)}
+                              variant="outline"
+                              className="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200"
+                            >
+                              <Eye className="w-4 h-4 mr-2" />
+                              {showUsedLists ? 'Ocultar' : 'Ver'} Listas Utilizadas ({usedLists.length})
+                              {showUsedLists ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
+                            </Button>
+                            
+                            {/* Modal/Dropdown com Listas Utilizadas */}
+                            {showUsedLists && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="mt-4 max-h-60 overflow-y-auto space-y-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600"
+                              >
+                                <h4 className="font-semibold text-gray-800 dark:text-gray-200 text-sm mb-3 flex items-center">
+                                  <List className="w-4 h-4 mr-2" />
+                                  Listas já utilizadas nesta campanha:
+                                </h4>
+                                {lists
+                                  .filter(list => usedLists.includes(list.id))
+                                  .map((list) => (
+                                    <div key={list.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                      <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                          <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                        </div>
+                                        <div>
+                                          <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                                            {list.name}
+                                          </h4>
+                                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                                            {list.total_leads} leads
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                        ✓ Utilizada
+                                      </div>
+                                    </div>
+                                  ))}
+                              </motion.div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -1112,12 +1209,12 @@ export default function DisparadorMassa() {
                   <div className="xl:col-span-1 space-y-6">
                     {/* Configuração da Mensagem - Card Elegante */}
                     <div className="bg-card rounded-2xl shadow-xl border-2 border-gray-200 dark:border-border overflow-hidden">
-                      <div className="bg-purple-50 dark:bg-gray-900 p-6 border-b-2 border-gray-200 dark:border-purple-600">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                          <MessageSquare className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-300" />
+                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-800 dark:to-pink-800 p-6 border-b-2 border-purple-200 dark:border-purple-600">
+                        <h3 className="text-xl font-bold text-purple-900 dark:text-white flex items-center">
+                          <MessageSquare className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" />
                           Mensagem da Campanha
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                        <p className="text-purple-700 dark:text-purple-200 mt-2">
                           Configure sua mensagem personalizada
                         </p>
                       </div>
@@ -1125,14 +1222,14 @@ export default function DisparadorMassa() {
                       <div className="p-6 space-y-6">
                                                  {/* Editor de Mensagem Profissional */}
                          <div className="space-y-4">
-                           <Label htmlFor="message" className="text-gray-700 dark:text-white font-semibold text-base block mb-3">
-                             Mensagem Personalizada
-                           </Label>
+                                                       <Label htmlFor="message" className="disparador-texto-claro dark:text-white font-semibold text-base block mb-3">
+                              Mensagem Personalizada
+                            </Label>
                            <div className="relative">
-                            <textarea
-                              id="message"
-                              className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 dark:focus:border-purple-400 resize-none transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                              rows={8}
+                                                                                         <textarea
+                                id="message"
+                                className="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 dark:focus:border-purple-400 resize-none transition-all duration-300 disparador-fundo-claro dark:bg-gray-800 disparador-texto-claro dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                               rows={8}
                               placeholder="Ex: Olá {nome}, temos uma proposta especial para você! 🚀
 
 Estamos oferecendo condições exclusivas para novos clientes.
@@ -1141,6 +1238,12 @@ Entre em contato conosco para mais detalhes!"
                               value={message}
                               onChange={(e) => {
                                 setMessage(e.target.value);
+                              }}
+                              onFocus={() => {
+                                // Se a mensagem estiver vazia, restaurar o exemplo
+                                if (!message.trim()) {
+                                  setMessage(defaultMessage);
+                                }
                               }}
                               onBlur={() => {
                                 // Salvar quando o campo perder o foco (usuário terminar de digitar)
@@ -1164,16 +1267,16 @@ Entre em contato conosco para mais detalhes!"
                           </div>
                           
                           {/* Dicas de Personalização */}
-                          <div className="p-4 bg-blue-50 dark:bg-blue-900 border-2 border-blue-200 dark:border-blue-800 rounded-xl">
+                          <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 border-2 border-purple-200 dark:border-purple-800 rounded-xl">
                             <div className="flex items-start space-x-3">
-                              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                                 <span className="text-white font-bold text-xs">💡</span>
                               </div>
                               <div>
-                                <p className="font-semibold text-blue-800 dark:text-white text-sm mb-2">
+                                <p className="font-semibold text-purple-800 dark:text-white text-sm mb-2">
                                   Dicas de Personalização
                                 </p>
-                                <div className="space-y-1 text-xs text-blue-700 dark:text-blue-100">
+                                <div className="space-y-1 text-xs text-purple-700 dark:text-purple-100">
                                   <p>• Use <code>{"{nome}"}</code> para incluir o nome do lead</p>
                                   <p>• Mantenha a mensagem clara e objetiva</p>
                                   <p>• Inclua uma chamada para ação</p>

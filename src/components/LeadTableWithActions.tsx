@@ -146,10 +146,10 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
     const count = reviewsCount || 0
     return (
       <div className="flex items-center space-x-2">
-        <div className="text-base font-bold text-blue-600 dark:text-blue-400">
+        <div className="text-base font-bold text-blue-600 dark:text-blue-400 disparador-texto-claro">
           {count}
         </div>
-        <div className="text-xs text-gray-600 dark:text-gray-300 font-medium">
+        <div className="text-xs disparador-texto-claro dark:text-gray-300 font-medium">
           Avaliações
         </div>
       </div>
@@ -159,11 +159,11 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
   return (
     <div className="space-y-6">
       {/* Header com estatísticas */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 rounded-2xl p-6 border border-blue-100 dark:border-blue-800">
+      <div className="lista-detalhes-header-claro lista-detalhes-header-escuro rounded-2xl p-6 border">
         <div className="flex items-center justify-between mb-4">
           <div>
-                    <h2 className="text-3xl font-bold text-foreground">{title}</h2>
-        <p className="text-muted-foreground mt-1">
+                    <h2 className="text-3xl font-bold lista-detalhes-texto-claro dark:text-foreground">{title}</h2>
+        <p className="lista-detalhes-texto-claro dark:text-muted-foreground mt-1">
               {filteredLeads.length} leads encontrados
               {selectedLeads.size > 0 && (
                 <span className="ml-2 text-blue-600 font-medium">
@@ -189,37 +189,37 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
 
         {/* Estatísticas rápidas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-card rounded-lg p-3 border border-border">
+          <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-3 border">
             <div className="flex items-center space-x-2">
               <Users className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-muted-foreground">Total</span>
+              <span className="text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Total</span>
             </div>
-            <p className="text-2xl font-bold text-foreground">{filteredLeads.length}</p>
+            <p className="text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">{filteredLeads.length}</p>
           </div>
-          <div className="bg-card rounded-lg p-3 border border-border">
+          <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-3 border">
             <div className="flex items-center space-x-2">
               <Phone className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-muted-foreground">Com Telefone</span>
+              <span className="text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Com Telefone</span>
             </div>
-            <p className="text-2xl font-bold text-foreground">
+            <p className="text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
               {filteredLeads.filter(lead => lead.phone).length}
             </p>
           </div>
-          <div className="bg-card rounded-lg p-3 border border-border">
+          <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-3 border">
             <div className="flex items-center space-x-2">
               <Globe className="w-4 h-4 text-purple-600" />
-              <span className="text-sm font-medium text-muted-foreground">Com Website</span>
+              <span className="text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Com Website</span>
             </div>
-            <p className="text-2xl font-bold text-foreground">
+            <p className="text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
               {filteredLeads.filter(lead => lead.website).length}
             </p>
           </div>
-          <div className="bg-card rounded-lg p-3 border border-border">
+          <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-3 border">
             <div className="flex items-center space-x-2">
               <Star className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm font-medium text-muted-foreground">4+ Estrelas</span>
+              <span className="text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">4+ Estrelas</span>
             </div>
-            <p className="text-2xl font-bold text-foreground">
+            <p className="text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
               {filteredLeads.filter(lead => lead.rating && lead.rating >= 4).length}
             </p>
           </div>
@@ -325,7 +325,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       </Card>
 
       {/* Controles de seleção */}
-      <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 p-4 rounded-xl border border-blue-200 dark:border-blue-800">
+      <div className="flex items-center justify-between lista-controles-claro lista-controles-escuro p-4 rounded-xl border">
         <div className="flex items-center space-x-4">
           <Button
             variant="outline"
@@ -377,15 +377,19 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
         {paginatedLeads.map((lead, index) => (
           <Card 
             key={lead.id || index} 
-            className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 border-gray-200 dark:border-border rounded-lg overflow-hidden bg-card ${
+            className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
               selectedLeads.has(lead.id || '') 
-                ? 'ring-2 ring-blue-500 border-blue-500 shadow-md' 
-                : 'hover:border-blue-300 dark:hover:border-blue-200'
+                ? 'ring-2 ring-blue-500 border-blue-500 shadow-md card-selecionado-claro card-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
+                : 'border-gray-200 dark:border-border bg-card hover:border-blue-300 dark:hover:border-blue-200'
             }`}
             onClick={() => toggleLeadSelection(lead.id || '')}
           >
             {/* Header do Card */}
-            <div className="p-4 border-b-2 border-gray-200 dark:border-border bg-muted/30">
+            <div className={`p-4 border-b-2 rounded-b-none ${
+              selectedLeads.has(lead.id || '') 
+                ? 'border-blue-200 dark:border-blue-700 card-header-selecionado-claro card-header-selecionado-escuro'
+                : 'border-gray-200 dark:border-border bg-muted/30'
+            }`}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <input 
@@ -395,7 +399,11 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                       e.stopPropagation()
                       toggleLeadSelection(lead.id || '')
                     }}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 flex-shrink-0 w-4 h-4"
+                    className={`rounded flex-shrink-0 w-4 h-4 focus:ring-2 focus:ring-blue-500 ${
+                      selectedLeads.has(lead.id || '') 
+                        ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white'
+                        : 'border-gray-300 text-blue-600'
+                    }`}
                   />
                   <div className="flex items-center space-x-2">
                     {renderReviewsCount(lead.reviews_count)}
@@ -408,8 +416,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
               
               {/* Nome do estabelecimento */}
               <div className="mb-3">
-                <h3 className="font-semibold text-foreground text-base truncate mb-2 leading-tight">{lead.name}</h3>
-                <div className="flex items-start space-x-2 text-sm text-muted-foreground">
+                <h3 className="font-semibold disparador-texto-claro dark:text-foreground text-base truncate mb-2 leading-tight">{lead.name}</h3>
+                <div className="flex items-start space-x-2 text-sm disparador-texto-claro dark:text-muted-foreground">
                   <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   <span className="leading-relaxed">{lead.address}</span>
                 </div>
@@ -423,17 +431,17 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 {lead.phone && (
                   <div className="flex items-center space-x-2 text-sm">
                     <Phone className="w-4 h-4 text-green-600" />
-                    <span className="text-green-700 dark:text-green-300 font-medium">{lead.phone}</span>
+                    <span className="text-green-700 dark:text-green-300 font-medium disparador-texto-claro">{lead.phone}</span>
                   </div>
                 )}
                 {lead.website && (
                   <div className="flex items-center space-x-2 text-sm">
                     <Globe className="w-4 h-4 text-blue-600" />
-                    <span className="text-blue-700 dark:text-blue-300 font-medium">Website disponível</span>
+                    <span className="text-blue-700 dark:text-blue-300 font-medium disparador-texto-claro">Website disponível</span>
                   </div>
                 )}
                 {!lead.phone && !lead.website && (
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <div className="flex items-center space-x-2 text-sm disparador-texto-claro dark:text-muted-foreground">
                     <Eye className="w-4 h-4" />
                     <span>Contato não disponível</span>
                   </div>
@@ -489,15 +497,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 )}
               </div>
 
-              {/* Indicador de Seleção */}
-              {selectedLeads.has(lead.id || '') && (
-                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/50 rounded-md border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center space-x-2 text-blue-700 dark:text-blue-300">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium">Selecionado</span>
-                  </div>
-                </div>
-              )}
+
             </div>
           </Card>
         ))}
@@ -547,8 +547,8 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       {filteredLeads.length === 0 && (
         <div className="text-center py-16">
                   <Filter className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-medium text-foreground mb-2">Nenhum lead encontrado</h3>
-        <p className="text-muted-foreground max-w-md mx-auto">
+        <h3 className="text-xl font-medium disparador-texto-claro dark:text-foreground mb-2">Nenhum lead encontrado</h3>
+        <p className="disparador-texto-claro dark:text-muted-foreground max-w-md mx-auto">
             Tente ajustar os filtros ou realizar uma nova busca para encontrar leads que correspondam aos seus critérios.
           </p>
         </div>
