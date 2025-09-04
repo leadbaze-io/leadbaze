@@ -1,7 +1,5 @@
 import * as BlogTypes from '../types/blog';
 type BlogPost = BlogTypes.BlogPost;
-type BlogCategory = BlogTypes.BlogCategory;
-type BlogTag = BlogTypes.BlogTag;
 
 export interface N8NWebhookConfig {
   webhookUrl: string;

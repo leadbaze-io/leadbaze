@@ -16,7 +16,6 @@ export default function BlogCategoryFilter({
 }: BlogCategoryFilterProps) {
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(filters.search || '');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
@@ -49,16 +48,8 @@ export default function BlogCategoryFilter({
     });
   };
 
-  const handleSearchChange = (search: string) => {
-    setSearchTerm(search);
-    onFiltersChange({
-      ...filters,
-      search: search.trim() || undefined
-    });
-  };
 
   const clearFilters = () => {
-    setSearchTerm('');
     onFiltersChange({});
   };
 

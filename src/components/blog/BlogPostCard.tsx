@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, Eye, Heart, User } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import * as BlogTypes from '../../types/blog';
 type BlogPost = BlogTypes.BlogPost;
 import { BlogService } from '../../lib/blogService';
