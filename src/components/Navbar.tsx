@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { User, LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight } from 'lucide-react'
+import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
@@ -60,44 +60,7 @@ export default function Navbar() {
     }
   }
 
-  // Animações para o menu mobile - otimizadas para suavidade
-  const mobileMenuVariants = {
-    closed: {
-      opacity: 0,
-      height: 0,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut" as const
-      }
-    },
-    open: {
-      opacity: 1,
-      height: "auto",
-      transition: {
-        duration: 0.25,
-        ease: "easeOut" as const
-      }
-    }
-  }
 
-  // Animações para os itens do menu mobile - otimizadas para suavidade
-  const mobileItemVariants = {
-    closed: {
-      opacity: 0,
-      x: -15,
-      transition: {
-        duration: 0.15
-      }
-    },
-    open: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.2,
-        staggerChildren: 0.08
-      }
-    }
-  }
 
   useEffect(() => {
     // Verificar usuário logado inicialmente

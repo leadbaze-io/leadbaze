@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader, ArrowLeft, Search, BookOpen, X, Filter, ChevronDown, Mail, Phone } from 'lucide-react';
+import { Loader, ArrowLeft, Search, X, Filter, ChevronDown, Mail, Phone } from 'lucide-react';
 import LogoImage from '../components/LogoImage';
 import * as BlogTypes from '../types/blog';
 
@@ -26,13 +26,13 @@ export default function BlogPage() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Extract filters from URL params
-  const filters: BlogFilters = {
+  // Extract filters from URL params - otimizado com useMemo
+  const filters: BlogFilters = useMemo(() => ({
     category: searchParams.get('category') || undefined,
     tag: searchParams.get('tag') || undefined,
     search: searchParams.get('search') || undefined,
     sortBy: (searchParams.get('sortBy') as BlogFilters['sortBy']) || 'newest'
-  };
+  }), [searchParams]);
 
   // Função para controlar a visibilidade da navbar baseada no scroll
   const controlNavbar = useCallback(() => {
@@ -74,7 +74,7 @@ export default function BlogPage() {
     };
 
     loadPosts();
-  }, [searchParams]);
+  }, [searchParams, currentPage, filters]);
 
   // Forçar modo claro no Blog
   useEffect(() => {

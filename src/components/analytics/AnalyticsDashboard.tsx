@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
-import { Badge } from '../ui/badge'
+
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
 import type { LeadList } from '../../types'

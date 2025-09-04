@@ -4,7 +4,6 @@ interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode
   className?: string
   shimmerColor?: string
-  shimmerSize?: string
   borderRadius?: string
   shimmerDuration?: string
   background?: string
@@ -15,7 +14,6 @@ export function ShimmerButton({
   children,
   className,
   shimmerColor = "#ffffff",
-  shimmerSize = "0.05em",
   borderRadius = "0.5rem",
   shimmerDuration = "3s",
   background = "linear-gradient(45deg, #3b82f6, #8b5cf6)",
