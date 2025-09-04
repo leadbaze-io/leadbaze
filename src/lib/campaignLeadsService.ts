@@ -44,8 +44,8 @@ export class CampaignLeadsService {
           console.log(`- Telefone ${phone} tem ${group.length} leads:`)
           group.forEach((g: { lead: CampaignLead }, i: number) => {
             const lead = g.lead
-            const hash = this.generateLeadHash(lead)
-            console.log(`  ${i + 1}. Nome: "${lead.name}", Endereço: "${lead.address}", Hash: "${hash}"`)
+            const hash = this.generateLeadHash(lead.lead_data)
+            console.log(`  ${i + 1}. Nome: "${lead.lead_data.name}", Endereço: "${lead.lead_data.address}", Hash: "${hash}"`)
           })
         }
       })
@@ -288,8 +288,8 @@ export class CampaignLeadsService {
         if (!listMap.has(listId)) {
           listMap.set(listId, {
             list_id: listId,
-            list_name: (item.lead_lists as { name: string })?.name || 'Lista desconhecida',
-            total_leads: (item.lead_lists as { total_leads: number })?.total_leads || 0, // Total da lista original
+            list_name: (item.lead_lists as { name: string }[])?.[0]?.name || 'Lista desconhecida',
+            total_leads: (item.lead_lists as { total_leads: number }[])?.[0]?.total_leads || 0, // Total da lista original
             leads_in_campaign: 0, // Será contado abaixo
             added_at: item.added_at
           })

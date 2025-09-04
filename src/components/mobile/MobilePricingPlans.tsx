@@ -154,7 +154,7 @@ export default function MobilePricingPlans() {
               className={`relative group cursor-pointer ${
                 selectedPlan === plan.id ? 'ring-4 ring-purple-500 ring-opacity-50' : ''
               }`}
-              onClick={() => setSelectedPlan(plan.id as string)}
+              onClick={() => setSelectedPlan(plan.id as 'start' | 'scale' | 'enterprise')}
             >
               {/* Popular Badge */}
               {plan.popular && (
