@@ -7,12 +7,13 @@ import { getCurrentUser } from '../lib/supabaseClient'
 import { LeadService } from '../lib/leadService'
 import { WhatsAppInstanceService } from '../lib/whatsappInstanceService'
 import { CampaignService } from '../lib/campaignService'
+import { CampaignLeadsService } from '../lib/campaignLeadsService'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
 import { EvolutionApiService } from '../lib/evolutionApiService'
-import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead } from '../types'
+import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, CampaignLead, UsedListSummary } from '../types'
 import type { User } from '@supabase/supabase-js'
 
 export default function DisparadorMassa() {
@@ -22,6 +23,8 @@ export default function DisparadorMassa() {
   const [lists, setLists] = useState<LeadList[]>([])
   const [selectedLists, setSelectedLists] = useState<string[]>([])
   const [message, setMessage] = useState('')
+  
+  // Função de debug removida - problema resolvido
   const [campaignName, setCampaignName] = useState('')
   const [whatsappConfig, setWhatsappConfig] = useState<EvolutionAPIConfig | null>(null)
   const [activeTab, setActiveTab] = useState<'campaign' | 'config'>('campaign')
@@ -40,14 +43,23 @@ Entre em contato conosco para mais detalhes!`
   const [campaigns, setCampaigns] = useState<BulkCampaign[]>([])
   const [selectedCampaign, setSelectedCampaign] = useState<BulkCampaign | null>(null)
   const [isCreatingCampaign, setIsCreatingCampaign] = useState(false)
-  const [campaignLeads, setCampaignLeads] = useState<Lead[]>([])
+  const [campaignLeads, setCampaignLeads] = useState<CampaignLead[]>([])
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
   const [newLeads, setNewLeads] = useState<Lead[]>([])
   const [showCampaignDetails, setShowCampaignDetails] = useState(false)
   
-  // Estado para controlar listas utilizadas
-  const [usedLists, setUsedLists] = useState<string[]>([])
+  // Estado para controlar listas utilizadas (usando nova estrutura)
+  const [usedListsSummary, setUsedListsSummary] = useState<UsedListSummary[]>([])
   const [showUsedLists, setShowUsedLists] = useState(false)
+  
+  // Estado para seleção múltipla de leads
+  const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
+  
+  // Estado para controlar visualização expandida dos leads
+  const [showAllLeads, setShowAllLeads] = useState(false)
+  
+  // Estado para controlar animação do botão de salvar
+  const [isSaving, setIsSaving] = useState(false)
 
   const loadData = useCallback(async () => {
     try {
@@ -59,6 +71,7 @@ Entre em contato conosco para mais detalhes!`
       if (user) {
         const userCampaigns = await loadUserCampaigns()
         setCampaigns(userCampaigns)
+        console.log('📋 Campanhas carregadas:', userCampaigns.length)
       }
       
       // Carregar instância WhatsApp do usuário
@@ -108,23 +121,25 @@ Entre em contato conosco para mais detalhes!`
 
   // Carregar dados quando o usuário estiver disponível
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && !selectedCampaign) {
+      console.log('🔄 useEffect loadData chamado:', {
+        hasUser: !!user,
+        loading,
+        hasSelectedCampaign: !!selectedCampaign,
+        selectedCampaignId: selectedCampaign?.id
+      })
       loadData().catch(error => {
         console.error('Erro ao carregar dados:', error)
       })
     }
-  }, [user, loading, loadData])
+  }, [user, loading])
 
-  // Salvar mensagem automaticamente com debounce inteligente
-  useEffect(() => {
-    if (!selectedCampaign || !message.trim()) return;
+  // Removido salvamento automático para evitar conflitos
+  // A mensagem será salva apenas quando o usuário clicar no botão ou sair do campo
 
-    const timeoutId = setTimeout(() => {
-      handleSaveMessage(false);
-    }, 800);
+  // Logs de debug removidos - problema resolvido
 
-    return () => clearTimeout(timeoutId);
-  }, [message, selectedCampaign]);
+  // Função de teste removida - problema resolvido
 
   // Carregar campanhas do usuário
   const loadUserCampaigns = async (): Promise<BulkCampaign[]> => {
@@ -213,12 +228,58 @@ Entre em contato conosco para mais detalhes!`
   };
 
   // Selecionar campanha existente
-  const handleSelectCampaign = (campaign: BulkCampaign) => {
-    setSelectedCampaign(campaign)
-    setMessage(campaign.message || '')
+  const handleSelectCampaign = async (campaign: BulkCampaign) => {
+    console.log('📋 Selecionando campanha:', {
+      id: campaign.id,
+      name: campaign.name,
+      message: campaign.message,
+      messageLength: campaign.message?.length || 0
+    })
+    
+    // Recarregar campanha do banco para garantir dados atualizados
+    try {
+      const freshCampaign = await CampaignService.getCampaign(campaign.id)
+      if (freshCampaign) {
+        console.log('🔄 Campanha recarregada do banco:', {
+          id: freshCampaign.id,
+          message: freshCampaign.message,
+          messageLength: freshCampaign.message?.length || 0,
+          originalMessage: campaign.message
+        })
+        setSelectedCampaign(freshCampaign)
+        setMessage(freshCampaign.message || '')
+        console.log('✅ Estado atualizado:', {
+          selectedCampaignId: freshCampaign.id,
+          messageState: freshCampaign.message || ''
+        })
+      } else {
+        console.log('⚠️ Campanha não encontrada no banco, usando dados locais')
+        setSelectedCampaign(campaign)
+        setMessage(campaign.message || '')
+      }
+    } catch (error) {
+      console.error('❌ Erro ao recarregar campanha:', error)
+      setSelectedCampaign(campaign)
+      setMessage(campaign.message || '')
+    }
+    
     // Não carregar listas selecionadas - usuário deve escolher novamente
     setSelectedLists([])
-    setUsedLists([])
+    
+    // Carregar leads da campanha usando nova estrutura
+    try {
+      const leads = await CampaignLeadsService.getCampaignLeads(campaign.id)
+      setCampaignLeads(leads)
+      
+      // Carregar resumo das listas utilizadas
+      const usedLists = await CampaignLeadsService.getUsedListsSummary(campaign.id)
+      setUsedListsSummary(usedLists)
+    } catch (error) {
+      console.error('Erro ao carregar leads da campanha:', error)
+      setCampaignLeads([])
+      setUsedListsSummary([])
+    }
+    
     setShowCampaignDetails(true)
     setIsCreatingCampaign(false)
   }
@@ -239,7 +300,7 @@ Entre em contato conosco para mais detalhes!`
 
     // Criar um Set com os telefones já existentes na campanha
     const existingPhones = new Set(
-      campaignLeads.map(lead => lead.phone?.replace(/\D/g, '')).filter(Boolean)
+      campaignLeads.map(lead => lead.lead_data.phone?.replace(/\D/g, '')).filter(Boolean)
     )
 
     const newLeads: Lead[] = []
@@ -270,12 +331,33 @@ Entre em contato conosco para mais detalhes!`
       
       setNewLeads(newLeads)
       setDuplicateLeads(duplicateLeads)
-      setCampaignLeads(prev => [...prev, ...newLeads])
+
+      // Usar nova estrutura robusta para adicionar leads
+      for (const listId of selectedLists) {
+        const list = lists.find(l => l.id === listId)
+        if (list && list.leads) {
+          const result = await CampaignLeadsService.addLeadsFromList(
+            selectedCampaign.id,
+            listId,
+            list.leads
+          )
+          
+          if (result.success) {
+            // Recarregar leads da campanha
+            const updatedLeads = await CampaignLeadsService.getCampaignLeads(selectedCampaign.id)
+            setCampaignLeads(updatedLeads)
+            
+            // Recarregar resumo das listas utilizadas
+            const updatedUsedLists = await CampaignLeadsService.getUsedListsSummary(selectedCampaign.id)
+            setUsedListsSummary(updatedUsedLists)
+          }
+        }
+      }
 
       // Atualizar campanha
       const updatedCampaign = await CampaignService.updateCampaign(selectedCampaign.id, {
         selected_lists: selectedLists,
-        total_leads: campaignLeads.length + newLeads.length,
+        total_leads: await CampaignLeadsService.getCampaignLeadsCount(selectedCampaign.id),
         message: message
       })
 
@@ -283,9 +365,6 @@ Entre em contato conosco para mais detalhes!`
         setSelectedCampaign(updatedCampaign)
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
       }
-
-      // Adicionar listas utilizadas ao estado
-      setUsedLists(prev => [...new Set([...prev, ...selectedLists])])
       
       // Limpar apenas a seleção de listas, mas manter os leads na campanha
       setSelectedLists([])
@@ -295,13 +374,15 @@ Entre em contato conosco para mais detalhes!`
       // Mostrar feedback
       if (duplicateLeads.length > 0) {
         toast({
-          title: 'Leads adicionados',
-          description: `${newLeads.length} novos leads adicionados. ${duplicateLeads.length} leads duplicados ignorados.`,
+          title: '✅ Leads adicionados com sucesso',
+          description: `${newLeads.length} novos leads únicos adicionados. ${duplicateLeads.length} leads duplicados foram automaticamente ignorados.`,
+          variant: 'success'
         })
       } else {
         toast({
-          title: 'Leads adicionados',
-          description: `${newLeads.length} novos leads adicionados à campanha.`,
+          title: '✅ Leads adicionados com sucesso',
+          description: `${newLeads.length} leads únicos foram adicionados à campanha.`,
+          variant: 'success'
         })
       }
     } catch (error) {
@@ -318,20 +399,107 @@ Entre em contato conosco para mais detalhes!`
   const handleSaveMessage = async (showToast = true) => {
     if (!selectedCampaign) return
 
+    console.log('💾 Salvando mensagem:', {
+      campaignId: selectedCampaign.id,
+      currentMessage: message,
+      showToast
+    })
+
+    // Ativar animação apenas quando o usuário clica no botão
+    if (showToast) {
+      setIsSaving(true)
+    }
+
     try {
-      const updatedCampaign = await CampaignService.updateCampaign(selectedCampaign.id, {
-        message: message
+      const messageToSave = message
+      console.log('💾 Tentando salvar mensagem:', {
+        messageToSave,
+        messageLength: messageToSave.length
       })
+
+      const updatedCampaign = await CampaignService.updateCampaign(selectedCampaign.id, {
+        message: messageToSave
+      })
+
+      console.log('✅ Campanha atualizada:', {
+        id: updatedCampaign?.id,
+        savedMessage: updatedCampaign?.message,
+        originalMessage: message,
+        messageChanged: updatedCampaign?.message !== message
+      })
+
+      // Verificar se a mensagem foi alterada durante o salvamento
+      if (updatedCampaign?.message !== message) {
+        console.warn('⚠️ ATENÇÃO: Mensagem foi alterada durante o salvamento!', {
+          original: message,
+          saved: updatedCampaign?.message,
+          difference: updatedCampaign?.message !== message
+        })
+        
+        // Tentar corrigir automaticamente (múltiplas tentativas)
+        console.log('🔧 Tentando corrigir mensagem...')
+        let attempts = 0
+        const maxAttempts = 3
+        
+        while (attempts < maxAttempts) {
+          try {
+            attempts++
+            console.log(`🔄 Tentativa ${attempts}/${maxAttempts}`)
+            
+            const correctedCampaign = await CampaignService.updateCampaign(selectedCampaign.id, {
+              message: message
+            })
+            
+            if (correctedCampaign?.message === message) {
+              console.log('✅ Mensagem corrigida com sucesso!')
+              setSelectedCampaign(correctedCampaign)
+              setCampaigns(prev => prev.map(c => c.id === correctedCampaign.id ? correctedCampaign : c))
+              break
+            } else {
+              console.warn(`⚠️ Tentativa ${attempts} falhou, mensagem ainda incorreta`)
+              if (attempts < maxAttempts) {
+                // Aguardar um pouco antes da próxima tentativa
+                await new Promise(resolve => setTimeout(resolve, 500))
+              }
+            }
+          } catch (error) {
+            console.error(`❌ Erro na tentativa ${attempts}:`, error)
+            if (attempts < maxAttempts) {
+              await new Promise(resolve => setTimeout(resolve, 500))
+            }
+          }
+        }
+        
+        if (attempts >= maxAttempts) {
+          console.error('❌ Falha ao corrigir mensagem após múltiplas tentativas')
+          toast({
+            title: '⚠️ Problema detectado',
+            description: 'A mensagem pode ter sido alterada por um trigger do banco. Tente salvar novamente.',
+            variant: 'warning'
+          })
+        }
+      }
 
       if (updatedCampaign) {
         setSelectedCampaign(updatedCampaign)
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
+        
+        // Forçar atualização da mensagem no estado local
+        console.log('🔄 Verificando sincronização do estado:', {
+          currentState: message,
+          savedMessage: updatedCampaign.message,
+          areEqual: updatedCampaign.message === message
+        })
+        
+        // Sempre atualizar o estado com a mensagem salva para garantir sincronização
+        setMessage(updatedCampaign.message)
 
         // Só mostra toast se solicitado (para evitar spam quando salva automaticamente)
         if (showToast) {
           toast({
-            title: 'Mensagem salva!',
-            description: 'Mensagem da campanha foi salva com sucesso.',
+            title: '✅ Mensagem salva com sucesso',
+            description: 'Sua mensagem personalizada foi salva e está pronta para envio.',
+            variant: 'success'
           })
         }
       }
@@ -343,6 +511,13 @@ Entre em contato conosco para mais detalhes!`
         description: 'Erro ao salvar mensagem da campanha. Tente novamente.',
         variant: 'destructive'
       })
+    } finally {
+      // Desativar animação após um pequeno delay
+      if (showToast) {
+        setTimeout(() => {
+          setIsSaving(false)
+        }, 1000)
+      }
     }
   }
 
@@ -363,7 +538,8 @@ Entre em contato conosco para mais detalhes!`
     setSelectedLists([])
     setNewLeads([])
     setDuplicateLeads([])
-    setUsedLists([])
+    setUsedListsSummary([])
+    clearLeadSelection() // Limpar seleção de leads também
     // NÃO limpar campaignLeads aqui - eles devem permanecer na campanha
   }
 
@@ -371,6 +547,123 @@ Entre em contato conosco para mais detalhes!`
     return lists
       .filter(list => selectedLists.includes(list.id))
       .reduce((total, list) => total + list.total_leads, 0)
+  }
+
+  // Funções para seleção múltipla de leads
+  const handleLeadSelection = (leadId: string) => {
+    setSelectedLeads(prev => {
+      const newSelection = new Set(prev)
+      if (newSelection.has(leadId)) {
+        newSelection.delete(leadId)
+      } else {
+        newSelection.add(leadId)
+      }
+      return newSelection
+    })
+  }
+
+  const handleSelectAllLeads = () => {
+    if (selectedLeads.size === campaignLeads.length) {
+      // Se todos estão selecionados, desmarcar todos
+      setSelectedLeads(new Set())
+    } else {
+      // Selecionar todos
+      setSelectedLeads(new Set(campaignLeads.map(lead => lead.id)))
+    }
+  }
+
+  const handleRemoveSelectedLeads = async () => {
+    if (!selectedCampaign || selectedLeads.size === 0) return
+
+    if (!window.confirm(`Tem certeza que deseja remover ${selectedLeads.size} lead(s) selecionado(s) da campanha?\n\nEsta ação não pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      // Usar nova estrutura robusta para remover leads
+      const result = await CampaignLeadsService.removeSpecificLeads(
+        selectedCampaign.id,
+        Array.from(selectedLeads)
+      )
+      
+      if (result.success) {
+        // Recarregar leads da campanha
+        const updatedLeads = await CampaignLeadsService.getCampaignLeads(selectedCampaign.id)
+        setCampaignLeads(updatedLeads)
+        
+        // Recarregar resumo das listas utilizadas (para remover listas vazias)
+        const updatedUsedLists = await CampaignLeadsService.getUsedListsSummary(selectedCampaign.id)
+        console.log('🔍 DEBUG - Listas utilizadas após remoção:', updatedUsedLists)
+        setUsedListsSummary(updatedUsedLists)
+        
+        // Limpar seleção
+        setSelectedLeads(new Set())
+        
+        toast({
+          title: '🗑️ Leads removidos',
+          description: `${result.removed_leads} lead(s) foram removido(s) da campanha com sucesso.`,
+          variant: 'warning'
+        })
+      } else {
+        throw new Error(result.error || 'Erro desconhecido')
+      }
+    } catch (error) {
+      console.error('Erro ao remover leads:', error)
+      toast({
+        title: 'Erro',
+        description: 'Erro ao remover leads da campanha. Tente novamente.',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  // Função para remover uma lista inteira com todos os seus leads
+  const handleRemoveList = async (listId: string) => {
+    if (!selectedCampaign) return
+
+    const list = lists.find(l => l.id === listId)
+    if (!list) return
+
+    if (!window.confirm(`Tem certeza que deseja remover todos os leads da lista "${list.name}" da campanha?\n\nIsso removerá ${list.total_leads} leads.`)) {
+      return
+    }
+
+    try {
+      // Usar nova estrutura robusta para remover leads da lista
+      const result = await CampaignLeadsService.removeLeadsFromList(
+        selectedCampaign.id,
+        listId
+      )
+      
+      if (result.success) {
+        // Recarregar leads da campanha
+        const updatedLeads = await CampaignLeadsService.getCampaignLeads(selectedCampaign.id)
+        setCampaignLeads(updatedLeads)
+        
+        // Recarregar resumo das listas utilizadas
+        const updatedUsedLists = await CampaignLeadsService.getUsedListsSummary(selectedCampaign.id)
+        setUsedListsSummary(updatedUsedLists)
+        
+        toast({
+          title: '🗑️ Lista removida',
+          description: `${result.removed_leads} leads da lista "${list.name}" foram removidos da campanha com sucesso.`,
+          variant: 'warning'
+        })
+      } else {
+        throw new Error(result.error || 'Erro desconhecido')
+      }
+    } catch (error) {
+      console.error('Erro ao remover lista:', error)
+      toast({
+        title: 'Erro',
+        description: 'Erro ao remover lista da campanha. Tente novamente.',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const clearLeadSelection = () => {
+    setSelectedLeads(new Set())
   }
 
   const handleSendCampaign = async () => {
@@ -416,12 +709,12 @@ Entre em contato conosco para mais detalhes!`
     
     // Usar leads da campanha (que já foram verificados para duplicatas)
     const selectedItems = campaignLeads.map(lead => ({
-      nome: (lead.name || 'Sem nome').normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+      nome: (lead.lead_data.name || 'Sem nome').normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
       telefone: (() => {
-        const phone = (lead.phone || '').replace(/\D/g, '');
+        const phone = (lead.lead_data.phone || '').replace(/\D/g, '');
         return phone.startsWith('55') ? phone : `55${phone}`;
       })(),
-      cidade: lead.address || ''
+      cidade: lead.lead_data.address || ''
     }))
 
     const payload = [{
@@ -927,7 +1220,7 @@ Entre em contato conosco para mais detalhes!`
                            <div className="space-y-4">
                              {/* Filtrar apenas listas não utilizadas */}
                              {lists
-                               .filter(list => !usedLists.includes(list.id))
+                               .filter(list => !usedListsSummary.some(used => used.list_id === list.id))
                                .map((list) => {
                                const isSelected = selectedLists.includes(list.id);
                                return (
@@ -985,31 +1278,6 @@ Entre em contato conosco para mais detalhes!`
                                 </div>
                               );
                             })}
-                            
-                            {/* Resumo de Seleção */}
-                            {selectedLists.length > 0 && (
-                              <motion.div 
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 rounded-xl border-2 border-purple-200 dark:border-purple-800"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center space-x-2">
-                                    <CheckCircle className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                                    <span className="font-semibold text-purple-800 dark:text-white">
-                                      {calculateTotalLeads()} leads selecionados
-                                    </span>
-                                  </div>
-                                </div>
-                                <Button
-                                  onClick={handleUpdateCampaignLists}
-                                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                                >
-                                  <Users className="w-4 h-4 mr-2" />
-                                  Adicionar à Campanha
-                                </Button>
-                              </motion.div>
-                            )}
                           </div>
                         )}
 
@@ -1088,119 +1356,179 @@ Entre em contato conosco para mais detalhes!`
                             
                           </div>
                         ) : (
-                          <div className="space-y-4">
-                                                                                       {/* Resumo Estatístico - Design Compacto e Responsivo */}
-                              <div className="p-2 sm:p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 border border-purple-200 dark:border-purple-800 rounded-lg">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center space-x-1 sm:space-x-2">
-                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                                      <Users className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                      <p className="text-base sm:text-lg font-bold text-purple-800 dark:text-purple-200">
-                                        {campaignLeads.length}
-                                      </p>
-                                      <p className="text-xs text-purple-600 dark:text-purple-300">
-                                        Leads
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-xs text-purple-600 dark:text-purple-300 font-medium">
-                                      ✓ Pronto
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            
-                            {/* Lista de Leads com Scroll Elegante */}
-                            <div className="max-h-80 overflow-y-auto space-y-3 pr-2">
-                                                                                            {campaignLeads.slice(0, 15).map((lead, index) => (
-                                 <div key={index} className="p-4 disparador-fundo-claro dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                                   <div className="flex items-start justify-between">
-                                     <div className="flex-1">
-                                       <p className="font-semibold disparador-texto-claro dark:text-white text-sm mb-1">
-                                         {lead.name}
-                                       </p>
-                                       {lead.phone && (
-                                         <p className="text-xs disparador-texto-claro dark:text-gray-300 mb-1">
-                                           📱 {lead.phone}
-                                         </p>
-                                       )}
-                                       <p className="text-xs disparador-texto-claro dark:text-gray-400 leading-relaxed">
-                                         📍 {lead.address}
-                                       </p>
+                                                     <div className="space-y-4">
+
+                             {/* Resumo Estatístico - Design Compacto e Responsivo */}
+                             <div className="p-2 sm:p-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 border border-purple-200 dark:border-purple-800 rounded-lg">
+                               <div className="flex items-center justify-between">
+                                 <div className="flex items-center space-x-1 sm:space-x-2">
+                                   <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                     <Users className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                                   </div>
+                                   <div className="flex items-center space-x-1">
+                                     <p className="text-base sm:text-lg font-bold text-purple-800 dark:text-purple-200">
+                                       {campaignLeads.length}
+                                     </p>
+                                     <p className="text-xs text-purple-600 dark:text-purple-300">
+                                       Leads Únicos
+                                     </p>
                                      </div>
-                                     <div className="text-xs disparador-texto-claro dark:text-gray-500 font-mono">
-                                       #{index + 1}
+                                   </div>
+                                   <div className="text-right">
+                                     <div className="text-xs text-purple-600 dark:text-purple-300 font-medium">
+                                       ✓ Pronto
                                      </div>
                                    </div>
                                  </div>
-                               ))}
-                               {campaignLeads.length > 15 && (
-                                 <div className="text-center py-4">
-                                   <div className="inline-flex items-center space-x-2 px-4 py-2 disparador-fundo-claro dark:bg-gray-800 rounded-full">
+                               </div>
+                            
+                                                                                      {/* Lista de Leads com Scroll Elegante */}
+                             <div className="space-y-3">
+                                                               {/* Botão para expandir/recolher lista */}
+                                {campaignLeads.length > 15 && (
+                                  <div className="text-center pb-2">
+                                    <Button
+                                      onClick={() => setShowAllLeads(!showAllLeads)}
+                                      variant="outline"
+                                      size="sm"
+                                      className="disparador-fundo-claro dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 disparador-texto-claro dark:text-gray-300"
+                                    >
+                                      {showAllLeads ? (
+                                        <>
+                                          <ChevronUp className="w-4 h-4 mr-2" />
+                                          Mostrar Menos
+                                        </>
+                                      ) : (
+                                        <>
+                                          <ChevronDown className="w-4 h-4 mr-2" />
+                                          Ver Todos os {campaignLeads.length} Leads
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
+                               
+                                                               {/* Lista de leads com altura dinâmica */}
+                                <div className={`overflow-y-auto space-y-3 pr-2 ${
+                                  showAllLeads ? 'max-h-96' : 'max-h-80'
+                                }`}>
+                                  {(showAllLeads ? campaignLeads : campaignLeads.slice(0, 15)).map((lead, index) => (
+                                    <div 
+                                      key={lead.id} 
+                                      className={`p-4 disparador-fundo-claro dark:bg-gray-800 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+                                        selectedLeads.has(lead.id)
+                                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
+                                          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                      }`}
+                                      onClick={() => handleLeadSelection(lead.id)}
+                                    >
+                                      <div className="flex items-start justify-between">
+                                        <div className="flex items-start space-x-3">
+                                          <div className="flex items-center mt-1">
+                                            <input
+                                              type="checkbox"
+                                              checked={selectedLeads.has(lead.id)}
+                                              onChange={(e) => {
+                                                e.stopPropagation()
+                                                handleLeadSelection(lead.id)
+                                              }}
+                                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                            />
+                                          </div>
+                                          <div className="flex-1">
+                                            <p className="font-semibold disparador-texto-claro dark:text-white text-sm mb-1">
+                                              {lead.lead_data.name}
+                                            </p>
+                                            {lead.lead_data.phone && (
+                                              <p className="text-xs disparador-texto-claro dark:text-gray-300 mb-1">
+                                                📱 {lead.lead_data.phone}
+                                              </p>
+                                            )}
+                                            <p className="text-xs disparador-texto-claro dark:text-gray-400 leading-relaxed">
+                                              📍 {lead.lead_data.address}
+                                            </p>
+                                          </div>
+                                        </div>
+                                        <div className="text-xs disparador-texto-claro dark:text-gray-500 font-mono">
+                                          #{index + 1}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                               
+                               {/* Indicador de leads restantes quando não expandido */}
+                               {!showAllLeads && campaignLeads.length > 15 && (
+                                 <div className="text-center py-3">
+                                   <div className="inline-flex items-center space-x-2 px-4 py-2 disparador-fundo-claro dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600">
                                      <span className="text-sm disparador-texto-claro dark:text-gray-300">
                                        ... e mais {campaignLeads.length - 15} leads
                                      </span>
                                    </div>
                                  </div>
                                )}
-                            </div>
+                             </div>
                           </div>
                         )}
                         
-                        {/* Botão Listas Utilizadas */}
-                        {usedLists.length > 0 && (
-                          <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
-                            <Button
-                              onClick={() => setShowUsedLists(!showUsedLists)}
-                              variant="outline"
-                              className="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200"
-                            >
-                              <Eye className="w-4 h-4 mr-2" />
-                              {showUsedLists ? 'Ocultar' : 'Ver'} Listas Utilizadas ({usedLists.length})
-                              {showUsedLists ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
-                            </Button>
-                            
-                            {/* Modal/Dropdown com Listas Utilizadas */}
-                            {showUsedLists && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="mt-4 max-h-60 overflow-y-auto space-y-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600"
-                              >
-                                <h4 className="font-semibold text-gray-800 dark:text-gray-200 text-sm mb-3 flex items-center">
-                                  <List className="w-4 h-4 mr-2" />
-                                  Listas já utilizadas nesta campanha:
-                                </h4>
-                                {lists
-                                  .filter(list => usedLists.includes(list.id))
-                                  .map((list) => (
-                                    <div key={list.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                                      <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                                          <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
-                                        </div>
-                                        <div>
-                                          <h4 className="font-medium text-gray-900 dark:text-gray-100 text-sm">
-                                            {list.name}
-                                          </h4>
-                                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                                            {list.total_leads} leads
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div className="text-xs text-green-600 dark:text-green-400 font-medium">
-                                        ✓ Utilizada
-                                      </div>
-                                    </div>
-                                  ))}
-                              </motion.div>
-                            )}
-                          </div>
-                        )}
+                                                 {/* Botão Listas Utilizadas */}
+                         {usedListsSummary.length > 0 && (
+                           <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
+                             <Button
+                               onClick={() => setShowUsedLists(!showUsedLists)}
+                               variant="outline"
+                               className="w-full disparador-fundo-claro dark:bg-gray-800 border-blue-200 dark:border-gray-600 hover:bg-blue-100 dark:hover:bg-gray-700 disparador-texto-claro dark:text-gray-300 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-200"
+                             >
+                               <Eye className="w-4 h-4 mr-2" />
+                               {showUsedLists ? 'Ocultar' : 'Ver'} Listas Utilizadas ({usedListsSummary.length})
+                               {showUsedLists ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
+                             </Button>
+                             
+                                                          {/* Modal/Dropdown com Listas Utilizadas */}
+                              {showUsedLists && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="mt-4 max-h-60 overflow-y-auto space-y-2 p-4 disparador-fundo-claro dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600"
+                                >
+                                  <h4 className="font-semibold disparador-texto-claro dark:text-gray-200 text-sm mb-3 flex items-center">
+                                    <List className="w-4 h-4 mr-2" />
+                                    Listas já utilizadas nesta campanha:
+                                  </h4>
+                                                                    {usedListsSummary.map((usedList) => (
+                                       <div key={usedList.list_id} className="flex items-center justify-between p-3 disparador-fundo-claro dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                         <div className="flex items-center space-x-3">
+                                           <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                             <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                           </div>
+                                           <div>
+                                             <h4 className="font-medium disparador-texto-claro dark:text-gray-100 text-sm">
+                                               {usedList.list_name}
+                                             </h4>
+                                             <p className="text-xs disparador-texto-claro dark:text-gray-400">
+                                               {usedList.leads_in_campaign} leads
+                                             </p>
+                                           </div>
+                                         </div>
+                                         <div className="flex items-center space-x-2">
+                                           <div className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                             ✓ Utilizada
+                                           </div>
+                                           <button
+                                             onClick={() => handleRemoveList(usedList.list_id)}
+                                             className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-all duration-200"
+                                             title={`Remover todos os leads da lista "${usedList.list_name}"`}
+                                           >
+                                             <Trash2 className="w-3 h-3" />
+                                           </button>
+                                         </div>
+                                       </div>
+                                     ))}
+                                </motion.div>
+                              )}
+                           </div>
+                         )}
                       </div>
                     </div>
                   </div>
@@ -1237,19 +1565,28 @@ Estamos oferecendo condições exclusivas para novos clientes.
 Entre em contato conosco para mais detalhes!"
                               value={message}
                               onChange={(e) => {
+                                console.log('📝 Textarea onChange:', {
+                                  newValue: e.target.value,
+                                  currentMessage: message,
+                                  campaignId: selectedCampaign?.id
+                                });
                                 setMessage(e.target.value);
                               }}
                               onFocus={() => {
-                                // Se a mensagem estiver vazia, restaurar o exemplo
-                                if (!message.trim()) {
-                                  setMessage(defaultMessage);
-                                }
+                                // Removido: não restaurar mensagem padrão automaticamente
+                                // O usuário deve digitar sua própria mensagem
                               }}
                               onBlur={() => {
                                 // Salvar quando o campo perder o foco (usuário terminar de digitar)
-                                if (selectedCampaign && message.trim()) {
-                                  handleSaveMessage(false);
-                                }
+                                console.log('👁️ Textarea onBlur:', {
+                                  message: message,
+                                  hasMessage: !!message.trim(),
+                                  campaignId: selectedCampaign?.id
+                                });
+                                // TEMPORARIAMENTE DESABILITADO PARA TESTE
+                                // if (selectedCampaign && message.trim()) {
+                                //   handleSaveMessage(false);
+                                // }
                               }}
                             />
                             {/* Contador de Caracteres Elegante */}
@@ -1291,12 +1628,26 @@ Entre em contato conosco para mais detalhes!"
                           <Button 
                             onClick={() => handleSaveMessage(true)}
                             variant="outline"
-                            className="w-full border-2 border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-600 py-3 rounded-xl font-semibold transition-all duration-300"
-                            disabled={!message.trim()}
+                            className={`w-full border-2 border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900 hover:border-purple-300 dark:hover:border-purple-600 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                              isSaving 
+                                ? 'animate-pulse btn-salvando-claro dark:btn-salvando-escuro scale-95' 
+                                : 'hover:scale-105 active:scale-95'
+                            }`}
+                            disabled={!message.trim() || isSaving}
                           >
-                            <MessageSquare className="w-4 h-4 mr-2" />
-                            Salvar Mensagem
+                            {isSaving ? (
+                              <>
+                                <div className="w-4 h-4 mr-2 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
+                                Salvando...
+                              </>
+                            ) : (
+                              <>
+                                <MessageSquare className="w-4 h-4 mr-2" />
+                                Salvar Mensagem
+                              </>
+                            )}
                           </Button>
+                          
                           
                           <Button 
                             onClick={handleSendCampaign}
@@ -1369,6 +1720,135 @@ Entre em contato conosco para mais detalhes!"
           </button>
         </div>
       </div>
+
+      {/* Botão Flutuante para Adicionar Leads */}
+      {selectedLists.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 100, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 100, scale: 0.8 }}
+          className="fixed bottom-6 right-6 z-50"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-purple-200 dark:border-purple-700 p-4 min-w-[280px] relative">
+            <button
+              onClick={() => setSelectedLists([])}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+            >
+              ×
+            </button>
+            
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Users className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {calculateTotalLeads()} Leads Selecionados
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {selectedLists.length} lista{selectedLists.length > 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Button
+                onClick={() => {
+                  if (selectedLists.length === lists.length) {
+                    setSelectedLists([])
+                  } else {
+                    setSelectedLists(lists.map(list => list.id))
+                  }
+                }}
+                variant="outline"
+                size="sm"
+                className="w-full border-purple-200 dark:border-purple-700 disparador-texto-claro dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+              >
+                <Check className="w-4 h-4 mr-2" />
+                {selectedLists.length === lists.length ? 'Desmarcar Todas' : 'Selecionar Todas'}
+              </Button>
+              
+              <Button
+                onClick={handleUpdateCampaignLists}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Adicionar à Campanha
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Botão Flutuante para Remover Leads */}
+      {selectedCampaign && campaignLeads.length > 0 && selectedLeads.size > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 100, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 100, scale: 0.8 }}
+          className="fixed bottom-6 left-6 z-50"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-red-200 dark:border-red-700 p-4 min-w-[280px] relative">
+            <button
+              onClick={() => setSelectedLeads(new Set())}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+            >
+              ×
+            </button>
+            
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    {selectedLeads.size} Lead(s) Selecionado(s)
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Para remoção da campanha
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Button
+                onClick={handleSelectAllLeads}
+                variant="outline"
+                size="sm"
+                className="w-full border-blue-200 dark:border-blue-700 disparador-texto-claro dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+              >
+                <Check className="w-4 h-4 mr-2" />
+                {selectedLeads.size === campaignLeads.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+              </Button>
+              
+              <Button
+                onClick={handleRemoveSelectedLeads}
+                className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Remover Selecionados
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Botão de Scroll para o Topo - aparece quando há muitas listas */}
+      {lists.length > 5 && selectedLists.length === 0 && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-40 w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+        >
+          <ChevronUp className="w-5 h-5" />
+        </motion.button>
+      )}
     </div>
   )
 }
