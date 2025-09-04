@@ -66,8 +66,15 @@ export default function MobileFooter() {
               >
                 Disparador
               </button>
+              <button 
+                onClick={() => handleNavigation('/blog')}
+                className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
+              >
+                Blog
+              </button>
             </div>
           </div>
+
 
           {/* Suporte */}
           <div className="text-center">

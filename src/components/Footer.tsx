@@ -66,8 +66,15 @@ export default function Footer() {
               >
                 Disparador
               </button>
+              <button 
+                onClick={() => handleNavigation('/blog')}
+                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+              >
+                Blog
+              </button>
             </div>
           </div>
+
 
           {/* Suporte */}
           <div>

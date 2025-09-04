@@ -15,6 +15,8 @@ const Dashboard = lazy(() => import('./pages/Dashboard'))
 const GeradorLeads = lazy(() => import('./pages/GeradorLeads'))
 const ListaDetalhes = lazy(() => import('./pages/ListaDetalhes'))
 const DisparadorMassa = lazy(() => import('./pages/DisparadorMassa'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 
 // Componente principal que gerencia as classes de tema
 function AppContent() {
@@ -23,13 +25,14 @@ function AppContent() {
   
   useEffect(() => {
     const isLandingPage = location.pathname === '/'
+    const isBlogPage = location.pathname.startsWith('/blog')
     
-    console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage)
+    console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage, 'isBlogPage:', isBlogPage)
     
-    if (isLandingPage) {
-      // Landing Page - sempre clara, forçar remoção da classe dark
+    if (isLandingPage || isBlogPage) {
+      // Landing Page e Blog - sempre claros, forçar remoção da classe dark
       document.documentElement.classList.remove('dark')
-      console.log('✅ Landing Page - classe dark forçadamente removida')
+      console.log('✅ Landing Page/Blog - classe dark forçadamente removida')
     } else {
       // Para outras páginas, restaurar o tema escolhido pelo usuário
       if (isDark) {
@@ -56,6 +59,8 @@ function AppContent() {
             <Route path="/gerador" element={<GeradorLeads />} />
             <Route path="/disparador" element={<DisparadorMassa />} />
             <Route path="/lista/:id" element={<ListaDetalhes />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
           </Routes>
         </Suspense>
       </main>

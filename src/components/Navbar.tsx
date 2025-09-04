@@ -13,6 +13,7 @@ export default function Navbar() {
   const location = useLocation()
 
   // Páginas onde o ThemeToggle deve aparecer (APENAS páginas da aplicação)
+  // Blog não tem ThemeToggle - sempre modo claro
   const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador'].some(path => 
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
@@ -70,6 +71,12 @@ export default function Navbar() {
               className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
             >
               Início
+            </Link>
+            <Link 
+              to="/blog" 
+              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+            >
+              Blog
             </Link>
             
             {user ? (
@@ -141,6 +148,13 @@ export default function Navbar() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Início
+              </Link>
+              <Link 
+                to="/blog" 
+                className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
               </Link>
               
               {user ? (
