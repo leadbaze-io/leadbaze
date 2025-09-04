@@ -321,7 +321,7 @@ export default function Navbar() {
               >
                 {/* Container do menu */}
                 <motion.div
-                  className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50 shadow-2xl"
+                  className="bg-white/95 backdrop-blur-xl border-t border-gray-200/50 shadow-2xl"
                   initial={{ scaleY: 0, opacity: 0 }}
                   animate={{ scaleY: 1, opacity: 1 }}
                   exit={{ scaleY: 0, opacity: 0 }}
@@ -335,7 +335,7 @@ export default function Navbar() {
                 >
                   {/* Header do menu */}
                   <motion.div
-                    className="px-6 py-4 border-b border-gray-100 dark:border-gray-800"
+                    className="px-6 py-4 border-b border-gray-100"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
@@ -343,18 +343,18 @@ export default function Navbar() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse"></div>
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-900">
+                        <span className="text-sm font-semibold text-gray-700">
                           Menu de Navegação
                         </span>
                       </div>
                       <motion.button
                         onClick={() => setIsMenuOpen(false)}
-                        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                         whileHover={{ scale: 1.1, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        <X className="w-5 h-5 text-gray-600" />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -368,37 +368,37 @@ export default function Navbar() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: 0.15 }}
                     >
-                                              <Link
-                          to="/"
-                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                            isActiveLink('/') 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                              : 'hover:bg-gray-50 dark:hover:bg-gray-50'
-                          }`}
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                                                  <motion.div
+                                                                    <Link
+                        to="/"
+                        className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                          isActiveLink('/') 
+                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                            : 'hover:bg-gray-50'
+                        }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <motion.div
                           className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                             isActiveLink('/') 
                               ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
                               : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
                           }`}
-                            whileHover={{ scale: 1.1, rotate: 5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Home className="w-4 h-4" />
-                          </motion.div>
-                          <div className="flex-1">
-                                                  <span className={`text-sm font-medium transition-colors ${
-                          isActiveLink('/') 
-                            ? 'text-blue-700 dark:text-white' 
-                            : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
-                        }`}>
-                          Início
-                        </span>
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Home className="w-4 h-4" />
+                        </motion.div>
+                        <div className="flex-1">
+                          <span className={`text-sm font-medium transition-colors ${
+                            isActiveLink('/') 
+                              ? 'text-blue-700' 
+                              : 'text-gray-700 group-hover:text-blue-600'
+                          }`}>
+                            Início
+                          </span>
                           {isActiveLink('/') && (
                             <motion.div
-                              className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                              className="text-xs text-blue-600 mt-1"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
@@ -417,12 +417,12 @@ export default function Navbar() {
                         )}
                       </Link>
 
-                      <Link
+                                            <Link
                         to="/blog"
                         className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                           isActiveLink('/blog') 
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-50'
+                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                            : 'hover:bg-gray-50'
                         }`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -438,16 +438,16 @@ export default function Navbar() {
                           <FileText className="w-4 h-4" />
                         </motion.div>
                         <div className="flex-1">
-                                                  <span className={`text-sm font-medium transition-colors ${
-                          isActiveLink('/blog') 
-                            ? 'text-blue-700 dark:text-white' 
-                            : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
-                        }`}>
-                          Blog
-                        </span>
+                          <span className={`text-sm font-medium transition-colors ${
+                            isActiveLink('/blog') 
+                              ? 'text-blue-700' 
+                              : 'text-gray-700 group-hover:text-blue-600'
+                          }`}>
+                            Blog
+                          </span>
                           {isActiveLink('/blog') && (
                             <motion.div
-                              className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                              className="text-xs text-blue-600 mt-1"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
@@ -466,12 +466,12 @@ export default function Navbar() {
                         )}
                       </Link>
 
-                      <Link
+                                            <Link
                         to="/blog/sobre"
                         className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                           isActiveLink('/blog/sobre') 
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-50'
+                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                            : 'hover:bg-gray-50'
                         }`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -487,16 +487,16 @@ export default function Navbar() {
                           <Info className="w-4 h-4" />
                         </motion.div>
                         <div className="flex-1">
-                                                  <span className={`text-sm font-medium transition-colors ${
-                          isActiveLink('/blog/sobre') 
-                            ? 'text-blue-700 dark:text-white' 
-                            : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
-                        }`}>
-                          Sobre
-                        </span>
+                          <span className={`text-sm font-medium transition-colors ${
+                            isActiveLink('/blog/sobre') 
+                              ? 'text-blue-700' 
+                              : 'text-gray-700 group-hover:text-blue-600'
+                          }`}>
+                            Sobre
+                          </span>
                           {isActiveLink('/blog/sobre') && (
                             <motion.div
-                              className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                              className="text-xs text-blue-600 mt-1"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
@@ -519,13 +519,13 @@ export default function Navbar() {
                     {/* Links do usuário logado */}
                     {user && (
                       <motion.div
-                        className="px-2 py-1 border-t border-gray-100 dark:border-gray-800"
+                        className="px-2 py-1 border-t border-gray-100"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 }}
                       >
                         <div className="px-4 py-2">
-                          <span className="text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Área do Usuário
                           </span>
                         </div>
@@ -534,8 +534,8 @@ export default function Navbar() {
                           to="/dashboard"
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/dashboard') 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                              : 'hover:bg-gray-50 dark:hover:bg-gray-50'
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                         >
@@ -553,14 +553,14 @@ export default function Navbar() {
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/dashboard') 
-                                ? 'text-blue-700 dark:text-white' 
-                                : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
                             }`}>
                               Dashboard
                             </span>
                             {isActiveLink('/dashboard') && (
                               <motion.div
-                                className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                                className="text-xs text-blue-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -583,8 +583,8 @@ export default function Navbar() {
                           to="/gerador"
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/gerador') 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                              : 'hover:bg-gray-50 dark:hover:bg-gray-50'
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                         >
@@ -602,14 +602,14 @@ export default function Navbar() {
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/gerador') 
-                                ? 'text-blue-700 dark:text-white' 
-                                : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
                             }`}>
                               Gerar Leads
                             </span>
                             {isActiveLink('/gerador') && (
                               <motion.div
-                                className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                                className="text-xs text-blue-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -632,8 +632,8 @@ export default function Navbar() {
                           to="/disparador"
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/disparador') 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 border-l-4 border-blue-500 shadow-lg' 
-                              : 'hover:bg-gray-50 dark:hover:bg-gray-50'
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                         >
@@ -651,14 +651,14 @@ export default function Navbar() {
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/disparador') 
-                                ? 'text-blue-700 dark:text-white' 
-                                : 'text-gray-700 dark:text-gray-700 group-hover:text-blue-600 dark:group-hover:text-blue-600'
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
                             }`}>
                               Disparador
                             </span>
                             {isActiveLink('/disparador') && (
                               <motion.div
-                                className="text-xs text-blue-600 dark:text-blue-400 mt-1"
+                                className="text-xs text-blue-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -681,7 +681,7 @@ export default function Navbar() {
 
                     {/* Botão de logout ou login */}
                     <motion.div
-                      className="px-2 py-1 border-t border-gray-100 dark:border-gray-800"
+                      className="px-2 py-1 border-t border-gray-100"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: 0.25 }}
@@ -692,13 +692,13 @@ export default function Navbar() {
                             handleLogout()
                             setIsMenuOpen(false)
                           }}
-                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300"
+                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-300"
                           whileHover={{ x: 4, scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           transition={{ duration: 0.2 }}
                         >
                           <motion.div
-                            className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors"
+                            className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors"
                             whileHover={{ scale: 1.1, rotate: -5 }}
                             transition={{ duration: 0.2 }}
                           >
