@@ -1,8 +1,4 @@
-interface BlogSidebarProps {
-  currentPost?: unknown;
-}
-
-export default function BlogSidebar(_props: BlogSidebarProps) {
+export default function BlogSidebar() {
   return (
     <aside className="space-y-8">
       {/* Sidebar simplificada - apenas espaçamento para manter layout */}
