@@ -75,7 +75,7 @@ class BlogAutomationServiceClient {
   private currentUser: any = null;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+    this.baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io';
     
     // Escutar mudanças de autenticação
     supabase.auth.onAuthStateChange((_event, session) => {

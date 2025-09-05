@@ -117,8 +117,8 @@ router.get('/list', async (req, res) => {
 router.post('/process', async (req, res) => {
     try {
         // Importar o serviço de automação
-        const BlogAutomationService = require('../services/blogAutomationService');
-        const automationService = new BlogAutomationService();
+        const { BlogAutomationService, getBlogAutomationService } = require('../services/blogAutomationService');
+        const automationService = getBlogAutomationService();
         
         // Processar fila
         const result = await automationService.processQueue();

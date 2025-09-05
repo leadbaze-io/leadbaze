@@ -4,7 +4,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
-const { getBlogAutomationService } = require('./services/blogAutomationService');
+const { BlogAutomationService, getBlogAutomationService } = require('./services/blogAutomationService');
 const blogQueueRoutes = require('./routes/blogQueue');
 const blogPostsRoutes = require('./routes/blogPosts');
 require('dotenv').config({ path: './config.env' });
@@ -13,6 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Security middleware
+
+// Configurar trust proxy para rate limiting
+app.set("trust proxy", 1);
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
   contentSecurityPolicy: {

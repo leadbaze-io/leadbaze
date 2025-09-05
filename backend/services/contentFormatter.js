@@ -202,32 +202,32 @@ class ContentFormatter {
         
         // Detectar se é principalmente narrativo
         if (hasNarrativeIndicators && longParagraphs > listCount && longParagraphs > 2) {
-            console.log('📖 [ContentFormatter] Detectado: NARRATIVA/DEPOIMENTO');
+            console.log('�� [ContentFormatter] Detectado: NARRATIVA/DEPOIMENTO');
             return 'narrative';
         }
         
         // Detectar listas simples primeiro
         if (lowerContent.includes('lista') || lowerContent.includes('top') || 
             lowerContent.includes('melhores') || (listCount > 3 && listCount < 8)) {
-            console.log('📝 [ContentFormatter] Detectado: LISTA');
+            console.log('�� [ContentFormatter] Detectado: LISTA');
             return 'list';
         }
         
         // Detectar tutoriais (muitos passos numerados)
         if (lowerContent.includes('passo') || lowerContent.includes('tutorial') || 
             lowerContent.includes('como fazer') || listCount >= 8) {
-            console.log('📋 [ContentFormatter] Detectado: TUTORIAL/LISTA');
+            console.log('�� [ContentFormatter] Detectado: TUTORIAL/LISTA');
             return 'tutorial';
         }
         
         // Detectar notícias
         if (lowerContent.includes('notícia') || lowerContent.includes('anúncio') || 
             lowerContent.includes('lançamento') || lowerContent.includes('novidade')) {
-            console.log('📰 [ContentFormatter] Detectado: NOTÍCIA');
+            console.log('�� [ContentFormatter] Detectado: NOTÍCIA');
             return 'news';
         }
         
-        console.log('🔧 [ContentFormatter] Detectado: ARTIGO TÉCNICO (padrão)');
+        console.log('�� [ContentFormatter] Detectado: ARTIGO TÉCNICO (padrão)');
         return 'technical';
     }
 
@@ -246,210 +246,6 @@ class ContentFormatter {
     }
 
     /**
-     * Adicionar estrutura ao conteúdo formatado
-     */
-    addStructureToContent(content, type) {
-        // Dividir em seções baseadas em títulos
-        const sections = this.splitByTitles(content);
-        
-        let structuredContent = '';
-        
-        // Adicionar introdução
-        if (sections.intro) {
-            structuredContent += `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Introdução</h2>
-                    <div class="prose prose-lg max-w-none">
-                        ${sections.intro}
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Adicionar seções principais
-        sections.main.forEach((section, index) => {
-            structuredContent += `
-                <div class="mb-8">
-                    <div class="prose prose-lg max-w-none">
-                        ${section}
-                    </div>
-                </div>
-            `;
-        });
-        
-        // Adicionar conclusão
-        if (sections.conclusion) {
-            structuredContent += `
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Conclusão</h2>
-                    <div class="prose prose-lg max-w-none">
-                        ${sections.conclusion}
-                    </div>
-                </div>
-            `;
-        }
-        
-        return structuredContent;
-    }
-
-    /**
-     * Dividir conteúdo por títulos
-     */
-    splitByTitles(content) {
-        const sections = {
-            intro: null,
-            main: [],
-            conclusion: null
-        };
-        
-        // Dividir por títulos H2
-        const parts = content.split(/<h2[^>]*>.*?<\/h2>/i);
-        
-        if (parts.length > 0) {
-            // Primeira parte como introdução
-            const introContent = parts[0].trim();
-            if (introContent && introContent.length > 50) {
-                sections.intro = introContent;
-            }
-            
-            // Partes do meio como seções principais
-            for (let i = 1; i < parts.length - 1; i++) {
-                const sectionContent = parts[i].trim();
-                if (sectionContent && sectionContent.length > 20) {
-                    sections.main.push(sectionContent);
-                }
-            }
-            
-            // Última parte como conclusão
-            if (parts.length > 1) {
-                const conclusionContent = parts[parts.length - 1].trim();
-                if (conclusionContent && conclusionContent.length > 50) {
-                    sections.conclusion = conclusionContent;
-                }
-            }
-        } else {
-            // Se não há títulos H2, dividir por parágrafos
-            const paragraphs = content.split('</p>').filter(p => p.trim());
-            
-            if (paragraphs.length > 0) {
-                // Primeiro parágrafo como introdução
-                sections.intro = paragraphs[0] + '</p>';
-                
-                // Parágrafos do meio
-                for (let i = 1; i < paragraphs.length - 1; i++) {
-                    sections.main.push(paragraphs[i] + '</p>');
-                }
-                
-                // Último parágrafo como conclusão
-                if (paragraphs.length > 1) {
-                    sections.conclusion = paragraphs[paragraphs.length - 1] + '</p>';
-                }
-            }
-        }
-        
-        return sections;
-    }
-
-    /**
-     * Dividir conteúdo em seções
-     */
-    splitIntoSections(content) {
-        const sections = {
-            intro: null,
-            body: [],
-            conclusion: null
-        };
-        
-        const paragraphs = content.split('\n\n').filter(p => p.trim());
-        
-        // Primeiro parágrafo como introdução
-        if (paragraphs.length > 0) {
-            sections.intro = paragraphs[0];
-        }
-        
-        // Parágrafos do meio como corpo
-        if (paragraphs.length > 2) {
-            sections.body = paragraphs.slice(1, -1);
-        } else if (paragraphs.length > 1) {
-            sections.body = paragraphs.slice(1);
-        }
-        
-        // Último parágrafo como conclusão
-        if (paragraphs.length > 1) {
-            sections.conclusion = paragraphs[paragraphs.length - 1];
-        }
-        
-        return sections;
-    }
-
-    /**
-     * Gerar introdução automática
-     */
-    generateIntro(content, type) {
-        const intros = {
-            technical: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Neste artigo, vamos explorar os principais aspectos e benefícios desta solução, fornecendo insights valiosos para implementação.</p>',
-            tutorial: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Neste tutorial passo a passo, você aprenderá como implementar esta solução de forma prática e eficiente.</p>',
-            news: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Confira as principais informações e detalhes sobre este importante desenvolvimento.</p>',
-            list: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Aqui estão as principais informações organizadas de forma clara e objetiva.</p>'
-        };
-        
-        return intros[type] || intros.technical;
-    }
-
-    /**
-     * Formatar seção individual
-     */
-    formatSection(content, index, type) {
-        const sectionTitles = {
-            technical: ['Desenvolvimento', 'Implementação', 'Benefícios'],
-            tutorial: ['Passo a Passo', 'Implementação', 'Configuração'],
-            news: ['Detalhes', 'Contexto', 'Impacto'],
-            list: ['Lista', 'Itens', 'Detalhes']
-        };
-        
-        const title = sectionTitles[type]?.[index - 1] || `Seção ${index}`;
-        
-        return `
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">${title}</h3>
-            <div class="mb-6">
-                ${this.formatContent(content)}
-            </div>
-        `;
-    }
-
-    /**
-     * Gerar conclusão automática
-     */
-    generateConclusion(type) {
-        const conclusions = {
-            technical: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Esta solução oferece uma abordagem robusta e eficiente para atender às necessidades identificadas, proporcionando resultados significativos.</p>',
-            tutorial: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Com este tutorial, você agora tem todas as informações necessárias para implementar esta solução com sucesso.</p>',
-            news: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Este desenvolvimento representa um marco importante e terá impacto significativo no setor.</p>',
-            list: '<p class="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed">Estas informações fornecem uma visão abrangente e organizada do tema abordado.</p>'
-        };
-        
-        return conclusions[type] || conclusions.technical;
-    }
-
-    /**
-     * Formatar conteúdo completo
-     */
-    formatContent(content) {
-        let formatted = content;
-        
-        // Aplicar regras de formatação em ordem
-        formatted = this.formattingRules.cleanText(formatted);
-        formatted = this.formattingRules.formatCode(formatted);
-        formatted = this.formattingRules.formatLinks(formatted);
-        formatted = this.formattingRules.formatEmphasis(formatted);
-        formatted = this.formattingRules.formatTitles(formatted);
-        formatted = this.formattingRules.formatLists(formatted);
-        formatted = this.formattingRules.formatParagraphs(formatted);
-        
-        return formatted;
-    }
-
-    /**
      * Formatar conteúdo com estrutura melhorada baseada no tipo detectado
      */
     formatContentWithStructure(content, contentType = null) {
@@ -461,7 +257,7 @@ class ContentFormatter {
         // Obter template para o tipo detectado
         const template = this.templates[contentType] || this.templates.technical;
         
-        console.log(`🎨 [ContentFormatter] Aplicando template: ${contentType} (${template.style})`);
+        console.log(`�� [ContentFormatter] Aplicando template: ${contentType} (${template.style})`);
         
         // Primeiro, dividir o conteúdo em seções baseadas em títulos
         const sections = this.parseContentSections(content);
@@ -778,9 +574,9 @@ class ContentFormatter {
             mappedCategory = 'Gestão e Vendas B2B'; // Categoria mais genérica
         }
         
-        console.log(`🏷️ [ContentFormatter] Categoria fornecida: "${category}"`);
-        console.log(`🏷️ [ContentFormatter] Categoria mapeada: "${mappedCategory}"`);
-        console.log(`🏷️ [ContentFormatter] ✅ Categoria segura e organizada!`);
+        console.log(`��️ [ContentFormatter] Categoria fornecida: "${category}"`);
+        console.log(`��️ [ContentFormatter] Categoria mapeada: "${mappedCategory}"`);
+        console.log(`��️ [ContentFormatter] ✅ Categoria segura e organizada!`);
         
         return mappedCategory;
     }
