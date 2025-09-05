@@ -224,7 +224,7 @@ class BlogAutomationService {
                             content: formattedData.content, // Já formatado em HTML
                             featured_image: formattedData.imageurl,
                             category_id: categoryId,
-                            author_name: formattedData.autor,
+                            author_name: formattedData.autor || "LeadBaze Team",
                             author_avatar: '/avatars/leadbaze-ai.png',
                             published: true,
                             published_at: new Date().toISOString(), // Data atual
