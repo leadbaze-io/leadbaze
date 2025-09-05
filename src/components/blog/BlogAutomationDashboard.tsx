@@ -35,6 +35,7 @@ import type {
   HealthStatus 
 } from '../../lib/blogAutomationService';
 import { supabase } from '../../lib/supabaseClient';
+import BlogRealtimeMonitor from './BlogRealtimeMonitor';
 
 const BlogAutomationDashboard: React.FC = () => {
   // Estados
@@ -45,7 +46,7 @@ const BlogAutomationDashboard: React.FC = () => {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [queue, setQueue] = useState<BlogQueueItem[]>([]);
   const [config, setConfig] = useState<BlogAutomationConfig | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'queue' | 'config' | 'logs' | 'posts'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'queue' | 'config' | 'logs' | 'posts' | 'realtime'>('overview');
   const [processing, setProcessing] = useState(false);
   const [logs, setLogs] = useState<any[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
@@ -501,6 +502,7 @@ const BlogAutomationDashboard: React.FC = () => {
               { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
               { id: 'queue', label: 'Fila de Artigos', icon: FileText },
               { id: 'posts', label: 'Posts Criados', icon: Edit },
+              { id: 'realtime', label: 'Tempo Real', icon: Zap },
               { id: 'config', label: 'Configurações', icon: Settings },
               { id: 'logs', label: 'Logs', icon: Activity }
             ].map(tab => (
@@ -527,6 +529,7 @@ const BlogAutomationDashboard: React.FC = () => {
                   { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
                   { id: 'queue', label: 'Fila de Artigos', icon: FileText },
                   { id: 'posts', label: 'Posts Criados', icon: Edit },
+                  { id: 'realtime', label: 'Tempo Real', icon: Zap },
                   { id: 'config', label: 'Configurações', icon: Settings },
                   { id: 'logs', label: 'Logs', icon: Activity }
                 ].map(tab => (
@@ -589,6 +592,10 @@ const BlogAutomationDashboard: React.FC = () => {
             onDeletePost={handleDeletePost}
             onRefresh={loadPosts}
           />
+        )}
+        
+        {activeTab === 'realtime' && (
+          <BlogRealtimeMonitor />
         )}
         
         {activeTab === 'config' && (

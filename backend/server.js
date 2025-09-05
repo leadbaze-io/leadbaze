@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const { BlogAutomationService, getBlogAutomationService } = require('./services/blogAutomationService');
 const blogQueueRoutes = require('./routes/blogQueue');
 const blogPostsRoutes = require('./routes/blogPosts');
+const { router: autoProcessRoutes } = require('./routes/autoProcess');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
@@ -690,6 +691,7 @@ app.get('/api/blog/automation/stats', async (req, res) => {
 console.log('🔧 [Server] Registrando rotas do blog...');
 app.use('/api/blog/queue', blogQueueRoutes);
 app.use('/api/blog', blogPostsRoutes);
+app.use('/api/blog/auto', autoProcessRoutes);
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Endpoints admin (requerem autenticação) - com rate limit específico
@@ -935,6 +937,12 @@ app.listen(PORT, () => {
   try {
     const automationService = getBlogAutomationService();
     automationService.startScheduler();
+    
+    // AutoPollingService disponível mas não iniciado por padrão
+    // Para ativar: POST /api/blog/realtime/polling/start
+    const autoPollingService = getAutoPollingService();
+    console.log('🔄 AutoPollingService disponível (não iniciado por padrão)');
+    
     console.log('🤖 Blog Automation Service iniciado');
     console.log('📧 Admin autorizado: creaty12345@gmail.com');
   } catch (error) {

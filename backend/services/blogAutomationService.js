@@ -82,6 +82,131 @@ class BlogAutomationService {
     }
     
     /**
+     * Obter contagem de itens pendentes
+     */
+    async getPendingCount() {
+        try {
+            const { count, error } = await this.supabase
+                .from('n8n_blog_queue')
+                .select('*', { count: 'exact', head: true })
+                .eq('processed', false);
+            
+            if (error) {
+                throw new Error(`Erro ao contar pendentes: ${error.message}`);
+            }
+            
+            return count || 0;
+        } catch (error) {
+            console.error('❌ Erro ao obter contagem de pendentes:', error);
+            return 0;
+        }
+    }
+
+    /**
+     * Processar número limitado de itens da fila (para processamento em tempo real)
+     */
+    async processQueueItems(maxItems = 5) {
+        console.log(`🔄 [Realtime] Processando até ${maxItems} itens da fila`);
+        
+        if (this.isRunning) {
+            console.log('⚠️ [Realtime] Processamento já em andamento, pulando...');
+            return { success: true, processed: 0, errors: 0, details: [] };
+        }
+        
+        this.isRunning = true;
+        
+        try {
+            // Buscar itens pendentes (limitado)
+            const { data: queueItems, error: queueError } = await this.supabase
+                .from('n8n_blog_queue')
+                .select('*')
+                .eq('processed', false)
+                .order('created_at', { ascending: true })
+                .limit(maxItems);
+            
+            if (queueError) {
+                throw new Error(`Erro ao buscar fila: ${queueError.message}`);
+            }
+            
+            console.log(`📋 [Realtime] Itens encontrados: ${queueItems?.length || 0}`);
+            
+            if (!queueItems || queueItems.length === 0) {
+                console.log('✅ [Realtime] Nenhum item pendente para processar');
+                return { success: true, processed: 0, errors: 0, details: [] };
+            }
+            
+            let processedCount = 0;
+            let errorCount = 0;
+            const results = [];
+            
+            // Processar cada item individualmente
+            for (const item of queueItems) {
+                try {
+                    console.log(`🔄 [Realtime] Processando item: ${item.title}`);
+                    
+                    // Usar a mesma lógica do processamento normal
+                    const result = await this.processSingleItem(item);
+                    
+                    processedCount++;
+                    results.push({
+                        id: item.id,
+                        title: item.title,
+                        status: 'success',
+                        blog_post_id: result.id
+                    });
+                    
+                    console.log(`✅ [Realtime] Item processado com sucesso: ${item.title}`);
+                    
+                } catch (itemError) {
+                    console.error(`❌ [Realtime] Erro ao processar item ${item.title}:`, itemError.message);
+                    
+                    // Marcar item com erro
+                    await this.supabase
+                        .from('n8n_blog_queue')
+                        .update({
+                            processed: false,
+                            error_message: itemError.message,
+                            processed_at: new Date().toISOString()
+                        })
+                        .eq('id', item.id);
+                    
+                    errorCount++;
+                    results.push({
+                        id: item.id,
+                        title: item.title,
+                        status: 'error',
+                        error: itemError.message
+                    });
+                }
+            }
+            
+            const finalResult = {
+                success: true,
+                processed: processedCount,
+                errors: errorCount,
+                details: results
+            };
+            
+            console.log(`✅ [Realtime] Processamento concluído: ${processedCount} processados, ${errorCount} erros`);
+            return finalResult;
+            
+        } catch (error) {
+            console.error('❌ [Realtime] Erro no processamento:', error);
+            return {
+                success: false,
+                processed: 0,
+                errors: 1,
+                details: [{
+                    status: 'error',
+                    error: error.message
+                }]
+            };
+        } finally {
+            this.isRunning = false;
+        }
+    }
+
+    /**
      * Processar fila de artigos N8N
      */
     async processQueue() {
