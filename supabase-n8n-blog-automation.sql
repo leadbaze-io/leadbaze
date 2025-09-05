@@ -135,7 +135,7 @@ BEGIN
                 COALESCE(queue_item.autor, 'LeadBaze Team'), -- Usar autor do N8N ou padrão
                 '/avatars/leadbaze-ai.png',
                 TRUE, -- Publicar automaticamente
-                queue_item.date::TIMESTAMP WITH TIME ZONE,
+                NOW(),
                 -- Calcular tempo de leitura (250 palavras por minuto)
                 GREATEST(1, (LENGTH(REGEXP_REPLACE(queue_item.content, '<[^>]+>', '', 'g')) / 5) / 250),
                 queue_item.title,
