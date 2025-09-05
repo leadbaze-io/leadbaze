@@ -22,7 +22,10 @@ import {
   FileText,
   User,
   Zap,
-  Database
+  Database,
+  Trash2,
+  Edit,
+  Menu
 } from 'lucide-react';
 import blogAutomationService from '../../lib/blogAutomationService';
 import type { 
@@ -42,9 +45,11 @@ const BlogAutomationDashboard: React.FC = () => {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [queue, setQueue] = useState<BlogQueueItem[]>([]);
   const [config, setConfig] = useState<BlogAutomationConfig | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'queue' | 'config' | 'logs'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'queue' | 'config' | 'logs' | 'posts'>('overview');
   const [processing, setProcessing] = useState(false);
   const [logs, setLogs] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Verificar autenticação e autorização
   useEffect(() => {
@@ -130,6 +135,11 @@ const BlogAutomationDashboard: React.FC = () => {
         loadQueue()
       ]);
       
+      // Carregar posts se estiver na aba de posts
+      if (activeTab === 'posts') {
+        loadPosts();
+      }
+      
       // Carregar dados secundários apenas se necessário
       // loadHealth() e loadConfig() removidos para reduzir requisições
       
@@ -193,6 +203,108 @@ const BlogAutomationDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Erro ao carregar logs:', error);
+    }
+  };
+
+  // Carregar posts criados
+  const loadPosts = async () => {
+    try {
+      console.log('📄 [LoadPosts] Carregando posts...');
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select(`
+          id,
+          title,
+          slug,
+          excerpt,
+          published,
+          published_at,
+          created_at,
+          blog_categories (
+            name,
+            slug
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      console.log('📄 [LoadPosts] Resposta:', { data, error });
+
+      if (error) {
+        console.error('📄 [LoadPosts] Erro ao carregar posts:', error);
+        alert(`❌ Erro ao carregar posts: ${error.message}`);
+        return;
+      }
+
+      console.log('📄 [LoadPosts] Posts carregados:', data?.length || 0);
+      setPosts(data || []);
+    } catch (error) {
+      console.error('📄 [LoadPosts] Erro inesperado ao carregar posts:', error);
+      alert(`❌ Erro inesperado: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  };
+
+  // Deletar post
+  const handleDeletePost = async (postId: string, postTitle: string) => {
+    console.log('🗑️ [Delete] Iniciando deleção do post:', { postId, postTitle });
+    
+    if (!confirm(`Tem certeza que deseja deletar o post "${postTitle}"?\n\nEsta ação não pode ser desfeita.`)) {
+      console.log('🗑️ [Delete] Deleção cancelada pelo usuário');
+      return;
+    }
+
+    try {
+      console.log('🗑️ [Delete] Verificando permissões...');
+      
+      // Primeiro, verificar se o usuário está autenticado
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('🗑️ [Delete] Usuário não autenticado');
+        alert('❌ Você precisa estar logado para deletar posts');
+        return;
+      }
+
+      console.log('🗑️ [Delete] Usuário autenticado:', user.email);
+      console.log('🗑️ [Delete] Fazendo requisição para deletar post...');
+      
+      // Usar sempre a API backend para deletar (tem SERVICE ROLE KEY)
+      console.log('🗑️ [Delete] Deletando via API backend...');
+      console.log('🗑️ [Delete] URL da requisição:', '/api/blog/delete-post');
+      console.log('🗑️ [Delete] Método:', 'DELETE');
+      console.log('🗑️ [Delete] Headers:', {
+        'Content-Type': 'application/json',
+        'x-user-email': user.email || ''
+      });
+      console.log('🗑️ [Delete] Body:', JSON.stringify({ postId }));
+      
+      const response = await fetch('/api/blog/delete-post', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-email': user.email || ''
+        },
+        body: JSON.stringify({ postId })
+      });
+      
+      console.log('🗑️ [Delete] Status da resposta:', response.status);
+      console.log('🗑️ [Delete] Status Text:', response.statusText);
+      console.log('🗑️ [Delete] Headers da resposta:', Object.fromEntries(response.headers.entries()));
+
+      const result = await response.json();
+      console.log('🗑️ [Delete] Resposta da API backend:', result);
+
+      if (result.success) {
+        console.log('🗑️ [Delete] Post deletado com sucesso:', result.deletedPost);
+        alert('✅ Post deletado com sucesso!');
+        loadPosts(); // Recarregar lista
+      } else {
+        console.error('🗑️ [Delete] Erro ao deletar post:', result.message);
+        alert(`❌ Erro ao deletar post: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('🗑️ [Delete] Erro inesperado ao deletar post:', error);
+      alert(`❌ Erro inesperado: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
@@ -309,9 +421,12 @@ const BlogAutomationDashboard: React.FC = () => {
             Este dashboard é restrito apenas para administradores autorizados.
           </p>
           {currentUser ? (
-            <p className="text-sm text-gray-500">
-              Usuário atual: {currentUser.email}
-            </p>
+            <div className="flex items-center justify-center mt-4">
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-sm font-medium shadow-sm">
+                <User className="h-4 w-4" />
+                <span>Admin</span>
+              </div>
+            </div>
           ) : (
             <p className="text-sm text-gray-500">
               Você precisa estar logado para acessar esta área.
@@ -327,52 +442,65 @@ const BlogAutomationDashboard: React.FC = () => {
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header Mobile */}
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
-              <Zap className="h-8 w-8 text-blue-600" />
+              <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Blog Automation
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  Blog Auto
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
                   Sistema de automação de artigos via N8N
                 </p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              {/* Status de saúde */}
-              {health && (
-                <div className="flex items-center space-x-2">
-                  <div className={`h-3 w-3 rounded-full ${
-                    health.status === 'healthy' ? 'bg-green-400' : 'bg-red-400'
-                  }`} />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
-                    {health.status === 'healthy' ? 'Sistema Saudável' : 'Sistema com Problemas'}
-                  </span>
-                </div>
-              )}
+            {/* Header Actions */}
+            <div className="flex items-center space-x-3">
+              {/* Desktop Refresh Button */}
+              <button
+                onClick={loadDashboardData}
+                className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                title="Atualizar dados"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Atualizar</span>
+              </button>
               
-              {/* Usuário */}
-              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                <User className="h-4 w-4" />
-                <span>{currentUser?.email}</span>
+              {/* Mobile Refresh Button */}
+              <button
+                onClick={loadDashboardData}
+                className="sm:hidden p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                title="Atualizar dados"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+              
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="sm:hidden p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              
+              {/* Desktop Admin Badge */}
+              <div className="hidden sm:flex items-center space-x-2">
+                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-sm font-medium shadow-sm">
+                  <User className="h-4 w-4" />
+                  <span>Admin</span>
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Tabs */}
-          <div className="flex items-center space-x-8">
-            <button
-              onClick={loadDashboardData}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-              title="Atualizar dados"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
+          {/* Tabs - Desktop */}
+          <div className="hidden sm:flex items-center space-x-8">
             {[
               { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
               { id: 'queue', label: 'Fila de Artigos', icon: FileText },
+              { id: 'posts', label: 'Posts Criados', icon: Edit },
               { id: 'config', label: 'Configurações', icon: Settings },
               { id: 'logs', label: 'Logs', icon: Activity }
             ].map(tab => (
@@ -390,11 +518,52 @@ const BlogAutomationDashboard: React.FC = () => {
               </button>
             ))}
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="sm:hidden border-t border-gray-200 dark:border-gray-700 py-4">
+              <div className="space-y-2">
+                {[
+                  { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
+                  { id: 'queue', label: 'Fila de Artigos', icon: FileText },
+                  { id: 'posts', label: 'Posts Criados', icon: Edit },
+                  { id: 'config', label: 'Configurações', icon: Settings },
+                  { id: 'logs', label: 'Logs', icon: Activity }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setActiveTab(tab.id as any);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 py-3 px-4 rounded-lg font-medium text-sm transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <tab.icon className="h-5 w-5" />
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+                
+                {/* Mobile Admin Info */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center justify-center px-4">
+                    <div className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-sm font-medium shadow-sm">
+                      <User className="h-4 w-4" />
+                      <span>Admin</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Conteúdo */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {activeTab === 'overview' && (
           <OverviewTab 
             stats={stats}
@@ -411,6 +580,14 @@ const BlogAutomationDashboard: React.FC = () => {
             queue={queue}
             onProcessItem={handleProcessItem}
             onRefresh={loadQueue}
+          />
+        )}
+        
+        {activeTab === 'posts' && (
+          <PostsTab 
+            posts={posts}
+            onDeletePost={handleDeletePost}
+            onRefresh={loadPosts}
           />
         )}
         
@@ -446,9 +623,9 @@ const OverviewTab: React.FC<{
   const statusSummary = stats ? blogAutomationService.getStatusSummary(stats) : '';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Cards de estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <StatCard
           title="Total na Fila"
           value={stats?.total_queue || 0}
@@ -476,12 +653,12 @@ const OverviewTab: React.FC<{
       </div>
 
       {/* Progresso geral */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white">
             Progresso Geral
           </h3>
-          <span className="text-2xl font-bold text-blue-600">{progress}%</span>
+          <span className="text-xl sm:text-2xl font-bold text-blue-600">{progress}%</span>
         </div>
         
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
@@ -493,22 +670,22 @@ const OverviewTab: React.FC<{
           />
         </div>
         
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
           {statusSummary}
         </p>
       </div>
 
       {/* Controles */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4">
           Controles do Sistema
         </h3>
         
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <button
             onClick={onProcessQueue}
             disabled={processing}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform ${
+            className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-300 transform ${
               processing 
                 ? 'bg-blue-500 cursor-not-allowed scale-95' 
                 : 'bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
@@ -516,13 +693,13 @@ const OverviewTab: React.FC<{
           >
             {processing ? (
               <>
-                <RefreshCw className="h-5 w-5 animate-spin" />
-                <span className="animate-pulse">Processando...</span>
+                <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                <span className="animate-pulse text-sm sm:text-base">Processando...</span>
               </>
             ) : (
               <>
-                <Play className="h-5 w-5" />
-                <span>Processar Fila</span>
+                <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="text-sm sm:text-base">Processar Fila</span>
               </>
             )}
           </button>
@@ -530,18 +707,18 @@ const OverviewTab: React.FC<{
           {config?.schedulerActive ? (
             <button
               onClick={() => onSchedulerControl('stop')}
-              className="flex items-center space-x-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              className="flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
-              <Pause className="h-5 w-5" />
-              <span>Parar Scheduler</span>
+              <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">Parar Scheduler</span>
             </button>
           ) : (
             <button
               onClick={() => onSchedulerControl('start')}
-              className="flex items-center space-x-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              className="flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
-              <Play className="h-5 w-5" />
-              <span>Iniciar Scheduler</span>
+              <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="text-sm sm:text-base">Iniciar Scheduler</span>
             </button>
           )}
         </div>
@@ -592,17 +769,17 @@ const StatCard: React.FC<{
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 sm:p-6"
     >
       <div className="flex items-center">
-        <div className={`p-2 rounded-lg bg-opacity-10 ${colorClasses[color]}`}>
-          <Icon className={`h-6 w-6 ${colorClasses[color].split(' ')[1]}`} />
+        <div className={`p-1.5 sm:p-2 rounded-lg bg-opacity-10 ${colorClasses[color]}`}>
+          <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${colorClasses[color].split(' ')[1]}`} />
         </div>
-        <div className="ml-4">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+        <div className="ml-2 sm:ml-4">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">
             {title}
           </p>
-          <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+          <p className="text-lg sm:text-2xl font-semibold text-gray-900 dark:text-white">
             {value.toLocaleString()}
           </p>
         </div>
@@ -618,14 +795,14 @@ const QueueTab: React.FC<{
   onRefresh: () => void;
 }> = ({ queue, onProcessItem, onRefresh }) => {
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
           Fila de Artigos ({queue.length})
         </h2>
         <button
           onClick={onRefresh}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
         >
           <RefreshCw className="h-4 w-4" />
           <span>Atualizar</span>
@@ -633,7 +810,8 @@ const QueueTab: React.FC<{
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table */}
+        <div className="hidden lg:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
@@ -717,11 +895,226 @@ const QueueTab: React.FC<{
           </table>
         </div>
 
+        {/* Mobile Cards */}
+        <div className="lg:hidden">
+          {queue.map((item) => {
+            const status = blogAutomationService.getItemStatus(item);
+            return (
+              <div key={item.id} className="p-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
+                    {item.title}
+                  </h3>
+                  <span className={`inline-flex items-center space-x-1 text-xs ${status.color} ml-2`}>
+                    <span>{status.icon}</span>
+                    <span>{status.status}</span>
+                  </span>
+                </div>
+                
+                <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                  <p><strong>Categoria:</strong> {item.category}</p>
+                  <p><strong>Autor:</strong> {item.autor}</p>
+                  <p><strong>Data:</strong> {new Date(item.date).toLocaleDateString('pt-BR')}</p>
+                </div>
+                
+                {item.error_message && (
+                  <div className="text-xs text-red-600 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                    {item.error_message}
+                  </div>
+                )}
+                
+                <div className="flex space-x-2 mt-3">
+                  {!item.processed && (
+                    <button
+                      onClick={() => onProcessItem(item.id)}
+                      className="text-blue-600 hover:text-blue-900 text-xs font-medium transition-all duration-200 hover:scale-105 active:scale-95"
+                    >
+                      Processar
+                    </button>
+                  )}
+                  {item.blog_posts?.slug && (
+                    <a
+                      href={`/blog/${item.blog_posts.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:text-green-900 text-xs font-medium inline-flex items-center space-x-1"
+                    >
+                      <Eye className="h-3 w-3" />
+                      <span>Ver Post</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
         {queue.length === 0 && (
           <div className="text-center py-12">
             <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400">
               Nenhum item na fila
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Componente da aba de posts criados
+const PostsTab: React.FC<{
+  posts: any[];
+  onDeletePost: (postId: string, postTitle: string) => void;
+  onRefresh: () => void;
+}> = ({ posts, onDeletePost, onRefresh }) => {
+  return (
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+          Posts Criados ({posts.length})
+        </h2>
+        <button
+          onClick={onRefresh}
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+        >
+          <RefreshCw className="h-4 w-4" />
+          <span>Atualizar</span>
+        </button>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+        {/* Desktop Table */}
+        <div className="hidden lg:block overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Título
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Categoria
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Data
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  Ações
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {posts.map((post) => (
+                <tr key={post.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      {post.title}
+                    </div>
+                    {post.excerpt && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                        {post.excerpt}
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    {post.blog_categories?.name || 'Sem categoria'}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      post.published 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                    }`}>
+                      {post.published ? 'Publicado' : 'Rascunho'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    {new Date(post.created_at).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex space-x-2">
+                      <a
+                        href={`/blog/${post.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-600 hover:text-green-900 text-sm font-medium inline-flex items-center space-x-1"
+                      >
+                        <Eye className="h-3 w-3" />
+                        <span>Ver</span>
+                      </a>
+                      <button
+                        onClick={() => onDeletePost(post.id, post.title)}
+                        className="text-red-600 hover:text-red-900 text-sm font-medium inline-flex items-center space-x-1 transition-all duration-200 hover:scale-105 active:scale-95"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                        <span>Deletar</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="lg:hidden">
+          {posts.map((post) => (
+            <div key={post.id} className="p-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 flex-1">
+                  {post.title}
+                </h3>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 ${
+                  post.published 
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                }`}>
+                  {post.published ? 'Publicado' : 'Rascunho'}
+                </span>
+              </div>
+              
+              {post.excerpt && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-2">
+                  {post.excerpt}
+                </div>
+              )}
+              
+              <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+                <p><strong>Categoria:</strong> {post.blog_categories?.name || 'Sem categoria'}</p>
+                <p><strong>Criado:</strong> {new Date(post.created_at).toLocaleDateString('pt-BR')}</p>
+              </div>
+              
+              <div className="flex space-x-3 mt-3">
+                <a
+                  href={`/blog/${post.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:text-green-900 text-xs font-medium inline-flex items-center space-x-1"
+                >
+                  <Eye className="h-3 w-3" />
+                  <span>Ver Post</span>
+                </a>
+                <button
+                  onClick={() => onDeletePost(post.id, post.title)}
+                  className="text-red-600 hover:text-red-900 text-xs font-medium inline-flex items-center space-x-1 transition-all duration-200 hover:scale-105 active:scale-95"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  <span>Deletar</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {posts.length === 0 && (
+          <div className="text-center py-12">
+            <Edit className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400">
+              Nenhum post encontrado
             </p>
           </div>
         )}
@@ -747,17 +1140,17 @@ const ConfigTab: React.FC<{
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="space-y-4 sm:space-y-6">
+      <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
         Configurações do Sistema
       </h2>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4">
           Configuração Atual
         </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Status do Sistema
@@ -818,11 +1211,11 @@ const ConfigTab: React.FC<{
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <h4 className="text-md font-medium text-gray-900 dark:text-white mb-3">
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
+          <h4 className="text-sm sm:text-md font-medium text-gray-900 dark:text-white mb-3">
             Status Atual
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div>
               <span className="text-gray-600 dark:text-gray-400">Scheduler: </span>
               <span className={config.schedulerActive ? 'text-green-600' : 'text-red-600'}>
@@ -857,26 +1250,26 @@ const LogsTab: React.FC<{
   onRefresh: () => void;
 }> = ({ logs, onRefresh }) => {
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
           Logs do Sistema ({logs.length})
         </h2>
         <button
           onClick={onRefresh}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
         >
           <RefreshCw className="h-4 w-4" />
           <span>Atualizar</span>
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <div className="space-y-4 max-h-96 overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+        <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
           {logs.map((log, index) => (
             <div 
               key={index}
-              className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+              className="flex items-start space-x-2 sm:space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
             >
               <div className="flex-shrink-0 mt-1">
                 {log.processed ? (
@@ -888,14 +1281,14 @@ const LogsTab: React.FC<{
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-900 dark:text-white">
+                <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
                   {log.title}
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {blogAutomationService.formatDate(log.created_at)}
                 </div>
                 {log.error_message && (
-                  <div className="text-xs text-red-600 mt-1">
+                  <div className="text-xs text-red-600 mt-1 p-2 bg-red-50 dark:bg-red-900/20 rounded">
                     {log.error_message}
                   </div>
                 )}

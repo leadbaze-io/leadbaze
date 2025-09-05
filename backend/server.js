@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const { getBlogAutomationService } = require('./services/blogAutomationService');
 const blogQueueRoutes = require('./routes/blogQueue');
+const blogPostsRoutes = require('./routes/blogPosts');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
@@ -132,7 +133,9 @@ const evolutionHeaders = {
 
 // Middleware de logging para debug
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`🌐 [Request] ${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log(`🌐 [Request] Headers:`, req.headers);
+  console.log(`🌐 [Request] Body:`, req.body);
   next();
 });
 
@@ -681,7 +684,10 @@ app.get('/api/blog/automation/stats', async (req, res) => {
 });
 
 // Rotas do blog queue (públicas para inserção manual)
+console.log('🔧 [Server] Registrando rotas do blog...');
 app.use('/api/blog/queue', blogQueueRoutes);
+app.use('/api/blog', blogPostsRoutes);
+console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Endpoints admin (requerem autenticação) - com rate limit específico
 app.use('/api/blog/automation/admin/*', dashboardLimit, checkAdminAuth);

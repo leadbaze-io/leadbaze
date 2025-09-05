@@ -10,6 +10,14 @@ export default defineConfig({
     // Força recarregamento em desenvolvimento
     hmr: {
       overlay: true
+    },
+    // Proxy para redirecionar requisições da API para o backend
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false
+      }
     }
   },
   build: {
