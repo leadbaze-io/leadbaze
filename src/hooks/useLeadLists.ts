@@ -102,9 +102,10 @@ export const useSaveLeadList = () => {
       }
       
       toast({
-        title: "Erro ao Salvar Lista",
+        title: "❌ Erro ao Salvar Lista",
         description: "Não foi possível salvar a lista. Tente novamente.",
-        variant: "destructive",
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     },
     

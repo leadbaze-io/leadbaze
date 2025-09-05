@@ -96,9 +96,9 @@ export default function WhatsAppConnection({
             setQrCode('')
             
             toast({
-              title: 'WhatsApp Desconectado',
+              title: '🔄 WhatsApp Desconectado',
               description: 'Sua instância foi desconectada da Evolution API.',
-              variant: 'destructive'
+              className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
             })
           }
         } catch (error) {
@@ -168,8 +168,9 @@ export default function WhatsAppConnection({
       setIsPolling(false)
 
       toast({
-        title: 'WhatsApp Desconectado!',
+        title: '🔄 WhatsApp Desconectado!',
         description: 'Sua conta WhatsApp foi desconectada com sucesso.',
+        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
       })
 
       // 5. Chamar callback de desconexão
@@ -180,9 +181,10 @@ export default function WhatsAppConnection({
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
       
       toast({
-        title: 'Erro na Desconexão',
+        title: '❌ Erro na Desconexão',
         description: errorMessage,
-        variant: 'destructive'
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsDisconnecting(false)
@@ -222,8 +224,9 @@ export default function WhatsAppConnection({
       startQRCodePolling(instance.instanceName)
 
       toast({
-        title: 'Instância Criada!',
+        title: '🚀 Instância Criada!',
         description: 'Aguardando QR Code...',
+        className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
       })
 
     } catch (error) {
@@ -231,9 +234,10 @@ export default function WhatsAppConnection({
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
       
       toast({
-        title: 'Erro na Conexão',
+        title: '❌ Erro na Conexão',
         description: errorMessage,
-        variant: 'destructive'
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
 
       onConnectionError?.(errorMessage)
@@ -278,8 +282,9 @@ export default function WhatsAppConnection({
           startConnectionPolling(instanceName)
 
           toast({
-            title: 'QR Code Gerado!',
+            title: '📱 QR Code Gerado!',
             description: 'Escaneie o código com seu WhatsApp para conectar.',
+            className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
           })
           return
         }
@@ -326,8 +331,9 @@ export default function WhatsAppConnection({
           }
           
           toast({
-            title: 'WhatsApp Conectado!',
+            title: '🎉 WhatsApp Conectado!',
             description: 'Sua conta WhatsApp foi conectada com sucesso.',
+            className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
           })
           onConnectionSuccess?.(instanceName)
         }
@@ -348,9 +354,9 @@ export default function WhatsAppConnection({
           }
           
           toast({
-            title: 'WhatsApp Desconectado',
+            title: '🔄 WhatsApp Desconectado',
             description: 'Sua conta WhatsApp foi desconectada.',
-            variant: 'destructive'
+            className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
           })
         }
       },
@@ -373,8 +379,9 @@ export default function WhatsAppConnection({
     setInstanceName('')
     
     toast({
-      title: 'Conexão Cancelada',
+      title: '⏹️ Conexão Cancelada',
       description: 'O processo de conexão foi cancelado.',
+      className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
     })
   }
 
@@ -391,15 +398,17 @@ export default function WhatsAppConnection({
       setQrCode(instance.qrCodeBase64)
       
       toast({
-        title: 'QR Code Atualizado!',
+        title: '🔄 QR Code Atualizado!',
         description: 'Novo QR Code gerado. Tente escanear novamente.',
+        className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
       })
     } catch (error) {
       console.error('❌ Erro ao atualizar QR Code:', error)
       toast({
-        title: 'Erro',
+        title: '❌ Erro',
         description: 'Não foi possível atualizar o QR Code.',
-        variant: 'destructive'
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800'
       })
     } finally {
       setIsConnecting(false)

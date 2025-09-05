@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
-import { Trash2, CheckSquare, Square, Filter, Star, Phone, Globe, MapPin, Users, Eye } from 'lucide-react'
+import { Trash2, Filter, Star, Phone, Globe, MapPin, Users, Eye, Check } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { Lead } from '../types'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -91,9 +92,9 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
   const handleDeleteSelected = async () => {
     if (selectedLeads.size === 0) {
       toast({
-        title: "Nenhum lead selecionado",
+        title: "⚠️ Nenhum Lead Selecionado",
         description: "Selecione pelo menos um lead para deletar.",
-        variant: "destructive",
+        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
       })
       return
     }
@@ -110,14 +111,16 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
       }
       setSelectedLeads(new Set())
       toast({
-        title: "Leads deletados",
+        title: "🗑️ Leads Deletados",
         description: `${selectedLeads.size} lead(s) foram deletado(s) com sucesso.`,
+        className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
       })
     } catch {
       toast({
-        title: "Erro ao deletar",
+        title: "❌ Erro ao Deletar",
         description: "Ocorreu um erro ao deletar os leads selecionados.",
-        variant: "destructive",
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsDeleting(false)
@@ -165,26 +168,9 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                     <h2 className="text-3xl font-bold lista-detalhes-texto-claro dark:text-foreground">{title}</h2>
         <p className="lista-detalhes-texto-claro dark:text-muted-foreground mt-1">
               {filteredLeads.length} leads encontrados
-              {selectedLeads.size > 0 && (
-                <span className="ml-2 text-blue-600 font-medium">
-                  • {selectedLeads.size} selecionado(s)
-                </span>
-              )}
             </p>
           </div>
           
-          <div className="flex items-center space-x-3">
-            {selectedLeads.size > 0 && (
-              <Button
-                onClick={handleDeleteSelected}
-                disabled={isDeleting}
-                className="flex items-center space-x-2 bg-card text-red-600 dark:text-red-400 font-semibold px-6 py-2 rounded-lg shadow-lg border-2 border-red-200 dark:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 hover:border-red-300 dark:hover:border-red-400 transition-all duration-200 transform hover:scale-105"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Deletar {selectedLeads.size} Lead{selectedLeads.size > 1 ? 's' : ''}</span>
-              </Button>
-            )}
-          </div>
         </div>
 
         {/* Estatísticas rápidas */}
@@ -320,57 +306,31 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                 </SelectContent>
               </Select>
             </div>
+            
+            <div>
+              <Label className="text-xs font-medium text-foreground mb-2 block">Leads por Página</Label>
+              <Select 
+                value={leadsPerPage} 
+                onValueChange={(value) => {
+                  setLeadsPerPage(value)
+                  resetPagination()
+                }}
+              >
+                <SelectTrigger className="h-10 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border border-border shadow-lg">
+                  <SelectItem value="12">12</SelectItem>
+                  <SelectItem value="24">24</SelectItem>
+                  <SelectItem value="48">48</SelectItem>
+                  <SelectItem value="96">96</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Controles de seleção */}
-      <div className="flex items-center justify-between lista-controles-claro lista-controles-escuro p-4 rounded-xl border">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleSelectAll}
-            className="flex items-center space-x-2 border-blue-300 text-blue-700 hover:bg-blue-100"
-          >
-            {selectedLeads.size === filteredLeads.length ? (
-              <CheckSquare className="w-4 h-4" />
-            ) : (
-              <Square className="w-4 h-4" />
-            )}
-            <span>
-              {selectedLeads.size === filteredLeads.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
-            </span>
-          </Button>
-          
-          {selectedLeads.size > 0 && (
-            <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-              {selectedLeads.size} de {filteredLeads.length} leads selecionados
-            </Badge>
-          )}
-        </div>
-
-        <div className="flex items-center space-x-3">
-          <Label className="text-sm font-medium text-muted-foreground">Leads por Página</Label>
-          <Select 
-            value={leadsPerPage} 
-            onValueChange={(value) => {
-              setLeadsPerPage(value)
-              resetPagination()
-            }}
-          >
-            <SelectTrigger className="h-8 text-sm w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-popover border border-border shadow-lg">
-              <SelectItem value="12">12</SelectItem>
-              <SelectItem value="24">24</SelectItem>
-              <SelectItem value="48">48</SelectItem>
-              <SelectItem value="96">96</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
       {/* Grid de Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -474,7 +434,7 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
                   </Badge>
                 )}
                 {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
-                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 font-medium">
+                  <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
                     📈 Em Crescimento
                   </Badge>
                 )}
@@ -553,6 +513,78 @@ export default function LeadTableWithActions({ leads, title = "Lista de Leads", 
           </p>
         </div>
       )}
+
+      {/* Botão Flutuante para Remoção */}
+      <AnimatePresence>
+        {selectedLeads.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border-2 border-red-200 dark:border-red-700 p-4 min-w-[280px] relative">
+              <button
+                onClick={() => setSelectedLeads(new Set())}
+                className="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 hover:bg-gray-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+              >
+                ×
+              </button>
+              
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <Trash2 className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {selectedLeads.size} Lead(s) Selecionado(s)
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      Para remoção da lista
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Button
+                  onClick={toggleSelectAll}
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  style={{ 
+                    color: document.documentElement.classList.contains('dark') 
+                      ? 'rgb(147 197 253)' // blue-300 para dark mode
+                      : 'rgb(29 78 216)'   // blue-700 para light mode
+                  }}
+                >
+                  <Check className="w-4 h-4 mr-2" />
+                  {selectedLeads.size === filteredLeads.length ? 'Desmarcar Todos' : 'Selecionar Todos'}
+                </Button>
+                
+                <Button
+                  onClick={handleDeleteSelected}
+                  disabled={isDeleting}
+                  className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isDeleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      Removendo...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Remover Selecionados
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

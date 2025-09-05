@@ -39,16 +39,17 @@ export function ConnectivityTest({
       if (response.ok) {
         setConnectionStatus('success')
         toast({
-          title: "Conectividade OK!",
+          title: "✅ Conectividade OK!",
           description: "O N8N está respondendo corretamente.",
+          className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
         })
       } else {
         setConnectionStatus('error')
         setErrorDetails(`HTTP ${response.status}: ${response.statusText}`)
         toast({
-          title: "Erro de Resposta",
+          title: "⚠️ Erro de Resposta",
           description: `O N8N retornou: ${response.status} ${response.statusText}`,
-          variant: "destructive",
+          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
         })
       }
     } catch (error: unknown) {
@@ -59,17 +60,18 @@ export function ConnectivityTest({
         setConnectionStatus('cors_error')
         setErrorDetails('Erro de CORS - N8N não configurado para aceitar requisições do frontend')
         toast({
-          title: "Erro de CORS",
+          title: "⚠️ Erro de CORS",
           description: "Configure CORS no N8N. Veja o arquivo N8N_CORS_SETUP.md",
-          variant: "destructive",
+          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
         })
       } else {
         setConnectionStatus('error')
         setErrorDetails(err.message || 'Erro de conexão desconhecido')
         toast({
-          title: "Erro de Conexão",
+          title: "❌ Erro de Conexão",
           description: err.message || "Não foi possível conectar ao N8N",
-          variant: "destructive",
+          variant: 'destructive',
+          className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
         })
       }
     } finally {

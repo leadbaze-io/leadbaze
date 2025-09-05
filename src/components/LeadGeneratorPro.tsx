@@ -137,26 +137,28 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       // Verificar se está em modo demo
       if (result.demo_mode) {
         toast({
-          title: "Modo Demonstração Ativado",
+          title: "🔧 Modo Demonstração Ativado",
           description: "N8N indisponível. Usando dados de exemplo para demonstração.",
+          className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
         })
       }
 
       if (!result.success) {
         console.error('❌ Erro na resposta do serviço:', result.error)
         toast({
-          title: "Erro na Extração",
+          title: "❌ Erro na Extração",
           description: result.error || "Não foi possível extrair os leads.",
-          variant: "destructive",
+          variant: 'destructive',
+          className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
         })
         return
       }
 
       if (result.leads.length === 0) {
         toast({
-          title: "Nenhum lead encontrado",
+          title: "🔍 Nenhum Lead Encontrado",
           description: "Sua busca não retornou resultados. Tente um termo ou URL diferente.",
-          variant: "destructive",
+          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
         })
         return
       }
@@ -173,8 +175,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       setShowSaveOptions(true)
       
       toast({
-        title: "Leads Extraídos com Sucesso!",
+        title: "🎉 Leads Extraídos com Sucesso!",
         description: `${result.leads.length} leads encontrados. Selecione os que deseja salvar.`,
+        className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
       })
 
       if (onLeadsGenerated) {
@@ -184,9 +187,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     } catch (error) {
       console.error('❌ Erro na geração de leads:', error)
       toast({
-        title: "Erro na Extração",
+        title: "❌ Erro na Extração",
         description: "Ocorreu um erro durante a extração dos leads. Tente novamente.",
-        variant: "destructive",
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsGenerating(false)
@@ -293,27 +297,27 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     
     if (selectedLeads.length === 0) {
       toast({
-        title: "Nenhum lead selecionado",
+        title: "⚠️ Nenhum Lead Selecionado",
         description: "Selecione pelo menos um lead para salvar.",
-        variant: "destructive",
+        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
       })
       return
     }
 
     if (saveMode === 'new' && !newListName.trim()) {
       toast({
-        title: "Nome da lista obrigatório",
+        title: "⚠️ Nome da Lista Obrigatório",
         description: "Digite um nome para a nova lista.",
-        variant: "destructive",
+        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
       })
       return
     }
 
     if (saveMode === 'existing' && !selectedListId) {
       toast({
-        title: "Lista não selecionada",
+        title: "⚠️ Lista Não Selecionada",
         description: "Selecione uma lista para adicionar os leads.",
-        variant: "destructive",
+        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
       })
       return
     }
@@ -371,9 +375,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     } catch (error) {
       console.error('❌ Erro ao salvar leads:', error)
       toast({
-        title: "Erro ao Salvar",
+        title: "❌ Erro ao Salvar",
         description: "Não foi possível salvar os leads. Tente novamente.",
-        variant: "destructive",
+        variant: 'destructive',
+        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsSaving(false)
@@ -821,7 +826,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             </Badge>
                           )}
                           {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 font-medium">
+                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
                               📈 Em Crescimento
                             </Badge>
                           )}

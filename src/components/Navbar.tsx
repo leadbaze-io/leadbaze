@@ -10,6 +10,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js'
 export default function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAdminAuthorized, setIsAdminAuthorized] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -19,8 +20,48 @@ export default function Navbar() {
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
 
+  // Função para verificar se usuário é admin autorizado
+  const checkAdminAuthorization = async (userEmail: string | undefined) => {
+    if (!userEmail) {
+      setIsAdminAuthorized(false);
+      return;
+    }
+    
+    // Verificação por e-mail direto (fallback)
+    if (userEmail === 'creaty12345@gmail.com') {
+      setIsAdminAuthorized(true);
+      return;
+    }
+    
+    // Verificação por hash (mais seguro)
+    try {
+      const salt = 'leadflow-blog-automation-2024';
+      const encoder = new TextEncoder();
+      const keyData = encoder.encode(salt);
+      const messageData = encoder.encode(userEmail);
+      
+      const key = await crypto.subtle.importKey(
+        'raw',
+        keyData,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+      
+      const signature = await crypto.subtle.sign('HMAC', key, messageData);
+      const hashArray = Array.from(new Uint8Array(signature));
+      const emailHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      const expectedHash = '742b0188bdd92a56f71b6cd8cd3f10679af59842413ae26468f681e129584747';
+      
+      setIsAdminAuthorized(emailHash === expectedHash);
+    } catch (error) {
+      console.warn('Erro ao verificar hash do e-mail:', error);
+      setIsAdminAuthorized(false);
+    }
+  };
+
   // Função para verificar se um link está ativo - otimizada para fluidez
-  const isActiveLink = (path: string) => {
+const isActiveLink = (path: string) => {
     if (path === '/') {
       return location.pathname === '/'
     }
@@ -39,26 +80,31 @@ export default function Navbar() {
     if (path === '/disparador') {
       return location.pathname === '/disparador'
     }
+    if (path === '/admin/blog-automation') {
+      return location.pathname === '/admin/blog-automation'
+    }
     return location.pathname.startsWith(path)
   }
 
   // Animações para os links - otimizadas para suavidade e consistência
   const linkVariants = {
     hover: {
-      y: -1,
-      scale: 1.02,
+      y: -2,
+      scale: 1.05,
       transition: {
-        duration: 0.2,
+        duration: 0.3,
         ease: "easeOut" as const
       }
     },
     tap: {
-      scale: 0.98,
+      scale: 0.95,
+      y: 0,
       transition: {
-        duration: 0.1
+        duration: 0.15
       }
     }
   }
+
 
 
 
@@ -67,6 +113,7 @@ export default function Navbar() {
     const checkUser = async () => {
       const currentUser = await getCurrentUser()
       setUser(currentUser)
+      await checkAdminAuthorization(currentUser?.email)
     }
     checkUser()
 
@@ -77,10 +124,13 @@ export default function Navbar() {
         
         if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user)
+          await checkAdminAuthorization(session.user.email)
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
+          setIsAdminAuthorized(false)
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           setUser(session.user)
+          await checkAdminAuthorization(session.user.email)
         }
       }
     )
@@ -96,9 +146,14 @@ export default function Navbar() {
   }
 
   // Componente para links da NavBar com animações
-  const NavLink = ({ to, children, className = "" }: { to: string; children: React.ReactNode; className?: string }) => (
+  const NavLink = ({ to, children, className = "", variants = linkVariants }: { 
+    to: string; 
+    children: React.ReactNode; 
+    className?: string;
+    variants?: any;
+  }) => (
     <motion.div
-      variants={linkVariants}
+      variants={variants}
       whileHover="hover"
       whileTap="tap"
       className="relative"
@@ -216,6 +271,18 @@ export default function Navbar() {
                 >
                   Disparador
                 </NavLink>
+                
+                {/* Blog Automation Dashboard - Apenas para admin autorizado */}
+                {isAdminAuthorized && (
+                  <NavLink 
+                    to="/admin/blog-automation" 
+                    className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                      isActiveLink('/admin/blog-automation') ? 'text-blue-600 font-semibold' : ''
+                    }`}
+                  >
+                    Blog Auto
+                  </NavLink>
+                )}
                 <div className="flex items-center space-x-4 ml-4">
                   <div className="w-10 h-10 flex items-center justify-center">
                     {showThemeToggle ? (
@@ -668,6 +735,65 @@ export default function Navbar() {
                             )}
                           </div>
                           {isActiveLink('/disparador') && (
+                            <motion.div
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                            />
+                          )}
+                        </Link>
+                      </motion.div>
+                    )}
+
+                    {/* Blog Automation Dashboard - Mobile - Apenas para admin */}
+                    {isAdminAuthorized && (
+                      <motion.div
+                        className="px-2 py-1"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                      >
+                        <Link
+                          to="/admin/blog-automation"
+                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                            isActiveLink('/admin/blog-automation') 
+                              ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <motion.div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              isActiveLink('/admin/blog-automation') 
+                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' 
+                                : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                            }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <span className="text-sm font-bold">BA</span>
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-medium transition-colors ${
+                              isActiveLink('/admin/blog-automation') 
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
+                            }`}>
+                              Blog Automation
+                            </span>
+                            {isActiveLink('/admin/blog-automation') && (
+                              <motion.div
+                                className="text-xs text-blue-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                Página atual
+                              </motion.div>
+                            )}
+                          </div>
+                          {isActiveLink('/admin/blog-automation') && (
                             <motion.div
                               className="w-2 h-2 bg-blue-500 rounded-full"
                               initial={{ scale: 0 }}

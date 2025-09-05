@@ -8,15 +8,13 @@ interface BlogPostCardProps {
   post: BlogPost;
   variant?: 'default' | 'featured' | 'compact';
   showAuthor?: boolean;
-  showCategory?: boolean;
   showStats?: boolean;
 }
 
 export default function BlogPostCard({ 
   post, 
   variant = 'default',
-  showAuthor = true,
-  showCategory = true,
+  showAuthor = false, // Removido por padrão
   showStats = true
 }: BlogPostCardProps) {
   const formattedDate = BlogService.formatDate(post.publishedAt);
@@ -29,7 +27,7 @@ export default function BlogPostCard({
           className="block bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
         >
           {/* Featured Image */}
-          <div className="relative h-64 md:h-80 overflow-hidden">
+          <div className="relative h-72 md:h-96 overflow-hidden">
             <img
               src={post.featuredImage || 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&h=600&fit=crop'}
               alt={post.title}
@@ -37,14 +35,6 @@ export default function BlogPostCard({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             
-            {/* Category Badge */}
-            {showCategory && (
-              <div className="absolute top-4 left-4">
-                <span className="inline-block px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-full">
-                  {post.category.name}
-                </span>
-              </div>
-            )}
             
             {/* Read Time Badge */}
             <div className="absolute top-4 right-4">
@@ -56,14 +46,14 @@ export default function BlogPostCard({
           </div>
           
           {/* Content Section */}
-          <div className="p-6">
+          <div className="p-7">
             {/* Title */}
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight min-h-[3.5rem]">
               {post.title}
             </h2>
             
             {/* Excerpt */}
-            <p className="text-gray-600 mb-4 leading-relaxed line-clamp-2">
+            <p className="text-gray-600 mb-5 leading-relaxed line-clamp-3">
               {post.excerpt}
             </p>
             
@@ -73,11 +63,6 @@ export default function BlogPostCard({
                 {/* Author */}
                 {showAuthor && (
                   <div className="flex items-center">
-                    <img
-                      src={post.author.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'}
-                      alt={post.author.name}
-                      className="w-6 h-6 rounded-full object-cover mr-2"
-                    />
                     <span className="font-medium text-gray-700">{post.author.name}</span>
                   </div>
                 )}
@@ -121,7 +106,7 @@ export default function BlogPostCard({
           
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900  group-hover:text-purple-600  transition-colors line-clamp-2">
+            <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-3 leading-tight">
               {post.title}
             </h3>
             <div className="flex items-center mt-2 text-xs text-gray-500  space-x-3">
@@ -145,30 +130,21 @@ export default function BlogPostCard({
         className="block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-blue-200 h-full flex flex-col"
       >
         {/* Featured Image */}
-        <div className="relative h-40 overflow-hidden">
+        <div className="relative h-48 overflow-hidden">
           <img
             src={post.featuredImage || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop'}
             alt={post.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          
-          {/* Category Badge */}
-          {showCategory && (
-            <div className="absolute top-2 left-2">
-              <span className="inline-block px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-md">
-                {post.category.name}
-              </span>
-            </div>
-          )}
         </div>
         
         {/* Content */}
-        <div className="p-4 flex-1 flex flex-col">
-          <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2 h-12 leading-tight">
+        <div className="p-5 flex-1 flex flex-col">
+          <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-3 h-16 leading-tight">
             {post.title}
           </h3>
           
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2 flex-1">
+          <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
             {post.excerpt}
           </p>
           
@@ -179,12 +155,7 @@ export default function BlogPostCard({
                 {/* Author */}
                 {showAuthor && (
                   <div className="flex items-center">
-                    <img
-                      src={post.author.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'}
-                      alt={post.author.name}
-                      className="w-5 h-5 rounded-full object-cover mr-1"
-                    />
-                    <span className="text-xs">{post.author.name}</span>
+                    <span className="text-xs font-medium text-gray-600">{post.author.name}</span>
                   </div>
                 )}
                 

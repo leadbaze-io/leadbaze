@@ -263,9 +263,9 @@ export default function BlogPage() {
                                          }`}
                                        >
                                          {category.name}
-                                         {category.postCount && (
-                                           <span className="ml-2 text-xs opacity-75">
-                                             ({category.postCount})
+                                         {category.postCount > 0 && (
+                                           <span className="ml-1 text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                                             {category.postCount}
                                            </span>
                                          )}
                                        </button>
@@ -446,7 +446,6 @@ export default function BlogPage() {
                     post={post} 
                     variant="default"
                     showAuthor={true}
-                    showCategory={true}
                     showStats={false}
                   />
                 </motion.div>

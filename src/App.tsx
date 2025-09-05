@@ -19,6 +19,7 @@ const DisparadorMassa = lazy(() => import('./pages/DisparadorMassa'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const BlogAutomationDashboard = lazy(() => import('./components/blog/BlogAutomationDashboard'))
 
 // Componente principal que gerencia as classes de tema
 function AppContent() {
@@ -64,6 +65,7 @@ function AppContent() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/blog/sobre" element={<AboutPage />} />
+            <Route path="/admin/blog-automation" element={<BlogAutomationDashboard />} />
           </Routes>
         </Suspense>
       </main>

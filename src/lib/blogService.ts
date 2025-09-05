@@ -1,4 +1,5 @@
 import * as BlogTypes from '../types/blog';
+import { supabase } from './supabaseClient';
 
 type BlogPost = BlogTypes.BlogPost;
 type BlogCategory = BlogTypes.BlogCategory;
@@ -1148,74 +1149,366 @@ const mockPosts: BlogPost[] = [
 ];
 
 export class BlogService {
-  // Simula chamada de API - será substituído pela integração N8N
+  // Busca posts reais do Supabase
   static async getPosts(filters?: BlogFilters, page = 1, limit = 10): Promise<{ posts: BlogPost[], pagination: BlogPagination }> {
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    let filteredPosts = [...mockPosts];
-    
-    // Aplicar filtros
-    if (filters?.category) {
-      filteredPosts = filteredPosts.filter(post => post.category.slug === filters.category);
-    }
-    
-    if (filters?.tag) {
-      filteredPosts = filteredPosts.filter(post => 
-        post.tags.some(tag => tag.slug === filters.tag)
-      );
-    }
-    
-    if (filters?.search) {
-      const searchTerm = filters.search.toLowerCase();
-      filteredPosts = filteredPosts.filter(post => 
-        post.title.toLowerCase().includes(searchTerm) ||
-        post.excerpt.toLowerCase().includes(searchTerm)
-      );
-    }
-    
-    // Aplicar ordenação
-    if (filters?.sortBy) {
-      switch (filters.sortBy) {
-        case 'newest':
-          filteredPosts.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-          break;
-        case 'oldest':
-          filteredPosts.sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime());
-          break;
-        case 'popular':
-          filteredPosts.sort((a, b) => (b.views || 0) - (a.views || 0));
-          break;
+    try {
+      // Buscar posts do Supabase
+      let query = supabase
+        .from('blog_posts')
+        .select(`
+          *,
+          blog_categories (
+            id,
+            name,
+            slug,
+            description,
+            color,
+            icon
+          )
+        `)
+        .eq('published', true)
+        .order('published_at', { ascending: false });
+
+      // Aplicar filtros
+      if (filters?.category) {
+        // Primeiro buscar o ID da categoria pelo slug
+        const { data: categoryData } = await supabase
+          .from('blog_categories')
+          .select('id')
+          .eq('slug', filters.category)
+          .single();
+        
+        if (categoryData) {
+          query = query.eq('category_id', categoryData.id);
+        }
       }
+
+      if (filters?.search) {
+        query = query.or(`title.ilike.%${filters.search}%,excerpt.ilike.%${filters.search}%`);
+      }
+
+      // Aplicar paginação
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit - 1;
+      query = query.range(startIndex, endIndex);
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching blog posts:', error);
+        // Fallback para mockPosts em caso de erro
+        let filteredPosts = [...mockPosts];
+        
+        // Aplicar filtros no fallback
+        if (filters?.category) {
+          filteredPosts = filteredPosts.filter(post => post.category.slug === filters.category);
+        }
+        
+        if (filters?.tag) {
+          filteredPosts = filteredPosts.filter(post => 
+            post.tags.some(tag => tag.slug === filters.tag)
+          );
+        }
+        
+        if (filters?.search) {
+          const searchTerm = filters.search.toLowerCase();
+          filteredPosts = filteredPosts.filter(post => 
+            post.title.toLowerCase().includes(searchTerm) ||
+            post.excerpt.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        // Aplicar ordenação no fallback
+        if (filters?.sortBy) {
+          switch (filters.sortBy) {
+            case 'newest':
+              filteredPosts.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+              break;
+            case 'oldest':
+              filteredPosts.sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime());
+              break;
+            case 'popular':
+              filteredPosts.sort((a, b) => (b.views || 0) - (a.views || 0));
+              break;
+          }
+        }
+        
+        // Paginação no fallback
+        const totalPosts = filteredPosts.length;
+        const totalPages = Math.ceil(totalPosts / limit);
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+        
+        return {
+          posts: paginatedPosts,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalPosts,
+            postsPerPage: limit,
+            hasNextPage: page < totalPages,
+            hasPrevPage: page > 1
+          }
+        };
+      }
+
+      // Transformar dados do Supabase para o formato esperado
+      const posts: BlogPost[] = (data || []).map((post: any) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        author: {
+          name: post.author_name || 'LeadBaze Team',
+          avatar: post.author_avatar || '/avatars/leadbaze-ai.png',
+          bio: post.author_bio || 'Equipe LeadBaze'
+        },
+        category: post.blog_categories ? {
+          id: post.blog_categories.id,
+          name: post.blog_categories.name,
+          slug: post.blog_categories.slug,
+          description: post.blog_categories.description,
+          color: post.blog_categories.color,
+          icon: post.blog_categories.icon,
+          postCount: 0
+        } : mockCategories[0],
+        tags: [],
+        featuredImage: post.featured_image,
+        published: post.published,
+        publishedAt: post.published_at,
+        createdAt: post.created_at,
+        updatedAt: post.updated_at,
+        readTime: post.read_time || 5,
+        views: post.views || 0,
+        likes: post.likes || 0,
+        seoTitle: post.seo_title || post.title,
+        seoDescription: post.seo_description || post.excerpt,
+        seoKeywords: post.seo_keywords ? post.seo_keywords.split(',') : []
+      }));
+
+      // Buscar total de posts para paginação (aplicando os mesmos filtros)
+      let countQuery = supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('published', true);
+      
+      // Aplicar os mesmos filtros na contagem
+      if (filters?.category) {
+        const { data: categoryData } = await supabase
+          .from('blog_categories')
+          .select('id')
+          .eq('slug', filters.category)
+          .single();
+        
+        if (categoryData) {
+          countQuery = countQuery.eq('category_id', categoryData.id);
+        }
+      }
+      
+      if (filters?.search) {
+        countQuery = countQuery.or(`title.ilike.%${filters.search}%,excerpt.ilike.%${filters.search}%`);
+      }
+      
+      const { count } = await countQuery;
+
+      const totalPosts = count || 0;
+      const totalPages = Math.ceil(totalPosts / limit);
+    
+      const pagination: BlogPagination = {
+        currentPage: page,
+        totalPages,
+        totalPosts,
+        postsPerPage: limit,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      };
+      
+      return { posts, pagination };
+      
+    } catch (error) {
+      console.error('Error in getPosts:', error);
+      // Fallback para mockPosts em caso de erro geral
+      let filteredPosts = [...mockPosts];
+      
+      // Aplicar filtros no fallback
+      if (filters?.category) {
+        filteredPosts = filteredPosts.filter(post => post.category.slug === filters.category);
+      }
+      
+      if (filters?.tag) {
+        filteredPosts = filteredPosts.filter(post => 
+          post.tags.some(tag => tag.slug === filters.tag)
+        );
+      }
+      
+      if (filters?.search) {
+        const searchTerm = filters.search.toLowerCase();
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(searchTerm) ||
+          post.excerpt.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Aplicar ordenação no fallback
+      if (filters?.sortBy) {
+        switch (filters.sortBy) {
+          case 'newest':
+            filteredPosts.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+            break;
+          case 'oldest':
+            filteredPosts.sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime());
+            break;
+          case 'popular':
+            filteredPosts.sort((a, b) => (b.views || 0) - (a.views || 0));
+            break;
+        }
+      }
+      
+      // Paginação no fallback
+      const totalPosts = filteredPosts.length;
+      const totalPages = Math.ceil(totalPosts / limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+      
+      return {
+        posts: paginatedPosts,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalPosts,
+          postsPerPage: limit,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1
+        }
+      };
     }
-    
-    // Paginação
-    const totalPosts = filteredPosts.length;
-    const totalPages = Math.ceil(totalPosts / limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
-    
-    const pagination: BlogPagination = {
-      currentPage: page,
-      totalPages,
-      totalPosts,
-      postsPerPage: limit,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1
-    };
-    
-    return { posts: paginatedPosts, pagination };
   }
-  
+
   static async getPostBySlug(slug: string): Promise<BlogPost | null> {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return mockPosts.find(post => post.slug === slug) || null;
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select(`
+          *,
+          blog_categories (
+            id,
+            name,
+            slug,
+            description,
+            color,
+            icon
+          )
+        `)
+        .eq('slug', slug)
+        .eq('published', true)
+        .single();
+
+      if (error) {
+        console.error('Error fetching blog post:', error);
+        return null;
+      }
+
+      if (!data) {
+        return null;
+      }
+
+      // Transformar dados do Supabase para o formato esperado
+      const post: BlogPost = {
+        id: data.id,
+        title: data.title,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        content: data.content,
+        author: {
+          name: data.author_name || 'LeadBaze Team',
+          avatar: data.author_avatar || '/avatars/leadbaze-ai.png',
+          bio: data.author_bio || 'Equipe LeadBaze'
+        },
+        category: data.blog_categories ? {
+          id: data.blog_categories.id,
+          name: data.blog_categories.name,
+          slug: data.blog_categories.slug,
+          description: data.blog_categories.description,
+          color: data.blog_categories.color,
+          icon: data.blog_categories.icon,
+          postCount: 0 // Será calculado se necessário
+        } : mockCategories[0], // Fallback para categoria padrão
+        tags: [], // Por enquanto vazio, pode ser implementado depois
+        featuredImage: data.featured_image,
+        published: data.published,
+        publishedAt: data.published_at,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at,
+        readTime: data.read_time || 5,
+        views: data.views || 0,
+        likes: data.likes || 0,
+        seoTitle: data.seo_title || data.title,
+        seoDescription: data.seo_description || data.excerpt,
+        seoKeywords: data.seo_keywords ? data.seo_keywords.split(',') : []
+      };
+
+      return post;
+    } catch (error) {
+      console.error('Error in getPostBySlug:', error);
+      return null;
+    }
   }
   
   static async getCategories(): Promise<BlogCategory[]> {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    return mockCategories;
+    try {
+      // Buscar apenas as 5 categorias principais especificadas
+      const mainCategoryNames = [
+        'Prospecção B2B',
+        'Estratégias de Outbound', 
+        'Gestão e Vendas B2B',
+        'Inteligência de Dados',
+        'Automação de Vendas'
+      ];
+      
+      const { data, error } = await supabase
+        .from('blog_categories')
+        .select('*')
+        .in('name', mainCategoryNames)
+        .order('name');
+      
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return mockCategories; // Fallback para mock
+      }
+      
+      // Transformar dados do Supabase para o formato esperado
+      const categories: BlogCategory[] = await Promise.all((data || []).map(async (category: any) => {
+        // Buscar contagem real de posts para cada categoria
+        const { count } = await supabase
+          .from('blog_posts')
+          .select('*', { count: 'exact', head: true })
+          .eq('published', true)
+          .eq('category_id', category.id);
+        
+        const postCount = count || 0;
+        console.log(`🏷️ [BlogService] Categoria "${category.name}": ${postCount} posts`);
+        
+        return {
+          id: category.id,
+          name: category.name,
+          slug: category.slug,
+          description: category.description || '',
+          color: category.color || 'bg-blue-500',
+          icon: category.icon || '📝',
+          postCount: postCount
+        };
+      }));
+      
+      console.log(`🏷️ [BlogService] Retornando ${categories.length} categorias principais:`, categories.map(c => c.name));
+      
+      return categories;
+    } catch (error) {
+      console.error('Error in getCategories:', error);
+      return mockCategories; // Fallback para mock
+    }
   }
   
   static async getTags(): Promise<BlogTag[]> {

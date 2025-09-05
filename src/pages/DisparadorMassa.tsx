@@ -822,7 +822,7 @@ export default function DisparadorMassa() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-muted-foreground">Carregando...</p>
+          <p className="text-gray-700 dark:text-gray-300">Carregando...</p>
         </div>
       </div>
     )
@@ -848,19 +848,19 @@ export default function DisparadorMassa() {
             </div>
             
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="space-y-4">
-                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                  <Send className="w-4 h-4" />
+              <div className="space-y-3 md:space-y-4">
+                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium shadow-lg">
+                  <Send className="w-3 h-3 md:w-4 md:h-4" />
                   <span>Disparador em Massa</span>
                 </div>
                 
-                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
                   Envie mensagens para suas listas de 
-                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent ml-2">
+                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent ml-1 md:ml-2">
                     Leads
                   </span>
                 </h1>
-                <p className="text-purple-100 text-lg max-w-2xl">
+                <p className="text-purple-100 text-sm md:text-base lg:text-lg max-w-2xl leading-relaxed">
                   Envie mensagens personalizadas para todos os seus leads via WhatsApp de uma só vez!
                 </p>
               </div>
@@ -879,7 +879,7 @@ export default function DisparadorMassa() {
         <div className="mb-6">
           <Link
             to="/dashboard"
-            className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para Dashboard</span>
@@ -893,7 +893,7 @@ export default function DisparadorMassa() {
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
               activeTab === 'campaign'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                : 'bg-card text-muted-foreground hover:text-foreground hover:shadow-md border border-border'
+                : 'bg-card text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:shadow-md border border-border'
             }`}
           >
             <MessageSquare className="w-4 h-4 inline mr-2" />
@@ -904,7 +904,7 @@ export default function DisparadorMassa() {
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
               activeTab === 'config'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                : 'bg-card text-muted-foreground hover:text-foreground hover:shadow-md border border-border'
+                : 'bg-card text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:shadow-md border border-border'
             }`}
           >
             Configuração WhatsApp
@@ -926,7 +926,7 @@ export default function DisparadorMassa() {
                       WhatsApp conectado: {whatsappConfig?.whatsapp_number || 'Via QR Code'}
                     </span>
                     {connectedInstance && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-600 dark:text-gray-400">
                         (Instância: {connectedInstance})
                       </span>
                     )}
@@ -1016,20 +1016,20 @@ export default function DisparadorMassa() {
                   
                   {campaigns.length === 0 ? (
                     <div className="text-center py-8">
-                      <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-4">
+                      <MessageSquare className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                      <p className="text-gray-700 dark:text-gray-300 mb-4">
                         Você ainda não possui campanhas
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         Crie sua primeira campanha para começar
                       </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                       {campaigns.map((campaign) => (
                         <div
                           key={campaign.id}
-                          className="group p-5 border-2 border-gray-200 dark:border-border rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all duration-200 cursor-pointer bg-card hover:bg-muted/30"
+                          className="group p-4 md:p-5 border-2 border-gray-200 dark:border-border rounded-xl hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg hover:shadow-blue-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer bg-card hover:bg-muted/30"
                           onClick={() => handleSelectCampaign(campaign)}
                         >
                           {/* Header do Card */}
@@ -1040,7 +1040,7 @@ export default function DisparadorMassa() {
                               </div>
                               <div>
                                 <h4 className="font-semibold text-foreground text-base leading-tight">{campaign.name}</h4>
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-xs text-gray-600 dark:text-gray-400">
                                   {new Date(campaign.created_at).toLocaleDateString('pt-BR', {
                                     day: '2-digit',
                                     month: '2-digit',
@@ -1056,7 +1056,7 @@ export default function DisparadorMassa() {
                                 e.stopPropagation()
                                 handleDeleteCampaign(campaign.id)
                               }}
-                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-all duration-200"
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95"
                               title="Deletar campanha"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -1066,11 +1066,11 @@ export default function DisparadorMassa() {
                           {/* Informações da Campanha */}
                           <div className="space-y-3">
                             {/* Estatísticas */}
-                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border border-border">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 bg-muted/50 rounded-lg border border-border">
                               <div className="flex items-center space-x-2">
-                                <Users className="w-4 h-4 text-blue-600" />
+                                <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                                 <span className="text-sm font-medium text-foreground">{campaign.total_leads}</span>
-                                <span className="text-xs text-muted-foreground">leads</span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400">leads</span>
                               </div>
                               
                               {/* Status Badge - FORMATO ESPECÍFICO SOLICITADO */}
@@ -1089,7 +1089,7 @@ export default function DisparadorMassa() {
                             {/* Mensagem Preview */}
                             {campaign.message && (
                               <div className="p-3 bg-muted/30 rounded-lg border border-border">
-                                <p className="text-xs text-muted-foreground mb-1">Mensagem:</p>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Mensagem:</p>
                                 <p className="text-sm text-foreground line-clamp-2 leading-relaxed">
                                   {campaign.message}
                                 </p>
@@ -1097,7 +1097,7 @@ export default function DisparadorMassa() {
                             )}
 
                             {/* Indicador de Interação */}
-                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
                               <span>Clique para editar</span>
                               <div className="w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                             </div>
@@ -1122,25 +1122,25 @@ export default function DisparadorMassa() {
                    {/* Padrão de Fundo Sutil */}
                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-30"></div>
                    
-                   <div className="relative p-6">
-                     <div className="flex items-center justify-between">
+                   <div className="relative p-4 md:p-6">
+                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                        {/* Lado Esquerdo - Nome e Status */}
-                       <div className="flex items-center space-x-4">
-                         <div className="w-12 h-12 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
-                           <MessageSquare className="w-6 h-6 text-white" />
+                       <div className="flex items-start space-x-3 md:space-x-4">
+                         <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20 flex-shrink-0">
+                           <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-white" />
                          </div>
-                         <div className="space-y-1">
-                           <h1 className="text-2xl font-bold text-white tracking-tight drop-shadow-sm">
+                         <div className="space-y-2 min-w-0 flex-1">
+                           <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight drop-shadow-sm leading-tight">
                              {selectedCampaign.name}
                            </h1>
-                                                       <div className="flex items-center space-x-3 text-white/90">
-                              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                                <Users className="w-4 h-4" />
-                                <span className="text-sm font-medium">{campaignLeads.length} Leads</span>
+                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-white/90">
+                              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-2 md:px-3 py-1 rounded-full border border-white/20">
+                                <Users className="w-3 h-3 md:w-4 md:h-4" />
+                                <span className="text-xs md:text-sm font-medium">{campaignLeads.length} Leads</span>
                               </div>
-                              <div className="w-1.5 h-1.5 bg-white/60 rounded-full"></div>
-                              <div className="bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                                <span className="text-sm font-medium">
+                              <div className="hidden sm:block w-1.5 h-1.5 bg-white/60 rounded-full"></div>
+                              <div className="bg-white/10 backdrop-blur-sm px-2 md:px-3 py-1 rounded-full border border-white/20">
+                                <span className="text-xs md:text-sm font-medium">
                                   {selectedCampaign.status === 'draft' ? 'Rascunho' : 
                                    selectedCampaign.status === 'sending' ? 'Enviando' : 
                                    selectedCampaign.status === 'completed' ? 'Concluída' : 
@@ -1151,31 +1151,31 @@ export default function DisparadorMassa() {
                          </div>
                        </div>
                        
-                                                                       {/* Lado Direito - Botão Voltar (apenas desktop) */}
-                         <div className="hidden md:flex items-center">
-                           <Button
-                             variant="outline"
-                             onClick={() => {
-                               setShowCampaignDetails(false)
-                               setSelectedCampaign(null)
-                               setSelectedLists([])
-                               setMessage('')
-                               setCampaignLeads([])
-                               setNewLeads([])
-                               setDuplicateLeads([])
-                             }}
-                             className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg"
-                           >
-                             <ArrowLeft className="w-4 h-4 mr-2" />
-                             Voltar
-                           </Button>
-                         </div>
+                       {/* Botão Voltar - Mobile e Desktop */}
+                       <div className="flex items-center justify-end md:justify-start">
+                         <Button
+                           variant="outline"
+                           onClick={() => {
+                             setShowCampaignDetails(false)
+                             setSelectedCampaign(null)
+                             setSelectedLists([])
+                             setMessage('')
+                             setCampaignLeads([])
+                             setNewLeads([])
+                             setDuplicateLeads([])
+                           }}
+                           className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300 px-3 md:px-4 py-2 rounded-xl font-medium shadow-md hover:shadow-lg hover:scale-105 active:scale-95 text-sm md:text-base"
+                         >
+                           <ArrowLeft className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                           Voltar
+                         </Button>
+                       </div>
                      </div>
                    </div>
                  </div>
 
                 {/* Grid Principal - Layout Profissional */}
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                   {/* Coluna 1: Gestão de Listas */}
                   <div className="xl:col-span-1 space-y-6">
                     {/* Seleção de Listas - Card Elegante */}
@@ -1485,9 +1485,9 @@ export default function DisparadorMassa() {
                                     Listas já utilizadas nesta campanha:
                                   </h4>
                                                                     {usedListsSummary.map((usedList) => (
-                                       <div key={usedList.list_id} className="flex items-center justify-between p-3 disparador-fundo-claro dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                                       <div key={usedList.list_id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 disparador-fundo-claro dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                                          <div className="flex items-center space-x-3">
-                                           <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                           <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center flex-shrink-0">
                                              <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
                                            </div>
                                            <div>
@@ -1725,9 +1725,9 @@ Entre em contato conosco para mais detalhes!"
               ×
             </button>
             
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Users className="w-4 h-4 text-white" />
                 </div>
                 <div>
@@ -1786,9 +1786,9 @@ Entre em contato conosco para mais detalhes!"
               ×
             </button>
             
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <Trash2 className="w-4 h-4 text-white" />
                 </div>
                 <div>

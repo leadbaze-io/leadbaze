@@ -4,6 +4,8 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const { getBlogAutomationService } = require('./services/blogAutomationService');
+const blogQueueRoutes = require('./routes/blogQueue');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
@@ -46,11 +48,25 @@ const createRateLimit = (windowMs, max, message) => {
   });
 };
 
-// Rate limits específicos
+// Rate limits específicos - OTIMIZADOS PARA PRODUÇÃO
 const generalLimit = createRateLimit(
   15 * 60 * 1000, // 15 minutos
-  100, // 100 requests por IP
+  500, // 500 requests por IP (muito mais permissivo)
   'Muitas requisições. Tente novamente em 15 minutos.'
+);
+
+// Rate limit MUITO permissivo para dashboard
+const dashboardLimit = createRateLimit(
+  5 * 60 * 1000, // 5 minutos
+  200, // 200 requests por IP para dashboard (muito mais permissivo)
+  'Muitas requisições do dashboard. Tente novamente em 5 minutos.'
+);
+
+// Rate limit para processamento (ainda mais permissivo)
+const processLimit = createRateLimit(
+  1 * 60 * 1000, // 1 minuto
+  10, // 10 processamentos por minuto
+  'Muitos processamentos. Tente novamente em 1 minuto.'
 );
 
 const campaignLimit = createRateLimit(
@@ -613,6 +629,283 @@ app.use((error, req, res, next) => {
   });
 });
 
+// =====================================================
+// BLOG AUTOMATION ENDPOINTS
+// =====================================================
+
+// Middleware para verificar admin autorizado
+const checkAdminAuth = (req, res, next) => {
+  const userEmail = req.headers['x-user-email'];
+  const automationService = getBlogAutomationService();
+  
+  if (!userEmail || !automationService.isAuthorizedAdmin(userEmail)) {
+    return res.status(403).json({
+      success: false,
+      error: 'Acesso negado. Apenas administradores autorizados.'
+    });
+  }
+  
+  next();
+};
+
+// Health check do sistema de automação
+app.get('/api/blog/automation/health', async (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const health = await automationService.healthCheck();
+    
+    res.json(health);
+  } catch (error) {
+    console.error('❌ Erro no health check de automação:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro no health check de automação'
+    });
+  }
+});
+
+// Obter estatísticas (público)
+app.get('/api/blog/automation/stats', async (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const stats = await automationService.getStats();
+    
+    res.json(stats);
+  } catch (error) {
+    console.error('❌ Erro ao obter estatísticas:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao obter estatísticas'
+    });
+  }
+});
+
+// Rotas do blog queue (públicas para inserção manual)
+app.use('/api/blog/queue', blogQueueRoutes);
+
+// Endpoints admin (requerem autenticação) - com rate limit específico
+app.use('/api/blog/automation/admin/*', dashboardLimit, checkAdminAuth);
+
+// Processar fila manualmente (admin) - COM RATE LIMIT ESPECÍFICO
+app.post('/api/blog/automation/admin/process', processLimit, async (req, res) => {
+  console.log('🎯 [Backend] ===== RECEBENDO REQUISIÇÃO DE PROCESSAMENTO =====');
+  console.log('⏰ [Backend] Timestamp:', new Date().toISOString());
+  console.log('👤 [Backend] User email:', req.headers['x-user-email']);
+  console.log('🌐 [Backend] IP:', req.ip);
+  console.log('📋 [Backend] Headers:', JSON.stringify(req.headers, null, 2));
+  
+  try {
+    console.log('🔧 [Backend] Obtendo BlogAutomationService...');
+    const automationService = getBlogAutomationService();
+    console.log('✅ [Backend] Serviço obtido com sucesso');
+    
+    console.log('🚀 [Backend] Chamando automationService.processQueue()...');
+    const result = await automationService.processQueue();
+    
+    console.log('✅ [Backend] ===== RESULTADO DO PROCESSAMENTO =====');
+    console.log('📄 [Backend] Tipo do resultado:', typeof result);
+    console.log('📄 [Backend] Resultado completo:', JSON.stringify(result, null, 2));
+    console.log('📄 [Backend] result.success:', result?.success);
+    console.log('📄 [Backend] result.processed:', result?.processed);
+    console.log('📄 [Backend] result.errors:', result?.errors);
+    console.log('📄 [Backend] result.details:', result?.details);
+    
+    console.log('📤 [Backend] Enviando resposta para o frontend...');
+    res.json(result);
+    console.log('✅ [Backend] Resposta enviada com sucesso');
+    
+  } catch (error) {
+    console.error('❌ [Backend] ===== ERRO NO PROCESSAMENTO =====');
+    console.error('❌ [Backend] Tipo do erro:', typeof error);
+    console.error('❌ [Backend] Erro completo:', error);
+    console.error('❌ [Backend] Error message:', error.message);
+    console.error('❌ [Backend] Error stack:', error.stack);
+    
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao processar fila',
+      details: error.message
+    });
+  }
+});
+
+// Obter fila completa (admin)
+app.get('/api/blog/automation/admin/queue', async (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const limit = parseInt(req.query.limit) || 50;
+    const queue = await automationService.getQueue(limit);
+    
+    res.json(queue);
+  } catch (error) {
+    console.error('❌ Erro ao obter fila:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao obter fila'
+    });
+  }
+});
+
+// Processar item específico (admin)
+app.post('/api/blog/automation/admin/process/:itemId', async (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const { itemId } = req.params;
+    const result = await automationService.processItem(itemId);
+    
+    res.json(result);
+  } catch (error) {
+    console.error('❌ Erro ao processar item:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao processar item'
+    });
+  }
+});
+
+// Obter configuração (admin)
+app.get('/api/blog/automation/admin/config', (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const config = automationService.getConfig();
+    
+    res.json({
+      success: true,
+      config
+    });
+  } catch (error) {
+    console.error('❌ Erro ao obter configuração:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao obter configuração'
+    });
+  }
+});
+
+// Atualizar configuração (admin)
+app.put('/api/blog/automation/admin/config', (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const newConfig = req.body;
+    
+    automationService.updateConfig(newConfig);
+    
+    res.json({
+      success: true,
+      message: 'Configuração atualizada com sucesso',
+      config: automationService.getConfig()
+    });
+  } catch (error) {
+    console.error('❌ Erro ao atualizar configuração:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao atualizar configuração'
+    });
+  }
+});
+
+// Controlar scheduler (admin)
+app.post('/api/blog/automation/admin/scheduler/:action', (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const { action } = req.params;
+    
+    if (action === 'start') {
+      automationService.startScheduler();
+      res.json({
+        success: true,
+        message: 'Scheduler iniciado com sucesso'
+      });
+    } else if (action === 'stop') {
+      automationService.stopScheduler();
+      res.json({
+        success: true,
+        message: 'Scheduler parado com sucesso'
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        error: 'Ação inválida. Use "start" ou "stop"'
+      });
+    }
+  } catch (error) {
+    console.error('❌ Erro ao controlar scheduler:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao controlar scheduler'
+    });
+  }
+});
+
+// Obter logs (admin)
+app.get('/api/blog/automation/admin/logs', async (req, res) => {
+  try {
+    const automationService = getBlogAutomationService();
+    const limit = parseInt(req.query.limit) || 100;
+    const logs = await automationService.getLogs(limit);
+    
+    res.json(logs);
+  } catch (error) {
+    console.error('❌ Erro ao obter logs:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao obter logs'
+    });
+  }
+});
+
+// Webhook para receber dados do N8N
+app.post('/api/blog/automation/webhook', async (req, res) => {
+  try {
+    console.log('📡 Webhook N8N recebido:', req.body);
+    
+    const { title, content, category, date, imageurl, autor } = req.body;
+    
+    // Validação básica
+    if (!title || !content || !category || !date) {
+      return res.status(400).json({
+        success: false,
+        error: 'Campos obrigatórios: title, content, category, date'
+      });
+    }
+    
+    // Inserir na fila N8N
+    const automationService = getBlogAutomationService();
+    const result = await automationService.addToQueue({
+      title,
+      content,
+      category,
+      date,
+      imageurl: imageurl || null,
+      autor: autor || 'LeadBaze Team'
+    });
+    
+    if (result.success) {
+      console.log('✅ Artigo adicionado à fila:', result.data);
+      res.json({
+        success: true,
+        message: 'Artigo adicionado à fila com sucesso',
+        data: result.data
+      });
+    } else {
+      console.error('❌ Erro ao adicionar à fila:', result.error);
+      res.status(500).json({
+        success: false,
+        error: 'Erro ao adicionar artigo à fila',
+        details: result.error
+      });
+    }
+    
+  } catch (error) {
+    console.error('❌ Erro no webhook N8N:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor',
+      details: error.message
+    });
+  }
+});
+
 // Rota 404
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -628,6 +921,16 @@ app.listen(PORT, () => {
   console.log(`🌐 CORS Origin: ${process.env.CORS_ORIGIN}`);
   console.log(`🔧 Ambiente: ${process.env.NODE_ENV}`);
   console.log(`🔗 N8N Webhook URL configurada: ${N8N_WEBHOOK_URL ? '✅' : '❌'}`);
+  
+  // Iniciar serviço de automação do blog
+  try {
+    const automationService = getBlogAutomationService();
+    automationService.startScheduler();
+    console.log('🤖 Blog Automation Service iniciado');
+    console.log('📧 Admin autorizado: creaty12345@gmail.com');
+  } catch (error) {
+    console.error('❌ Erro ao iniciar Blog Automation Service:', error);
+  }
 });
 
 module.exports = app; 
