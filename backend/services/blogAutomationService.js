@@ -210,7 +210,7 @@ class BlogAutomationService {
                             content: formattedData.content,
                             featured_image: formattedData.featured_image,
                             category_id: categoryId,
-                            author_name: formattedData.autor || "LeadBaze Team",
+                            author_name: formattedData.author_name || "LeadBaze Team",
                             author_avatar: '/avatars/leadbaze-ai.png',
                             published: true,
                             published_at: new Date().toISOString(),
@@ -446,7 +446,7 @@ class BlogAutomationService {
                             content: formattedData.content, // Já formatado em HTML
                             featured_image: formattedData.featured_image,
                             category_id: categoryId,
-                            author_name: formattedData.autor || "LeadBaze Team",
+                            author_name: formattedData.author_name || "LeadBaze Team",
                             author_avatar: '/avatars/leadbaze-ai.png',
                             published: true,
                             published_at: new Date().toISOString(), // Data atual
