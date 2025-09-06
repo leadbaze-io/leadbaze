@@ -31,7 +31,7 @@ export class CampaignLeadsService {
       // Verificar se há leads com dados similares
       const phoneGroups = new Map()
       leads.forEach((lead, index) => {
-        const phone = (lead.phone || '').replace(/\D/g, '')
+        const phone = (lead?.phone || '').replace(/\D/g, '')
         if (!phoneGroups.has(phone)) {
           phoneGroups.set(phone, [])
         }
@@ -350,14 +350,17 @@ export class CampaignLeadsService {
    * (combinação única para evitar duplicatas incorretas)
    */
   private static generateLeadHash(lead: Lead): string {
-    // Normalizar telefone
-    const normalizedPhone = (lead.phone || '').replace(/\D/g, '') // Apenas números
+    // Normalizar telefone (com verificação de segurança)
+    const phone = lead?.phone || ''
+    const normalizedPhone = phone.replace(/\D/g, '') // Apenas números
     
-    // Normalizar nome
-    const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+    // Normalizar nome (com verificação de segurança)
+    const name = lead?.name || ''
+    const normalizedName = name.toLowerCase().trim().replace(/\s+/g, ' ')
     
-    // Normalizar endereço
-    const normalizedAddress = (lead.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
+    // Normalizar endereço (com verificação de segurança)
+    const address = lead?.address || ''
+    const normalizedAddress = address.toLowerCase().trim().replace(/\s+/g, ' ')
     
     // Se não há telefone, usar nome + endereço como identificador
     if (!normalizedPhone) {
@@ -372,9 +375,9 @@ export class CampaignLeadsService {
     // Log detalhado para debug (apenas para telefones específicos)
     if (normalizedPhone === '31987264531') {
       console.log('🔍 DEBUG generateLeadHash para telefone 31987264531:')
-      console.log('- Nome original:', lead.name)
-      console.log('- Telefone original:', lead.phone)
-      console.log('- Endereço original:', lead.address)
+      console.log('- Nome original:', name)
+      console.log('- Telefone original:', phone)
+      console.log('- Endereço original:', address)
       console.log('- Telefone normalizado:', normalizedPhone)
       console.log('- Nome normalizado:', normalizedName)
       console.log('- Endereço normalizado:', normalizedAddress)
