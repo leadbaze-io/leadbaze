@@ -208,7 +208,7 @@ class BlogAutomationService {
                             slug: finalSlug,
                             excerpt: formattedData.excerpt,
                             content: formattedData.content,
-                            featured_image: formattedData.imageurl,
+                            featured_image: formattedData.featured_image,
                             category_id: categoryId,
                             author_name: formattedData.autor || "LeadBaze Team",
                             author_avatar: '/avatars/leadbaze-ai.png',
@@ -444,7 +444,7 @@ class BlogAutomationService {
                             slug: finalSlug,
                             excerpt: formattedData.excerpt,
                             content: formattedData.content, // Já formatado em HTML
-                            featured_image: formattedData.imageurl,
+                            featured_image: formattedData.featured_image,
                             category_id: categoryId,
                             author_name: formattedData.autor || "LeadBaze Team",
                             author_avatar: '/avatars/leadbaze-ai.png',
