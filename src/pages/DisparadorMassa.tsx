@@ -272,7 +272,7 @@ export default function DisparadorMassa() {
     setIsCreatingCampaign(false)
   }
 
-  // Verificar leads duplicados
+  // Verificar leads duplicados (melhorado para considerar telefone + nome + endereço)
   const checkDuplicateLeads = (selectedListIds: string[]): { newLeads: Lead[], duplicateLeads: Lead[] } => {
     if (!selectedCampaign) {
       return { newLeads: [], duplicateLeads: [] }
@@ -286,24 +286,36 @@ export default function DisparadorMassa() {
       }
     })
 
-    // Criar um Set com os telefones já existentes na campanha
-    const existingPhones = new Set(
-      campaignLeads.map(lead => lead.lead_data.phone?.replace(/\D/g, '')).filter(Boolean)
+    // Criar um Set com os leads já existentes na campanha (usando telefone + nome + endereço)
+    const existingLeads = new Set(
+      campaignLeads.map(lead => {
+        const phone = (lead.lead_data.phone || '').replace(/\D/g, '')
+        const name = (lead.lead_data.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+        const address = (lead.lead_data.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
+        
+        return phone 
+          ? `${phone}|${name}|${address}`
+          : `${name}|${address}`
+      })
     )
 
     const newLeads: Lead[] = []
     const duplicateLeads: Lead[] = []
 
     allSelectedLeads.forEach(lead => {
-      const normalizedPhone = lead.phone?.replace(/\D/g, '')
+      const normalizedPhone = (lead.phone || '').replace(/\D/g, '')
+      const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+      const normalizedAddress = (lead.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
       
-      if (normalizedPhone && existingPhones.has(normalizedPhone)) {
+      const leadKey = normalizedPhone 
+        ? `${normalizedPhone}|${normalizedName}|${normalizedAddress}`
+        : `${normalizedName}|${normalizedAddress}`
+      
+      if (existingLeads.has(leadKey)) {
         duplicateLeads.push(lead)
       } else {
         newLeads.push(lead)
-        if (normalizedPhone) {
-          existingPhones.add(normalizedPhone)
-        }
+        existingLeads.add(leadKey)
       }
     })
 

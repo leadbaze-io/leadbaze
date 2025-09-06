@@ -346,29 +346,40 @@ export class CampaignLeadsService {
   // ==============================================
 
   /**
-   * Gerar hash único para um lead baseado apenas no telefone
-   * (telefone é o identificador único real para evitar duplicatas)
+   * Gerar hash único para um lead baseado em telefone + nome + endereço
+   * (combinação única para evitar duplicatas incorretas)
    */
   private static generateLeadHash(lead: Lead): string {
-    // Normalizar apenas o telefone - é o identificador único real
+    // Normalizar telefone
     const normalizedPhone = (lead.phone || '').replace(/\D/g, '') // Apenas números
     
-    // Se não há telefone, usar nome como fallback
+    // Normalizar nome
+    const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+    
+    // Normalizar endereço
+    const normalizedAddress = (lead.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
+    
+    // Se não há telefone, usar nome + endereço como identificador
     if (!normalizedPhone) {
-      const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
-      return this.simpleHash(normalizedName)
+      const combinedData = `${normalizedName}|${normalizedAddress}`
+      return this.simpleHash(combinedData)
     }
     
-    // Usar apenas o telefone como identificador único
-    const finalHash = this.simpleHash(normalizedPhone)
+    // Usar telefone + nome + endereço como identificador único
+    const combinedData = `${normalizedPhone}|${normalizedName}|${normalizedAddress}`
+    const finalHash = this.simpleHash(combinedData)
     
-    // Log detalhado para debug (apenas para telefones duplicados)
+    // Log detalhado para debug (apenas para telefones específicos)
     if (normalizedPhone === '31987264531') {
       console.log('🔍 DEBUG generateLeadHash para telefone 31987264531:')
       console.log('- Nome original:', lead.name)
       console.log('- Telefone original:', lead.phone)
+      console.log('- Endereço original:', lead.address)
       console.log('- Telefone normalizado:', normalizedPhone)
-      console.log('- Hash final (baseado apenas no telefone):', finalHash)
+      console.log('- Nome normalizado:', normalizedName)
+      console.log('- Endereço normalizado:', normalizedAddress)
+      console.log('- Dados combinados:', combinedData)
+      console.log('- Hash final (baseado em telefone + nome + endereço):', finalHash)
     }
     
     return finalHash
