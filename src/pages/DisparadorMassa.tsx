@@ -272,7 +272,7 @@ export default function DisparadorMassa() {
     setIsCreatingCampaign(false)
   }
 
-  // Verificar leads duplicados (melhorado para considerar telefone + nome + endereço)
+  // Verificar leads duplicados (baseado PRINCIPALMENTE no telefone)
   const checkDuplicateLeads = (selectedListIds: string[]): { newLeads: Lead[], duplicateLeads: Lead[] } => {
     if (!selectedCampaign) {
       return { newLeads: [], duplicateLeads: [] }
@@ -286,17 +286,11 @@ export default function DisparadorMassa() {
       }
     })
 
-    // Criar um Set com os leads já existentes na campanha (usando telefone + nome + endereço)
-    const existingLeads = new Set(
-      campaignLeads.map(lead => {
-        const phone = (lead.lead_data.phone || '').replace(/\D/g, '')
-        const name = (lead.lead_data.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
-        const address = (lead.lead_data.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
-        
-        return phone 
-          ? `${phone}|${name}|${address}`
-          : `${name}|${address}`
-      })
+    // Criar um Set com os telefones já existentes na campanha
+    const existingPhones = new Set(
+      campaignLeads
+        .map(lead => (lead.lead_data.phone || '').replace(/\D/g, ''))
+        .filter(phone => phone) // Apenas telefones válidos
     )
 
     const newLeads: Lead[] = []
@@ -304,18 +298,36 @@ export default function DisparadorMassa() {
 
     allSelectedLeads.forEach(lead => {
       const normalizedPhone = (lead.phone || '').replace(/\D/g, '')
-      const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
-      const normalizedAddress = (lead.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
       
-      const leadKey = normalizedPhone 
-        ? `${normalizedPhone}|${normalizedName}|${normalizedAddress}`
-        : `${normalizedName}|${normalizedAddress}`
-      
-      if (existingLeads.has(leadKey)) {
-        duplicateLeads.push(lead)
+      // Se tem telefone, verificar duplicata por telefone
+      if (normalizedPhone) {
+        if (existingPhones.has(normalizedPhone)) {
+          duplicateLeads.push(lead)
+        } else {
+          newLeads.push(lead)
+          existingPhones.add(normalizedPhone)
+        }
       } else {
-        newLeads.push(lead)
-        existingLeads.add(leadKey)
+        // Se não tem telefone, verificar por nome + endereço (fallback)
+        const normalizedName = (lead.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+        const normalizedAddress = (lead.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
+        const fallbackKey = `${normalizedName}|${normalizedAddress}`
+        
+        // Verificar se já existe lead sem telefone com mesmo nome + endereço
+        const existingFallback = campaignLeads.some(existing => {
+          const existingPhone = (existing.lead_data.phone || '').replace(/\D/g, '')
+          if (existingPhone) return false // Se tem telefone, não é fallback
+          
+          const existingName = (existing.lead_data.name || '').toLowerCase().trim().replace(/\s+/g, ' ')
+          const existingAddress = (existing.lead_data.address || '').toLowerCase().trim().replace(/\s+/g, ' ')
+          return `${existingName}|${existingAddress}` === fallbackKey
+        })
+        
+        if (existingFallback) {
+          duplicateLeads.push(lead)
+        } else {
+          newLeads.push(lead)
+        }
       }
     })
 

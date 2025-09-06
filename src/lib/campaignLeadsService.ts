@@ -15,8 +15,27 @@ export class CampaignLeadsService {
     leads: Lead[]
   ): Promise<CampaignLeadsOperation> {
     try {
-      // Gerar hashes únicos para cada lead
-      const leadsWithHashes = leads.map(lead => ({
+      // Validar parâmetros de entrada
+      if (!campaignId || !listId || !Array.isArray(leads)) {
+        throw new Error('Parâmetros inválidos: campaignId, listId e leads são obrigatórios')
+      }
+
+      // Filtrar leads válidos (não null/undefined)
+      const validLeads = leads.filter(lead => lead && typeof lead === 'object')
+      
+      if (validLeads.length === 0) {
+        return {
+          success: true,
+          message: 'Nenhum lead válido encontrado para adicionar',
+          added_leads: 0,
+          removed_leads: 0,
+          duplicate_leads: 0,
+          total_campaign_leads: await this.getCampaignLeadsCount(campaignId)
+        }
+      }
+
+      // Gerar hashes únicos para cada lead válido
+      const leadsWithHashes = validLeads.map(lead => ({
         campaign_id: campaignId,
         list_id: listId,
         lead_data: lead,
@@ -26,26 +45,31 @@ export class CampaignLeadsService {
       console.log('🔍 DEBUG addLeadsFromList:')
       console.log('- Total de leads para inserir:', leadsWithHashes.length)
       console.log('- Hashes únicos gerados:', new Set(leadsWithHashes.map(l => l.lead_hash)).size)
-      console.log('- Primeiro hash:', leadsWithHashes[0]?.lead_hash)
+      console.log('- Primeiro hash:', leadsWithHashes[0]?.lead_hash || 'N/A')
       
       // Verificar se há leads com dados similares
       const phoneGroups = new Map()
-      leads.forEach((lead, index) => {
+      validLeads.forEach((lead, index) => {
         const phone = (lead?.phone || '').replace(/\D/g, '')
         if (!phoneGroups.has(phone)) {
           phoneGroups.set(phone, [])
         }
-        phoneGroups.get(phone).push({ index, lead })
+        const group = phoneGroups.get(phone)
+        if (group) {
+          group.push({ index, lead })
+        }
       })
       
       console.log('- Grupos por telefone:', phoneGroups.size)
       phoneGroups.forEach((group, phone) => {
-        if (group.length > 1) {
+        if (group && group.length > 1) {
           console.log(`- Telefone ${phone} tem ${group.length} leads:`)
-          group.forEach((g: { lead: CampaignLead }, i: number) => {
-            const lead = g.lead
-            const hash = this.generateLeadHash(lead.lead_data)
-            console.log(`  ${i + 1}. Nome: "${lead.lead_data.name}", Endereço: "${lead.lead_data.address}", Hash: "${hash}"`)
+          group.forEach((g: { lead: Lead }, i: number) => {
+            const lead = g?.lead
+            if (lead) {
+              const hash = this.generateLeadHash(lead)
+              console.log(`  ${i + 1}. Nome: "${lead?.name || 'N/A'}", Endereço: "${lead?.address || 'N/A'}", Hash: "${hash}"`)
+            }
           })
         }
       })
@@ -346,46 +370,54 @@ export class CampaignLeadsService {
   // ==============================================
 
   /**
-   * Gerar hash único para um lead baseado em telefone + nome + endereço
-   * (combinação única para evitar duplicatas incorretas)
+   * Gerar hash único para um lead baseado PRINCIPALMENTE no telefone
+   * (telefone é o identificador único real para evitar duplicatas)
    */
   private static generateLeadHash(lead: Lead): string {
+    // Verificação de segurança para lead
+    if (!lead || typeof lead !== 'object') {
+      console.warn('⚠️ Lead inválido recebido:', lead)
+      return this.simpleHash('invalid_lead_' + Date.now())
+    }
+
     // Normalizar telefone (com verificação de segurança)
     const phone = lead?.phone || ''
     const normalizedPhone = phone.replace(/\D/g, '') // Apenas números
     
-    // Normalizar nome (com verificação de segurança)
+    // Se há telefone, usar APENAS o telefone como identificador único
+    if (normalizedPhone) {
+      const finalHash = this.simpleHash(normalizedPhone)
+      
+      // Log detalhado para debug (apenas para telefones específicos)
+      if (normalizedPhone === '31987264531') {
+        console.log('🔍 DEBUG generateLeadHash para telefone 31987264531:')
+        console.log('- Nome original:', lead?.name || 'N/A')
+        console.log('- Telefone original:', phone)
+        console.log('- Endereço original:', lead?.address || 'N/A')
+        console.log('- Telefone normalizado:', normalizedPhone)
+        console.log('- Hash final (baseado APENAS no telefone):', finalHash)
+        console.log('- ✅ Mesmo telefone = Mesmo contato (duplicata)')
+      }
+      
+      return finalHash
+    }
+    
+    // Fallback: Se não há telefone, usar nome + endereço
     const name = lead?.name || ''
     const normalizedName = name.toLowerCase().trim().replace(/\s+/g, ' ')
-    
-    // Normalizar endereço (com verificação de segurança)
     const address = lead?.address || ''
     const normalizedAddress = address.toLowerCase().trim().replace(/\s+/g, ' ')
     
-    // Se não há telefone, usar nome + endereço como identificador
-    if (!normalizedPhone) {
-      const combinedData = `${normalizedName}|${normalizedAddress}`
-      return this.simpleHash(combinedData)
-    }
+    const combinedData = `${normalizedName}|${normalizedAddress}`
+    const fallbackHash = this.simpleHash(combinedData)
     
-    // Usar telefone + nome + endereço como identificador único
-    const combinedData = `${normalizedPhone}|${normalizedName}|${normalizedAddress}`
-    const finalHash = this.simpleHash(combinedData)
+    console.log('⚠️ Lead sem telefone usando fallback:', {
+      name: name || 'N/A',
+      address: address || 'N/A',
+      hash: fallbackHash
+    })
     
-    // Log detalhado para debug (apenas para telefones específicos)
-    if (normalizedPhone === '31987264531') {
-      console.log('🔍 DEBUG generateLeadHash para telefone 31987264531:')
-      console.log('- Nome original:', name)
-      console.log('- Telefone original:', phone)
-      console.log('- Endereço original:', address)
-      console.log('- Telefone normalizado:', normalizedPhone)
-      console.log('- Nome normalizado:', normalizedName)
-      console.log('- Endereço normalizado:', normalizedAddress)
-      console.log('- Dados combinados:', combinedData)
-      console.log('- Hash final (baseado em telefone + nome + endereço):', finalHash)
-    }
-    
-    return finalHash
+    return fallbackHash
   }
 
   /**
