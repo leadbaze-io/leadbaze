@@ -108,10 +108,9 @@ router.get('/events', (req, res) => {
     // Adicionar cliente à lista
     clients.add(res);
 
-    // Enviar notificações existentes
-    notifications.slice(-10).forEach(notification => {
-        res.write(`data: ${JSON.stringify(notification)}\n\n`);
-    });
+    // NÃO enviar notificações antigas - apenas heartbeat inicial
+    console.log('🔗 [SSE] Cliente conectado, enviando apenas heartbeat inicial');
+    res.write(`data: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`);
 
     // Enviar heartbeat a cada 30 segundos
     const heartbeat = setInterval(() => {

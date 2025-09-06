@@ -83,8 +83,15 @@ export default function BlogRealtimeMonitor() {
       try {
         const data = JSON.parse(event.data);
         
-        // Ignorar heartbeats
-        if (data.type === 'heartbeat') {
+        // Ignorar heartbeats e mensagens de conexão
+        if (data.type === 'heartbeat' || data.type === 'connected') {
+          return;
+        }
+        
+        // Verificar se já existe uma notificação com o mesmo ID
+        const existingNotification = notifications.find(n => n.id === data.id);
+        if (existingNotification) {
+          console.log('🔄 Notificação duplicada ignorada:', data.id);
           return;
         }
         
