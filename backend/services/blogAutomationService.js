@@ -144,8 +144,105 @@ class BlogAutomationService {
                 try {
                     console.log(`🔄 [Realtime] Processando item: ${item.title}`);
                     
-                    // Usar a mesma lógica do processamento normal
-                    const result = await this.processSingleItem(item);
+                    // Usar a mesma lógica do processamento normal (copiada do processQueue)
+                    const formattedData = this.contentFormatter.formatPost({
+                        title: item.title,
+                        content: item.content,
+                        category: item.category,
+                        date: item.date,
+                        imageurl: item.imageurl,
+                        autor: item.autor
+                    });
+                    
+                    // Buscar categoria
+                    const { data: categoryData } = await this.supabase
+                        .from('blog_categories')
+                        .select('id')
+                        .eq('name', formattedData.category)
+                        .single();
+                    
+                    let categoryId = categoryData?.id;
+                    
+                    // Se categoria não existe, usar padrão
+                    if (!categoryId) {
+                        const { data: defaultCategory } = await this.supabase
+                            .from('blog_categories')
+                            .select('id')
+                            .eq('name', 'Gestão e Vendas B2B')
+                            .single();
+                        categoryId = defaultCategory?.id;
+                        
+                        if (!categoryId) {
+                            const { data: firstCategory } = await this.supabase
+                                .from('blog_categories')
+                                .select('id')
+                                .limit(1)
+                                .single();
+                            categoryId = firstCategory?.id;
+                        }
+                    }
+                    
+                    // Gerar slug único
+                    const baseSlug = this.generateSlug(formattedData.title);
+                    let finalSlug = baseSlug;
+                    let slugCounter = 1;
+                    
+                    while (true) {
+                        const { data: existingSlug } = await this.supabase
+                            .from('blog_posts')
+                            .select('id')
+                            .eq('slug', finalSlug)
+                            .single();
+                        
+                        if (!existingSlug) break;
+                        
+                        finalSlug = `${baseSlug}-${slugCounter}`;
+                        slugCounter++;
+                    }
+                    
+                    // Inserir post no blog
+                    const { data: newPost, error: insertError } = await this.supabase
+                        .from('blog_posts')
+                        .insert([{
+                            title: formattedData.title,
+                            slug: finalSlug,
+                            excerpt: formattedData.excerpt,
+                            content: formattedData.content,
+                            featured_image: formattedData.imageurl,
+                            category_id: categoryId,
+                            author_name: formattedData.autor || "LeadBaze Team",
+                            author_avatar: '/avatars/leadbaze-ai.png',
+                            published: true,
+                            published_at: new Date().toISOString(),
+                            read_time: Math.max(1, Math.ceil(formattedData.content.length / 1250)),
+                            seo_title: formattedData.title,
+                            seo_description: formattedData.excerpt,
+                            n8n_sync_id: item.id.toString(),
+                            n8n_last_sync: new Date().toISOString()
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (insertError) {
+                        throw new Error(`Erro ao inserir post: ${insertError.message}`);
+                    }
+                    
+                    // Marcar como processado
+                    const { error: updateError } = await this.supabase
+                        .from('n8n_blog_queue')
+                        .update({
+                            processed: true,
+                            blog_post_id: newPost.id,
+                            processed_at: new Date().toISOString(),
+                            error_message: null
+                        })
+                        .eq('id', item.id);
+                    
+                    if (updateError) {
+                        throw new Error(`Erro ao atualizar fila: ${updateError.message}`);
+                    }
+                    
+                    const result = { id: newPost.id };
                     
                     processedCount++;
                     results.push({

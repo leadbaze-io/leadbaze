@@ -229,12 +229,21 @@ export default function BlogRealtimeMonitor() {
             {notifications.length > 0 && (
               <button
                 onClick={() => {
+                  // Limpar estado local
                   setNotifications([]);
+                  // Limpar localStorage
                   localStorage.removeItem('blog-realtime-notifications');
+                  // Resetar contador de notificações
+                  setStatus(prev => ({
+                    ...prev,
+                    totalNotifications: 0,
+                    lastNotification: null
+                  }));
+                  console.log('🧹 Notificações limpas do localStorage');
                 }}
-                className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               >
-                Limpar
+                Limpar Todas
               </button>
             )}
           </div>
