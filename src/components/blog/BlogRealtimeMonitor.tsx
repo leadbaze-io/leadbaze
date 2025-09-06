@@ -7,6 +7,13 @@ interface RealtimeNotification {
   created_at: string;
   action: string;
   timestamp: string;
+  details?: {
+    pending?: number;
+    processed?: number;
+    errors?: number;
+    error?: string;
+    [key: string]: any;
+  };
 }
 
 interface RealtimeStatus {
