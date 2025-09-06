@@ -96,3 +96,4 @@ $$ LANGUAGE plpgsql;
 -- 6. Testar o sistema
 SELECT * FROM test_auto_processing();
 SELECT * FROM check_processing_triggers();
+

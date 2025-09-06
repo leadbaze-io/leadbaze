@@ -179,3 +179,4 @@ BEGIN
     AND t.trigger_name LIKE '%auto_process%';
 END;
 $$ LANGUAGE plpgsql;
+

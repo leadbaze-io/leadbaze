@@ -79,3 +79,4 @@ SELECT
 FROM information_schema.triggers 
 WHERE event_object_table = 'n8n_blog_queue'
 AND trigger_name = 'trigger_blog_notification';
+
