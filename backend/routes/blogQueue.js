@@ -17,45 +17,104 @@ function getSupabaseClient() {
 }
 
 /**
+ * GET /api/blog/queue/test
+ * Testar conexão com Supabase
+ */
+router.get('/test', async (req, res) => {
+    try {
+        console.log('🔍 [BlogQueue] Testando conexão com Supabase...');
+        
+        const supabase = getSupabaseClient();
+        console.log('🔗 [BlogQueue] Cliente Supabase criado');
+        
+        // Testar conexão fazendo uma consulta simples
+        const { data, error } = await supabase
+            .from('n8n_blog_queue')
+            .select('count')
+            .limit(1);
+        
+        if (error) {
+            console.error('❌ [BlogQueue] Erro na conexão:', error);
+            return res.status(500).json({
+                success: false,
+                error: 'Erro na conexão com Supabase',
+                details: error.message
+            });
+        }
+        
+        console.log('✅ [BlogQueue] Conexão com Supabase OK');
+        res.json({
+            success: true,
+            message: 'Conexão com Supabase funcionando',
+            data: data
+        });
+        
+    } catch (error) {
+        console.error('❌ [BlogQueue] Erro no teste:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erro no teste de conexão',
+            details: error.message
+        });
+    }
+});
+
+/**
  * POST /api/blog/queue/add
  * Adicionar post manualmente à fila
  */
 router.post('/add', async (req, res) => {
     try {
+        console.log('🔍 [BlogQueue] Recebendo requisição para adicionar à fila');
+        console.log('📦 [BlogQueue] Body recebido:', JSON.stringify(req.body, null, 2));
+        
         const { title, content, category, date, imageurl, autor } = req.body;
         
         // Validação
         if (!title || !content || !category || !date) {
+            console.log('❌ [BlogQueue] Validação falhou - campos obrigatórios ausentes');
+            console.log('📋 [BlogQueue] Campos recebidos:', { title: !!title, content: !!content, category: !!category, date: !!date });
             return res.status(400).json({
                 success: false,
                 error: 'Campos obrigatórios: title, content, category, date'
             });
         }
         
+        console.log('✅ [BlogQueue] Validação passou, tentando conectar ao Supabase...');
+        
         // Inserir na fila
         const supabase = getSupabaseClient();
+        console.log('🔗 [BlogQueue] Cliente Supabase criado');
+        
+        const insertData = {
+            title,
+            content,
+            category,
+            date,
+            imageurl: imageurl || null,
+            autor: autor || 'LeadBaze Team',
+            processed: false
+        };
+        
+        console.log('📝 [BlogQueue] Dados para inserção:', JSON.stringify(insertData, null, 2));
+        
         const { data, error } = await supabase
             .from('n8n_blog_queue')
-            .insert([{
-                title,
-                content,
-                category,
-                date,
-                imageurl: imageurl || null,
-                autor: autor || 'LeadBaze Team',
-                processed: false
-            }])
+            .insert([insertData])
             .select()
             .single();
         
         if (error) {
-            console.error('❌ Erro ao adicionar à fila:', error);
+            console.error('❌ [BlogQueue] Erro ao adicionar à fila:', error);
+            console.error('❌ [BlogQueue] Detalhes do erro:', JSON.stringify(error, null, 2));
             return res.status(500).json({
                 success: false,
                 error: 'Erro ao adicionar à fila',
                 details: error.message
             });
         }
+        
+        console.log('✅ [BlogQueue] Post adicionado com sucesso:', JSON.stringify(data, null, 2));
         
         console.log('✅ Post adicionado à fila:', data);
         res.json({

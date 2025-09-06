@@ -36,6 +36,7 @@ import type {
 } from '../../lib/blogAutomationService';
 import { supabase } from '../../lib/supabaseClient';
 import BlogRealtimeMonitor from './BlogRealtimeMonitor';
+import AddPostToQueue from './AddPostToQueue';
 
 const BlogAutomationDashboard: React.FC = () => {
   // Estados
@@ -595,7 +596,10 @@ const BlogAutomationDashboard: React.FC = () => {
         )}
         
         {activeTab === 'realtime' && (
-          <BlogRealtimeMonitor />
+          <div className="space-y-6">
+            <AddPostToQueue />
+            <BlogRealtimeMonitor />
+          </div>
         )}
         
         {activeTab === 'config' && (
