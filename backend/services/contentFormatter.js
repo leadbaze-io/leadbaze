@@ -45,8 +45,18 @@ class ContentFormatter {
         if (!imageurl || imageurl === 'null' || imageurl === 'undefined' || imageurl === null) {
             finalImageUrl = 'https://leadbaze.io/images/blog/default-blog-image.jpg';
             console.log(`🖼️ [ContentFormatter] ⚠️ ImageURL inválido, usando padrão: "${finalImageUrl}"`);
+        } else if (typeof imageurl === 'string' && imageurl.startsWith('https://lsvwjyhnnzeewuuuykmb.supabase.co/storage/')) {
+            // Link do Supabase Storage - válido
+            finalImageUrl = imageurl;
+            console.log(`🖼️ [ContentFormatter] ✅ ImageURL Supabase válido: "${finalImageUrl}"`);
+        } else if (typeof imageurl === 'string' && (imageurl.startsWith('http://') || imageurl.startsWith('https://'))) {
+            // Outro link HTTP válido
+            finalImageUrl = imageurl;
+            console.log(`🖼️ [ContentFormatter] ✅ ImageURL HTTP válido: "${finalImageUrl}"`);
         } else {
-            console.log(`🖼️ [ContentFormatter] ✅ ImageURL válido: "${finalImageUrl}"`);
+            // URL inválida, usar padrão
+            finalImageUrl = 'https://leadbaze.io/images/blog/default-blog-image.jpg';
+            console.log(`🖼️ [ContentFormatter] ⚠️ ImageURL formato inválido, usando padrão: "${finalImageUrl}"`);
         }
 
         return {
