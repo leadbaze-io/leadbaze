@@ -158,15 +158,15 @@ export default function BlogRealtimeMonitor() {
   };
 
   const getStatusColor = () => {
-    if (status.isActive) return 'bg-green-500';
     if (status.pendingCount > 0) return 'bg-yellow-500';
+    if (status.isActive) return 'bg-green-500';
     return 'bg-gray-500';
   };
 
   const getStatusText = () => {
+    if (status.pendingCount > 0) return 'Processando';
     if (status.isActive) return 'Ativo';
-    if (status.pendingCount > 0) return 'Pendente';
-    return 'Inativo';
+    return 'Aguardando';
   };
 
   return (

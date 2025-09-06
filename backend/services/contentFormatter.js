@@ -437,7 +437,10 @@ class ContentFormatter {
             title,
             content,
             category,
-            type = null
+            type = null,
+            imageurl,
+            autor,
+            date
         } = postData;
         
         // Detectar tipo se não especificado
@@ -455,6 +458,9 @@ class ContentFormatter {
             excerpt: excerpt,
             category: this.formatCategory(category),
             type: contentType,
+            imageurl: imageurl,
+            autor: autor,
+            date: date,
             formatted: true,
             validation: {
                 passed: true,
