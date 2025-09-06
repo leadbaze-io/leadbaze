@@ -940,8 +940,13 @@ app.listen(PORT, () => {
     
     // AutoPollingService disponível mas não iniciado por padrão
     // Para ativar: POST /api/blog/realtime/polling/start
-    const autoPollingService = getAutoPollingService();
-    console.log('🔄 AutoPollingService disponível (não iniciado por padrão)');
+    // const autoPollingService = getAutoPollingService();
+    // console.log('🔄 AutoPollingService disponível (não iniciado por padrão)');
+    
+    // Iniciar serviço de polling automático
+    const { getPollingService } = require("./services/pollingService");
+    const pollingService = getPollingService();
+    pollingService.start();
     
     console.log('🤖 Blog Automation Service iniciado');
     console.log('📧 Admin autorizado: creaty12345@gmail.com');
