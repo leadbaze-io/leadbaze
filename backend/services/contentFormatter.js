@@ -3,86 +3,51 @@ const ValidationRules = require('./validationRules');
 class ContentFormatter {
     constructor() {
         this.validationRules = new ValidationRules();
-        this.templates = {
-            technical: {
-                structure: 'profissional',
-                tone: 'técnico',
-                format: 'estruturado'
-            },
-            marketing: {
-                structure: 'persuasivo',
-                tone: 'comercial',
-                format: 'engajante'
-            },
-            news: {
-                structure: 'informativo',
-                tone: 'neutro',
-                format: 'direto'
-            }
-        };
+        console.log('📝 ContentFormatter inicializado');
     }
 
     /**
-     * Validar dados do post
-     */
-    validatePost(postData) {
-        const errors = [];
-
-        // Validar título
-        const titleError = this.validationRules.validateTitle(postData.title);
-        if (titleError) errors.push(titleError);
-
-        // Validar conteúdo
-        const contentError = this.validationRules.validateContent(postData.content);
-        if (contentError) errors.push(contentError);
-
-        // Validar categoria
-        const categoryError = this.validationRules.validateCategory(postData.category);
-        if (categoryError) errors.push(categoryError);
-
-        return {
-            isValid: errors.length === 0,
-            errors: errors
-        };
-    }
-
-    /**
-     * Formatar post completo com validação
+     * Formatar post completo
      */
     formatPost(postData) {
-        // Validar dados primeiro
-        const validation = this.validatePost(postData);
-        if (!validation.isValid) {
-            throw new Error(`Dados inválidos: ${validation.errors.join(', ')}`);
-        }
+        const { title, content, category, imageurl, autor, date } = postData;
+        
+        console.log(`📝 [ContentFormatter] Formatando post: "${title}"`);
+        console.log(`📝 [ContentFormatter] Conteúdo recebido: ${content ? content.substring(0, 100) + '...' : 'null'}`);
+        console.log(`📝 [ContentFormatter] Categoria: "${category}"`);
+        console.log(`📝 [ContentFormatter] Autor: "${autor}"`);
+        console.log(`📝 [ContentFormatter] Data: "${date}"`);
 
-        const {
-            title,
-            content,
-            category,
-            type = null,
-            imageurl,
-            autor,
-            date
-        } = postData;
+        // Detectar tipo de conteúdo
+        const contentType = this.detectContentType(content);
+        console.log(`📝 [ContentFormatter] Detectado: ${contentType.toUpperCase()}`);
 
-        console.log(`�� [ContentFormatter] Detectado: ${type || 'ARTIGO TÉCNICO'} (padrão)`);
-
-        // Determinar tipo de conteúdo
-        const contentType = this.determineContentType(content, type);
-        console.log(`�� [ContentFormatter] Aplicando template: ${contentType} (${this.templates[contentType]?.structure || 'padrão'})`);
-
-        // Estruturar conteúdo
-        const structuredContent = this.structureContent(content, contentType);
+        // Aplicar template baseado no tipo
+        const structuredContent = this.applyTemplate(content, contentType);
+        console.log(`📝 [ContentFormatter] Template aplicado: ${contentType} (${this.getTemplateStyle(contentType)})`);
 
         // Gerar excerpt
-        const excerpt = this.generateExcerpt(content);
+        const excerpt = this.generateExcerpt(structuredContent);
+        console.log(`📝 [ContentFormatter] Excerpt gerado: ${excerpt.substring(0, 50)}...`);
 
         // Validar e formatar categoria
-        console.log(`��️ [ContentFormatter] Categoria fornecida: "${category}"`);
+        console.log(`️ [ContentFormatter] Categoria fornecida: "${category}"`);
         const formattedCategory = this.formatCategory(category);
-        console.log(`��️ [ContentFormatter] Categoria mapeada: "${formattedCategory}"`);
-        console.log(`��️ [ContentFormatter] ✅ Categoria segura e organizada!`);
+        console.log(`️ [ContentFormatter] Categoria mapeada: "${formattedCategory}"`);
+        console.log(`️ [ContentFormatter] ✅ Categoria segura e organizada!`);
+
+        // Debug: Verificar imageurl
+        console.log(`🖼️ [ContentFormatter] ImageURL recebido: "${imageurl}"`);
+        console.log(`🖼️ [ContentFormatter] ImageURL tipo: ${typeof imageurl}`);
+        
+        // Validar e corrigir imageurl se necessário
+        let finalImageUrl = imageurl;
+        if (!imageurl || imageurl === 'null' || imageurl === 'undefined' || imageurl === null) {
+            finalImageUrl = 'https://leadbaze.io/images/blog/default-blog-image.jpg';
+            console.log(`🖼️ [ContentFormatter] ⚠️ ImageURL inválido, usando padrão: "${finalImageUrl}"`);
+        } else {
+            console.log(`🖼️ [ContentFormatter] ✅ ImageURL válido: "${finalImageUrl}"`);
+        }
 
         return {
             title: this.formatTitle(title),
@@ -90,7 +55,7 @@ class ContentFormatter {
             excerpt: excerpt,
             category: formattedCategory,
             type: contentType,
-            featured_image: imageurl,  // Corrigido: mapear para featured_image
+            featured_image: finalImageUrl,  // Usar imageurl validado
             author_name: autor,        // Corrigido: mapear para author_name
             published_at: date,        // Corrigido: mapear para published_at
             formatted: true,
@@ -108,72 +73,168 @@ class ContentFormatter {
         if (!title || typeof title !== 'string') {
             throw new Error('Título é obrigatório e deve ser uma string');
         }
-
-        // Limpar e formatar título
-        let formattedTitle = title.trim();
         
-        // Capitalizar primeira letra
-        formattedTitle = formattedTitle.charAt(0).toUpperCase() + formattedTitle.slice(1);
-        
-        // Remover caracteres especiais excessivos
-        formattedTitle = formattedTitle.replace(/[^\w\s\-.,!?]/g, '');
-        
-        // Limitar tamanho
-        if (formattedTitle.length > 100) {
-            formattedTitle = formattedTitle.substring(0, 97) + '...';
-        }
-
-        return formattedTitle;
+        // Remover caracteres especiais e normalizar
+        return title
+            .trim()
+            .replace(/[^\w\s\-.,!?]/g, '')
+            .replace(/\s+/g, ' ')
+            .substring(0, 100);
     }
 
     /**
-     * Determinar tipo de conteúdo
+     * Detectar tipo de conteúdo
      */
-    determineContentType(content, type) {
-        if (type && this.templates[type]) {
-            return type;
-        }
-
-        // Análise automática baseada no conteúdo
-        const contentLower = content.toLowerCase();
-        
-        if (contentLower.includes('tutorial') || contentLower.includes('como fazer') || contentLower.includes('passo a passo')) {
-            return 'technical';
-        }
-        
-        if (contentLower.includes('promoção') || contentLower.includes('oferta') || contentLower.includes('desconto')) {
-            return 'marketing';
-        }
-        
-        if (contentLower.includes('notícia') || contentLower.includes('atualização') || contentLower.includes('lançamento')) {
-            return 'news';
-        }
-
-        return 'technical'; // Padrão
-    }
-
-    /**
-     * Estruturar conteúdo
-     */
-    structureContent(content, contentType) {
+    detectContentType(content) {
         if (!content || typeof content !== 'string') {
-            throw new Error('Conteúdo é obrigatório e deve ser uma string');
+            return 'artigo';
         }
 
-        const template = this.templates[contentType] || this.templates.technical;
+        const lowerContent = content.toLowerCase();
         
-        // Aplicar estrutura baseada no template
-        let structuredContent = content.trim();
-        
-        // Adicionar quebras de linha para melhor legibilidade
-        structuredContent = structuredContent.replace(/\n\s*\n/g, '\n\n');
-        
-        // Garantir que não está vazio
-        if (structuredContent.length < 50) {
-            throw new Error('Conteúdo muito curto para ser um post válido');
+        // Detectar tutorial
+        if (lowerContent.includes('passo a passo') || 
+            lowerContent.includes('como fazer') || 
+            lowerContent.includes('tutorial') ||
+            lowerContent.includes('guia completo')) {
+            return 'tutorial';
         }
+        
+        // Detectar case study
+        if (lowerContent.includes('case study') || 
+            lowerContent.includes('estudo de caso') || 
+            lowerContent.includes('resultado') ||
+            lowerContent.includes('antes e depois')) {
+            return 'case-study';
+        }
+        
+        // Detectar análise
+        if (lowerContent.includes('análise') || 
+            lowerContent.includes('comparação') || 
+            lowerContent.includes('review') ||
+            lowerContent.includes('avaliação')) {
+            return 'analise';
+        }
+        
+        // Padrão: artigo técnico
+        return 'artigo';
+    }
 
-        return structuredContent;
+    /**
+     * Aplicar template baseado no tipo
+     */
+    applyTemplate(content, type) {
+        const templates = {
+            'tutorial': this.getTutorialTemplate(),
+            'case-study': this.getCaseStudyTemplate(),
+            'analise': this.getAnaliseTemplate(),
+            'artigo': this.getArtigoTemplate()
+        };
+
+        const template = templates[type] || templates['artigo'];
+        
+        return template.replace('{{CONTENT}}', content);
+    }
+
+    /**
+     * Template para tutorial
+     */
+    getTutorialTemplate() {
+        return `
+<div class="tutorial-content">
+    <div class="tutorial-intro">
+        <h3>🎯 O que você vai aprender</h3>
+        <p>Neste tutorial completo, você vai dominar todas as etapas necessárias para alcançar seus objetivos.</p>
+    </div>
+    
+    <div class="tutorial-steps">
+        {{CONTENT}}
+    </div>
+    
+    <div class="tutorial-conclusion">
+        <h3>✅ Próximos passos</h3>
+        <p>Agora que você completou este tutorial, continue praticando e explore outras funcionalidades avançadas.</p>
+    </div>
+</div>`;
+    }
+
+    /**
+     * Template para case study
+     */
+    getCaseStudyTemplate() {
+        return `
+<div class="case-study-content">
+    <div class="case-study-header">
+        <h3>📊 Estudo de Caso</h3>
+        <p>Análise detalhada de uma implementação real e seus resultados.</p>
+    </div>
+    
+    <div class="case-study-body">
+        {{CONTENT}}
+    </div>
+    
+    <div class="case-study-results">
+        <h3>📈 Resultados Alcançados</h3>
+        <p>Os resultados demonstram a eficácia da estratégia implementada.</p>
+    </div>
+</div>`;
+    }
+
+    /**
+     * Template para análise
+     */
+    getAnaliseTemplate() {
+        return `
+<div class="analise-content">
+    <div class="analise-intro">
+        <h3>🔍 Análise Detalhada</h3>
+        <p>Uma análise profunda e objetiva do tema abordado.</p>
+    </div>
+    
+    <div class="analise-body">
+        {{CONTENT}}
+    </div>
+    
+    <div class="analise-conclusion">
+        <h3>💡 Conclusões</h3>
+        <p>Baseado na análise realizada, podemos extrair insights valiosos.</p>
+    </div>
+</div>`;
+    }
+
+    /**
+     * Template para artigo técnico
+     */
+    getArtigoTemplate() {
+        return `
+<div class="artigo-content">
+    <div class="artigo-intro">
+        <h3>💡 Artigo Técnico</h3>
+        <p>Conteúdo especializado e detalhado sobre o tema abordado.</p>
+    </div>
+    
+    <div class="artigo-body">
+        {{CONTENT}}
+    </div>
+    
+    <div class="artigo-conclusion">
+        <h3>🎯 Conclusão</h3>
+        <p>Este artigo fornece uma base sólida para implementação e desenvolvimento.</p>
+    </div>
+</div>`;
+    }
+
+    /**
+     * Obter estilo do template
+     */
+    getTemplateStyle(type) {
+        const styles = {
+            'tutorial': 'passo a passo',
+            'case-study': 'resultados',
+            'analise': 'profissional',
+            'artigo': 'técnico'
+        };
+        return styles[type] || 'padrão';
     }
 
     /**
@@ -181,21 +242,22 @@ class ContentFormatter {
      */
     generateExcerpt(content) {
         if (!content || typeof content !== 'string') {
-            return '';
+            return 'Conteúdo não disponível.';
         }
 
-        // Limpar conteúdo
-        let excerpt = content.trim();
+        // Remover HTML tags
+        const textContent = content.replace(/<[^>]*>/g, '');
         
-        // Remover quebras de linha excessivas
-        excerpt = excerpt.replace(/\n+/g, ' ');
-        
-        // Limitar tamanho
-        if (excerpt.length > 200) {
-            excerpt = excerpt.substring(0, 197) + '...';
+        // Limitar a 160 caracteres
+        if (textContent.length <= 160) {
+            return textContent;
         }
-
-        return excerpt;
+        
+        // Cortar no último espaço antes de 160 caracteres
+        const truncated = textContent.substring(0, 160);
+        const lastSpace = truncated.lastIndexOf(' ');
+        
+        return lastSpace > 0 ? truncated.substring(0, lastSpace) + '...' : truncated + '...';
     }
 
     /**
@@ -203,29 +265,26 @@ class ContentFormatter {
      */
     formatCategory(category) {
         if (!category || typeof category !== 'string') {
-            throw new Error('Categoria é obrigatória e deve ser uma string');
+            return 'Automação de Vendas';
         }
 
-        // Mapear categorias para valores seguros
+        // Mapear categorias para as permitidas
         const categoryMap = {
             'prospecção b2b': 'Prospecção B2B',
             'prospecção': 'Prospecção B2B',
-            'b2b': 'Prospecção B2B',
-            'estratégias de outbound': 'Estratégias de Outbound',
             'outbound': 'Estratégias de Outbound',
+            'estratégias de outbound': 'Estratégias de Outbound',
+            'gestão b2b': 'Gestão e Vendas B2B',
+            'vendas b2b': 'Gestão e Vendas B2B',
             'gestão e vendas b2b': 'Gestão e Vendas B2B',
-            'gestão': 'Gestão e Vendas B2B',
-            'vendas': 'Gestão e Vendas B2B',
-            'inteligência de dados': 'Inteligência de Dados',
             'dados': 'Inteligência de Dados',
-            'analytics': 'Inteligência de Dados',
-            'automação de vendas': 'Automação de Vendas',
+            'inteligência de dados': 'Inteligência de Dados',
             'automação': 'Automação de Vendas',
-            'crm': 'Automação de Vendas'
+            'automação de vendas': 'Automação de Vendas'
         };
 
-        const categoryLower = category.toLowerCase().trim();
-        return categoryMap[categoryLower] || 'Automação de Vendas'; // Padrão seguro
+        const normalizedCategory = category.toLowerCase().trim();
+        return categoryMap[normalizedCategory] || 'Automação de Vendas';
     }
 }
 
