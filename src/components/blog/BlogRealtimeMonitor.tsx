@@ -17,7 +17,16 @@ interface RealtimeStatus {
 }
 
 export default function BlogRealtimeMonitor() {
-  const [notifications, setNotifications] = useState<RealtimeNotification[]>([]);
+  // Carregar notificações do localStorage
+  const [notifications, setNotifications] = useState<RealtimeNotification[]>(() => {
+    try {
+      const saved = localStorage.getItem('blog-realtime-notifications');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  
   const [status, setStatus] = useState<RealtimeStatus>({
     isActive: false,
     lastNotification: null,
@@ -26,6 +35,15 @@ export default function BlogRealtimeMonitor() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  // Salvar notificações no localStorage sempre que mudarem
+  useEffect(() => {
+    try {
+      localStorage.setItem('blog-realtime-notifications', JSON.stringify(notifications));
+    } catch (error) {
+      console.warn('Erro ao salvar notificações no localStorage:', error);
+    }
+  }, [notifications]);
 
   // Simular notificações em tempo real
   useEffect(() => {
@@ -56,8 +74,26 @@ export default function BlogRealtimeMonitor() {
     
     eventSource.onmessage = (event) => {
       try {
-        const notification = JSON.parse(event.data);
-        setNotifications(prev => [notification, ...prev.slice(0, 9)]); // Manter apenas 10 notificações
+        const data = JSON.parse(event.data);
+        
+        // Ignorar heartbeats
+        if (data.type === 'heartbeat') {
+          return;
+        }
+        
+        // Criar notificação detalhada
+        const notification: RealtimeNotification = {
+          id: data.id || Date.now().toString(),
+          title: data.title || 'Nova Atividade Detectada',
+          created_at: data.timestamp || new Date().toISOString(),
+          action: data.action || 'unknown',
+          timestamp: data.timestamp || new Date().toISOString(),
+          details: data // Incluir todos os detalhes
+        };
+        
+        console.log('🔔 Nova notificação recebida:', notification);
+        
+        setNotifications(prev => [notification, ...prev.slice(0, 19)]); // Manter apenas 20 notificações
         
         setStatus(prev => ({
           ...prev,
@@ -67,6 +103,7 @@ export default function BlogRealtimeMonitor() {
         }));
       } catch (error) {
         console.error('Erro ao processar notificação:', error);
+        console.error('Dados recebidos:', event.data);
       }
     };
 
@@ -177,10 +214,23 @@ export default function BlogRealtimeMonitor() {
       {/* Notificações Recentes */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            Notificações Recentes
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <Bell className="h-5 w-5" />
+              Notificações Recentes
+            </h3>
+            {notifications.length > 0 && (
+              <button
+                onClick={() => {
+                  setNotifications([]);
+                  localStorage.removeItem('blog-realtime-notifications');
+                }}
+                className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                Limpar
+              </button>
+            )}
+          </div>
         </div>
         <div className="p-6">
           {notifications.length === 0 ? (
@@ -192,24 +242,64 @@ export default function BlogRealtimeMonitor() {
           ) : (
             <div className="space-y-3">
               {notifications.map((notification, index) => (
-                <div key={notification.id || index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-shrink-0">
+                <div key={notification.id || index} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                  <div className="flex-shrink-0 mt-0.5">
                     {notification.action === 'new_post_added' ? (
                       <CheckCircle className="h-5 w-5 text-green-500" />
+                    ) : notification.action === 'processing_started' ? (
+                      <RefreshCw className="h-5 w-5 text-blue-500" />
+                    ) : notification.action === 'processing_completed' ? (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    ) : notification.action === 'processing_error' ? (
+                      <AlertCircle className="h-5 w-5 text-red-500" />
                     ) : (
-                      <AlertCircle className="h-5 w-5 text-yellow-500" />
+                      <Bell className="h-5 w-5 text-yellow-500" />
                     )}
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{notification.title}</p>
-                    <p className="text-xs text-gray-600">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      {notification.title}
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                       {new Date(notification.timestamp).toLocaleString('pt-BR')}
                     </p>
+                    
+                    {/* Mostrar detalhes adicionais se disponíveis */}
+                    {notification.details && (
+                      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        {notification.details.pending && (
+                          <span className="inline-block mr-2">📋 {notification.details.pending} pendentes</span>
+                        )}
+                        {notification.details.processed && (
+                          <span className="inline-block mr-2">✅ {notification.details.processed} processados</span>
+                        )}
+                        {notification.details.errors && (
+                          <span className="inline-block mr-2">❌ {notification.details.errors} erros</span>
+                        )}
+                        {notification.details.error && (
+                          <span className="inline-block text-red-500">⚠️ {notification.details.error}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                   
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                    {notification.action === 'new_post_added' ? 'Novo Post' : 'Processado'}
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    notification.action === 'new_post_added' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : notification.action === 'processing_started'
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      : notification.action === 'processing_completed'
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : notification.action === 'processing_error'
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                  }`}>
+                    {notification.action === 'new_post_added' ? 'Novo Post' 
+                     : notification.action === 'processing_started' ? 'Processando'
+                     : notification.action === 'processing_completed' ? 'Concluído'
+                     : notification.action === 'processing_error' ? 'Erro'
+                     : 'Atividade'}
                   </span>
                 </div>
               ))}
