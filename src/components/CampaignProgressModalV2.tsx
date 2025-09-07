@@ -12,15 +12,11 @@ import {
   Wifi, 
   WifiOff,
   TrendingUp,
-  Zap,
   Target,
-  Timer,
-  BarChart3,
-  Activity,
-  Globe
+  Timer
 } from 'lucide-react'
 import { Button } from './ui/button'
-import { CampaignStatusServiceV2, type CampaignProgress, type CampaignCompletion } from '../lib/campaignStatusServiceV2'
+import { CampaignStatusServiceV2, type CampaignProgress } from '../lib/campaignStatusServiceV2'
 
 // Sistema de status mais robusto
 export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending' | 'draft'
