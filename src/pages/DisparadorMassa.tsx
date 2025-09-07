@@ -63,6 +63,7 @@ export default function DisparadorMassa() {
   
   // Estados para o modal de progresso
   const [showProgressModal, setShowProgressModal] = useState(false)
+  const [isProgressModalMinimized, setIsProgressModalMinimized] = useState(false)
   const [campaignStartTime, setCampaignStartTime] = useState<Date | null>(null)
   const [currentCampaignStatus, setCurrentCampaignStatus] = useState<'sending' | 'completed' | 'failed'>('sending')
   const [currentSuccessCount, setCurrentSuccessCount] = useState(0)
@@ -756,6 +757,20 @@ export default function DisparadorMassa() {
     )
 
     setStopPolling(() => stopFunction)
+  }
+
+  // Funções para controlar o modal de progresso
+  const handleMinimizeProgressModal = () => {
+    setIsProgressModalMinimized(true)
+  }
+
+  const handleExpandProgressModal = () => {
+    setIsProgressModalMinimized(false)
+  }
+
+  const handleCloseProgressModal = () => {
+    setShowProgressModal(false)
+    setIsProgressModalMinimized(false)
   }
 
   // Função para simular conclusão da campanha (para teste)
@@ -1999,7 +2014,10 @@ Entre em contato conosco para mais detalhes!"
         successCount={currentSuccessCount}
         failedCount={currentFailedCount}
         startTime={campaignStartTime || undefined}
-        onClose={() => setShowProgressModal(false)}
+        isMinimized={isProgressModalMinimized}
+        onClose={handleCloseProgressModal}
+        onMinimize={handleMinimizeProgressModal}
+        onExpand={handleExpandProgressModal}
       />
     </div>
   )

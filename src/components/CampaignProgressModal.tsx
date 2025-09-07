@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare } from 'lucide-react'
+import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2, Maximize2 } from 'lucide-react'
 import { Button } from './ui/button'
 
 interface CampaignProgressModalProps {
@@ -12,6 +12,9 @@ interface CampaignProgressModalProps {
   failedCount?: number
   startTime?: Date
   onClose: () => void
+  onMinimize?: () => void
+  onExpand?: () => void
+  isMinimized?: boolean
 }
 
 export default function CampaignProgressModal({
@@ -22,10 +25,14 @@ export default function CampaignProgressModal({
   successCount = 0,
   failedCount = 0,
   startTime,
-  onClose
+  onClose,
+  onMinimize,
+  onExpand,
+  isMinimized = false
 }: CampaignProgressModalProps) {
   const [elapsedTime, setElapsedTime] = useState(0)
   const [estimatedProgress, setEstimatedProgress] = useState(0)
+  const [hasNotified, setHasNotified] = useState(false)
 
   // Calcular tempo decorrido
   useEffect(() => {
@@ -55,6 +62,39 @@ export default function CampaignProgressModal({
       setEstimatedProgress(0)
     }
   }, [elapsedTime, totalLeads, status, startTime])
+
+  // Mostrar notificação quando a campanha termina (se estiver minimizada)
+  useEffect(() => {
+    if (isMinimized && (status === 'completed' || status === 'failed') && !hasNotified) {
+      setHasNotified(true)
+      
+      // Solicitar permissão para notificações
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
+      
+      // Mostrar notificação do navegador
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const notification = new Notification(
+          status === 'completed' ? '🎉 Campanha Concluída!' : '❌ Campanha Falhou',
+          {
+            body: status === 'completed' 
+              ? `${campaignName} foi enviada com sucesso! ${successCount} mensagens enviadas.`
+              : `${campaignName} falhou. Tente novamente.`,
+            icon: '/favicon.ico',
+            tag: `campaign-${campaignName}`,
+            requireInteraction: true
+          }
+        )
+        
+        notification.onclick = () => {
+          window.focus()
+          onExpand?.()
+          notification.close()
+        }
+      }
+    }
+  }, [isMinimized, status, hasNotified, campaignName, successCount, onExpand])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -114,14 +154,99 @@ export default function CampaignProgressModal({
     }
   }
 
+  // Bolinha de loading flutuante (quando minimizado)
+  if (isVisible && isMinimized) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
+        >
+          <motion.div
+            onClick={onExpand}
+            className={`relative w-16 h-16 rounded-full shadow-2xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+              status === 'sending' ? 'bg-gradient-to-r from-blue-500 to-purple-600' :
+              status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+              status === 'failed' ? 'bg-gradient-to-r from-red-500 to-pink-600' :
+              'bg-gradient-to-r from-gray-400 to-gray-600'
+            }`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title={`${campaignName} - ${getStatusText()}`}
+          >
+            {/* Ícone animado */}
+            <motion.div
+              animate={status === 'sending' ? { rotate: 360 } : {}}
+              transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
+            >
+              {getStatusIcon()}
+            </motion.div>
+            
+            {/* Badge de notificação quando completado */}
+            {status === 'completed' && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <CheckCircle className="w-4 h-4 text-white" />
+              </motion.div>
+            )}
+            
+            {/* Badge de notificação quando falhou */}
+            {status === 'failed' && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
+              >
+                <AlertTriangle className="w-4 h-4 text-white" />
+              </motion.div>
+            )}
+            
+            {/* Progresso circular */}
+            {status === 'sending' && (
+              <svg className="absolute inset-0 w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="28"
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <motion.circle
+                  cx="32"
+                  cy="32"
+                  r="28"
+                  stroke="white"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray={`${2 * Math.PI * 28}`}
+                  strokeDashoffset={`${2 * Math.PI * 28 * (1 - estimatedProgress / 100)}`}
+                  initial={{ strokeDashoffset: 2 * Math.PI * 28 }}
+                  animate={{ strokeDashoffset: 2 * Math.PI * 28 * (1 - estimatedProgress / 100) }}
+                  transition={{ duration: 0.5 }}
+                />
+              </svg>
+            )}
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    )
+  }
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && !isMinimized && (
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 100 }}
-          className="fixed bottom-6 right-6 z-50 w-80 max-w-sm"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-72 sm:w-80 max-w-sm"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -130,29 +255,46 @@ export default function CampaignProgressModal({
             className={`relative ${getStatusColor()} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
           >
             {/* Header */}
-            <div className="p-6 pb-4">
+            <div className="p-4 sm:p-6 pb-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   {getStatusIcon()}
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                       {campaignName}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                       {getStatusText()}
                     </p>
                   </div>
                 </div>
                 
-                {/* Botão de fechar sempre visível */}
-                <Button
-                  onClick={onClose}
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
+                {/* Botões de controle */}
+                <div className="flex items-center space-x-1">
+                  {/* Botão de minimizar (apenas quando não está minimizado) */}
+                  {!isMinimized && onMinimize && (
+                    <Button
+                      onClick={onMinimize}
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
+                      title="Minimizar"
+                    >
+                      <Minimize2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                  
+                  {/* Botão de fechar sempre visível */}
+                  <Button
+                    onClick={onClose}
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
+                    title="Fechar"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Estatísticas */}
