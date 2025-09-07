@@ -206,6 +206,206 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
 });
 
 /**
+ * POST /api/campaign/update-status
+ * Atualiza o status de uma campanha (para callback do N8N ou verificação manual)
+ */
+app.post('/api/campaign/update-status', async (req, res) => {
+  try {
+    const { campaignId, status, successCount, failedCount } = req.body;
+    
+    if (!campaignId || !status) {
+      return res.status(400).json({
+        success: false,
+        error: 'campaignId e status são obrigatórios'
+      });
+    }
+
+    console.log(`🔄 Atualizando status da campanha ${campaignId} para: ${status}`);
+
+    // Atualizar no Supabase
+    const { createClient } = require('@supabase/supabase-js');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    const updateData = {
+      status: status,
+      updated_at: new Date().toISOString()
+    };
+
+    // Adicionar contadores se fornecidos
+    if (successCount !== undefined) {
+      updateData.success_count = successCount;
+    }
+    if (failedCount !== undefined) {
+      updateData.failed_count = failedCount;
+    }
+
+    // Se status for 'completed', adicionar timestamp de conclusão
+    if (status === 'completed') {
+      updateData.completed_at = new Date().toISOString();
+    }
+
+    const { data, error } = await supabase
+      .from('bulk_campaigns')
+      .update(updateData)
+      .eq('id', campaignId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Erro ao atualizar campanha:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Erro ao atualizar campanha no banco de dados',
+        details: error.message
+      });
+    }
+
+    console.log(`✅ Campanha ${campaignId} atualizada com sucesso para status: ${status}`);
+    
+    res.json({
+      success: true,
+      message: 'Status da campanha atualizado com sucesso',
+      campaign: data
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao atualizar status da campanha:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor',
+      details: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/campaign/status/:campaignId
+ * Verifica o status atual de uma campanha
+ */
+app.get('/api/campaign/status/:campaignId', async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    
+    console.log(`🔍 Verificando status da campanha: ${campaignId}`);
+
+    // Buscar no Supabase
+    const { createClient } = require('@supabase/supabase-js');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    const { data, error } = await supabase
+      .from('bulk_campaigns')
+      .select('id, status, success_count, failed_count, sent_at, completed_at, updated_at')
+      .eq('id', campaignId)
+      .single();
+
+    if (error) {
+      console.error('❌ Erro ao buscar campanha:', error);
+      return res.status(404).json({
+        success: false,
+        error: 'Campanha não encontrada',
+        details: error.message
+      });
+    }
+
+    console.log(`✅ Status da campanha ${campaignId}: ${data.status}`);
+    
+    res.json({
+      success: true,
+      campaign: data
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao verificar status da campanha:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor',
+      details: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/campaign/check-timeouts
+ * Verifica e atualiza campanhas que ficaram muito tempo em 'sending'
+ */
+app.post('/api/campaign/check-timeouts', async (req, res) => {
+  try {
+    console.log('🕐 Verificando campanhas com timeout...');
+
+    // Buscar campanhas em 'sending' há mais de 30 minutos
+    const { createClient } = require('@supabase/supabase-js');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+
+    const { data: timeoutCampaigns, error: fetchError } = await supabase
+      .from('bulk_campaigns')
+      .select('id, name, sent_at, status')
+      .eq('status', 'sending')
+      .lt('sent_at', thirtyMinutesAgo);
+
+    if (fetchError) {
+      console.error('❌ Erro ao buscar campanhas com timeout:', fetchError);
+      return res.status(500).json({
+        success: false,
+        error: 'Erro ao buscar campanhas com timeout',
+        details: fetchError.message
+      });
+    }
+
+    if (!timeoutCampaigns || timeoutCampaigns.length === 0) {
+      console.log('✅ Nenhuma campanha com timeout encontrada');
+      return res.json({
+        success: true,
+        message: 'Nenhuma campanha com timeout encontrada',
+        updatedCount: 0
+      });
+    }
+
+    console.log(`🔄 Encontradas ${timeoutCampaigns.length} campanhas com timeout`);
+
+    // Atualizar campanhas para 'failed'
+    const campaignIds = timeoutCampaigns.map(c => c.id);
+    
+    const { data: updatedCampaigns, error: updateError } = await supabase
+      .from('bulk_campaigns')
+      .update({
+        status: 'failed',
+        updated_at: new Date().toISOString(),
+        completed_at: new Date().toISOString()
+      })
+      .in('id', campaignIds)
+      .select('id, name');
+
+    if (updateError) {
+      console.error('❌ Erro ao atualizar campanhas com timeout:', updateError);
+      return res.status(500).json({
+        success: false,
+        error: 'Erro ao atualizar campanhas com timeout',
+        details: updateError.message
+      });
+    }
+
+    console.log(`✅ ${updatedCampaigns.length} campanhas atualizadas para 'failed'`);
+    
+    res.json({
+      success: true,
+      message: `${updatedCampaigns.length} campanhas foram marcadas como falhadas por timeout`,
+      updatedCount: updatedCampaigns.length,
+      campaigns: updatedCampaigns
+    });
+
+  } catch (error) {
+    console.error('❌ Erro ao verificar timeouts de campanhas:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor',
+      details: error.message
+    });
+  }
+});
+
+/**
  * POST /api/create-instance-and-qrcode
  * Cria uma nova instância e retorna o QR Code
  */

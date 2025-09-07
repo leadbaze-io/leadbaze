@@ -8,10 +8,12 @@ import { LeadService } from '../lib/leadService'
 import { WhatsAppInstanceService } from '../lib/whatsappInstanceService'
 import { CampaignService } from '../lib/campaignService'
 import { CampaignLeadsService } from '../lib/campaignLeadsService'
+import { CampaignStatusService, type CampaignStatus } from '../lib/campaignStatusService'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
+import CampaignProgressModal from '../components/CampaignProgressModal'
 import { EvolutionApiService } from '../lib/evolutionApiService'
 import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, CampaignLead, UsedListSummary } from '../types'
 import type { User } from '@supabase/supabase-js'
@@ -54,6 +56,17 @@ export default function DisparadorMassa() {
   
   // Estado para controlar animação do botão de salvar
   const [isSaving, setIsSaving] = useState(false)
+  
+  // Estados para controle de status da campanha
+  const [isPollingStatus, setIsPollingStatus] = useState(false)
+  const [stopPolling, setStopPolling] = useState<(() => void) | null>(null)
+  
+  // Estados para o modal de progresso
+  const [showProgressModal, setShowProgressModal] = useState(false)
+  const [campaignStartTime, setCampaignStartTime] = useState<Date | null>(null)
+  const [currentCampaignStatus, setCurrentCampaignStatus] = useState<'sending' | 'completed' | 'failed'>('sending')
+  const [currentSuccessCount, setCurrentSuccessCount] = useState(0)
+  const [currentFailedCount, setCurrentFailedCount] = useState(0)
 
   const loadData = useCallback(async () => {
     try {
@@ -121,6 +134,15 @@ export default function DisparadorMassa() {
       })
     }
   }, [user, loading, loadData, selectedCampaign])
+
+  // Cleanup do polling quando o componente for desmontado
+  useEffect(() => {
+    return () => {
+      if (stopPolling) {
+        stopPolling()
+      }
+    }
+  }, [stopPolling])
 
   // Removido salvamento automático para evitar conflitos
   // A mensagem será salva apenas quando o usuário clicar no botão ou sair do campo
@@ -680,6 +702,83 @@ export default function DisparadorMassa() {
     setSelectedLeads(new Set())
   }
 
+  // Função para iniciar o polling de status da campanha
+  const startCampaignStatusPolling = (campaignId: string) => {
+    // Parar polling anterior se existir
+    if (stopPolling) {
+      stopPolling()
+    }
+
+    setIsPollingStatus(true)
+
+    const stopFunction = CampaignStatusService.startStatusPolling(
+      campaignId,
+      (status: CampaignStatus) => {
+        console.log('📊 Status da campanha atualizado:', status)
+        
+        // Atualizar estados do modal de progresso
+        setCurrentCampaignStatus(status.status as 'sending' | 'completed' | 'failed')
+        setCurrentSuccessCount(status.success_count || 0)
+        setCurrentFailedCount(status.failed_count || 0)
+        
+        // Atualizar campanha na lista
+        setCampaigns(prev => prev.map(c => 
+          c.id === campaignId 
+            ? { 
+                ...c, 
+                status: status.status, 
+                success_count: status.success_count || 0, 
+                failed_count: status.failed_count || 0 
+              }
+            : c
+        ))
+
+        // Se a campanha foi concluída ou falhou, fechar o modal após um delay
+        if (status.status === 'completed' || status.status === 'failed') {
+          setTimeout(() => {
+            setShowProgressModal(false)
+          }, 3000) // Fechar após 3 segundos
+        }
+      },
+      () => {
+        // Callback quando o polling termina
+        console.log('🛑 Polling de status finalizado')
+        setIsPollingStatus(false)
+        setStopPolling(null)
+        
+        // Se não foi concluída nem falhou, fechar o modal
+        if (currentCampaignStatus === 'sending') {
+          setShowProgressModal(false)
+        }
+      },
+      10000, // Verificar a cada 10 segundos
+      60 // Máximo 10 minutos (60 tentativas)
+    )
+
+    setStopPolling(() => stopFunction)
+  }
+
+  // Função para simular conclusão da campanha (para teste)
+  const simulateCampaignCompletion = async (campaignId: string) => {
+    try {
+      const success = await CampaignStatusService.simulateCampaignCompletion(campaignId)
+      if (success) {
+        // Atualizar estados do modal
+        setCurrentCampaignStatus('completed')
+        setCurrentSuccessCount(campaignLeads.length)
+        setCurrentFailedCount(0)
+        
+        toast({
+          title: '🧪 Teste Concluído',
+          description: 'Status da campanha foi simulado como concluído.',
+          variant: 'info',
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao simular conclusão:', error)
+    }
+  }
+
   const handleSendCampaign = async () => {
     if (!selectedCampaign) {
       toast({
@@ -766,6 +865,16 @@ export default function DisparadorMassa() {
         description: `Campanha "${selectedCampaign.name}" enviada para processamento.`,
         variant: 'success',
       })
+
+      // Mostrar modal de progresso
+      setShowProgressModal(true)
+      setCampaignStartTime(new Date())
+      setCurrentCampaignStatus('sending')
+      setCurrentSuccessCount(0)
+      setCurrentFailedCount(0)
+
+      // Iniciar polling para verificar status da campanha
+      startCampaignStatusPolling(selectedCampaign.id)
 
       // Reset form
       setMessage('')
@@ -1099,11 +1208,13 @@ export default function DisparadorMassa() {
                                 campaign.status === 'draft' ? 'bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800' :
                                 campaign.status === 'sending' ? 'bg-pink-50 text-pink-700 border border-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800' :
                                 campaign.status === 'completed' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800' :
+                                campaign.status === 'failed' ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800' :
                                 'bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800'
                               }`}>
                                 {campaign.status === 'draft' ? '📝 Em Preparação' :
-                                 campaign.status === 'sending' ? '📤 Enviando' :
-                                 campaign.status === 'completed' ? '✅ Concluída' : '❓ Desconhecido'}
+                                 campaign.status === 'sending' ? (isPollingStatus ? '🔄 Verificando...' : '📤 Enviando') :
+                                 campaign.status === 'completed' ? '✅ Campanha Enviada com Sucesso!' :
+                                 campaign.status === 'failed' ? '❌ Falhou' : '❓ Desconhecido'}
                               </div>
                             </div>
 
@@ -1163,8 +1274,9 @@ export default function DisparadorMassa() {
                               <div className="bg-white/10 backdrop-blur-sm px-2 md:px-3 py-1 rounded-full border border-white/20">
                                 <span className="text-xs md:text-sm font-medium">
                                   {selectedCampaign.status === 'draft' ? 'Rascunho' : 
-                                   selectedCampaign.status === 'sending' ? 'Enviando' : 
-                                   selectedCampaign.status === 'completed' ? 'Concluída' : 
+                                   selectedCampaign.status === 'sending' ? (isPollingStatus ? 'Verificando...' : 'Enviando') : 
+                                   selectedCampaign.status === 'completed' ? 'Campanha Enviada com Sucesso!' : 
+                                   selectedCampaign.status === 'failed' ? 'Falhou' :
                                    selectedCampaign.status}
                                 </span>
                               </div>
@@ -1669,6 +1781,17 @@ Entre em contato conosco para mais detalhes!"
                               {campaignLeads.length} leads
                             </span>
                           </Button>
+                          
+                          {/* Botão de Teste - TEMPORÁRIO */}
+                          {selectedCampaign?.status === 'sending' && (
+                            <Button 
+                              onClick={() => simulateCampaignCompletion(selectedCampaign.id)}
+                              variant="outline"
+                              className="w-full border-2 border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 py-2 rounded-xl font-medium transition-all duration-300"
+                            >
+                              🧪 Simular Conclusão (Teste)
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1842,6 +1965,18 @@ Entre em contato conosco para mais detalhes!"
           <ChevronUp className="w-5 h-5" />
         </motion.button>
       )}
+
+      {/* Modal de Progresso da Campanha */}
+      <CampaignProgressModal
+        isVisible={showProgressModal}
+        campaignName={selectedCampaign?.name || 'Campanha'}
+        totalLeads={campaignLeads.length}
+        status={currentCampaignStatus}
+        successCount={currentSuccessCount}
+        failedCount={currentFailedCount}
+        startTime={campaignStartTime || undefined}
+        onClose={() => setShowProgressModal(false)}
+      />
     </div>
   )
 }

@@ -64,8 +64,41 @@ class PollingService {
                 console.log('✅ [Polling] Nenhum item pendente');
             }
             
+            // Verificar campanhas com timeout a cada 5 minutos
+            await this.checkCampaignTimeouts();
+            
         } catch (error) {
             console.error('❌ [Polling] Erro no polling:', error);
+        }
+    }
+    
+    /**
+     * Verificar campanhas com timeout (executa a cada 5 minutos)
+     */
+    async checkCampaignTimeouts() {
+        try {
+            // Verificar se é hora de verificar timeouts (a cada 5 minutos)
+            const now = Date.now();
+            if (!this.lastTimeoutCheck || (now - this.lastTimeoutCheck) > 5 * 60 * 1000) {
+                this.lastTimeoutCheck = now;
+                
+                console.log('🕐 [Polling] Verificando campanhas com timeout...');
+                
+                const axios = require('axios');
+                const API_BASE_URL = process.env.NODE_ENV === 'production' 
+                    ? 'https://leadbaze.io' 
+                    : 'http://localhost:3001';
+                
+                const response = await axios.post(`${API_BASE_URL}/api/campaign/check-timeouts`, {}, {
+                    timeout: 10000
+                });
+                
+                if (response.data.success && response.data.updatedCount > 0) {
+                    console.log(`✅ [Polling] ${response.data.updatedCount} campanhas marcadas como falhadas por timeout`);
+                }
+            }
+        } catch (error) {
+            console.error('❌ [Polling] Erro ao verificar timeouts de campanhas:', error);
         }
     }
 }
