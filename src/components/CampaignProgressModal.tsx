@@ -3,11 +3,24 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2 } from 'lucide-react'
 import { Button } from './ui/button'
 
+// Sistema de status mais robusto
+export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending'
+
+export interface CampaignStatusInfo {
+  status: CampaignStatus
+  progress: number
+  message: string
+  icon: React.ReactNode
+  color: string
+  showProgress: boolean
+  showTimeEstimate: boolean
+}
+
 interface CampaignProgressModalProps {
   isVisible: boolean
   campaignName: string
   totalLeads: number
-  status: 'sending' | 'completed' | 'failed'
+  status: CampaignStatus
   successCount?: number
   failedCount?: number
   startTime?: Date
@@ -34,6 +47,72 @@ export default function CampaignProgressModal({
   const [estimatedProgress, setEstimatedProgress] = useState(0)
   const [hasNotified, setHasNotified] = useState(false)
   const [hasAutoMinimized, setHasAutoMinimized] = useState(false)
+
+  // Função robusta para obter informações do status
+  const getStatusInfo = (): CampaignStatusInfo => {
+    const baseInfo = {
+      status,
+      progress: estimatedProgress,
+      message: '',
+      icon: null as React.ReactNode,
+      color: '',
+      showProgress: false,
+      showTimeEstimate: false
+    }
+
+    switch (status) {
+      case 'sending':
+        return {
+          ...baseInfo,
+          progress: estimatedProgress,
+          message: estimatedProgress >= 100 
+            ? 'Envio concluído! Aguardando confirmação...'
+            : 'Enviando mensagens...',
+          icon: <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />,
+          color: 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg',
+          showProgress: true,
+          showTimeEstimate: true
+        }
+      
+      case 'completed':
+        return {
+          ...baseInfo,
+          progress: 100,
+          message: 'Campanha enviada com sucesso!',
+          icon: <CheckCircle className="w-5 h-5 text-green-600" />,
+          color: 'bg-white dark:bg-gray-800/90 border-green-300 dark:border-green-700 shadow-lg',
+          showProgress: false,
+          showTimeEstimate: false
+        }
+      
+      case 'failed':
+        return {
+          ...baseInfo,
+          progress: 0,
+          message: 'Falha no envio da campanha',
+          icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
+          color: 'bg-white dark:bg-gray-800/90 border-red-300 dark:border-red-700 shadow-lg',
+          showProgress: false,
+          showTimeEstimate: false
+        }
+      
+      case 'pending':
+        return {
+          ...baseInfo,
+          progress: 0,
+          message: 'Preparando envio...',
+          icon: <Clock className="w-5 h-5 text-gray-600" />,
+          color: 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-700 shadow-lg',
+          showProgress: false,
+          showTimeEstimate: false
+        }
+      
+      default:
+        return baseInfo
+    }
+  }
+
+  const statusInfo = getStatusInfo()
 
   // Calcular tempo decorrido
   useEffect(() => {
@@ -115,44 +194,6 @@ export default function CampaignProgressModal({
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const getStatusIcon = () => {
-    switch (status) {
-      case 'sending':
-        return <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />
-      case 'completed':
-        return <CheckCircle className="w-5 h-5 text-green-600" />
-      case 'failed':
-        return <AlertTriangle className="w-5 h-5 text-red-600" />
-      default:
-        return <Clock className="w-5 h-5 text-gray-600" />
-    }
-  }
-
-  const getStatusText = () => {
-    switch (status) {
-      case 'sending':
-        return 'Enviando mensagens...'
-      case 'completed':
-        return 'Campanha concluída com sucesso!'
-      case 'failed':
-        return 'Campanha falhou'
-      default:
-        return 'Preparando envio...'
-    }
-  }
-
-  const getStatusColor = () => {
-    switch (status) {
-      case 'sending':
-        return 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg'
-      case 'completed':
-        return 'bg-white dark:bg-gray-800/90 border-green-300 dark:border-green-700 shadow-lg'
-      case 'failed':
-        return 'bg-white dark:bg-gray-800/90 border-red-300 dark:border-red-700 shadow-lg'
-      default:
-        return 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-700 shadow-lg'
-    }
-  }
 
   const getProgressColor = () => {
     switch (status) {
@@ -199,14 +240,14 @@ export default function CampaignProgressModal({
               repeat: Infinity,
               ease: "easeInOut"
             } : {}}
-            title={`${campaignName} - ${getStatusText()}`}
+            title={`${campaignName} - ${statusInfo.message}`}
           >
             {/* Ícone animado */}
             <motion.div
               animate={status === 'sending' ? { rotate: 360 } : {}}
               transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
             >
-              {getStatusIcon()}
+              {statusInfo.icon}
             </motion.div>
             
             {/* Badge de notificação quando completado */}
@@ -287,19 +328,19 @@ export default function CampaignProgressModal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`relative ${getStatusColor()} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
+            className={`relative ${statusInfo.color} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
           >
             {/* Header */}
             <div className="p-4 sm:p-6 pb-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  {getStatusIcon()}
+                  {statusInfo.icon}
                   <div>
                     <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                       {campaignName}
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                      {getStatusText()}
+                      {statusInfo.message}
                     </p>
                   </div>
                 </div>
@@ -362,33 +403,31 @@ export default function CampaignProgressModal({
               </div>
 
               {/* Barra de Progresso */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Progresso
-                  </span>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">
-                    {status === 'sending' ? `${Math.floor(estimatedProgress)}%` : 
-                     status === 'completed' ? '100%' : '0%'}
-                  </span>
+              {statusInfo.showProgress && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Progresso
+                    </span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">
+                      {Math.floor(statusInfo.progress)}%
+                    </span>
+                  </div>
+                  
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                    <motion.div
+                      className={`h-full ${getProgressColor()} rounded-full`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${statusInfo.progress}%` }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                  </div>
                 </div>
-                
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                  <motion.div
-                    className={`h-full ${getProgressColor()} rounded-full`}
-                    initial={{ width: 0 }}
-                    animate={{ 
-                      width: status === 'sending' ? `${estimatedProgress}%` : 
-                             status === 'completed' ? '100%' : '0%'
-                    }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
-                </div>
-              </div>
+              )}
 
               {/* Tempo e Estimativa */}
-              {status === 'sending' && (
-                <div className="space-y-2">
+              <div className="space-y-2">
+                {status === 'sending' && (
                   <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center space-x-2">
                       <Clock className="w-4 h-4" />
@@ -401,22 +440,12 @@ export default function CampaignProgressModal({
                       </span>
                     </div>
                   </div>
-                  
-                  {/* Estimativa de tempo restante */}
+                )}
+                
+                {/* Estimativa de tempo restante */}
+                {statusInfo.showTimeEstimate && (
                   <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                    {status === 'completed' ? (
-                      <>
-                        🎉 Campanha enviada com sucesso!
-                        <br />
-                        📊 {successCount} mensagens enviadas
-                      </>
-                    ) : status === 'failed' ? (
-                      <>
-                        ❌ Falha no envio da campanha
-                        <br />
-                        📊 {failedCount} mensagens falharam
-                      </>
-                    ) : estimatedProgress >= 100 ? (
+                    {status === 'sending' && estimatedProgress >= 100 ? (
                       <>
                         ✅ Envio concluído! Aguardando confirmação...
                         <br />
@@ -436,8 +465,25 @@ export default function CampaignProgressModal({
                       </>
                     )}
                   </div>
-                </div>
-              )}
+                )}
+
+                {/* Mensagem de status final */}
+                {status === 'completed' && (
+                  <div className="text-center text-xs text-green-600 dark:text-green-400">
+                    🎉 Campanha enviada com sucesso!
+                    <br />
+                    📊 {successCount} mensagens enviadas
+                  </div>
+                )}
+
+                {status === 'failed' && (
+                  <div className="text-center text-xs text-red-600 dark:text-red-400">
+                    ❌ Falha no envio da campanha
+                    <br />
+                    📊 {failedCount} mensagens falharam
+                  </div>
+                )}
+              </div>
 
               {/* Mensagem de Conclusão */}
               {status === 'completed' && (
