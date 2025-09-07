@@ -45,7 +45,6 @@ export interface CampaignCompletion {
 
 export class CampaignStatusServiceV2 {
   private static eventSource: EventSource | null = null;
-  private static listeners: Map<string, Function[]> = new Map();
 
   /**
    * Inicia o rastreamento de uma campanha
@@ -137,12 +136,12 @@ export class CampaignStatusServiceV2 {
     });
 
     // Listener para erros
-    eventSource.addEventListener('error', (event) => {
-      console.error('Erro na conexão SSE:', event);
+    eventSource.addEventListener('error', () => {
+      console.error('Erro na conexão SSE');
     });
 
     // Listener para abertura da conexão
-    eventSource.addEventListener('open', (event) => {
+    eventSource.addEventListener('open', () => {
       console.log('✅ Conexão SSE estabelecida para campanha:', campaignId);
     });
 

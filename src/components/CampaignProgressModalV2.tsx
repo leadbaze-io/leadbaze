@@ -5,7 +5,7 @@ import { Button } from './ui/button'
 import { CampaignStatusServiceV2, type CampaignProgress, type CampaignCompletion } from '../lib/campaignStatusServiceV2'
 
 // Sistema de status mais robusto
-export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending'
+export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending' | 'draft'
 
 export interface CampaignStatusInfo {
   status: CampaignStatus
