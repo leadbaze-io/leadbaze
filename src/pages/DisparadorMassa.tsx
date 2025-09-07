@@ -862,8 +862,8 @@ export default function DisparadorMassa() {
       console.log('🔌 [DisparadorMassa] Iniciando SSE ANTES de enviar campanha...')
       startCampaignStatusMonitoring(selectedCampaign.id)
 
-      // Aguardar um pouco para garantir que SSE conecte
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Aguardar mais tempo para garantir que SSE conecte e permaneça ativo
+      await new Promise(resolve => setTimeout(resolve, 3000))
 
       // TERCEIRO: Agora enviar para N8N
       console.log('📤 [DisparadorMassa] Enviando campanha para N8N...')
