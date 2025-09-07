@@ -18,7 +18,7 @@ module.exports = {
       // Security
       API_SECRET: 'your-secret-key-here',
       // N8N Webhook Configuration
-      N8N_WEBHOOK_URL: 'https://n8n-evolution.kof6cn.easypanel.host/webhook/dispatch-campaign',
+      N8N_WEBHOOK_URL: 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae',
       // Supabase Configuration
       SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',
@@ -43,7 +43,7 @@ module.exports = {
       // Security
       API_SECRET: 'your-secret-key-here',
       // N8N Webhook Configuration
-      N8N_WEBHOOK_URL: 'https://n8n-evolution.kof6cn.easypanel.host/webhook/dispatch-campaign',
+      N8N_WEBHOOK_URL: 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae',
       // Supabase Configuration
       SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',

@@ -129,6 +129,10 @@ function sanitizeWebhookUrl(raw) {
 
 const N8N_WEBHOOK_URL = sanitizeWebhookUrl(process.env.N8N_WEBHOOK_URL); // opcional: webhook do fluxo N8N
 
+// Supabase Configuration
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 // Headers padrão para todas as requisições à Evolution API
 const evolutionHeaders = {
   'Content-Type': 'application/json',
