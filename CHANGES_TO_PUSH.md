@@ -48,3 +48,4 @@ git push origin main
 - ❌ Push para GitHub pendente
 - ⏳ Deploy no servidor pendente
 
+

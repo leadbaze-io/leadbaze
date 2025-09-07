@@ -38,3 +38,4 @@ VALUES (
     2,
     'active'
 );
+

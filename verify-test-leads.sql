@@ -25,3 +25,4 @@ SELECT
     jsonb_array_elements(leads) as lead_data
 FROM public.lead_lists 
 WHERE name = 'Teste Disparo';
+

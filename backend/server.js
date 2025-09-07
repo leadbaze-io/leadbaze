@@ -8,6 +8,7 @@ const { BlogAutomationService, getBlogAutomationService } = require('./services/
 const blogQueueRoutes = require('./routes/blogQueue');
 const blogPostsRoutes = require('./routes/blogPosts');
 const { router: autoProcessRoutes } = require('./routes/autoProcess');
+const campaignStatusRoutes = require('./routes/campaignStatus');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
@@ -921,6 +922,11 @@ app.use('/api/blog/queue', blogQueueRoutes);
 app.use('/api/blog', blogPostsRoutes);
 app.use('/api/blog/auto', autoProcessRoutes);
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
+
+// Rotas de status de campanhas
+console.log('🔧 [Server] Registrando rotas de status de campanhas...');
+app.use('/api/campaign/status', campaignStatusRoutes);
+console.log('✅ [Server] Rotas de status de campanhas registradas com sucesso');
 
 // Endpoints admin (requerem autenticação) - com rate limit específico
 app.use('/api/blog/automation/admin/*', dashboardLimit, checkAdminAuth);

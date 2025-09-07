@@ -49,3 +49,4 @@ echo "$STATUS_RESPONSE" | jq .
 echo ""
 echo "✅ Teste concluído!"
 
+

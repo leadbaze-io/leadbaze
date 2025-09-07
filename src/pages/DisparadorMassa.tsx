@@ -63,6 +63,7 @@ export default function DisparadorMassa() {
   
   // Estados para o modal de progresso
   const [showProgressModal, setShowProgressModal] = useState(false)
+  const [isProgressModalMinimized, setIsProgressModalMinimized] = useState(false)
   const [campaignStartTime, setCampaignStartTime] = useState<Date | null>(null)
   const [currentCampaignStatus, setCurrentCampaignStatus] = useState<'sending' | 'completed' | 'failed'>('sending')
   const [currentSuccessCount, setCurrentSuccessCount] = useState(0)
@@ -758,26 +759,20 @@ export default function DisparadorMassa() {
     setStopPolling(() => stopFunction)
   }
 
-  // Função para simular conclusão da campanha (para teste)
-  const simulateCampaignCompletion = async (campaignId: string) => {
-    try {
-      const success = await CampaignStatusService.simulateCampaignCompletion(campaignId)
-      if (success) {
-        // Atualizar estados do modal
-        setCurrentCampaignStatus('completed')
-        setCurrentSuccessCount(campaignLeads.length)
-        setCurrentFailedCount(0)
-        
-        toast({
-          title: '🧪 Teste Concluído',
-          description: 'Status da campanha foi simulado como concluído.',
-          variant: 'info',
-        })
-      }
-    } catch (error) {
-      console.error('Erro ao simular conclusão:', error)
-    }
+  // Funções para controlar o modal de progresso
+  const handleMinimizeProgressModal = () => {
+    setIsProgressModalMinimized(true)
   }
+
+  const handleExpandProgressModal = () => {
+    setIsProgressModalMinimized(false)
+  }
+
+  const handleCloseProgressModal = () => {
+    setShowProgressModal(false)
+    setIsProgressModalMinimized(false)
+  }
+
 
   const handleSendCampaign = async () => {
     if (!selectedCampaign) {
@@ -1782,16 +1777,6 @@ Entre em contato conosco para mais detalhes!"
                             </span>
                           </Button>
                           
-                          {/* Botão de Teste - TEMPORÁRIO */}
-                          {selectedCampaign?.status === 'sending' && (
-                            <Button 
-                              onClick={() => simulateCampaignCompletion(selectedCampaign.id)}
-                              variant="outline"
-                              className="w-full border-2 border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 py-2 rounded-xl font-medium transition-all duration-300"
-                            >
-                              🧪 Simular Conclusão (Teste)
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -1975,7 +1960,10 @@ Entre em contato conosco para mais detalhes!"
         successCount={currentSuccessCount}
         failedCount={currentFailedCount}
         startTime={campaignStartTime || undefined}
-        onClose={() => setShowProgressModal(false)}
+        isMinimized={isProgressModalMinimized}
+        onClose={handleCloseProgressModal}
+        onMinimize={handleMinimizeProgressModal}
+        onExpand={handleExpandProgressModal}
       />
     </div>
   )

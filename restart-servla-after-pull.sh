@@ -38,3 +38,4 @@ systemctl status nginx --no-pager -l
 echo "✅ Reinicialização concluída!"
 echo "🔗 Acesse: https://leadbaze.io"
 
+

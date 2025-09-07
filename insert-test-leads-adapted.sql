@@ -61,3 +61,4 @@ BEGIN
     RAISE NOTICE 'Leads inseridos: Jean Lopes (31983323121) e Matheus Moura (3199766846)';
 
 END $$;
+
