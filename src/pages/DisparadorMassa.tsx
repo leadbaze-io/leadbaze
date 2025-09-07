@@ -828,6 +828,7 @@ export default function DisparadorMassa() {
     const payload = [{
       instance_name: instanceName || 'sem_instancia',
       mensagem: normalizedMessage,
+      campaign_id: selectedCampaign?.id || 'temp-campaign-' + Date.now(),
       itens: selectedItems
     }]
 
