@@ -392,13 +392,26 @@ router.get('/stream/:campaignId', (req, res) => {
  * Função para enviar dados via SSE para uma campanha específica
  */
 function sendSSEData(campaignId, data) {
+  console.log(`📡 [sendSSEData] Tentando enviar dados para campanha: ${campaignId}`);
+  console.log(`📡 [sendSSEData] Conexões ativas totais: ${activeConnections.size}`);
+  
   const connections = Array.from(activeConnections.values())
     .filter(conn => conn.campaignId === campaignId);
   
-  connections.forEach(conn => {
+  console.log(`📡 [sendSSEData] Conexões encontradas para campanha ${campaignId}: ${connections.length}`);
+  
+  if (connections.length === 0) {
+    console.log(`⚠️ [sendSSEData] Nenhuma conexão SSE ativa para campanha ${campaignId}`);
+    console.log(`📋 [sendSSEData] Conexões ativas:`, Array.from(activeConnections.keys()));
+    return;
+  }
+  
+  connections.forEach((conn, index) => {
     if (!conn.res.writableEnded) {
+      console.log(`📤 [sendSSEData] Enviando dados via SSE para conexão ${index + 1}:`, data);
       conn.res.write(`data: ${JSON.stringify(data)}\n\n`);
     } else {
+      console.log(`🗑️ [sendSSEData] Removendo conexão ${index + 1} (fechada)`);
       activeConnections.delete(conn);
     }
   });
