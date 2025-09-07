@@ -403,43 +403,39 @@ export default function CampaignProgressModal({
                   </div>
                   
                   {/* Estimativa de tempo restante */}
-                  {(() => {
-                    const remainingMessages = Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))
-                    const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
-                    const estimatedTimeRemaining = estimatedMinutesRemaining > 0 ? 
-                      `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
-                      estimatedProgress >= 100 ? 'Finalizando envio...' : 'Concluindo...'
-                    
-                    return (
-                      <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                        {status === 'completed' ? (
-                          <>
-                            🎉 Campanha enviada com sucesso!
-                            <br />
-                            📊 {successCount} mensagens enviadas
-                          </>
-                        ) : status === 'failed' ? (
-                          <>
-                            ❌ Falha no envio da campanha
-                            <br />
-                            📊 {failedCount} mensagens falharam
-                          </>
-                        ) : estimatedProgress >= 100 ? (
-                          <>
-                            ✅ Envio concluído! Aguardando confirmação...
-                            <br />
-                            📊 {successCount} mensagens processadas
-                          </>
-                        ) : (
-                          <>
-                            ⏱️ Tempo estimado restante: {estimatedTimeRemaining}
-                            <br />
-                            <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
-                          </>
-                        )}
-                      </div>
-                    )
-                  })()}
+                  <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+                    {status === 'completed' ? (
+                      <>
+                        🎉 Campanha enviada com sucesso!
+                        <br />
+                        📊 {successCount} mensagens enviadas
+                      </>
+                    ) : status === 'failed' ? (
+                      <>
+                        ❌ Falha no envio da campanha
+                        <br />
+                        📊 {failedCount} mensagens falharam
+                      </>
+                    ) : estimatedProgress >= 100 ? (
+                      <>
+                        ✅ Envio concluído! Aguardando confirmação...
+                        <br />
+                        📊 {successCount} mensagens processadas
+                      </>
+                    ) : (
+                      <>
+                        ⏱️ Tempo estimado restante: {(() => {
+                          const remainingMessages = Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))
+                          const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
+                          return estimatedMinutesRemaining > 0 ? 
+                            `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
+                            'Concluindo...'
+                        })()}
+                        <br />
+                        <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
 
