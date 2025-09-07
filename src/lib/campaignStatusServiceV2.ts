@@ -108,41 +108,53 @@ export class CampaignStatusServiceV2 {
    * Inicia Server-Sent Events para receber atualizações em tempo real
    */
   static startRealTimeUpdates(campaignId: string, onProgress: (progress: CampaignProgress) => void, onComplete: (completion: CampaignCompletion) => void): () => void {
+    console.log('🔌 [CampaignStatusServiceV2] Iniciando conexão SSE...');
+    
     // Parar conexão anterior se existir
     this.stopRealTimeUpdates();
 
     // Criar nova conexão SSE
-    const eventSource = new EventSource(`${API_BASE_URL}/api/campaign/status/stream/${campaignId}`);
+    const sseUrl = `${API_BASE_URL}/api/campaign/status/stream/${campaignId}`;
+    console.log('🌐 [CampaignStatusServiceV2] Conectando SSE em:', sseUrl);
+    
+    const eventSource = new EventSource(sseUrl);
     this.eventSource = eventSource;
+    
+    console.log('📡 [CampaignStatusServiceV2] EventSource criado:', eventSource);
 
     // Listener para progresso
     eventSource.addEventListener('progress', (event) => {
+      console.log('📊 [CampaignStatusServiceV2] Evento progress recebido:', event);
       try {
         const progressData: CampaignProgress = JSON.parse(event.data);
+        console.log('📈 [CampaignStatusServiceV2] Dados de progresso:', progressData);
         onProgress(progressData);
       } catch (error) {
-        console.error('Erro ao processar evento de progresso:', error);
+        console.error('❌ [CampaignStatusServiceV2] Erro ao processar evento de progresso:', error);
       }
     });
 
     // Listener para conclusão
     eventSource.addEventListener('complete', (event) => {
+      console.log('✅ [CampaignStatusServiceV2] Evento complete recebido:', event);
       try {
         const completionData: CampaignCompletion = JSON.parse(event.data);
+        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão:', completionData);
         onComplete(completionData);
       } catch (error) {
-        console.error('Erro ao processar evento de conclusão:', error);
+        console.error('❌ [CampaignStatusServiceV2] Erro ao processar evento de conclusão:', error);
       }
     });
 
     // Listener para erros
-    eventSource.addEventListener('error', () => {
-      console.error('Erro na conexão SSE');
+    eventSource.addEventListener('error', (event) => {
+      console.error('❌ [CampaignStatusServiceV2] Erro na conexão SSE:', event);
+      console.error('❌ [CampaignStatusServiceV2] EventSource readyState:', eventSource.readyState);
     });
 
     // Listener para abertura da conexão
     eventSource.addEventListener('open', () => {
-      console.log('✅ Conexão SSE estabelecida para campanha:', campaignId);
+      console.log('✅ [CampaignStatusServiceV2] Conexão SSE estabelecida para campanha:', campaignId);
     });
 
     // Retornar função para parar as atualizações
@@ -156,9 +168,12 @@ export class CampaignStatusServiceV2 {
    */
   static stopRealTimeUpdates(): void {
     if (this.eventSource) {
+      console.log('🔌 [CampaignStatusServiceV2] Fechando conexão SSE...');
       this.eventSource.close();
       this.eventSource = null;
-      console.log('🔌 Conexão SSE fechada');
+      console.log('✅ [CampaignStatusServiceV2] Conexão SSE fechada');
+    } else {
+      console.log('ℹ️ [CampaignStatusServiceV2] Nenhuma conexão SSE ativa para fechar');
     }
   }
 
@@ -230,14 +245,19 @@ export class CampaignStatusServiceV2 {
     onComplete: (completion: CampaignCompletion) => void,
     onStatusUpdate?: (status: CampaignStatus) => void
   ): () => void {
+    console.log('🚀 [CampaignStatusServiceV2] Iniciando rastreamento da campanha:', campaignId);
+    console.log('🔗 [CampaignStatusServiceV2] URL base:', API_BASE_URL);
+    
     // Tentar SSE primeiro
     try {
+      console.log('📡 [CampaignStatusServiceV2] Tentando conectar via SSE...');
       const stopSSE = this.startRealTimeUpdates(campaignId, onProgress, onComplete);
       
+      console.log('✅ [CampaignStatusServiceV2] SSE conectado com sucesso');
       // Se SSE funcionou, retornar função de parada
       return stopSSE;
     } catch (error) {
-      console.warn('SSE não disponível, usando polling como fallback:', error);
+      console.warn('❌ [CampaignStatusServiceV2] SSE não disponível, usando polling como fallback:', error);
       
       // Fallback para polling
       return this.startFallbackPolling(

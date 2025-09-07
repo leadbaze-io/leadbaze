@@ -705,24 +705,29 @@ export default function DisparadorMassa() {
 
   // Função para iniciar o monitoramento de status em tempo real
   const startCampaignStatusMonitoring = (campaignId: string) => {
+    console.log('🚀 [DisparadorMassa] Iniciando monitoramento de status para campanha:', campaignId);
+    
     // Parar monitoramento anterior se existir
     if (stopPolling) {
+      console.log('🛑 [DisparadorMassa] Parando monitoramento anterior...');
       stopPolling()
     }
 
     setIsPollingStatus(true)
+    console.log('📊 [DisparadorMassa] Status de polling definido como true');
 
     const stopFunction = CampaignStatusServiceV2.startStatusTracking(
       campaignId,
       (progress) => {
-        console.log('📊 Progresso da campanha atualizado (tempo real):', progress)
+        console.log('📊 [DisparadorMassa] Progresso da campanha atualizado (tempo real):', progress)
         
         // Atualizar estados do modal de progresso
         setCurrentSuccessCount(progress.successCount)
         setCurrentFailedCount(progress.failedCount)
+        console.log('🔄 [DisparadorMassa] Estados atualizados - Sucesso:', progress.successCount, 'Falhas:', progress.failedCount)
       },
       (completion) => {
-        console.log('✅ Campanha finalizada (tempo real):', completion)
+        console.log('✅ [DisparadorMassa] Campanha finalizada (tempo real):', completion)
         
         // Atualizar estados do modal de progresso
         setCurrentCampaignStatus(completion.status)
@@ -741,13 +746,16 @@ export default function DisparadorMassa() {
             : c
         ))
 
+        console.log('🎉 [DisparadorMassa] Campanha atualizada na lista com status:', completion.status)
+
         // Fechar o modal após um delay
         setTimeout(() => {
+          console.log('⏰ [DisparadorMassa] Fechando modal após 3 segundos...');
           setShowProgressModal(false)
         }, 3000) // Fechar após 3 segundos
       },
       (status) => {
-        console.log('📊 Status da campanha atualizado (tempo real):', status)
+        console.log('📊 [DisparadorMassa] Status da campanha atualizado (tempo real):', status)
         
         // Atualizar campanha na lista
         setCampaigns(prev => prev.map(c => 
@@ -760,6 +768,7 @@ export default function DisparadorMassa() {
               }
             : c
         ))
+        console.log('🔄 [DisparadorMassa] Lista de campanhas atualizada com novo status:', status.status)
       }
     )
 
@@ -1490,16 +1499,16 @@ export default function DisparadorMassa() {
                                      <Users className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                                    </div>
                                    <div className="flex items-center space-x-1">
-                                     <p className="text-base sm:text-lg font-bold text-purple-800 dark:text-purple-200">
+                                     <p className="text-base sm:text-lg font-bold text-purple-900 dark:text-purple-200">
                                        {campaignLeads.length}
                                      </p>
-                                     <p className="text-xs text-purple-600 dark:text-purple-300">
+                                     <p className="text-xs text-purple-700 dark:text-purple-300 font-medium">
                                        Leads Únicos
                                      </p>
                                      </div>
                                    </div>
                                    <div className="text-right">
-                                     <div className="text-xs text-purple-600 dark:text-purple-300 font-medium">
+                                     <div className="text-xs text-purple-700 dark:text-purple-300 font-semibold">
                                        ✓ Pronto
                                      </div>
                                    </div>
