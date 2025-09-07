@@ -1,7 +1,7 @@
 // Script para testar o webhook N8N
 const axios = require('axios');
 
-const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e';
+const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae';
 
 async function testN8NWebhook() {
   console.log('🧪 Testando webhook N8N...');
