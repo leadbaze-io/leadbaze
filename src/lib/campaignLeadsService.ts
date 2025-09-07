@@ -138,6 +138,9 @@ export class CampaignLeadsService {
       const duplicatesInDatabase = uniqueLeadsInList.length - newLeadsToInsert.length
       const totalDuplicates = duplicatesInList + duplicatesInDatabase
       
+      // Atualizar total_leads na campanha
+      await this.updateCampaignTotalLeads(campaignId)
+      
       console.log('🔍 DEBUG após inserção:')
       console.log('- Leads originais:', leads.length)
       console.log('- Leads únicos na lista:', uniqueLeadsInList.length)
@@ -188,6 +191,9 @@ export class CampaignLeadsService {
 
       const removedCount = deletedLeads?.length || 0
 
+      // Atualizar total_leads na campanha
+      await this.updateCampaignTotalLeads(campaignId)
+
       return {
         success: true,
         message: `${removedCount} leads removidos com sucesso`,
@@ -228,6 +234,9 @@ export class CampaignLeadsService {
       if (deleteError) throw deleteError
 
       const removedCount = deletedLeads?.length || 0
+
+      // Atualizar total_leads na campanha
+      await this.updateCampaignTotalLeads(campaignId)
 
       return {
         success: true,
@@ -431,6 +440,31 @@ export class CampaignLeadsService {
       hash = hash & hash // Convert to 32bit integer
     }
     return Math.abs(hash).toString(36).substring(0, 64)
+  }
+
+  /**
+   * Atualizar total_leads na campanha baseado na contagem real
+   */
+  private static async updateCampaignTotalLeads(campaignId: string): Promise<void> {
+    try {
+      const totalLeads = await this.getCampaignLeadsCount(campaignId)
+      
+      const { error } = await supabase
+        .from('bulk_campaigns')
+        .update({ 
+          total_leads: totalLeads,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', campaignId)
+
+      if (error) {
+        console.error('Erro ao atualizar total_leads da campanha:', error)
+      } else {
+        console.log(`✅ Total de leads da campanha ${campaignId} atualizado para: ${totalLeads}`)
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar total_leads da campanha:', error)
+    }
   }
 
   /**
