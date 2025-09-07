@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2 } from 'lucide-react'
+import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2, Wifi, WifiOff } from 'lucide-react'
 import { Button } from './ui/button'
+import { CampaignStatusServiceV2, type CampaignProgress, type CampaignCompletion } from '../lib/campaignStatusServiceV2'
 
 // Sistema de status mais robusto
 export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending'
@@ -16,8 +17,9 @@ export interface CampaignStatusInfo {
   showTimeEstimate: boolean
 }
 
-interface CampaignProgressModalProps {
+interface CampaignProgressModalV2Props {
   isVisible: boolean
+  campaignId: string
   campaignName: string
   totalLeads: number
   status: CampaignStatus
@@ -30,11 +32,12 @@ interface CampaignProgressModalProps {
   isMinimized?: boolean
 }
 
-export default function CampaignProgressModal({
+export default function CampaignProgressModalV2({
   isVisible,
+  campaignId,
   campaignName,
   totalLeads,
-  status,
+  status: initialStatus,
   successCount = 0,
   failedCount = 0,
   startTime,
@@ -42,17 +45,23 @@ export default function CampaignProgressModal({
   onMinimize,
   onExpand,
   isMinimized = false
-}: CampaignProgressModalProps) {
+}: CampaignProgressModalV2Props) {
+  const [status, setStatus] = useState<CampaignStatus>(initialStatus)
+  const [currentSuccessCount, setCurrentSuccessCount] = useState(successCount)
+  const [currentFailedCount, setCurrentFailedCount] = useState(failedCount)
+  const [progress, setProgress] = useState(0)
+  const [currentLead, setCurrentLead] = useState<{ phone: string; name: string; success: boolean } | null>(null)
   const [elapsedTime, setElapsedTime] = useState(0)
-  const [estimatedProgress, setEstimatedProgress] = useState(0)
   const [hasNotified, setHasNotified] = useState(false)
   const [hasAutoMinimized, setHasAutoMinimized] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'unknown'>('unknown')
+  const [stopTracking, setStopTracking] = useState<(() => void) | null>(null)
 
   // Função robusta para obter informações do status
   const getStatusInfo = (): CampaignStatusInfo => {
     const baseInfo = {
       status,
-      progress: estimatedProgress,
+      progress,
       message: '',
       icon: null as React.ReactNode,
       color: '',
@@ -64,9 +73,9 @@ export default function CampaignProgressModal({
       case 'sending':
         return {
           ...baseInfo,
-          progress: estimatedProgress,
-          message: estimatedProgress >= 100 
-            ? 'Envio concluído! Aguardando confirmação...'
+          progress,
+          message: currentLead 
+            ? `Enviando para ${currentLead.name}...`
             : 'Enviando mensagens...',
           icon: <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />,
           color: 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg',
@@ -114,6 +123,52 @@ export default function CampaignProgressModal({
 
   const statusInfo = getStatusInfo()
 
+  // Iniciar rastreamento quando o modal for exibido
+  useEffect(() => {
+    if (isVisible && campaignId && status === 'sending') {
+      console.log('🚀 Iniciando rastreamento da campanha:', campaignId)
+      
+      // Iniciar rastreamento de status
+      const stopTrackingFn = CampaignStatusServiceV2.startStatusTracking(
+        campaignId,
+        // onProgress
+        (progressData: CampaignProgress) => {
+          console.log('📊 Progresso recebido:', progressData)
+          setProgress(progressData.progress)
+          setCurrentSuccessCount(progressData.successCount)
+          setCurrentFailedCount(progressData.failedCount)
+          setCurrentLead(progressData.currentLead || null)
+          setConnectionStatus('connected')
+        },
+        // onComplete
+        (completionData: CampaignCompletion) => {
+          console.log('🏁 Campanha concluída:', completionData)
+          setStatus(completionData.status)
+          setCurrentSuccessCount(completionData.successCount)
+          setCurrentFailedCount(completionData.failedCount)
+          setProgress(100)
+          setConnectionStatus('connected')
+        },
+        // onStatusUpdate (fallback)
+        (statusData) => {
+          console.log('📋 Status atualizado:', statusData)
+          setStatus(statusData.status)
+          setProgress(statusData.progress || 0)
+          setConnectionStatus('connected')
+        }
+      )
+
+      setStopTracking(() => stopTrackingFn)
+
+      // Cleanup ao desmontar
+      return () => {
+        if (stopTrackingFn) {
+          stopTrackingFn()
+        }
+      }
+    }
+  }, [isVisible, campaignId, status])
+
   // Calcular tempo decorrido
   useEffect(() => {
     if (!startTime || status === 'completed' || status === 'failed') return
@@ -126,22 +181,6 @@ export default function CampaignProgressModal({
 
     return () => clearInterval(interval)
   }, [startTime, status])
-
-  // Calcular progresso estimado baseado no tempo
-  useEffect(() => {
-    if (status === 'sending' && startTime) {
-      // Estimativa: 1 mensagem por minuto (60 segundos)
-      const messagesPerMinute = 1
-      const messagesPerSecond = messagesPerMinute / 60 // 0.0167 mensagens por segundo
-      const estimatedSent = Math.min(elapsedTime * messagesPerSecond, totalLeads)
-      const progress = Math.min((estimatedSent / totalLeads) * 100, 100) // Progresso completo
-      setEstimatedProgress(progress)
-    } else if (status === 'completed') {
-      setEstimatedProgress(100)
-    } else if (status === 'failed') {
-      setEstimatedProgress(0)
-    }
-  }, [elapsedTime, totalLeads, status, startTime])
 
   // Mostrar notificação quando a campanha termina (se estiver minimizada)
   useEffect(() => {
@@ -159,7 +198,7 @@ export default function CampaignProgressModal({
           status === 'completed' ? '🎉 Campanha Concluída!' : '❌ Campanha Falhou',
           {
             body: status === 'completed' 
-              ? `${campaignName} foi enviada com sucesso! ${successCount} mensagens enviadas.`
+              ? `${campaignName} foi enviada com sucesso! ${currentSuccessCount} mensagens enviadas.`
               : `${campaignName} falhou. Tente novamente.`,
             icon: '/favicon.ico',
             tag: `campaign-${campaignName}`,
@@ -174,7 +213,7 @@ export default function CampaignProgressModal({
         }
       }
     }
-  }, [isMinimized, status, hasNotified, campaignName, successCount, onExpand])
+  }, [isMinimized, status, hasNotified, campaignName, currentSuccessCount, onExpand])
 
   // Auto-minimizar após 4 segundos se o usuário não minimizar
   useEffect(() => {
@@ -188,12 +227,20 @@ export default function CampaignProgressModal({
     }
   }, [isVisible, isMinimized, status, hasAutoMinimized, onMinimize])
 
+  // Cleanup ao fechar
+  useEffect(() => {
+    return () => {
+      if (stopTracking) {
+        stopTracking()
+      }
+    }
+  }, [stopTracking])
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
-
 
   const getProgressColor = () => {
     switch (status) {
@@ -205,6 +252,17 @@ export default function CampaignProgressModal({
         return 'bg-gradient-to-r from-red-500 to-pink-600'
       default:
         return 'bg-gradient-to-r from-gray-400 to-gray-600'
+    }
+  }
+
+  const getConnectionIcon = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return <Wifi className="w-4 h-4 text-green-500" />
+      case 'disconnected':
+        return <WifiOff className="w-4 h-4 text-red-500" />
+      default:
+        return <Wifi className="w-4 h-4 text-gray-400" />
     }
   }
 
@@ -302,9 +360,9 @@ export default function CampaignProgressModal({
                   fill="none"
                   strokeLinecap="round"
                   strokeDasharray={`${2 * Math.PI * 28}`}
-                  strokeDashoffset={`${2 * Math.PI * 28 * (1 - estimatedProgress / 100)}`}
+                  strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
                   initial={{ strokeDashoffset: 2 * Math.PI * 28 }}
-                  animate={{ strokeDashoffset: 2 * Math.PI * 28 * (1 - estimatedProgress / 100) }}
+                  animate={{ strokeDashoffset: 2 * Math.PI * 28 * (1 - progress / 100) }}
                   transition={{ duration: 0.5 }}
                 />
               </svg>
@@ -347,6 +405,11 @@ export default function CampaignProgressModal({
                 
                 {/* Botões de controle */}
                 <div className="flex items-center space-x-1">
+                  {/* Status de conexão */}
+                  <div className="flex items-center space-x-1" title={`Conexão: ${connectionStatus}`}>
+                    {getConnectionIcon()}
+                  </div>
+                  
                   {/* Botão de minimizar (apenas quando não está minimizado) */}
                   {!isMinimized && onMinimize && (
                     <Button
@@ -389,7 +452,7 @@ export default function CampaignProgressModal({
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Enviadas</p>
                   <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                    {status === 'sending' ? Math.floor((estimatedProgress / 100) * totalLeads) : successCount}
+                    {currentSuccessCount}
                   </p>
                 </div>
                 
@@ -398,9 +461,24 @@ export default function CampaignProgressModal({
                     <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Falhas</p>
-                  <p className="text-lg font-bold text-red-600 dark:text-red-400">{failedCount}</p>
+                  <p className="text-lg font-bold text-red-600 dark:text-red-400">{currentFailedCount}</p>
                 </div>
               </div>
+
+              {/* Lead atual sendo processado */}
+              {currentLead && status === 'sending' && (
+                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-2 h-2 rounded-full ${currentLead.success ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                      {currentLead.success ? 'Enviado' : 'Falhou'}: {currentLead.name}
+                    </span>
+                  </div>
+                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                    {currentLead.phone}
+                  </p>
+                </div>
+              )}
 
               {/* Barra de Progresso */}
               {statusInfo.showProgress && (
@@ -410,7 +488,7 @@ export default function CampaignProgressModal({
                       Progresso
                     </span>
                     <span className="text-sm font-bold text-gray-900 dark:text-white">
-                      {Math.floor(statusInfo.progress)}%
+                      {Math.floor(progress)}%
                     </span>
                   </div>
                   
@@ -418,7 +496,7 @@ export default function CampaignProgressModal({
                     <motion.div
                       className={`h-full ${getProgressColor()} rounded-full`}
                       initial={{ width: 0 }}
-                      animate={{ width: `${statusInfo.progress}%` }}
+                      animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.5, ease: "easeOut" }}
                     />
                   </div>
@@ -436,7 +514,7 @@ export default function CampaignProgressModal({
                     <div className="flex items-center space-x-2">
                       <MessageSquare className="w-4 h-4" />
                       <span>
-                        Restam: {Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))}
+                        Restam: {Math.max(0, totalLeads - currentSuccessCount - currentFailedCount)}
                       </span>
                     </div>
                   </div>
@@ -445,16 +523,16 @@ export default function CampaignProgressModal({
                 {/* Estimativa de tempo restante */}
                 {statusInfo.showTimeEstimate && (
                   <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                    {status === 'sending' && estimatedProgress >= 100 ? (
+                    {status === 'sending' && progress >= 100 ? (
                       <>
                         ✅ Envio concluído! Aguardando confirmação...
                         <br />
-                        📊 {successCount} mensagens processadas
+                        📊 {currentSuccessCount} mensagens processadas
                       </>
                     ) : (
                       <>
                         ⏱️ Tempo estimado restante: {(() => {
-                          const remainingMessages = Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))
+                          const remainingMessages = Math.max(0, totalLeads - currentSuccessCount - currentFailedCount)
                           const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
                           return estimatedMinutesRemaining > 0 ? 
                             `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
@@ -472,7 +550,7 @@ export default function CampaignProgressModal({
                   <div className="text-center text-xs text-green-600 dark:text-green-400">
                     🎉 Campanha enviada com sucesso!
                     <br />
-                    📊 {successCount} mensagens enviadas
+                    📊 {currentSuccessCount} mensagens enviadas
                   </div>
                 )}
 
@@ -480,7 +558,7 @@ export default function CampaignProgressModal({
                   <div className="text-center text-xs text-red-600 dark:text-red-400">
                     ❌ Falha no envio da campanha
                     <br />
-                    📊 {failedCount} mensagens falharam
+                    📊 {currentFailedCount} mensagens falharam
                   </div>
                 )}
               </div>
@@ -499,7 +577,7 @@ export default function CampaignProgressModal({
                     🎉 Campanha Enviada com Sucesso!
                   </p>
                   <p className="text-sm text-green-600 dark:text-green-300 mt-1">
-                    {successCount} mensagens enviadas
+                    {currentSuccessCount} mensagens enviadas
                   </p>
                 </motion.div>
               )}

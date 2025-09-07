@@ -42,3 +42,4 @@ echo ""
 # Executar logs em tempo real
 pm2 logs leadbaze-backend --lines 50
 
+
