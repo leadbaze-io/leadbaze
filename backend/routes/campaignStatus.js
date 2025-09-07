@@ -321,4 +321,81 @@ function notifyCampaignComplete(campaignId, completionData) {
   // Em implementação futura, enviar via WebSocket para clientes conectados
 }
 
+/**
+ * GET /api/campaign/status/stream/:campaignId
+ * Server-Sent Events para monitoramento em tempo real
+ */
+router.get('/stream/:campaignId', (req, res) => {
+  const { campaignId } = req.params;
+  
+  console.log(`📡 Iniciando SSE para campanha: ${campaignId}`);
+  
+  // Configurar headers para SSE
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Cache-Control'
+  });
+
+  // Enviar evento de conexão
+  res.write(`data: ${JSON.stringify({
+    type: 'connected',
+    campaignId,
+    timestamp: new Date().toISOString()
+  })}\n\n`);
+
+  // Armazenar conexão
+  const connectionId = `${campaignId}_${Date.now()}`;
+  activeConnections.set(connectionId, {
+    campaignId,
+    res,
+    timestamp: Date.now()
+  });
+
+  // Enviar heartbeat a cada 30 segundos
+  const heartbeat = setInterval(() => {
+    if (res.writableEnded) {
+      clearInterval(heartbeat);
+      activeConnections.delete(connectionId);
+      return;
+    }
+    
+    res.write(`data: ${JSON.stringify({
+      type: 'heartbeat',
+      timestamp: new Date().toISOString()
+    })}\n\n`);
+  }, 30000);
+
+  // Limpar conexão quando cliente desconectar
+  req.on('close', () => {
+    console.log(`📡 Cliente desconectado da campanha: ${campaignId}`);
+    clearInterval(heartbeat);
+    activeConnections.delete(connectionId);
+  });
+
+  req.on('error', (error) => {
+    console.error(`❌ Erro na conexão SSE para campanha ${campaignId}:`, error);
+    clearInterval(heartbeat);
+    activeConnections.delete(connectionId);
+  });
+});
+
+/**
+ * Função para enviar dados via SSE para uma campanha específica
+ */
+function sendSSEData(campaignId, data) {
+  const connections = Array.from(activeConnections.values())
+    .filter(conn => conn.campaignId === campaignId);
+  
+  connections.forEach(conn => {
+    if (!conn.res.writableEnded) {
+      conn.res.write(`data: ${JSON.stringify(data)}\n\n`);
+    } else {
+      activeConnections.delete(conn);
+    }
+  });
+}
+
 module.exports = router;

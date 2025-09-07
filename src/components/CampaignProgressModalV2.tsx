@@ -226,11 +226,11 @@ export default function CampaignProgressModalV2({
             title={`${campaignName} - ${statusInfo.message}`}
           >
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-white/5">
+            <div className="absolute inset-0 bg-white/10 dark:bg-white/5">
               <div className="absolute inset-0" style={{
                 backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
                 backgroundSize: '20px 20px',
-                opacity: 0.1
+                opacity: 0.2
               }}></div>
             </div>
 
@@ -240,19 +240,19 @@ export default function CampaignProgressModalV2({
                 <motion.div
                   animate={status === 'sending' ? { rotate: 360 } : {}}
                   transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 text-white drop-shadow-lg"
                 >
                   {statusInfo.icon}
                 </motion.div>
 
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-white truncate">
+                  <h3 className="text-sm font-bold text-white truncate drop-shadow-md">
                     {campaignName}
                   </h3>
-                  <div className="flex items-center space-x-2 text-xs text-white/80">
+                  <div className="flex items-center space-x-2 text-xs text-white/90 drop-shadow-sm">
                     <span>{statusInfo.message}</span>
                     {!isConnected && (
-                      <WifiOff className="w-3 h-3 text-yellow-400" />
+                      <WifiOff className="w-3 h-3 text-yellow-300 drop-shadow-sm" />
                     )}
                   </div>
                 </div>
@@ -262,13 +262,13 @@ export default function CampaignProgressModalV2({
               <div className="flex items-center space-x-3">
                 {/* Estatísticas Compactas */}
                 <div className="text-right">
-                  <div className="text-sm font-bold text-white">
+                  <div className="text-sm font-bold text-white drop-shadow-md">
                     {status === 'sending' ? `${successCount}/${totalLeads}` :
                      status === 'completed' ? 'Concluído' :
                      status === 'failed' ? 'Falhou' : 'Aguardando'}
                   </div>
                   {status === 'sending' && (
-                    <div className="text-xs text-white/80">
+                    <div className="text-xs text-white/90 drop-shadow-sm">
                       {Math.floor(progress)}%
                     </div>
                   )}
@@ -338,11 +338,11 @@ export default function CampaignProgressModalV2({
               'bg-gradient-to-r from-gray-500 to-gray-600'
             }`}>
               {/* Background Pattern */}
-              <div className="absolute inset-0 bg-white/10">
+              <div className="absolute inset-0 bg-white/15 dark:bg-white/10">
                 <div className="absolute inset-0" style={{
                   backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
                   backgroundSize: '24px 24px',
-                  opacity: 0.1
+                  opacity: 0.2
                 }}></div>
               </div>
 
@@ -353,13 +353,15 @@ export default function CampaignProgressModalV2({
                     <motion.div
                       animate={status === 'sending' ? { rotate: 360 } : {}}
                       transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                      className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm"
+                      className="w-10 h-10 bg-white/25 dark:bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-lg"
                     >
-                      {statusInfo.icon}
+                      <div className="text-white drop-shadow-lg">
+                        {statusInfo.icon}
+                      </div>
                     </motion.div>
                     <div>
-                      <h2 className="text-xl font-bold">Status da Campanha</h2>
-                      <p className="text-white/80 text-sm">Monitoramento em tempo real</p>
+                      <h2 className="text-xl font-bold text-white drop-shadow-md">Status da Campanha</h2>
+                      <p className="text-white/90 text-sm drop-shadow-sm">Monitoramento em tempo real</p>
                     </div>
                   </div>
 
@@ -393,20 +395,20 @@ export default function CampaignProgressModalV2({
 
                 {/* Nome da Campanha */}
                 <div className="mb-4">
-                  <h1 className="text-2xl font-bold mb-1">{campaignName}</h1>
-                  <p className="text-white/80">{statusInfo.message}</p>
+                  <h1 className="text-2xl font-bold mb-1 text-white drop-shadow-md">{campaignName}</h1>
+                  <p className="text-white/90 drop-shadow-sm">{statusInfo.message}</p>
                 </div>
 
                 {/* Barra de Progresso Principal */}
                 {statusInfo.showProgress && (
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium">Progresso</span>
-                      <span className="text-sm font-bold">{Math.floor(progress)}%</span>
+                      <span className="text-sm font-medium text-white drop-shadow-sm">Progresso</span>
+                      <span className="text-sm font-bold text-white drop-shadow-md">{Math.floor(progress)}%</span>
                     </div>
-                    <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-white/25 dark:bg-white/20 rounded-full h-3 overflow-hidden shadow-inner">
                       <motion.div
-                        className="h-full bg-white/80 rounded-full"
+                        className="h-full bg-white/90 dark:bg-white/80 rounded-full shadow-sm"
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
