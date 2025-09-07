@@ -93,7 +93,7 @@ export class CampaignStatusService {
     maxAttempts: number = 60 // 10 minutos máximo
   ): () => void {
     let attempts = 0;
-    let intervalId: NodeJS.Timeout; // Linting fix: changed from const to let
+    let intervalId: NodeJS.Timeout;
 
     const checkStatus = async () => {
       attempts++;
