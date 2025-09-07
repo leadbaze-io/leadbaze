@@ -768,6 +768,30 @@ export default function DisparadorMassa() {
         setCurrentSuccessCount(campaignLeads.length)
         setCurrentFailedCount(0)
         
+        // Atualizar campanha na lista local
+        setCampaigns(prev => prev.map(c => 
+          c.id === campaignId 
+            ? { 
+                ...c, 
+                status: 'completed' as const, 
+                success_count: campaignLeads.length, 
+                failed_count: 0,
+                completed_at: new Date().toISOString()
+              }
+            : c
+        ))
+        
+        // Atualizar campanha selecionada se for a mesma
+        if (selectedCampaign?.id === campaignId) {
+          setSelectedCampaign(prev => prev ? {
+            ...prev,
+            status: 'completed' as const,
+            success_count: campaignLeads.length,
+            failed_count: 0,
+            completed_at: new Date().toISOString()
+          } : null)
+        }
+        
         toast({
           title: '🧪 Teste Concluído',
           description: 'Status da campanha foi simulado como concluído.',

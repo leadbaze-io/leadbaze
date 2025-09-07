@@ -118,16 +118,16 @@ export default function CampaignProgressModal({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 100 }}
+          className="fixed bottom-6 right-6 z-50 w-80 max-w-sm"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`relative w-full max-w-md ${getStatusColor()} rounded-2xl border-2 shadow-2xl overflow-hidden`}
+            className={`relative ${getStatusColor()} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
           >
             {/* Header */}
             <div className="p-6 pb-4">
@@ -144,16 +144,15 @@ export default function CampaignProgressModal({
                   </div>
                 </div>
                 
-                {status === 'completed' && (
-                  <Button
-                    onClick={onClose}
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                )}
+                {/* Botão de fechar sempre visível */}
+                <Button
+                  onClick={onClose}
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
 
               {/* Estatísticas */}
@@ -284,18 +283,6 @@ export default function CampaignProgressModal({
               )}
             </div>
 
-            {/* Footer */}
-            {status === 'completed' && (
-              <div className="px-6 pb-6">
-                <Button
-                  onClick={onClose}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Fechar
-                </Button>
-              </div>
-            )}
           </motion.div>
         </motion.div>
       )}
