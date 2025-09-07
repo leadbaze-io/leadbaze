@@ -54,7 +54,7 @@ export default function CampaignProgressModal({
       const messagesPerMinute = 1
       const messagesPerSecond = messagesPerMinute / 60 // 0.0167 mensagens por segundo
       const estimatedSent = Math.min(elapsedTime * messagesPerSecond, totalLeads)
-      const progress = Math.min((estimatedSent / totalLeads) * 100, 95) // Máximo 95% até confirmar
+      const progress = Math.min((estimatedSent / totalLeads) * 100, 100) // Progresso completo
       setEstimatedProgress(progress)
     } else if (status === 'completed') {
       setEstimatedProgress(100)
@@ -131,13 +131,13 @@ export default function CampaignProgressModal({
   const getStatusColor = () => {
     switch (status) {
       case 'sending':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950'
+        return 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg'
       case 'completed':
-        return 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
+        return 'bg-white dark:bg-gray-800/90 border-green-300 dark:border-green-700 shadow-lg'
       case 'failed':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950'
+        return 'bg-white dark:bg-gray-800/90 border-red-300 dark:border-red-700 shadow-lg'
       default:
-        return 'border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950'
+        return 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-700 shadow-lg'
     }
   }
 
@@ -277,10 +277,10 @@ export default function CampaignProgressModal({
                       onClick={onMinimize}
                       variant="ghost"
                       size="sm"
-                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
-                      title="Minimizar"
+                      className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200"
+                      title="Minimizar para bolinha de loading"
                     >
-                      <Minimize2 className="w-4 h-4" />
+                      <Minimize2 className="w-3.5 h-3.5" />
                     </Button>
                   )}
                   

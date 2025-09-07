@@ -773,50 +773,6 @@ export default function DisparadorMassa() {
     setIsProgressModalMinimized(false)
   }
 
-  // Função para simular conclusão da campanha (para teste)
-  const simulateCampaignCompletion = async (campaignId: string) => {
-    try {
-      const success = await CampaignStatusService.simulateCampaignCompletion(campaignId)
-      if (success) {
-        // Atualizar estados do modal
-        setCurrentCampaignStatus('completed')
-        setCurrentSuccessCount(campaignLeads.length)
-        setCurrentFailedCount(0)
-        
-        // Atualizar campanha na lista local
-        setCampaigns(prev => prev.map(c => 
-          c.id === campaignId 
-            ? { 
-                ...c, 
-                status: 'completed' as const, 
-                success_count: campaignLeads.length, 
-                failed_count: 0,
-                completed_at: new Date().toISOString()
-              }
-            : c
-        ))
-        
-        // Atualizar campanha selecionada se for a mesma
-        if (selectedCampaign?.id === campaignId) {
-          setSelectedCampaign(prev => prev ? {
-            ...prev,
-            status: 'completed' as const,
-            success_count: campaignLeads.length,
-            failed_count: 0,
-            completed_at: new Date().toISOString()
-          } : null)
-        }
-        
-        toast({
-          title: '🧪 Teste Concluído',
-          description: 'Status da campanha foi simulado como concluído.',
-          variant: 'info',
-        })
-      }
-    } catch (error) {
-      console.error('Erro ao simular conclusão:', error)
-    }
-  }
 
   const handleSendCampaign = async () => {
     if (!selectedCampaign) {
@@ -1821,16 +1777,6 @@ Entre em contato conosco para mais detalhes!"
                             </span>
                           </Button>
                           
-                          {/* Botão de Teste - TEMPORÁRIO */}
-                          {selectedCampaign?.status === 'sending' && (
-                            <Button 
-                              onClick={() => simulateCampaignCompletion(selectedCampaign.id)}
-                              variant="outline"
-                              className="w-full border-2 border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 py-2 rounded-xl font-medium transition-all duration-300"
-                            >
-                              🧪 Simular Conclusão (Teste)
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>
