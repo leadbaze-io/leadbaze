@@ -8,12 +8,12 @@ import { LeadService } from '../lib/leadService'
 import { WhatsAppInstanceService } from '../lib/whatsappInstanceService'
 import { CampaignService } from '../lib/campaignService'
 import { CampaignLeadsService } from '../lib/campaignLeadsService'
-import { CampaignStatusService, type CampaignStatus } from '../lib/campaignStatusService'
+import { CampaignStatusServiceV2 } from '../lib/campaignStatusServiceV2'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
-import CampaignProgressModal from '../components/CampaignProgressModal'
+import CampaignProgressModalV2 from '../components/CampaignProgressModalV2'
 import { EvolutionApiService } from '../lib/evolutionApiService'
 import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, CampaignLead, UsedListSummary } from '../types'
 import type { User } from '@supabase/supabase-js'
@@ -703,24 +703,51 @@ export default function DisparadorMassa() {
     setSelectedLeads(new Set())
   }
 
-  // Função para iniciar o polling de status da campanha
-  const startCampaignStatusPolling = (campaignId: string) => {
-    // Parar polling anterior se existir
+  // Função para iniciar o monitoramento de status em tempo real
+  const startCampaignStatusMonitoring = (campaignId: string) => {
+    // Parar monitoramento anterior se existir
     if (stopPolling) {
       stopPolling()
     }
 
     setIsPollingStatus(true)
 
-    const stopFunction = CampaignStatusService.startStatusPolling(
+    const stopFunction = CampaignStatusServiceV2.startStatusTracking(
       campaignId,
-      (status: CampaignStatus) => {
-        console.log('📊 Status da campanha atualizado:', status)
+      (progress) => {
+        console.log('📊 Progresso da campanha atualizado (tempo real):', progress)
         
         // Atualizar estados do modal de progresso
-        setCurrentCampaignStatus(status.status as 'sending' | 'completed' | 'failed')
-        setCurrentSuccessCount(status.success_count || 0)
-        setCurrentFailedCount(status.failed_count || 0)
+        setCurrentSuccessCount(progress.successCount)
+        setCurrentFailedCount(progress.failedCount)
+      },
+      (completion) => {
+        console.log('✅ Campanha finalizada (tempo real):', completion)
+        
+        // Atualizar estados do modal de progresso
+        setCurrentCampaignStatus(completion.status)
+        setCurrentSuccessCount(completion.successCount)
+        setCurrentFailedCount(completion.failedCount)
+        
+        // Atualizar campanha na lista
+        setCampaigns(prev => prev.map(c => 
+          c.id === campaignId 
+            ? { 
+                ...c, 
+                status: completion.status, 
+                success_count: completion.successCount, 
+                failed_count: completion.failedCount 
+              }
+            : c
+        ))
+
+        // Fechar o modal após um delay
+        setTimeout(() => {
+          setShowProgressModal(false)
+        }, 3000) // Fechar após 3 segundos
+      },
+      (status) => {
+        console.log('📊 Status da campanha atualizado (tempo real):', status)
         
         // Atualizar campanha na lista
         setCampaigns(prev => prev.map(c => 
@@ -733,27 +760,7 @@ export default function DisparadorMassa() {
               }
             : c
         ))
-
-        // Se a campanha foi concluída ou falhou, fechar o modal após um delay
-        if (status.status === 'completed' || status.status === 'failed') {
-          setTimeout(() => {
-            setShowProgressModal(false)
-          }, 3000) // Fechar após 3 segundos
-        }
-      },
-      () => {
-        // Callback quando o polling termina
-        console.log('🛑 Polling de status finalizado')
-        setIsPollingStatus(false)
-        setStopPolling(null)
-        
-        // Se não foi concluída nem falhou, fechar o modal
-        if (currentCampaignStatus === 'sending') {
-          setShowProgressModal(false)
-        }
-      },
-      10000, // Verificar a cada 10 segundos
-      60 // Máximo 10 minutos (60 tentativas)
+      }
     )
 
     setStopPolling(() => stopFunction)
@@ -869,8 +876,8 @@ export default function DisparadorMassa() {
       setCurrentSuccessCount(0)
       setCurrentFailedCount(0)
 
-      // Iniciar polling para verificar status da campanha
-      startCampaignStatusPolling(selectedCampaign.id)
+      // Iniciar monitoramento em tempo real para verificar status da campanha
+      startCampaignStatusMonitoring(selectedCampaign.id)
 
       // Reset form
       setMessage('')
@@ -1952,9 +1959,10 @@ Entre em contato conosco para mais detalhes!"
         </motion.button>
       )}
 
-      {/* Modal de Progresso da Campanha */}
-      <CampaignProgressModal
+      {/* Modal de Progresso da Campanha V2 - Tempo Real */}
+      <CampaignProgressModalV2
         isVisible={showProgressModal}
+        campaignId={selectedCampaign?.id || ''}
         campaignName={selectedCampaign?.name || 'Campanha'}
         totalLeads={campaignLeads.length}
         status={currentCampaignStatus}

@@ -1,6 +1,24 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2, Wifi, WifiOff } from 'lucide-react'
+import { 
+  X, 
+  Send, 
+  CheckCircle, 
+  AlertTriangle, 
+  Clock, 
+  Users, 
+  MessageSquare, 
+  Minimize2, 
+  Wifi, 
+  WifiOff,
+  TrendingUp,
+  Zap,
+  Target,
+  Timer,
+  BarChart3,
+  Activity,
+  Globe
+} from 'lucide-react'
 import { Button } from './ui/button'
 import { CampaignStatusServiceV2, type CampaignProgress, type CampaignCompletion } from '../lib/campaignStatusServiceV2'
 
@@ -23,13 +41,13 @@ interface CampaignProgressModalV2Props {
   campaignName: string
   totalLeads: number
   status: CampaignStatus
-  successCount?: number
-  failedCount?: number
+  successCount: number
+  failedCount: number
   startTime?: Date
+  isMinimized: boolean
   onClose: () => void
-  onMinimize?: () => void
-  onExpand?: () => void
-  isMinimized?: boolean
+  onMinimize: () => void
+  onExpand: () => void
 }
 
 export default function CampaignProgressModalV2({
@@ -37,321 +55,257 @@ export default function CampaignProgressModalV2({
   campaignId,
   campaignName,
   totalLeads,
-  status: initialStatus,
-  successCount = 0,
-  failedCount = 0,
+  status,
+  successCount,
+  failedCount,
   startTime,
+  isMinimized,
   onClose,
   onMinimize,
-  onExpand,
-  isMinimized = false
+  onExpand
 }: CampaignProgressModalV2Props) {
-  const [status, setStatus] = useState<CampaignStatus>(initialStatus)
-  const [currentSuccessCount, setCurrentSuccessCount] = useState(successCount)
-  const [currentFailedCount, setCurrentFailedCount] = useState(failedCount)
   const [progress, setProgress] = useState(0)
-  const [currentLead, setCurrentLead] = useState<{ phone: string; name: string; success: boolean } | null>(null)
-  const [elapsedTime, setElapsedTime] = useState(0)
-  const [hasNotified, setHasNotified] = useState(false)
-  const [hasAutoMinimized, setHasAutoMinimized] = useState(false)
-  const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'unknown'>('unknown')
-  const [stopTracking, setStopTracking] = useState<(() => void) | null>(null)
+  const [currentProgress, setCurrentProgress] = useState<CampaignProgress | null>(null)
+  const [isConnected, setIsConnected] = useState(true)
 
-  // Função robusta para obter informações do status
+  // Calcular progresso baseado nos contadores
+  useEffect(() => {
+    const totalProcessed = successCount + failedCount
+    const newProgress = totalLeads > 0 ? (totalProcessed / totalLeads) * 100 : 0
+    setProgress(Math.min(newProgress, 100))
+  }, [successCount, failedCount, totalLeads])
+
+  // Monitorar status em tempo real
+  useEffect(() => {
+    if (!isVisible || !campaignId) return
+
+    const stopTracking = CampaignStatusServiceV2.startStatusTracking(
+      campaignId,
+      (progressData) => {
+        setCurrentProgress(progressData)
+        setProgress(progressData.progress)
+        setIsConnected(true)
+      },
+      (completion) => {
+        console.log('Campaign completed:', completion)
+        setIsConnected(true)
+      },
+      (statusUpdate) => {
+        console.log('Status updated:', statusUpdate)
+        setIsConnected(true)
+      }
+    )
+
+    return stopTracking
+  }, [isVisible, campaignId])
+
+  // Detectar desconexão
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsConnected(false)
+    }, 30000) // Considerar desconectado após 30s sem atualizações
+
+    return () => clearInterval(interval)
+  }, [])
+
   const getStatusInfo = (): CampaignStatusInfo => {
-    const baseInfo = {
-      status,
-      progress,
-      message: '',
-      icon: null as React.ReactNode,
-      color: '',
-      showProgress: false,
-      showTimeEstimate: false
-    }
-
     switch (status) {
       case 'sending':
         return {
-          ...baseInfo,
+          status: 'sending',
           progress,
-          message: currentLead 
-            ? `Enviando para ${currentLead.name}...`
-            : 'Enviando mensagens...',
-          icon: <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />,
-          color: 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg',
+          message: 'Enviando mensagens...',
+          icon: <Send className="w-5 h-5" />,
+          color: 'blue',
           showProgress: true,
           showTimeEstimate: true
         }
-      
       case 'completed':
         return {
-          ...baseInfo,
+          status: 'completed',
           progress: 100,
-          message: 'Campanha enviada com sucesso!',
-          icon: <CheckCircle className="w-5 h-5 text-green-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-green-300 dark:border-green-700 shadow-lg',
+          message: 'Campanha concluída com sucesso!',
+          icon: <CheckCircle className="w-5 h-5" />,
+          color: 'green',
           showProgress: false,
           showTimeEstimate: false
         }
-      
       case 'failed':
         return {
-          ...baseInfo,
+          status: 'failed',
           progress: 0,
-          message: 'Falha no envio da campanha',
-          icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-red-300 dark:border-red-700 shadow-lg',
+          message: 'Falha na campanha',
+          icon: <AlertTriangle className="w-5 h-5" />,
+          color: 'red',
           showProgress: false,
           showTimeEstimate: false
         }
-      
       case 'pending':
         return {
-          ...baseInfo,
+          status: 'pending',
           progress: 0,
-          message: 'Preparando envio...',
-          icon: <Clock className="w-5 h-5 text-gray-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-700 shadow-lg',
+          message: 'Aguardando processamento...',
+          icon: <Clock className="w-5 h-5" />,
+          color: 'yellow',
           showProgress: false,
           showTimeEstimate: false
         }
-      
       default:
-        return baseInfo
+        return {
+          status: 'draft',
+          progress: 0,
+          message: 'Preparando campanha...',
+          icon: <MessageSquare className="w-5 h-5" />,
+          color: 'gray',
+          showProgress: false,
+          showTimeEstimate: false
+        }
     }
   }
 
   const statusInfo = getStatusInfo()
 
-  // Iniciar rastreamento quando o modal for exibido
-  useEffect(() => {
-    if (isVisible && campaignId && status === 'sending') {
-      console.log('🚀 Iniciando rastreamento da campanha:', campaignId)
-      
-      // Iniciar rastreamento de status
-      const stopTrackingFn = CampaignStatusServiceV2.startStatusTracking(
-        campaignId,
-        // onProgress
-        (progressData: CampaignProgress) => {
-          console.log('📊 Progresso recebido:', progressData)
-          setProgress(progressData.progress)
-          setCurrentSuccessCount(progressData.successCount)
-          setCurrentFailedCount(progressData.failedCount)
-          setCurrentLead(progressData.currentLead || null)
-          setConnectionStatus('connected')
-        },
-        // onComplete
-        (completionData: CampaignCompletion) => {
-          console.log('🏁 Campanha concluída:', completionData)
-          setStatus(completionData.status)
-          setCurrentSuccessCount(completionData.successCount)
-          setCurrentFailedCount(completionData.failedCount)
-          setProgress(100)
-          setConnectionStatus('connected')
-        },
-        // onStatusUpdate (fallback)
-        (statusData) => {
-          console.log('📋 Status atualizado:', statusData)
-          setStatus(statusData.status)
-          setProgress(statusData.progress || 0)
-          setConnectionStatus('connected')
-        }
-      )
+  // Calcular tempo estimado
+  const getEstimatedTime = () => {
+    if (!statusInfo.showTimeEstimate || !startTime) return null
+    
+    const remainingMessages = totalLeads - successCount - failedCount
+    if (remainingMessages <= 0) return 'Concluindo...'
+    
+    // Estimativa baseada em 30 segundos por mensagem
+    const estimatedMinutesRemaining = Math.ceil(remainingMessages * 0.5)
+    return estimatedMinutesRemaining > 0 ? 
+      `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
+      'Concluindo...'
+  }
 
-      setStopTracking(() => stopTrackingFn)
-
-      // Cleanup ao desmontar
-      return () => {
-        if (stopTrackingFn) {
-          stopTrackingFn()
-        }
-      }
-    }
-  }, [isVisible, campaignId, status])
+  const estimatedTime = getEstimatedTime()
 
   // Calcular tempo decorrido
-  useEffect(() => {
-    if (!startTime || status === 'completed' || status === 'failed') return
-
-    const interval = setInterval(() => {
-      const now = new Date()
-      const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000)
-      setElapsedTime(elapsed)
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [startTime, status])
-
-  // Mostrar notificação quando a campanha termina (se estiver minimizada)
-  useEffect(() => {
-    if (isMinimized && (status === 'completed' || status === 'failed') && !hasNotified) {
-      setHasNotified(true)
-      
-      // Solicitar permissão para notificações
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission()
-      }
-      
-      // Mostrar notificação do navegador
-      if ('Notification' in window && Notification.permission === 'granted') {
-        const notification = new Notification(
-          status === 'completed' ? '🎉 Campanha Concluída!' : '❌ Campanha Falhou',
-          {
-            body: status === 'completed' 
-              ? `${campaignName} foi enviada com sucesso! ${currentSuccessCount} mensagens enviadas.`
-              : `${campaignName} falhou. Tente novamente.`,
-            icon: '/favicon.ico',
-            tag: `campaign-${campaignName}`,
-            requireInteraction: true
-          }
-        )
-        
-        notification.onclick = () => {
-          window.focus()
-          onExpand?.()
-          notification.close()
-        }
-      }
+  const getElapsedTime = () => {
+    if (!startTime) return '0s'
+    
+    const elapsed = Math.floor((Date.now() - startTime.getTime()) / 1000)
+    const minutes = Math.floor(elapsed / 60)
+    const seconds = elapsed % 60
+    
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s`
     }
-  }, [isMinimized, status, hasNotified, campaignName, currentSuccessCount, onExpand])
-
-  // Auto-minimizar após 4 segundos se o usuário não minimizar
-  useEffect(() => {
-    if (isVisible && !isMinimized && status === 'sending' && !hasAutoMinimized && onMinimize) {
-      const timer = setTimeout(() => {
-        setHasAutoMinimized(true)
-        onMinimize()
-      }, 4000) // 4 segundos
-
-      return () => clearTimeout(timer)
-    }
-  }, [isVisible, isMinimized, status, hasAutoMinimized, onMinimize])
-
-  // Cleanup ao fechar
-  useEffect(() => {
-    return () => {
-      if (stopTracking) {
-        stopTracking()
-      }
-    }
-  }, [stopTracking])
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+    return `${seconds}s`
   }
 
-  const getProgressColor = () => {
-    switch (status) {
-      case 'sending':
-        return 'bg-gradient-to-r from-blue-500 to-purple-600'
-      case 'completed':
-        return 'bg-gradient-to-r from-green-500 to-emerald-600'
-      case 'failed':
-        return 'bg-gradient-to-r from-red-500 to-pink-600'
-      default:
-        return 'bg-gradient-to-r from-gray-400 to-gray-600'
-    }
-  }
-
-  const getConnectionIcon = () => {
-    switch (connectionStatus) {
-      case 'connected':
-        return <Wifi className="w-4 h-4 text-green-500" />
-      case 'disconnected':
-        return <WifiOff className="w-4 h-4 text-red-500" />
-      default:
-        return <Wifi className="w-4 h-4 text-gray-400" />
-    }
-  }
-
-  // Modal minimizado profissional (quando minimizado)
+  // Modal minimizado - Design moderno e compacto
   if (isVisible && isMinimized) {
     return (
       <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, scale: 0, y: 20 }}
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0, y: 20 }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
           className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
         >
           <motion.div
             onClick={onExpand}
-            className={`relative w-20 h-12 sm:w-24 sm:h-14 rounded-xl shadow-2xl cursor-pointer flex items-center justify-between px-3 transition-all duration-300 hover:scale-105 backdrop-blur-sm border ${
-              status === 'sending' ? 'bg-blue-600/90 dark:bg-blue-500/90 border-blue-400' :
-              status === 'completed' ? 'bg-green-600/90 dark:bg-green-500/90 border-green-400' :
-              status === 'failed' ? 'bg-red-600/90 dark:bg-red-500/90 border-red-400' :
-              'bg-gray-600/90 dark:bg-gray-500/90 border-gray-400'
+            className={`relative w-80 h-20 rounded-2xl shadow-2xl cursor-pointer overflow-hidden backdrop-blur-sm border transition-all duration-300 hover:scale-105 ${
+              status === 'sending' ? 'bg-gradient-to-r from-blue-500/90 to-blue-600/90 border-blue-400/50' :
+              status === 'completed' ? 'bg-gradient-to-r from-green-500/90 to-green-600/90 border-green-400/50' :
+              status === 'failed' ? 'bg-gradient-to-r from-red-500/90 to-red-600/90 border-red-400/50' :
+              'bg-gradient-to-r from-gray-500/90 to-gray-600/90 border-gray-400/50'
             }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            animate={status === 'completed' || status === 'failed' ? { 
+            animate={status === 'completed' || status === 'failed' ? {
               boxShadow: [
                 '0 0 0 0 rgba(34, 197, 94, 0.7)',
                 '0 0 0 10px rgba(34, 197, 94, 0)',
                 '0 0 0 0 rgba(34, 197, 94, 0)'
               ]
             } : {}}
-            transition={status === 'completed' || status === 'failed' ? { 
-              duration: 2, 
+            transition={status === 'completed' || status === 'failed' ? {
+              duration: 2,
               repeat: Infinity,
               ease: "easeInOut"
             } : {}}
             title={`${campaignName} - ${statusInfo.message}`}
           >
-            {/* Ícone e informações */}
-            <div className="flex items-center space-x-2">
-              <motion.div
-                animate={status === 'sending' ? { rotate: 360 } : {}}
-                transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                className="flex-shrink-0"
-              >
-                {statusInfo.icon}
-              </motion.div>
-              
-              {/* Informações compactas */}
-              <div className="min-w-0 flex-1">
-                <div className="text-xs font-medium text-white truncate">
-                  {status === 'sending' ? `${currentSuccessCount}/${totalLeads}` : 
-                   status === 'completed' ? 'Concluído' :
-                   status === 'failed' ? 'Falhou' : 'Aguardando'}
-                </div>
-                {status === 'sending' && (
-                  <div className="text-xs text-white/80">
-                    {Math.floor(progress)}%
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-white/5">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+                backgroundSize: '20px 20px',
+                opacity: 0.1
+              }}></div>
+            </div>
+
+            <div className="relative z-10 flex items-center justify-between h-full px-4">
+              {/* Lado Esquerdo - Informações */}
+              <div className="flex items-center space-x-3 flex-1 min-w-0">
+                <motion.div
+                  animate={status === 'sending' ? { rotate: 360 } : {}}
+                  transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
+                  className="flex-shrink-0"
+                >
+                  {statusInfo.icon}
+                </motion.div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-bold text-white truncate">
+                    {campaignName}
+                  </h3>
+                  <div className="flex items-center space-x-2 text-xs text-white/80">
+                    <span>{statusInfo.message}</span>
+                    {!isConnected && (
+                      <WifiOff className="w-3 h-3 text-yellow-400" />
+                    )}
                   </div>
+                </div>
+              </div>
+
+              {/* Lado Direito - Progresso e Estatísticas */}
+              <div className="flex items-center space-x-3">
+                {/* Estatísticas Compactas */}
+                <div className="text-right">
+                  <div className="text-sm font-bold text-white">
+                    {status === 'sending' ? `${successCount}/${totalLeads}` :
+                     status === 'completed' ? 'Concluído' :
+                     status === 'failed' ? 'Falhou' : 'Aguardando'}
+                  </div>
+                  {status === 'sending' && (
+                    <div className="text-xs text-white/80">
+                      {Math.floor(progress)}%
+                    </div>
+                  )}
+                </div>
+
+                {/* Badge de Status */}
+                {status === 'completed' && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
+                  >
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  </motion.div>
+                )}
+
+                {status === 'failed' && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-white" />
+                  </motion.div>
                 )}
               </div>
             </div>
-            
-            {/* Badge de notificação quando completado */}
-            {status === 'completed' && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <CheckCircle className="w-3 h-3 text-white" />
-              </motion.div>
-            )}
-            
-            {/* Badge de notificação quando falhou */}
-            {status === 'failed' && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <AlertTriangle className="w-3 h-3 text-white" />
-              </motion.div>
-            )}
-            
-            {/* Progresso linear no fundo */}
+
+            {/* Barra de Progresso Linear */}
             {status === 'sending' && (
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 rounded-b-xl overflow-hidden">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 overflow-hidden">
                 <motion.div
-                  className="h-full bg-white/60 rounded-b-xl"
+                  className="h-full bg-white/60"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}
@@ -364,240 +318,266 @@ export default function CampaignProgressModalV2({
     )
   }
 
-  return (
-    <AnimatePresence>
-      {isVisible && !isMinimized && (
+  // Modal expandido - Design completo e moderno
+  if (isVisible && !isMinimized) {
+    return (
+      <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          className="fixed bottom-2 right-2 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1rem)] sm:w-80 max-w-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`relative ${statusInfo.color} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
+            className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
           >
-            {/* Header */}
-            <div className="p-3 sm:p-6 pb-4">
-              <div className="flex items-start justify-between mb-3 sm:mb-4">
-                <div className="flex items-start space-x-2 sm:space-x-3 flex-1 min-w-0">
-                  <div className="flex-shrink-0 mt-0.5">
-                    {statusInfo.icon}
+            {/* Header com Gradiente */}
+            <div className={`relative p-6 text-white ${
+              status === 'sending' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
+              status === 'completed' ? 'bg-gradient-to-r from-green-500 to-green-600' :
+              status === 'failed' ? 'bg-gradient-to-r from-red-500 to-red-600' :
+              'bg-gradient-to-r from-gray-500 to-gray-600'
+            }`}>
+              {/* Background Pattern */}
+              <div className="absolute inset-0 bg-white/10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+                  backgroundSize: '24px 24px',
+                  opacity: 0.1
+                }}></div>
+              </div>
+
+              <div className="relative z-10">
+                {/* Header Controls */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <motion.div
+                      animate={status === 'sending' ? { rotate: 360 } : {}}
+                      transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
+                      className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm"
+                    >
+                      {statusInfo.icon}
+                    </motion.div>
+                    <div>
+                      <h2 className="text-xl font-bold">Status da Campanha</h2>
+                      <p className="text-white/80 text-sm">Monitoramento em tempo real</p>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white truncate">
-                      {campaignName}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-tight">
-                      {statusInfo.message}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Botões de controle */}
-                <div className="flex items-center space-x-1">
-                  {/* Status de conexão */}
-                  <div className="flex items-center space-x-1" title={`Conexão: ${connectionStatus}`}>
-                    {getConnectionIcon()}
-                  </div>
-                  
-                  {/* Botão de minimizar (apenas quando não está minimizado) */}
-                  {!isMinimized && onMinimize && (
+
+                  <div className="flex items-center space-x-2">
+                    {/* Indicador de Conexão */}
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${
+                      isConnected ? 'bg-green-500/20 text-green-200' : 'bg-yellow-500/20 text-yellow-200'
+                    }`}>
+                      {isConnected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
+                      <span>{isConnected ? 'Conectado' : 'Desconectado'}</span>
+                    </div>
+
                     <Button
-                      onClick={onMinimize}
                       variant="ghost"
                       size="sm"
-                      className="text-gray-800 dark:text-gray-400"
-                      title="Minimizar para bolinha de loading"
+                      onClick={onMinimize}
+                      className="text-white hover:bg-white/20 rounded-xl"
                     >
-                      <Minimize2 className="w-3.5 h-3.5" />
+                      <Minimize2 className="w-4 h-4" />
                     </Button>
-                  )}
-                  
-                  {/* Botão de fechar sempre visível */}
-                  <Button
-                    onClick={onClose}
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-800 dark:text-gray-400"
-                    title="Fechar"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={onClose}
+                      className="text-white hover:bg-white/20 rounded-xl"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Estatísticas - Design mais limpo para mobile */}
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto mb-1 sm:mb-2">
-                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Total</p>
-                  <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">{totalLeads}</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-green-100 dark:bg-green-900 rounded-full mx-auto mb-1 sm:mb-2">
-                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 dark:text-green-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Enviadas</p>
-                  <p className="text-sm sm:text-lg font-bold text-green-600 dark:text-green-400">
-                    {currentSuccessCount}
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-red-100 dark:bg-red-900 rounded-full mx-auto mb-1 sm:mb-2">
-                    <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 dark:text-red-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Falhas</p>
-                  <p className="text-sm sm:text-lg font-bold text-red-600 dark:text-red-400">{currentFailedCount}</p>
-                </div>
-              </div>
-
-              {/* Lead atual sendo processado */}
-              {currentLead && status === 'sending' && (
-                <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${currentLead.success ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                      {currentLead.success ? 'Enviado' : 'Falhou'}: {currentLead.name}
-                    </span>
-                  </div>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    {currentLead.phone}
-                  </p>
-                </div>
-              )}
-
-              {/* Barra de Progresso */}
-              {statusInfo.showProgress && (
+                {/* Nome da Campanha */}
                 <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Progresso
-                    </span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">
-                      {Math.floor(progress)}%
-                    </span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                    <motion.div
-                      className={`h-full ${getProgressColor()} rounded-full`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                  </div>
+                  <h1 className="text-2xl font-bold mb-1">{campaignName}</h1>
+                  <p className="text-white/80">{statusInfo.message}</p>
                 </div>
-              )}
 
-              {/* Tempo e Estimativa */}
-              <div className="space-y-2">
-                {status === 'sending' && (
-                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Tempo decorrido: {formatTime(elapsedTime)}</span>
+                {/* Barra de Progresso Principal */}
+                {statusInfo.showProgress && (
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Progresso</span>
+                      <span className="text-sm font-bold">{Math.floor(progress)}%</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <MessageSquare className="w-4 h-4" />
-                      <span>
-                        Restam: {Math.max(0, totalLeads - currentSuccessCount - currentFailedCount)}
-                      </span>
+                    <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+                      <motion.div
+                        className="h-full bg-white/80 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                      />
                     </div>
-                  </div>
-                )}
-                
-                {/* Estimativa de tempo restante */}
-                {statusInfo.showTimeEstimate && (
-                  <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                    {status === 'sending' && progress >= 100 ? (
-                      <>
-                        ✅ Envio concluído! Aguardando confirmação...
-                        <br />
-                        📊 {currentSuccessCount} mensagens processadas
-                      </>
-                    ) : (
-                      <>
-                        ⏱️ Tempo estimado restante: {(() => {
-                          const remainingMessages = Math.max(0, totalLeads - currentSuccessCount - currentFailedCount)
-                          const estimatedMinutesRemaining = Math.ceil(remainingMessages * 0.5) // 30 segundos por mensagem
-                          return estimatedMinutesRemaining > 0 ? 
-                            `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
-                            'Concluindo...'
-                        })()}
-                        <br />
-                        <span className="text-xs text-gray-400">Velocidade: 2 mensagens/minuto</span>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {/* Mensagem de status final */}
-                {status === 'completed' && (
-                  <div className="text-center text-xs text-green-600 dark:text-green-400">
-                    🎉 Campanha enviada com sucesso!
-                    <br />
-                    📊 {currentSuccessCount} mensagens enviadas
-                  </div>
-                )}
-
-                {status === 'failed' && (
-                  <div className="text-center text-xs text-red-600 dark:text-red-400">
-                    ❌ Falha no envio da campanha
-                    <br />
-                    📊 {currentFailedCount} mensagens falharam
                   </div>
                 )}
               </div>
-
-              {/* Mensagem de Conclusão */}
-              {status === 'completed' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-4"
-                >
-                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                  </div>
-                  <p className="text-green-800 dark:text-green-200 font-semibold">
-                    🎉 Campanha Enviada com Sucesso!
-                  </p>
-                  <p className="text-sm text-green-600 dark:text-green-300 mt-1">
-                    {currentSuccessCount} mensagens enviadas
-                  </p>
-                </motion.div>
-              )}
-
-              {/* Mensagem de Erro */}
-              {status === 'failed' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-4"
-                >
-                  <div className="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
-                  </div>
-                  <p className="text-red-800 dark:text-red-200 font-semibold">
-                    ❌ Campanha Falhou
-                  </p>
-                  <p className="text-sm text-red-600 dark:text-red-300 mt-1">
-                    Tente novamente em alguns minutos
-                  </p>
-                </motion.div>
-              )}
             </div>
 
+            {/* Conteúdo Principal */}
+            <div className="p-6">
+              {/* Estatísticas em Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 rounded-2xl border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Total</p>
+                      <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{totalLeads}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 rounded-2xl border border-green-200 dark:border-green-800">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">Enviados</p>
+                      <p className="text-xl font-bold text-green-900 dark:text-green-100">{successCount}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-4 rounded-2xl border border-red-200 dark:border-red-800">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-red-600 dark:text-red-400 font-medium">Falhas</p>
+                      <p className="text-xl font-bold text-red-900 dark:text-red-100">{failedCount}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-4 rounded-2xl border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+                      <Timer className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Tempo</p>
+                      <p className="text-xl font-bold text-purple-900 dark:text-purple-100">{getElapsedTime()}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informações Adicionais */}
+              <div className="space-y-4">
+                {/* Tempo Estimado */}
+                {estimatedTime && (
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-yellow-700 dark:text-yellow-300 font-medium">Tempo Estimado</p>
+                        <p className="text-lg font-bold text-yellow-900 dark:text-yellow-100">{estimatedTime}</p>
+                        <p className="text-xs text-yellow-600 dark:text-yellow-400">Velocidade: 2 mensagens/minuto</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Lead Atual (se disponível) */}
+                {currentProgress?.currentLead && (
+                  <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                        <Target className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">Processando</p>
+                        <p className="text-lg font-bold text-indigo-900 dark:text-indigo-100">
+                          {currentProgress.currentLead.name}
+                        </p>
+                        <p className="text-xs text-indigo-600 dark:text-indigo-400">
+                          {currentProgress.currentLead.phone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Taxa de Sucesso */}
+                {totalLeads > 0 && (
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                          <TrendingUp className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">Taxa de Sucesso</p>
+                          <p className="text-lg font-bold text-emerald-900 dark:text-emerald-100">
+                            {Math.round((successCount / totalLeads) * 100)}%
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="w-16 h-16 relative">
+                          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                            <path
+                              className="text-emerald-200 dark:text-emerald-800"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              fill="none"
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path
+                              className="text-emerald-500"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              fill="none"
+                              strokeDasharray={`${(successCount / totalLeads) * 100}, 100`}
+                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Ações */}
+              <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <Button
+                  variant="outline"
+                  onClick={onMinimize}
+                  className="rounded-xl"
+                >
+                  <Minimize2 className="w-4 h-4 mr-2" />
+                  Minimizar
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={onClose}
+                  className="rounded-xl"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Fechar
+                </Button>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
-      )}
-    </AnimatePresence>
-  )
+      </AnimatePresence>
+    )
+  }
+
+  return null
 }
