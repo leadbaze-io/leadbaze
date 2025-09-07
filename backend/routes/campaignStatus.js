@@ -321,46 +321,4 @@ function notifyCampaignComplete(campaignId, completionData) {
   // Em implementação futura, enviar via WebSocket para clientes conectados
 }
 
-/**
- * GET /api/campaign/status/:campaignId
- * Verifica o status atual de uma campanha
- */
-router.get('/:campaignId', async (req, res) => {
-  try {
-    const { campaignId } = req.params;
-    
-    console.log(`🔍 Verificando status da campanha: ${campaignId}`);
-
-    const { data, error } = await supabase
-      .from('bulk_campaigns')
-      .select('id, status, success_count, failed_count, sent_at, completed_at, updated_at')
-      .eq('id', campaignId)
-      .single();
-
-    if (error) {
-      console.error('❌ Erro ao buscar campanha:', error);
-      return res.status(404).json({
-        success: false,
-        error: 'Campanha não encontrada',
-        details: error.message
-      });
-    }
-
-    console.log(`✅ Status da campanha ${campaignId}: ${data.status}`);
-    
-    res.json({
-      success: true,
-      campaign: data
-    });
-
-  } catch (error) {
-    console.error('❌ Erro ao verificar status da campanha:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erro interno do servidor',
-      details: error.message
-    });
-  }
-});
-
 module.exports = router;
