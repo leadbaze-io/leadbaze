@@ -851,6 +851,22 @@ export default function DisparadorMassa() {
     console.log('📦 Payload N8N:', payload)
 
     try {
+      // PRIMEIRO: Mostrar modal e iniciar monitoramento SSE
+      setShowProgressModal(true)
+      setCampaignStartTime(new Date())
+      setCurrentCampaignStatus('sending')
+      setCurrentSuccessCount(0)
+      setCurrentFailedCount(0)
+
+      // SEGUNDO: Iniciar monitoramento SSE ANTES de enviar
+      console.log('🔌 [DisparadorMassa] Iniciando SSE ANTES de enviar campanha...')
+      startCampaignStatusMonitoring(selectedCampaign.id)
+
+      // Aguardar um pouco para garantir que SSE conecte
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // TERCEIRO: Agora enviar para N8N
+      console.log('📤 [DisparadorMassa] Enviando campanha para N8N...')
       const result = await EvolutionApiService.dispatchCampaignToWebhook(payload)
       if (!result.success) {
         toast({
@@ -877,16 +893,6 @@ export default function DisparadorMassa() {
         description: `Campanha "${selectedCampaign.name}" enviada para processamento.`,
         variant: 'success',
       })
-
-      // Mostrar modal de progresso
-      setShowProgressModal(true)
-      setCampaignStartTime(new Date())
-      setCurrentCampaignStatus('sending')
-      setCurrentSuccessCount(0)
-      setCurrentFailedCount(0)
-
-      // Iniciar monitoramento em tempo real para verificar status da campanha
-      startCampaignStatusMonitoring(selectedCampaign.id)
 
       // Reset form
       setMessage('')
