@@ -27,3 +27,4 @@ FROM n8n_blog_queue
 WHERE processed = false 
 ORDER BY created_at DESC 
 LIMIT 5;
+

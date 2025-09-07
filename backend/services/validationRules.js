@@ -31,3 +31,4 @@ class ValidationRules {
 }
 
 module.exports = ValidationRules;
+

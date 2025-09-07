@@ -47,3 +47,4 @@ git push origin main
 - ✅ Commit local criado
 - ❌ Push para GitHub pendente
 - ⏳ Deploy no servidor pendente
+

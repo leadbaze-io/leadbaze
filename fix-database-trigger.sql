@@ -65,3 +65,4 @@ WHERE event_object_table = 'n8n_blog_queue';
 -- 6. Testar o trigger (opcional)
 -- INSERT INTO n8n_blog_queue (title, content, category, date, autor, processed)
 -- VALUES ('Teste Trigger', 'Conteúdo de teste', 'Automação de Vendas', CURRENT_DATE, 'Sistema', false);
+

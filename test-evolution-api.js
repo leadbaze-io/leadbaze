@@ -1,12 +1,13 @@
-import axios from 'axios';
+/**
+ * Script para testar a conectividade com a Evolution API
+ * Execute: node test-evolution-api.js
+ */
 
-// Configuração do Evolution API
-const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL || 'https://sua-evolution-api.com:8080';
-const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY || 'sua-api-key-aqui';
+const axios = require('axios');
+require('dotenv').config({ path: './config.env' });
 
-console.log('🔍 Testando conectividade com Evolution API...');
-console.log('📍 URL:', EVOLUTION_API_URL);
-console.log('🔑 API Key:', EVOLUTION_API_KEY ? 'Configurada' : 'Não configurada');
+const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL;
+const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY;
 
 const evolutionHeaders = {
   'Content-Type': 'application/json',
@@ -14,103 +15,94 @@ const evolutionHeaders = {
 };
 
 async function testEvolutionAPI() {
+  console.log('🧪 Testando conectividade com Evolution API...');
+  console.log(`🌐 URL: ${EVOLUTION_API_URL}`);
+  console.log(`🔑 API Key: ${EVOLUTION_API_KEY ? '✅ Configurada' : '❌ Não configurada'}`);
+  console.log('');
+
+  if (!EVOLUTION_API_URL || !EVOLUTION_API_KEY) {
+    console.error('❌ Evolution API não configurada corretamente');
+    console.error('   Verifique as variáveis EVOLUTION_API_URL e EVOLUTION_API_KEY no config.env');
+    return;
+  }
+
   try {
-    console.log('\n1️⃣ Testando health check...');
-    
-    // Teste 1: Health check
-    const healthResponse = await axios.get(`${EVOLUTION_API_URL}/instance/fetchInstances`, {
+    // Teste 1: Health check básico
+    console.log('1️⃣ Testando health check...');
+    const healthResponse = await axios.get(`${EVOLUTION_API_URL}/manager/findInstances`, {
       headers: evolutionHeaders,
-      timeout: 10000
+      timeout: 10000,
     });
     
-    console.log('✅ Health check OK:', healthResponse.status);
-    console.log('📊 Instâncias encontradas:', healthResponse.data?.length || 0);
-    
-    // Teste 2: Criar instância de teste
-    console.log('\n2️⃣ Testando criação de instância...');
-    const testInstanceName = `test-${Date.now()}`;
+    console.log('✅ Health check OK');
+    console.log(`   Status: ${healthResponse.status}`);
+    console.log(`   Instâncias encontradas: ${healthResponse.data?.length || 0}`);
+    console.log('');
+
+    // Teste 2: Tentar criar uma instância de teste
+    console.log('2️⃣ Testando criação de instância...');
+    const testInstanceName = `test_${Date.now()}`;
     
     const createResponse = await axios.post(
       `${EVOLUTION_API_URL}/instance/create`,
       {
         instanceName: testInstanceName,
-        token: 'test-token',
+        token: 'test-token-123',
         qrcode: true,
-        number: "000000",
-        webhookByEvents: false,
-        events: [],
-        waitQrCode: true,
         integration: "WHATSAPP-BAILEYS"
       },
-      { headers: evolutionHeaders, timeout: 15000 }
+      { 
+        headers: evolutionHeaders,
+        timeout: 30000
+      }
     );
     
-    console.log('✅ Instância criada:', createResponse.data);
-    
-    // Teste 3: Iniciar instância
-    console.log('\n3️⃣ Testando inicialização da instância...');
-    
+    console.log('✅ Instância criada com sucesso');
+    console.log(`   Nome: ${testInstanceName}`);
+    console.log(`   Resposta:`, JSON.stringify(createResponse.data, null, 2));
+    console.log('');
+
+    // Teste 3: Tentar deletar a instância de teste
+    console.log('3️⃣ Limpando instância de teste...');
     try {
-      const startResponse = await axios.get(
-        `${EVOLUTION_API_URL}/instance/start/${testInstanceName}`,
-        { headers: evolutionHeaders, timeout: 10000 }
-      );
-      console.log('✅ Instância iniciada:', startResponse.data);
-    } catch (error) {
-      console.log('⚠️ Erro ao iniciar instância (pode ser normal):', error.message);
+      await axios.delete(`${EVOLUTION_API_URL}/instance/delete/${testInstanceName}`, {
+        headers: evolutionHeaders,
+        timeout: 10000
+      });
+      console.log('✅ Instância de teste removida');
+    } catch (deleteError) {
+      console.log('⚠️ Não foi possível remover instância de teste:', deleteError.message);
     }
-    
-    // Teste 4: Buscar QR Code
-    console.log('\n4️⃣ Testando busca de QR Code...');
-    
-    const qrResponse = await axios.get(
-      `${EVOLUTION_API_URL}/instance/connect/${testInstanceName}`,
-      { headers: evolutionHeaders, timeout: 10000 }
-    );
-    
-    console.log('✅ QR Code response:', {
-      hasQRCode: !!(qrResponse.data?.qrcode || qrResponse.data?.base64),
-      fields: Object.keys(qrResponse.data || {})
-    });
-    
-    // Teste 5: Verificar estado da conexão
-    console.log('\n5️⃣ Testando verificação de estado...');
-    
-    const stateResponse = await axios.get(
-      `${EVOLUTION_API_URL}/instance/connectionState/${testInstanceName}`,
-      { headers: evolutionHeaders, timeout: 10000 }
-    );
-    
-    console.log('✅ Estado da conexão:', stateResponse.data);
-    
-    // Teste 6: Limpar instância de teste
-    console.log('\n6️⃣ Limpando instância de teste...');
-    
-    const deleteResponse = await axios.delete(
-      `${EVOLUTION_API_URL}/instance/delete/${testInstanceName}`,
-      { headers: evolutionHeaders, timeout: 10000 }
-    );
-    
-    console.log('✅ Instância deletada:', deleteResponse.data);
-    
-    console.log('\n🎉 Todos os testes passaram! Evolution API está funcionando corretamente.');
-    
+
+    console.log('');
+    console.log('🎉 Todos os testes passaram! Evolution API está funcionando corretamente.');
+
   } catch (error) {
-    console.error('\n❌ Erro nos testes:', {
-      message: error.message,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data
-    });
+    console.error('❌ Erro nos testes:');
+    console.error(`   Status: ${error.response?.status}`);
+    console.error(`   Status Text: ${error.response?.statusText}`);
+    console.error(`   Data:`, JSON.stringify(error.response?.data, null, 2));
+    console.error(`   Message: ${error.message}`);
+    console.error(`   Code: ${error.code}`);
     
-    if (error.code === 'ENOTFOUND') {
-      console.log('\n💡 Dica: Verifique se a URL da Evolution API está correta');
-    } else if (error.response?.status === 401) {
-      console.log('\n💡 Dica: Verifique se a API Key está correta');
-    } else if (error.response?.status === 403) {
-      console.log('\n💡 Dica: Verifique se a API Key tem permissões adequadas');
+    if (error.response?.status === 401) {
+      console.error('');
+      console.error('🔑 Problema de autenticação:');
+      console.error('   - Verifique se a EVOLUTION_API_KEY está correta');
+      console.error('   - Verifique se a chave tem as permissões necessárias');
+    } else if (error.response?.status === 404) {
+      console.error('');
+      console.error('🌐 Problema de URL:');
+      console.error('   - Verifique se a EVOLUTION_API_URL está correta');
+      console.error('   - Verifique se a Evolution API está rodando');
+    } else if (error.code === 'ECONNREFUSED') {
+      console.error('');
+      console.error('🔌 Problema de conexão:');
+      console.error('   - Verifique se a Evolution API está rodando');
+      console.error('   - Verifique se a URL está acessível');
     }
   }
 }
 
-testEvolutionAPI(); 
+// Executar teste
+testEvolutionAPI().catch(console.error);
