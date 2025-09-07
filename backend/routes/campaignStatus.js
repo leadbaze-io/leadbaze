@@ -136,8 +136,8 @@ router.post('/progress', async (req, res) => {
       });
     }
 
-    // Notificar clientes conectados via WebSocket (se implementado)
-    notifyCampaignProgress(campaignId, {
+    // Notificar clientes conectados via SSE
+    const progressData = {
       campaignId,
       progress,
       leadIndex: leadIndex || 0,
@@ -150,7 +150,10 @@ router.post('/progress', async (req, res) => {
         success
       },
       error: errorMessage
-    });
+    };
+    
+    console.log(`📡 Notificando progresso da campanha ${campaignId}:`, progressData);
+    sendSSEData(campaignId, { type: 'progress', data: progressData });
 
     console.log(`✅ Progresso atualizado: ${progress}% (${newSuccessCount} sucessos, ${newFailedCount} falhas)`);
     
@@ -220,15 +223,18 @@ router.post('/complete', async (req, res) => {
       });
     }
 
-    // Notificar clientes conectados
-    notifyCampaignComplete(campaignId, {
+    // Notificar clientes conectados via SSE
+    const completionData = {
       campaignId,
       status: finalStatus,
       successCount: successCount || 0,
       failedCount: failedCount || 0,
       totalProcessed: totalProcessed || 0,
       completedAt: new Date().toISOString()
-    });
+    };
+    
+    console.log(`📡 Notificando conclusão da campanha ${campaignId}:`, completionData);
+    sendSSEData(campaignId, { type: 'complete', data: completionData });
 
     console.log(`✅ Campanha ${campaignId} finalizada com status: ${finalStatus}`);
     
