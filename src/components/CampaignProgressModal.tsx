@@ -33,6 +33,7 @@ export default function CampaignProgressModal({
   const [elapsedTime, setElapsedTime] = useState(0)
   const [estimatedProgress, setEstimatedProgress] = useState(0)
   const [hasNotified, setHasNotified] = useState(false)
+  const [hasAutoMinimized, setHasAutoMinimized] = useState(false)
 
   // Calcular tempo decorrido
   useEffect(() => {
@@ -96,6 +97,18 @@ export default function CampaignProgressModal({
     }
   }, [isMinimized, status, hasNotified, campaignName, successCount, onExpand])
 
+  // Auto-minimizar após 4 segundos se o usuário não minimizar
+  useEffect(() => {
+    if (isVisible && !isMinimized && status === 'sending' && !hasAutoMinimized && onMinimize) {
+      const timer = setTimeout(() => {
+        setHasAutoMinimized(true)
+        onMinimize()
+      }, 4000) // 4 segundos
+
+      return () => clearTimeout(timer)
+    }
+  }, [isVisible, isMinimized, status, hasAutoMinimized, onMinimize])
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -105,7 +118,7 @@ export default function CampaignProgressModal({
   const getStatusIcon = () => {
     switch (status) {
       case 'sending':
-        return <Send className="w-5 h-5 text-blue-600 animate-pulse" />
+        return <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />
       case 'completed':
         return <CheckCircle className="w-5 h-5 text-green-600" />
       case 'failed':
@@ -277,7 +290,7 @@ export default function CampaignProgressModal({
                       onClick={onMinimize}
                       variant="ghost"
                       size="sm"
-                      className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200"
+                      className="text-gray-800 dark:text-gray-400"
                       title="Minimizar para bolinha de loading"
                     >
                       <Minimize2 className="w-3.5 h-3.5" />
@@ -289,7 +302,7 @@ export default function CampaignProgressModal({
                     onClick={onClose}
                     variant="ghost"
                     size="sm"
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/20"
+                    className="text-gray-800 dark:text-gray-400"
                     title="Fechar"
                   >
                     <X className="w-4 h-4" />
@@ -373,13 +386,23 @@ export default function CampaignProgressModal({
                     const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
                     const estimatedTimeRemaining = estimatedMinutesRemaining > 0 ? 
                       `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
-                      'Concluindo...'
+                      estimatedProgress >= 100 ? 'Finalizando envio...' : 'Concluindo...'
                     
                     return (
                       <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                        ⏱️ Tempo estimado restante: {estimatedTimeRemaining}
-                        <br />
-                        <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
+                        {estimatedProgress >= 100 ? (
+                          <>
+                            ✅ Envio concluído! Aguardando confirmação...
+                            <br />
+                            📊 {successCount} mensagens processadas
+                          </>
+                        ) : (
+                          <>
+                            ⏱️ Tempo estimado restante: {estimatedTimeRemaining}
+                            <br />
+                            <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
+                          </>
+                        )}
                       </div>
                     )
                   })()}
