@@ -174,6 +174,7 @@ export default function DisparadorMassa() {
         toast({
           title: 'Campanha criada!',
           description: `Campanha "${newCampaign.name}" criada com sucesso.`,
+          variant: 'success',
         })
       } else {
         throw new Error('Falha ao criar campanha')
@@ -200,6 +201,7 @@ export default function DisparadorMassa() {
       toast({
         title: 'Campanha deletada!',
         description: 'A campanha foi deletada com sucesso.',
+        variant: 'success',
       });
       setSelectedCampaign(null);
       clearListSelection();
@@ -688,10 +690,10 @@ export default function DisparadorMassa() {
       return
     }
 
-    if (selectedLists.length === 0) {
+    if (campaignLeads.length === 0) {
       toast({
         title: 'Erro',
-        description: 'Selecione pelo menos uma lista',
+        description: 'Adicione pelo menos uma lista de leads à campanha antes de enviar',
         variant: 'destructive'
       })
       return
@@ -762,6 +764,7 @@ export default function DisparadorMassa() {
       toast({
         title: 'Campanha enviada!',
         description: `Campanha "${selectedCampaign.name}" enviada para processamento.`,
+        variant: 'success',
       })
 
       // Reset form
@@ -808,8 +811,8 @@ export default function DisparadorMassa() {
     // Mensagem de sucesso profissional
     toast({
       title: '🎉 WhatsApp Conectado com Sucesso!',
-      description: `Sua instância "${instanceName}" está ativa e pronta para enviar campanhas.`,
-      className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+      description: 'Sua conta WhatsApp está ativa e pronta para enviar campanhas.',
+      variant: 'success',
     })
     
     // Mudar para a aba de campanha após conectar
@@ -826,7 +829,6 @@ export default function DisparadorMassa() {
       title: '⚠️ Falha na Conexão WhatsApp',
       description: 'Não foi possível conectar ao WhatsApp. Tente novamente em alguns minutos ou verifique sua conexão.',
       variant: 'destructive',
-      className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
     })
   }
 
@@ -837,7 +839,7 @@ export default function DisparadorMassa() {
     toast({
       title: '🔄 WhatsApp Desconectado',
       description: 'Sua instância foi desconectada. Você pode conectar um novo número agora.',
-      className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+      variant: 'warning',
     })
   }
 
@@ -892,7 +894,7 @@ export default function DisparadorMassa() {
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-sm text-purple-200 mb-1">Status</div>
                   <div className="text-lg font-semibold">{connectedInstance ? 'WhatsApp Conectado' : 'Aguardando Conexão'}</div>
-                  <div className="text-xs text-purple-300 mt-1">{connectedInstance || 'Configure sua instância'}</div>
+                  <div className="text-xs text-purple-300 mt-1">{connectedInstance ? 'Pronto para enviar campanhas' : 'Configure sua instância'}</div>
                 </div>
               </div>
             </div>
@@ -947,13 +949,8 @@ export default function DisparadorMassa() {
                   <>
                     <CheckCircle className="w-5 h-5 text-green-600" />
                     <span className="text-green-600 font-medium">
-                      WhatsApp conectado: {whatsappConfig?.whatsapp_number || 'Via QR Code'}
+                      WhatsApp Conectado via QR Code!
                     </span>
-                    {connectedInstance && (
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
-                        (Instância: {connectedInstance})
-                      </span>
-                    )}
                   </>
                 ) : (
                   <>
@@ -1605,10 +1602,10 @@ Entre em contato conosco para mais detalhes!"
                             <div className="absolute bottom-3 right-3">
                               <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                                 message.length > 800 
-                                  ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' 
+                                  ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' 
                                   : message.length > 600 
-                                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                                    : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                                    : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
                               }`}>
                                 {message.length}/1000
                               </div>
@@ -1684,22 +1681,6 @@ Entre em contato conosco para mais detalhes!"
 
         {activeTab === 'config' && (
           <div className="space-y-6">
-            {/* Status da Conexão Atual */}
-            {connectedInstance && (
-              <div className="bg-green-50 border border-green-200 rounded-2xl p-6">
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
-                  <div>
-                    <h3 className="font-medium text-green-800">
-                      WhatsApp Conectado
-                    </h3>
-                    <p className="text-sm text-green-700">
-                      Instância: {connectedInstance}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Componente de Conexão WhatsApp */}
             <WhatsAppConnection

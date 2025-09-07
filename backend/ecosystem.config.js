@@ -17,6 +17,8 @@ module.exports = {
       CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       // Security
       API_SECRET: 'your-secret-key-here',
+      // N8N Webhook Configuration
+      N8N_WEBHOOK_URL: 'https://n8n-evolution.kof6cn.easypanel.host/webhook/dispatch-campaign',
       // Supabase Configuration
       SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',
@@ -40,6 +42,8 @@ module.exports = {
       CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       // Security
       API_SECRET: 'your-secret-key-here',
+      // N8N Webhook Configuration
+      N8N_WEBHOOK_URL: 'https://n8n-evolution.kof6cn.easypanel.host/webhook/dispatch-campaign',
       // Supabase Configuration
       SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',

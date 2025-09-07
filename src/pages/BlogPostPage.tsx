@@ -67,6 +67,7 @@ export default function BlogPostPage() {
     toast({
       title: liked ? 'Like removido!' : 'Obrigado pelo like! ❤️',
       description: liked ? 'Você removeu seu like do artigo.' : 'Seu feedback nos ajuda a criar mais conteúdo relevante.',
+      variant: 'success',
     });
   };
 
@@ -91,6 +92,7 @@ export default function BlogPostPage() {
         toast({
           title: 'Link copiado!',
           description: 'O link do artigo foi copiado para sua área de transferência.',
+          variant: 'success',
         });
         return;
     }

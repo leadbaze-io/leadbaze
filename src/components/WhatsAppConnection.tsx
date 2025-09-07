@@ -98,7 +98,7 @@ export default function WhatsAppConnection({
             toast({
               title: '🔄 WhatsApp Desconectado',
               description: 'Sua instância foi desconectada da Evolution API.',
-              className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+              variant: 'warning',
             })
           }
         } catch (error) {
@@ -170,7 +170,7 @@ export default function WhatsAppConnection({
       toast({
         title: '🔄 WhatsApp Desconectado!',
         description: 'Sua conta WhatsApp foi desconectada com sucesso.',
-        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+        variant: 'warning',
       })
 
       // 5. Chamar callback de desconexão
@@ -184,7 +184,6 @@ export default function WhatsAppConnection({
         title: '❌ Erro na Desconexão',
         description: errorMessage,
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsDisconnecting(false)
@@ -226,7 +225,7 @@ export default function WhatsAppConnection({
       toast({
         title: '🚀 Instância Criada!',
         description: 'Aguardando QR Code...',
-        className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
+        variant: 'info',
       })
 
     } catch (error) {
@@ -237,7 +236,6 @@ export default function WhatsAppConnection({
         title: '❌ Erro na Conexão',
         description: errorMessage,
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
 
       onConnectionError?.(errorMessage)
@@ -284,7 +282,7 @@ export default function WhatsAppConnection({
           toast({
             title: '📱 QR Code Gerado!',
             description: 'Escaneie o código com seu WhatsApp para conectar.',
-            className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+            variant: 'success',
           })
           return
         }
@@ -333,7 +331,7 @@ export default function WhatsAppConnection({
           toast({
             title: '🎉 WhatsApp Conectado!',
             description: 'Sua conta WhatsApp foi conectada com sucesso.',
-            className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+            variant: 'success',
           })
           onConnectionSuccess?.(instanceName)
         }
@@ -356,7 +354,7 @@ export default function WhatsAppConnection({
           toast({
             title: '🔄 WhatsApp Desconectado',
             description: 'Sua conta WhatsApp foi desconectada.',
-            className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+            variant: 'warning',
           })
         }
       },
@@ -381,7 +379,7 @@ export default function WhatsAppConnection({
     toast({
       title: '⏹️ Conexão Cancelada',
       description: 'O processo de conexão foi cancelado.',
-      className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+      variant: 'warning',
     })
   }
 
@@ -400,7 +398,7 @@ export default function WhatsAppConnection({
       toast({
         title: '🔄 QR Code Atualizado!',
         description: 'Novo QR Code gerado. Tente escanear novamente.',
-        className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
+        variant: 'info',
       })
     } catch (error) {
       console.error('❌ Erro ao atualizar QR Code:', error)
@@ -408,7 +406,6 @@ export default function WhatsAppConnection({
         title: '❌ Erro',
         description: 'Não foi possível atualizar o QR Code.',
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800'
       })
     } finally {
       setIsConnecting(false)
@@ -553,7 +550,7 @@ export default function WhatsAppConnection({
                   onClick={handleStopConnection}
                   variant="outline"
                   size="sm"
-                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 dark:text-red-600 dark:border-red-200 dark:hover:bg-red-950 dark:hover:text-red-400"
                 >
                   <X className="w-4 h-4 mr-1" />
                   Cancelar
@@ -586,17 +583,12 @@ export default function WhatsAppConnection({
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                 <div>
-                  <h3 className="font-medium text-green-800 dark:text-green-200">
+                  <h3 className="font-medium text-gray-900 dark:text-green-200">
                     WhatsApp Conectado com Sucesso!
                   </h3>
-                  <p className="text-sm text-green-700 dark:text-green-300">
+                  <p className="text-sm text-gray-800 dark:text-green-300">
                     Sua conta está pronta para enviar mensagens.
                   </p>
-                  {instanceName && (
-                    <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                      Instância: {instanceName}
-                    </p>
-                  )}
                 </div>
               </div>
               
@@ -605,7 +597,7 @@ export default function WhatsAppConnection({
                 variant="outline"
                 size="sm"
                 disabled={isDisconnecting}
-                className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                className="text-red-700 border-red-300 hover:bg-red-50 hover:text-red-800 dark:text-red-600 dark:border-red-200 dark:hover:bg-red-950 dark:hover:text-red-400"
               >
                 {isDisconnecting ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-1" />

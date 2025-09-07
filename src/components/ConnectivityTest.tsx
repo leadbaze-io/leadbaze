@@ -41,7 +41,7 @@ export function ConnectivityTest({
         toast({
           title: "✅ Conectividade OK!",
           description: "O N8N está respondendo corretamente.",
-          className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+          variant: 'success',
         })
       } else {
         setConnectionStatus('error')
@@ -49,7 +49,7 @@ export function ConnectivityTest({
         toast({
           title: "⚠️ Erro de Resposta",
           description: `O N8N retornou: ${response.status} ${response.statusText}`,
-          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+          variant: 'warning',
         })
       }
     } catch (error: unknown) {
@@ -62,7 +62,7 @@ export function ConnectivityTest({
         toast({
           title: "⚠️ Erro de CORS",
           description: "Configure CORS no N8N. Veja o arquivo N8N_CORS_SETUP.md",
-          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+          variant: 'warning',
         })
       } else {
         setConnectionStatus('error')
@@ -71,7 +71,6 @@ export function ConnectivityTest({
           title: "❌ Erro de Conexão",
           description: err.message || "Não foi possível conectar ao N8N",
           variant: 'destructive',
-          className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
         })
       }
     } finally {

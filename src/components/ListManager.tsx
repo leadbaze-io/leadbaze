@@ -130,6 +130,7 @@ export function ListManager({ onSelectList }: ListManagerProps) {
       toast({
         title: "Lista deletada",
         description: `A lista "${listName}" foi deletada com sucesso.`,
+        variant: 'success',
       })
       await loadLists()
     } catch (error) {

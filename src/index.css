@@ -620,3 +620,464 @@ html.dark .btn-salvando-escuro * {
   text-fill-color: #bbf7d0 !important;
 }
 
+/* ============================================== */
+/* WHATSAPP CONNECTION - FORÇAR CORES CORRETAS */
+/* ============================================== */
+
+/* Modo Claro - Texto do WhatsApp */
+html:not(.dark) .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .text-gray-800 {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html:not(.dark) .text-gray-700 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Botão Desconectar */
+html:not(.dark) .text-red-700 {
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+html:not(.dark) .border-red-300 {
+  border-color: #fca5a5 !important;
+}
+
+html:not(.dark) .hover\:text-red-800:hover {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+
+/* Modo Escuro - Manter cores verdes */
+html.dark .text-green-200 {
+  color: #bbf7d0 !important;
+  -webkit-text-fill-color: #bbf7d0 !important;
+  text-fill-color: #bbf7d0 !important;
+}
+
+html.dark .text-green-300 {
+  color: #86efac !important;
+  -webkit-text-fill-color: #86efac !important;
+  text-fill-color: #86efac !important;
+}
+
+html.dark .text-green-400 {
+  color: #4ade80 !important;
+  -webkit-text-fill-color: #4ade80 !important;
+  text-fill-color: #4ade80 !important;
+}
+
+/* ============================================== */
+/* TOAST MESSAGES - WHATSAPP - MELHOR CONTRASTE */
+/* ============================================== */
+
+/* Modo Claro - Toast de Sucesso (Verde) */
+html:not(.dark) .bg-green-50 {
+  background-color: #f0fdf4 !important;
+}
+
+html:not(.dark) .border-green-200 {
+  border-color: #bbf7d0 !important;
+}
+
+html:not(.dark) .text-green-800 {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+html:not(.dark) .text-green-700 {
+  color: #15803d !important;
+  -webkit-text-fill-color: #15803d !important;
+  text-fill-color: #15803d !important;
+}
+
+/* Modo Claro - Toast de Informação (Azul) */
+html:not(.dark) .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) .border-blue-200 {
+  border-color: #bfdbfe !important;
+}
+
+html:not(.dark) .text-blue-800 {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html:not(.dark) .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Toast de Aviso (Âmbar) */
+html:not(.dark) .bg-amber-50 {
+  background-color: #fffbeb !important;
+}
+
+html:not(.dark) .border-amber-200 {
+  border-color: #fed7aa !important;
+}
+
+html:not(.dark) .text-amber-800 {
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  text-fill-color: #92400e !important;
+}
+
+html:not(.dark) .text-amber-700 {
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+  text-fill-color: #b45309 !important;
+}
+
+/* Modo Claro - Toast de Erro (Vermelho) */
+html:not(.dark) .bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+html:not(.dark) .border-red-200 {
+  border-color: #fecaca !important;
+}
+
+html:not(.dark) .text-red-800 {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+
+html:not(.dark) .text-red-700 {
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-green-50 {
+  background-color: #052e16 !important;
+}
+
+html.dark .bg-blue-50 {
+  background-color: #1e3a8a !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: #451a03 !important;
+}
+
+html.dark .bg-red-50 {
+  background-color: #450a0a !important;
+}
+
+html.dark .border-green-200 {
+  border-color: #166534 !important;
+}
+
+html.dark .border-blue-200 {
+  border-color: #1e40af !important;
+}
+
+html.dark .border-amber-200 {
+  border-color: #92400e !important;
+}
+
+html.dark .border-red-200 {
+  border-color: #991b1b !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - THEME SELECTOR - MODO CLARO */
+/* ============================================== */
+
+/* Modo Claro - Dropdown Menu */
+html:not(.dark) .bg-popover {
+  background-color: #ffffff !important;
+}
+
+html:not(.dark) .text-popover-foreground {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Dropdown Menu Items */
+html:not(.dark) .hover\:bg-gray-100:hover {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) .focus\:bg-gray-100:focus {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+html:not(.dark) .text-blue-300 {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-popover {
+  background-color: #1f2937 !important;
+}
+
+html.dark .text-popover-foreground {
+  color: #f9fafb !important;
+  -webkit-text-fill-color: #f9fafb !important;
+  text-fill-color: #f9fafb !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - FORÇAR CORES ESPECÍFICAS */
+/* ============================================== */
+
+/* Modo Claro - Forçar fundo branco no dropdown */
+html:not(.dark) [data-radix-menu-content] {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Forçar texto preto nos itens */
+html:not(.dark) [data-radix-menu-content] .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Forçar hover cinza claro */
+html:not(.dark) [data-radix-menu-content] .hover\:bg-gray-100:hover {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .hover\:bg-gray-50:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Modo Claro - Forçar item selecionado azul claro */
+html:not(.dark) [data-radix-menu-content] .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Forçar ícones com cores corretas */
+html:not(.dark) [data-radix-menu-content] .text-yellow-500 {
+  color: #eab308 !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Modo Claro - Forçar indicador azul */
+html:not(.dark) [data-radix-menu-content] .bg-blue-600 {
+  background-color: #2563eb !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - SELETORES MAIS ESPECÍFICOS */
+/* ============================================== */
+
+/* Modo Claro - Forçar todas as cores do dropdown */
+html:not(.dark) div[data-radix-menu-content] {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #000000 !important;
+}
+
+/* Modo Claro - Forçar cores dos itens do menu */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"] {
+  color: #000000 !important;
+}
+
+/* Modo Claro - Forçar hover dos itens */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"]:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Modo Claro - Forçar item selecionado */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"].bg-blue-50 {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Forçar texto dos spans */
+html:not(.dark) div[data-radix-menu-content] span {
+  color: inherit !important;
+}
+
+/* Modo Claro - Forçar ícones específicos */
+html:not(.dark) div[data-radix-menu-content] .lucide-sun {
+  color: #eab308 !important;
+}
+
+html:not(.dark) div[data-radix-menu-content] .lucide-moon {
+  color: #60a5fa !important;
+}
+
+html:not(.dark) div[data-radix-menu-content] .lucide-monitor {
+  color: #4b5563 !important;
+}
+
+/* ============================================== */
+/* SUCCESS MODAL - MELHOR CONTRASTE */
+/* ============================================== */
+
+/* Modo Claro - Success Modal */
+html:not(.dark) .bg-white {
+  background-color: #ffffff !important;
+}
+
+html:not(.dark) .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .text-gray-600 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .text-gray-700 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .text-gray-300 {
+  color: #d1d5db !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* Modo Claro - Success Modal Stats */
+html:not(.dark) .text-blue-600 {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-fill-color: #2563eb !important;
+}
+
+html:not(.dark) .text-blue-400 {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+html:not(.dark) .text-blue-300 {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+html:not(.dark) .text-purple-600 {
+  color: #9333ea !important;
+  -webkit-text-fill-color: #9333ea !important;
+  text-fill-color: #9333ea !important;
+}
+
+html:not(.dark) .text-purple-400 {
+  color: #a855f7 !important;
+  -webkit-text-fill-color: #a855f7 !important;
+  text-fill-color: #a855f7 !important;
+}
+
+html:not(.dark) .text-purple-300 {
+  color: #c084fc !important;
+  -webkit-text-fill-color: #c084fc !important;
+  text-fill-color: #c084fc !important;
+}
+
+html:not(.dark) .text-green-700 {
+  color: #15803d !important;
+  -webkit-text-fill-color: #15803d !important;
+  text-fill-color: #15803d !important;
+}
+
+html:not(.dark) .text-green-300 {
+  color: #86efac !important;
+  -webkit-text-fill-color: #86efac !important;
+  text-fill-color: #86efac !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+html.dark .text-gray-100 {
+  color: #f3f4f6 !important;
+  -webkit-text-fill-color: #f3f4f6 !important;
+  text-fill-color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-300 {
+  color: #d1d5db !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
+html:not(.dark) .bg-green-100 {
+  background-color: #dcfce7 !important;
+}
+
+html:not(.dark) .text-green-800 {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+html:not(.dark) .bg-yellow-100 {
+  background-color: #fef3c7 !important;
+}
+
+html:not(.dark) .text-yellow-800 {
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  text-fill-color: #92400e !important;
+}
+
+html:not(.dark) .bg-red-100 {
+  background-color: #fee2e2 !important;
+}
+
+html:not(.dark) .text-red-800 {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+

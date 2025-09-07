@@ -139,7 +139,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         toast({
           title: "🔧 Modo Demonstração Ativado",
           description: "N8N indisponível. Usando dados de exemplo para demonstração.",
-          className: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200 dark:from-blue-950 dark:to-cyan-950 dark:border-blue-800',
+          variant: 'info',
         })
       }
 
@@ -149,7 +149,6 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           title: "❌ Erro na Extração",
           description: result.error || "Não foi possível extrair os leads.",
           variant: 'destructive',
-          className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
         })
         return
       }
@@ -158,7 +157,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         toast({
           title: "🔍 Nenhum Lead Encontrado",
           description: "Sua busca não retornou resultados. Tente um termo ou URL diferente.",
-          className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+          variant: 'warning',
         })
         return
       }
@@ -177,7 +176,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       toast({
         title: "🎉 Leads Extraídos com Sucesso!",
         description: `${result.leads.length} leads encontrados. Selecione os que deseja salvar.`,
-        className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+        variant: 'success',
       })
 
       if (onLeadsGenerated) {
@@ -190,7 +189,6 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "❌ Erro na Extração",
         description: "Ocorreu um erro durante a extração dos leads. Tente novamente.",
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsGenerating(false)
@@ -299,7 +297,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       toast({
         title: "⚠️ Nenhum Lead Selecionado",
         description: "Selecione pelo menos um lead para salvar.",
-        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+        variant: 'warning',
       })
       return
     }
@@ -308,7 +306,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       toast({
         title: "⚠️ Nome da Lista Obrigatório",
         description: "Digite um nome para a nova lista.",
-        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+        variant: 'warning',
       })
       return
     }
@@ -317,7 +315,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       toast({
         title: "⚠️ Lista Não Selecionada",
         description: "Selecione uma lista para adicionar os leads.",
-        className: 'bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950 dark:to-orange-950 dark:border-amber-800',
+        variant: 'warning',
       })
       return
     }
@@ -378,7 +376,6 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "❌ Erro ao Salvar",
         description: "Não foi possível salvar os leads. Tente novamente.",
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     } finally {
       setIsSaving(false)

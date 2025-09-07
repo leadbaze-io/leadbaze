@@ -105,7 +105,6 @@ export const useSaveLeadList = () => {
         title: "❌ Erro ao Salvar Lista",
         description: "Não foi possível salvar a lista. Tente novamente.",
         variant: 'destructive',
-        className: 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200 dark:from-red-950 dark:to-pink-950 dark:border-red-800',
       })
     },
     
@@ -113,6 +112,7 @@ export const useSaveLeadList = () => {
       toast({
         title: "Lista Salva com Sucesso!",
         description: `${data.total_leads} leads salvos na lista "${data.name}".`,
+        variant: 'success',
       })
     },
     
@@ -159,6 +159,7 @@ export const useAddLeadsToList = () => {
       toast({
         title: "Leads Adicionados!",
         description: `${leads.length} leads adicionados à lista "${data.name}".`,
+        variant: 'success',
       })
     },
     
@@ -208,6 +209,7 @@ export const useDeleteLeadList = () => {
       toast({
         title: "Lista Deletada",
         description: "A lista foi removida com sucesso.",
+        variant: 'success',
       })
     },
     
