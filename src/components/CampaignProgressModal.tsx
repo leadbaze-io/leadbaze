@@ -180,13 +180,25 @@ export default function CampaignProgressModal({
           <motion.div
             onClick={onExpand}
             className={`relative w-16 h-16 rounded-full shadow-2xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-              status === 'sending' ? 'bg-gradient-to-r from-blue-500 to-purple-600' :
-              status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
-              status === 'failed' ? 'bg-gradient-to-r from-red-500 to-pink-600' :
-              'bg-gradient-to-r from-gray-400 to-gray-600'
+              status === 'sending' ? 'bg-blue-600 dark:bg-blue-500' :
+              status === 'completed' ? 'bg-green-600 dark:bg-green-500' :
+              status === 'failed' ? 'bg-red-600 dark:bg-red-500' :
+              'bg-gray-600 dark:bg-gray-500'
             }`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            animate={status === 'completed' || status === 'failed' ? { 
+              boxShadow: [
+                '0 0 0 0 rgba(34, 197, 94, 0.7)',
+                '0 0 0 10px rgba(34, 197, 94, 0)',
+                '0 0 0 0 rgba(34, 197, 94, 0)'
+              ]
+            } : {}}
+            transition={status === 'completed' || status === 'failed' ? { 
+              duration: 2, 
+              repeat: Infinity,
+              ease: "easeInOut"
+            } : {}}
             title={`${campaignName} - ${getStatusText()}`}
           >
             {/* Ícone animado */}
@@ -202,9 +214,14 @@ export default function CampaignProgressModal({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
               >
-                <CheckCircle className="w-4 h-4 text-white" />
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  <CheckCircle className="w-5 h-5 text-white" />
+                </motion.div>
               </motion.div>
             )}
             
@@ -213,9 +230,14 @@ export default function CampaignProgressModal({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center"
+                className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
               >
-                <AlertTriangle className="w-4 h-4 text-white" />
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  <AlertTriangle className="w-5 h-5 text-white" />
+                </motion.div>
               </motion.div>
             )}
             
@@ -390,7 +412,19 @@ export default function CampaignProgressModal({
                     
                     return (
                       <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                        {estimatedProgress >= 100 ? (
+                        {status === 'completed' ? (
+                          <>
+                            🎉 Campanha enviada com sucesso!
+                            <br />
+                            📊 {successCount} mensagens enviadas
+                          </>
+                        ) : status === 'failed' ? (
+                          <>
+                            ❌ Falha no envio da campanha
+                            <br />
+                            📊 {failedCount} mensagens falharam
+                          </>
+                        ) : estimatedProgress >= 100 ? (
                           <>
                             ✅ Envio concluído! Aguardando confirmação...
                             <br />
