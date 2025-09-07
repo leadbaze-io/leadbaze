@@ -266,25 +266,25 @@ export default function CampaignProgressModalV2({
     }
   }
 
-  // Bolinha de loading flutuante (quando minimizado)
+  // Modal minimizado profissional (quando minimizado)
   if (isVisible && isMinimized) {
     return (
       <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
+          initial={{ opacity: 0, scale: 0, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0, y: 20 }}
           className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
         >
           <motion.div
             onClick={onExpand}
-            className={`relative w-16 h-16 rounded-full shadow-2xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-              status === 'sending' ? 'bg-blue-600 dark:bg-blue-500' :
-              status === 'completed' ? 'bg-green-600 dark:bg-green-500' :
-              status === 'failed' ? 'bg-red-600 dark:bg-red-500' :
-              'bg-gray-600 dark:bg-gray-500'
+            className={`relative w-20 h-12 sm:w-24 sm:h-14 rounded-xl shadow-2xl cursor-pointer flex items-center justify-between px-3 transition-all duration-300 hover:scale-105 backdrop-blur-sm border ${
+              status === 'sending' ? 'bg-blue-600/90 dark:bg-blue-500/90 border-blue-400' :
+              status === 'completed' ? 'bg-green-600/90 dark:bg-green-500/90 border-green-400' :
+              status === 'failed' ? 'bg-red-600/90 dark:bg-red-500/90 border-red-400' :
+              'bg-gray-600/90 dark:bg-gray-500/90 border-gray-400'
             }`}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             animate={status === 'completed' || status === 'failed' ? { 
               boxShadow: [
@@ -300,27 +300,39 @@ export default function CampaignProgressModalV2({
             } : {}}
             title={`${campaignName} - ${statusInfo.message}`}
           >
-            {/* Ícone animado */}
-            <motion.div
-              animate={status === 'sending' ? { rotate: 360 } : {}}
-              transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-            >
-              {statusInfo.icon}
-            </motion.div>
+            {/* Ícone e informações */}
+            <div className="flex items-center space-x-2">
+              <motion.div
+                animate={status === 'sending' ? { rotate: 360 } : {}}
+                transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
+                className="flex-shrink-0"
+              >
+                {statusInfo.icon}
+              </motion.div>
+              
+              {/* Informações compactas */}
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-medium text-white truncate">
+                  {status === 'sending' ? `${currentSuccessCount}/${totalLeads}` : 
+                   status === 'completed' ? 'Concluído' :
+                   status === 'failed' ? 'Falhou' : 'Aguardando'}
+                </div>
+                {status === 'sending' && (
+                  <div className="text-xs text-white/80">
+                    {Math.floor(progress)}%
+                  </div>
+                )}
+              </div>
+            </div>
             
             {/* Badge de notificação quando completado */}
             {status === 'completed' && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
+                className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
               >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </motion.div>
+                <CheckCircle className="w-3 h-3 text-white" />
               </motion.div>
             )}
             
@@ -329,43 +341,22 @@ export default function CampaignProgressModalV2({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
+                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
               >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <AlertTriangle className="w-5 h-5 text-white" />
-                </motion.div>
+                <AlertTriangle className="w-3 h-3 text-white" />
               </motion.div>
             )}
             
-            {/* Progresso circular */}
+            {/* Progresso linear no fundo */}
             {status === 'sending' && (
-              <svg className="absolute inset-0 w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="rgba(255,255,255,0.3)"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <motion.circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="white"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray={`${2 * Math.PI * 28}`}
-                  strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
-                  initial={{ strokeDashoffset: 2 * Math.PI * 28 }}
-                  animate={{ strokeDashoffset: 2 * Math.PI * 28 * (1 - progress / 100) }}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 rounded-b-xl overflow-hidden">
+                <motion.div
+                  className="h-full bg-white/60 rounded-b-xl"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}
                 />
-              </svg>
+              </div>
             )}
           </motion.div>
         </motion.div>
@@ -380,7 +371,7 @@ export default function CampaignProgressModalV2({
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 100 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-72 sm:w-80 max-w-sm"
+          className="fixed bottom-2 right-2 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1rem)] sm:w-80 max-w-sm"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -389,15 +380,17 @@ export default function CampaignProgressModalV2({
             className={`relative ${statusInfo.color} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
           >
             {/* Header */}
-            <div className="p-4 sm:p-6 pb-4">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  {statusInfo.icon}
-                  <div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+            <div className="p-3 sm:p-6 pb-4">
+              <div className="flex items-start justify-between mb-3 sm:mb-4">
+                <div className="flex items-start space-x-2 sm:space-x-3 flex-1 min-w-0">
+                  <div className="flex-shrink-0 mt-0.5">
+                    {statusInfo.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white truncate">
                       {campaignName}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-tight">
                       {statusInfo.message}
                     </p>
                   </div>
@@ -436,32 +429,32 @@ export default function CampaignProgressModalV2({
                 </div>
               </div>
 
-              {/* Estatísticas */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              {/* Estatísticas - Design mais limpo para mobile */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
                 <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto mb-2">
-                    <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto mb-1 sm:mb-2">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Total</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">{totalLeads}</p>
+                  <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">{totalLeads}</p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full mx-auto mb-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-green-100 dark:bg-green-900 rounded-full mx-auto mb-1 sm:mb-2">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 dark:text-green-400" />
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Enviadas</p>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                  <p className="text-sm sm:text-lg font-bold text-green-600 dark:text-green-400">
                     {currentSuccessCount}
                   </p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-red-100 dark:bg-red-900 rounded-full mx-auto mb-2">
-                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-red-100 dark:bg-red-900 rounded-full mx-auto mb-1 sm:mb-2">
+                    <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 dark:text-red-400" />
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Falhas</p>
-                  <p className="text-lg font-bold text-red-600 dark:text-red-400">{currentFailedCount}</p>
+                  <p className="text-sm sm:text-lg font-bold text-red-600 dark:text-red-400">{currentFailedCount}</p>
                 </div>
               </div>
 
@@ -533,13 +526,13 @@ export default function CampaignProgressModalV2({
                       <>
                         ⏱️ Tempo estimado restante: {(() => {
                           const remainingMessages = Math.max(0, totalLeads - currentSuccessCount - currentFailedCount)
-                          const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
+                          const estimatedMinutesRemaining = Math.ceil(remainingMessages * 0.5) // 30 segundos por mensagem
                           return estimatedMinutesRemaining > 0 ? 
                             `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
                             'Concluindo...'
                         })()}
                         <br />
-                        <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
+                        <span className="text-xs text-gray-400">Velocidade: 2 mensagens/minuto</span>
                       </>
                     )}
                   </div>
