@@ -35,6 +35,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import SuccessModal from './SuccessModal'
 import { LeadCard } from './LeadCard'
 import { LeadFilters } from './LeadFilters'
+import { StatusIndicator } from './StatusIndicator'
 
 const urlFormSchema = z.object({
   searchUrl: z
@@ -54,6 +55,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [generatedLeads, setGeneratedLeads] = useState<Lead[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [showSaveOptions, setShowSaveOptions] = useState(false)
+  const [extractionStatus, setExtractionStatus] = useState<'ready' | 'generating' | 'completed' | 'error'>('ready')
   const [saveMode, setSaveMode] = useState<'new' | 'existing'>('new')
   const [selectedListId, setSelectedListId] = useState("")
   const [newListName, setNewListName] = useState("")
@@ -127,6 +129,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
   const handleLeadGeneration = async (searchUrl: string, limit: number) => {
     setIsGenerating(true)
+    setExtractionStatus('generating')
     setGeneratedLeads([])
     setShowSaveOptions(false)
     resetPagination()
@@ -146,6 +149,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
       if (!result.success) {
         console.error('❌ Erro na resposta do serviço:', result.error)
+        setExtractionStatus('error')
         toast({
           title: "❌ Erro na Extração",
           description: result.error || "Não foi possível extrair os leads.",
@@ -155,6 +159,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       }
 
       if (result.leads.length === 0) {
+        setExtractionStatus('error')
         toast({
           title: "🔍 Nenhum Lead Encontrado",
           description: "Sua busca não retornou resultados. Tente um termo ou URL diferente.",
@@ -170,6 +175,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       }))
 
       setGeneratedLeads(leadsWithSelection)
+      setExtractionStatus('completed')
       
       // Mostrar opções de salvar automaticamente
       setShowSaveOptions(true)
@@ -186,6 +192,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
     } catch (error) {
       console.error('❌ Erro na geração de leads:', error)
+      setExtractionStatus('error')
       toast({
         title: "❌ Erro na Extração",
         description: "Ocorreu um erro durante a extração dos leads. Tente novamente.",
@@ -384,6 +391,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   const onUrlSubmit = (values: z.infer<typeof urlFormSchema>) => {
+    setExtractionStatus('ready') // Reset status before starting
     handleLeadGeneration(values.searchUrl, parseInt(quantity))
   }
 
@@ -391,6 +399,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     setShowSuccessModal(false)
     setSuccessData(null)
   }
+
 
   const handleGoToDashboard = () => {
     // Emitir evento para o componente pai navegar para o dashboard
@@ -517,11 +526,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         <Zap className="w-4 h-4" />
                         <span>Status</span>
                       </Label>
-                      <div className="h-12 flex items-center px-4 bg-muted/50 rounded-lg border-2 border-dashed gerador-input-claro gerador-input-escuro">
-                        <span className="text-sm gerador-descricao-claro dark:text-muted-foreground">
-                          {isGenerating ? "Extraindo leads..." : "Pronto para extrair"}
-                        </span>
-                      </div>
+                      <StatusIndicator 
+                        status={extractionStatus} 
+                        className="w-full"
+                      />
                     </div>
                   </div>
 
