@@ -134,6 +134,24 @@ export class CampaignStatusServiceV2 {
       }
     });
 
+    // Listener para mensagens genéricas (fallback)
+    eventSource.addEventListener('message', (event) => {
+      console.log('📨 [CampaignStatusServiceV2] Mensagem genérica recebida:', event);
+      console.log('📨 [CampaignStatusServiceV2] Dados da mensagem:', event.data);
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'progress') {
+          console.log('📈 [CampaignStatusServiceV2] Processando progresso via mensagem genérica:', data.data);
+          onProgress(data.data);
+        } else if (data.type === 'complete') {
+          console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
+          onComplete(data.data);
+        }
+      } catch (error) {
+        console.error('❌ [CampaignStatusServiceV2] Erro ao processar mensagem genérica:', error);
+      }
+    });
+
     // Listener para conclusão
     eventSource.addEventListener('complete', (event) => {
       console.log('✅ [CampaignStatusServiceV2] Evento complete recebido:', event);
