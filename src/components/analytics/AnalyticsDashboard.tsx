@@ -375,13 +375,13 @@ function SimpleLineChart({ data }: { data: Array<{ date: string; count: number }
 function getActivityIcon(type: string) {
   switch (type) {
     case 'lead_generated':
-      return <Users className="w-4 h-4 text-blue-600" />
+      return <Users className="w-4 h-4 text-white" />
     case 'list_created':
-      return <FolderPlus className="w-4 h-4 text-green-600" />
+      return <FolderPlus className="w-4 h-4 text-white" />
     case 'message_sent':
-      return <MessageSquare className="w-4 h-4 text-purple-600" />
+      return <MessageSquare className="w-4 h-4 text-white" />
     default:
-      return <Zap className="w-4 h-4 text-gray-600" />
+      return <Zap className="w-4 h-4 text-white" />
   }
 }
 

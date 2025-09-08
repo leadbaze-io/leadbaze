@@ -402,8 +402,13 @@ export default function Dashboard() {
                   transition={{ delay: 0.7 + index * 0.1 }}
                   className="flex items-start space-x-4 p-3 rounded-xl hover:bg-muted/50 transition-colors"
                 >
-                  <div className={`w-10 h-10 bg-${resource.color}-100 dark:bg-${resource.color}-900 rounded-xl flex items-center justify-center flex-shrink-0`}>
-                    <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
+                  <div className={`w-12 h-12 bg-gradient-to-r ${
+                    resource.color === 'blue' ? 'from-blue-500 to-blue-600' :
+                    resource.color === 'green' ? 'from-green-500 to-green-600' :
+                    resource.color === 'purple' ? 'from-purple-500 to-purple-600' :
+                    'from-orange-500 to-orange-600'
+                  } rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                    <resource.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <p className="font-semibold dashboard-card-text-claro dark:text-foreground">
