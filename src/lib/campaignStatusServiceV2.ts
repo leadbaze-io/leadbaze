@@ -187,12 +187,20 @@ export class CampaignStatusServiceV2 {
     // Listener para conclusão
     eventSource.addEventListener('complete', (event) => {
       console.log('✅ [CampaignStatusServiceV2] Evento complete recebido:', event);
+      console.log('✅ [CampaignStatusServiceV2] Dados do evento complete:', event.data);
       try {
-        const completionData: CampaignCompletion = JSON.parse(event.data);
-        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão:', completionData);
+        const data = JSON.parse(event.data);
+        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão parseados:', data);
+        
+        // Se os dados estão aninhados em 'data', extrair
+        const completionData = data.data || data;
+        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão finais:', completionData);
+        
         onComplete(completionData);
+        console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado via listener complete');
       } catch (error) {
         console.error('❌ [CampaignStatusServiceV2] Erro ao processar evento de conclusão:', error);
+        console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
       }
     });
 
