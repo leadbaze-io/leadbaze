@@ -472,17 +472,21 @@ export class CampaignLeadsService {
    */
   static async checkPhoneExists(phone: string): Promise<{
     exists: boolean
+    totalOccurrences: number
     campaigns: Array<{
       campaign_id: string
       campaign_name: string
       list_name: string
       lead_name: string
+      lead_phone: string
+      lead_address: string
+      added_at: string
     }>
   }> {
     try {
       const normalizedPhone = phone.replace(/\D/g, '')
       if (!normalizedPhone) {
-        return { exists: false, campaigns: [] }
+        return { exists: false, totalOccurrences: 0, campaigns: [] }
       }
 
       const phoneHash = this.simpleHash(normalizedPhone)
@@ -492,27 +496,37 @@ export class CampaignLeadsService {
         .select(`
           campaign_id,
           lead_data,
+          added_at,
           bulk_campaigns!inner(name),
           lead_lists!inner(name)
         `)
         .eq('lead_hash', phoneHash)
+        .order('added_at', { ascending: false })
 
       if (error) throw error
 
       const campaigns = data?.map(item => ({
         campaign_id: item.campaign_id,
-        campaign_name: (item.bulk_campaigns as { name: string })?.name || 'Campanha desconhecida',
-        list_name: (item.lead_lists as { name: string })?.name || 'Lista desconhecida',
-        lead_name: (item.lead_data as any)?.name || 'Lead sem nome'
+        campaign_name: Array.isArray(item.bulk_campaigns) 
+          ? (item.bulk_campaigns[0] as { name: string })?.name || 'Campanha desconhecida'
+          : (item.bulk_campaigns as { name: string })?.name || 'Campanha desconhecida',
+        list_name: Array.isArray(item.lead_lists)
+          ? (item.lead_lists[0] as { name: string })?.name || 'Lista desconhecida'
+          : (item.lead_lists as { name: string })?.name || 'Lista desconhecida',
+        lead_name: (item.lead_data as any)?.name || 'Lead sem nome',
+        lead_phone: (item.lead_data as any)?.phone || phone,
+        lead_address: (item.lead_data as any)?.address || 'Endereço não disponível',
+        added_at: item.added_at
       })) || []
 
       return {
         exists: campaigns.length > 0,
+        totalOccurrences: campaigns.length,
         campaigns
       }
     } catch (error) {
       console.error('Erro ao verificar telefone:', error)
-      return { exists: false, campaigns: [] }
+      return { exists: false, totalOccurrences: 0, campaigns: [] }
     }
   }
 

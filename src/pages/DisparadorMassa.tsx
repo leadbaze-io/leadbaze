@@ -14,6 +14,7 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
 import CampaignProgressModalV2 from '../components/CampaignProgressModalV2'
+import DuplicateLeadsModal from '../components/DuplicateLeadsModal'
 import Footer from '../components/Footer'
 import { EvolutionApiService } from '../lib/evolutionApiService'
 import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, CampaignLead, UsedListSummary } from '../types'
@@ -69,6 +70,9 @@ export default function DisparadorMassa() {
   const [currentCampaignStatus, setCurrentCampaignStatus] = useState<'sending' | 'completed' | 'failed'>('sending')
   const [currentSuccessCount, setCurrentSuccessCount] = useState(0)
   const [currentFailedCount, setCurrentFailedCount] = useState(0)
+
+  // Estados para o modal de leads duplicados
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
 
   const loadData = useCallback(async () => {
     try {
@@ -298,24 +302,22 @@ export default function DisparadorMassa() {
     setIsCreatingCampaign(false)
   }
 
-  // Função para debug de leads duplicados
-  const debugDuplicateLead = async (lead: Lead) => {
-    if (!lead.phone) return
+  // Função para mostrar modal de leads duplicados
+  const showDuplicateLeadsModal = () => {
+    setShowDuplicateModal(true)
+  }
+
+  // Função para processar leads após seleção no modal
+  const handleLeadsProcessed = (selectedLeads: Lead[], remainingDuplicates: Lead[]) => {
+    setNewLeads(prev => [...prev, ...selectedLeads])
+    setDuplicateLeads(remainingDuplicates)
     
-    try {
-      const result = await CampaignLeadsService.checkPhoneExists(lead.phone)
-      if (result.exists) {
-        console.log('🔍 DEBUG - Lead duplicado encontrado:')
-        console.log('- Nome:', lead.name)
-        console.log('- Telefone:', lead.phone)
-        console.log('- Endereço:', lead.address)
-        console.log('- Já existe em:', result.campaigns.length, 'campanha(s)')
-        result.campaigns.forEach((campaign, index) => {
-          console.log(`  ${index + 1}. Campanha: "${campaign.campaign_name}" | Lista: "${campaign.list_name}" | Lead: "${campaign.lead_name}"`)
-        })
-      }
-    } catch (error) {
-      console.error('Erro ao verificar lead duplicado:', error)
+    if (selectedLeads.length > 0) {
+      toast({
+        title: '✅ Leads adicionados',
+        description: `${selectedLeads.length} lead(s) foram adicionados mesmo sendo duplicados.`,
+        variant: 'default'
+      })
     }
   }
 
@@ -350,8 +352,6 @@ export default function DisparadorMassa() {
       if (normalizedPhone) {
         if (existingPhones.has(normalizedPhone)) {
           duplicateLeads.push(lead)
-          // Debug: verificar onde o telefone já existe
-          debugDuplicateLead(lead)
         } else {
           newLeads.push(lead)
           existingPhones.add(normalizedPhone)
@@ -1457,29 +1457,29 @@ export default function DisparadorMassa() {
                           </div>
                         )}
 
-                        {/* Botão de Debug para Leads Duplicados */}
+                        {/* Botão para Ver Detalhes de Leads Duplicados */}
                         {duplicateLeads.length > 0 && (
-                          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-2">
-                                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-                                <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                                  {duplicateLeads.length} lead(s) duplicado(s) detectado(s)
-                                </span>
+                          <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-800 rounded-lg">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center">
+                                  <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                                </div>
+                                <div>
+                                  <h4 className="text-sm font-semibold text-orange-800 dark:text-orange-200">
+                                    {duplicateLeads.length} lead(s) duplicado(s) detectado(s)
+                                  </h4>
+                                  <p className="text-xs text-orange-600 dark:text-orange-300">
+                                    Estes leads já existem em outras campanhas
+                                  </p>
+                                </div>
                               </div>
                               <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  console.log('🔍 DEBUG - Verificando todos os leads duplicados:')
-                                  duplicateLeads.forEach((lead, index) => {
-                                    console.log(`${index + 1}. ${lead.name} - ${lead.phone}`)
-                                    debugDuplicateLead(lead)
-                                  })
-                                }}
-                                className="text-xs"
+                                onClick={showDuplicateLeadsModal}
+                                className="bg-orange-600 hover:bg-orange-700 text-white text-sm"
                               >
-                                Ver Detalhes no Console
+                                <AlertTriangle className="w-4 h-4 mr-2" />
+                                Ver Detalhes
                               </Button>
                             </div>
                           </div>
@@ -2053,6 +2053,14 @@ Entre em contato conosco para mais detalhes!"
         onClose={handleCloseProgressModal}
         onMinimize={handleMinimizeProgressModal}
         onExpand={handleExpandProgressModal}
+      />
+      
+      {/* Modal de Leads Duplicados */}
+      <DuplicateLeadsModal
+        isOpen={showDuplicateModal}
+        onClose={() => setShowDuplicateModal(false)}
+        duplicateLeads={duplicateLeads}
+        onLeadsProcessed={handleLeadsProcessed}
       />
       
       {/* Footer */}
