@@ -143,6 +143,8 @@ export class CampaignStatusServiceV2 {
         if (data.type === 'progress') {
           console.log('📈 [CampaignStatusServiceV2] Processando progresso via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
+          console.log('🔍 [CampaignStatusServiceV2] Callback onProgress é uma função?', typeof onProgress);
+          console.log('🔍 [CampaignStatusServiceV2] Callback onProgress:', onProgress);
           try {
             onProgress(data.data);
             console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
