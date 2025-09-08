@@ -60,6 +60,29 @@ export default function CampaignProgressModalV2({
 }: CampaignProgressModalV2Props) {
   const { isDark } = useTheme()
   const [elapsedTime, setElapsedTime] = useState('0s')
+  const [finalTime, setFinalTime] = useState<string | null>(null)
+
+  // Capturar tempo final quando campanha for concluída
+  useEffect(() => {
+    if ((status === 'completed' || status === 'failed') && startTime && !finalTime) {
+      const now = new Date()
+      const diff = now.getTime() - startTime.getTime()
+      const seconds = Math.floor(diff / 1000)
+      const minutes = Math.floor(seconds / 60)
+      const hours = Math.floor(minutes / 60)
+
+      let timeString = ''
+      if (hours > 0) {
+        timeString = `${hours}h ${minutes % 60}m`
+      } else if (minutes > 0) {
+        timeString = `${minutes}m ${seconds % 60}s`
+      } else {
+        timeString = `${seconds}s`
+      }
+      
+      setFinalTime(timeString)
+    }
+  }, [status, startTime, finalTime])
 
   // Atualizar tempo decorrido
   useEffect(() => {
@@ -355,18 +378,34 @@ export default function CampaignProgressModalV2({
                     text-sm font-medium
                     ${isDark ? 'text-gray-300' : 'text-gray-700'}
                   `}>
-                    {status === 'completed' ? 'Status da campanha' : 'Tempo decorrido'}
+                    {status === 'completed' ? 'Tempo total da campanha' : 'Tempo decorrido'}
                   </span>
                 </div>
-                <span className={`
-                  text-sm font-bold
-                  ${status === 'completed' 
-                    ? (isDark ? 'text-green-400' : 'text-green-600')
-                    : (isDark ? 'text-white' : 'text-gray-900')
-                  }
-                `}>
-                  {status === 'completed' ? '✅ Concluída com sucesso' : elapsedTime}
-                </span>
+                <div className="text-right">
+                  {status === 'completed' ? (
+                    <div>
+                      <div className={`
+                        text-sm font-bold
+                        ${isDark ? 'text-green-400' : 'text-green-600'}
+                      `}>
+                        ✅ Concluída
+                      </div>
+                      <div className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                      `}>
+                        em {finalTime || elapsedTime}
+                      </div>
+                    </div>
+                  ) : (
+                    <span className={`
+                      text-sm font-bold
+                      ${isDark ? 'text-white' : 'text-gray-900'}
+                    `}>
+                      {elapsedTime}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -637,13 +676,13 @@ export default function CampaignProgressModalV2({
                         text-xs font-semibold uppercase tracking-wide
                         ${isDark ? 'text-gray-400' : 'text-purple-700'}
                       `}>
-                        {status === 'completed' ? 'Status' : 'Tempo'}
+                        {status === 'completed' ? 'Tempo Total' : 'Tempo'}
                       </p>
                       <p className={`
                         text-2xl font-black
                         ${isDark ? 'text-white' : 'text-purple-900'}
                       `}>
-                        {status === 'completed' ? '✅ Concluído' : elapsedTime}
+                        {status === 'completed' ? (finalTime || elapsedTime) : elapsedTime}
                       </p>
                     </div>
                   </div>
