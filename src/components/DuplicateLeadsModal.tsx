@@ -146,7 +146,7 @@ export default function DuplicateLeadsModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700"
+          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[98vh] sm:max-h-[95vh] overflow-hidden border border-gray-200 dark:border-gray-700"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -186,7 +186,7 @@ export default function DuplicateLeadsModal({
           </div>
 
           {/* Content */}
-          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-180px)] sm:max-h-[calc(90vh-140px)]">
+          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(98vh-200px)] sm:max-h-[calc(95vh-160px)]">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12 space-y-4">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600 dark:border-orange-400"></div>
@@ -197,7 +197,7 @@ export default function DuplicateLeadsModal({
             ) : (
               <div className="space-y-4">
                 {/* Action Bar */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-600">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                     <Button
                       variant="outline"
@@ -254,11 +254,11 @@ export default function DuplicateLeadsModal({
                                   {detail.lead.name || 'Lead sem nome'}
                                 </CardTitle>
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                                  <Badge variant="destructive" className="text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-red-200 dark:border-red-700">
+                                  <Badge variant="destructive" className="text-xs">
                                     {detail.totalOccurrences} ocorrência(s)
                                   </Badge>
                                   {detail.lead.phone && (
-                                    <Badge variant="outline" className="text-xs border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
+                                    <Badge variant="outline" className="text-xs">
                                       <Phone className="w-3 h-3 mr-1" />
                                       {formatPhone(detail.lead.phone)}
                                     </Badge>
@@ -302,14 +302,14 @@ export default function DuplicateLeadsModal({
                               {detail.campaigns.map((campaign, campaignIndex) => (
                                 <div
                                   key={campaignIndex}
-                                  className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-lg border border-gray-200 dark:border-gray-600"
+                                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
                                 >
                                   <div className="flex-1 min-w-0">
                                     <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-2">
                                       <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                         {campaign.campaign_name}
                                       </span>
-                                      <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-700 w-fit">
+                                      <Badge variant="secondary" className="text-xs">
                                         {campaign.list_name}
                                       </Badge>
                                     </div>
@@ -337,7 +337,7 @@ export default function DuplicateLeadsModal({
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
             <div className="text-sm text-gray-600 dark:text-gray-400 flex items-start space-x-2">
               <span className="text-lg">💡</span>
               <div>
