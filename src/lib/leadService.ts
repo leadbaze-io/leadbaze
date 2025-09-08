@@ -3,7 +3,7 @@ import { supabase, getCurrentUser } from './supabaseClient'
 import type { Lead, LeadList, LeadGenerationResponse } from '../types'
 import { generateDemoLeads } from './demoLeads'
 
-const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae'
+const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e'
 
 export class LeadService {
   /**

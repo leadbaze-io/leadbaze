@@ -9,7 +9,7 @@ interface ConnectivityTestProps {
 }
 
 export function ConnectivityTest({ 
-  webhookUrl = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae' 
+  webhookUrl = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e' 
 }: ConnectivityTestProps) {
   const [isTestingConnection, setIsTestingConnection] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error' | 'cors_error'>('idle')

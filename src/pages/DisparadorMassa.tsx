@@ -764,11 +764,7 @@ export default function DisparadorMassa() {
 
         console.log('🎉 [DisparadorMassa] Campanha atualizada na lista com status:', completion.status)
 
-        // Fechar o modal após um delay
-        setTimeout(() => {
-          console.log('⏰ [DisparadorMassa] Fechando modal após 3 segundos...');
-          setShowProgressModal(false)
-        }, 3000) // Fechar após 3 segundos
+        // Modal permanece aberto para o usuário ver os dados finais
         console.log('✅ [DisparadorMassa] ===== FIM CALLBACK ONCOMPLETE =====');
       },
       (status) => {
@@ -905,11 +901,7 @@ export default function DisparadorMassa() {
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
       }
 
-      toast({
-        title: 'Campanha enviada!',
-        description: `Campanha "${selectedCampaign.name}" enviada para processamento.`,
-        variant: 'success',
-      })
+      // Toast removido para não interferir com o Mini Player
 
       // Reset form
       setMessage('')
