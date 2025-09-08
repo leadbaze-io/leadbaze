@@ -426,17 +426,17 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
 
                     {/* Estatísticas */}
                     <div className="flex items-center justify-between text-sm mb-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                          <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                          <Users className="w-6 h-6 text-white" />
                         </div>
                         <span className="font-semibold lista-card-texto-claro dark:text-foreground">
                           {list.total_leads} leads
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                          <Calendar className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                          <Calendar className="w-6 h-6 text-white" />
                         </div>
                         <span className="lista-card-muted-claro dark:text-muted-foreground">
                           {formatDate(list.created_at)}
