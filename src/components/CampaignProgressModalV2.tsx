@@ -340,8 +340,8 @@ export default function CampaignProgressModalV2({
                       </div>
                     </motion.div>
                     <div>
-                      <h2 className="text-xl font-bold text-white drop-shadow-md">Status da Campanha</h2>
-                      <p className="text-white/90 text-sm drop-shadow-sm">Monitoramento em tempo real</p>
+                      <h2 className="text-xl font-black text-white drop-shadow-lg">Status da Campanha</h2>
+                      <p className="text-white/95 text-sm font-semibold drop-shadow-md">Monitoramento em tempo real</p>
                     </div>
                   </div>
 
@@ -375,16 +375,16 @@ export default function CampaignProgressModalV2({
 
                 {/* Nome da Campanha */}
                 <div className="mb-4">
-                  <h1 className="text-2xl font-bold mb-1 text-white drop-shadow-md">{campaignName}</h1>
-                  <p className="text-white/90 drop-shadow-sm">{statusInfo.message}</p>
+                  <h1 className="text-2xl font-black mb-1 text-white drop-shadow-lg">{campaignName}</h1>
+                  <p className="text-white/95 font-semibold drop-shadow-md">{statusInfo.message}</p>
                 </div>
 
                 {/* Barra de Progresso Principal */}
                 {statusInfo.showProgress && (
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-white drop-shadow-sm">Progresso</span>
-                      <span className="text-sm font-bold text-white drop-shadow-md">{Math.floor(progress)}%</span>
+                      <span className="text-sm font-semibold text-white drop-shadow-md">Progresso</span>
+                      <span className="text-lg font-black text-white drop-shadow-lg">{Math.floor(progress)}%</span>
                     </div>
                     <div className="w-full bg-white/25 dark:bg-white/20 rounded-full h-3 overflow-hidden shadow-inner">
                       <motion.div
@@ -403,50 +403,50 @@ export default function CampaignProgressModalV2({
             <div className="p-6">
               {/* Estatísticas em Grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 rounded-2xl border border-blue-200 dark:border-blue-800">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 rounded-2xl border border-blue-200 dark:border-blue-800 shadow-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-md">
                       <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-blue-700 dark:text-blue-400 font-medium drop-shadow-sm">Total</p>
-                      <p className="text-xl font-bold text-blue-900 dark:text-blue-100 drop-shadow-sm">{totalLeads}</p>
+                      <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold drop-shadow-md">Total</p>
+                      <p className="text-2xl font-black text-blue-950 dark:text-blue-100 drop-shadow-lg">{totalLeads}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 rounded-2xl border border-green-200 dark:border-green-800">
+                <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 rounded-2xl border border-green-200 dark:border-green-800 shadow-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-md">
                       <CheckCircle className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-green-700 dark:text-green-400 font-medium drop-shadow-sm">Enviados</p>
-                      <p className="text-xl font-bold text-green-900 dark:text-green-100 drop-shadow-sm">{successCount}</p>
+                      <p className="text-sm text-green-800 dark:text-green-400 font-semibold drop-shadow-md">Enviados</p>
+                      <p className="text-2xl font-black text-green-950 dark:text-green-100 drop-shadow-lg">{successCount}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-4 rounded-2xl border border-red-200 dark:border-red-800">
+                <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-4 rounded-2xl border border-red-200 dark:border-red-800 shadow-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center shadow-md">
                       <AlertTriangle className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-red-700 dark:text-red-400 font-medium drop-shadow-sm">Falhas</p>
-                      <p className="text-xl font-bold text-red-900 dark:text-red-100 drop-shadow-sm">{failedCount}</p>
+                      <p className="text-sm text-red-800 dark:text-red-400 font-semibold drop-shadow-md">Falhas</p>
+                      <p className="text-2xl font-black text-red-950 dark:text-red-100 drop-shadow-lg">{failedCount}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-4 rounded-2xl border border-purple-200 dark:border-purple-800">
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-4 rounded-2xl border border-purple-200 dark:border-purple-800 shadow-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center shadow-md">
                       <Timer className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-purple-700 dark:text-purple-400 font-medium drop-shadow-sm">Tempo</p>
-                      <p className="text-xl font-bold text-purple-900 dark:text-purple-100 drop-shadow-sm">{getElapsedTime()}</p>
+                      <p className="text-sm text-purple-800 dark:text-purple-400 font-semibold drop-shadow-md">Tempo</p>
+                      <p className="text-2xl font-black text-purple-950 dark:text-purple-100 drop-shadow-lg">{getElapsedTime()}</p>
                     </div>
                   </div>
                 </div>
@@ -456,15 +456,15 @@ export default function CampaignProgressModalV2({
               <div className="space-y-4">
                 {/* Tempo Estimado */}
                 {estimatedTime && (
-                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-2xl border border-yellow-200 dark:border-yellow-800 shadow-lg">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center shadow-md">
                         <Clock className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium drop-shadow-sm">Tempo Estimado</p>
-                        <p className="text-lg font-bold text-yellow-900 dark:text-yellow-100 drop-shadow-sm">{estimatedTime}</p>
-                        <p className="text-xs text-yellow-700 dark:text-yellow-400 drop-shadow-sm">Velocidade: 2 mensagens/minuto</p>
+                        <p className="text-sm text-yellow-900 dark:text-yellow-300 font-semibold drop-shadow-md">Tempo Estimado</p>
+                        <p className="text-xl font-black text-yellow-950 dark:text-yellow-100 drop-shadow-lg">{estimatedTime}</p>
+                        <p className="text-xs text-yellow-800 dark:text-yellow-400 drop-shadow-md">Velocidade: 2 mensagens/minuto</p>
                       </div>
                     </div>
                   </div>
@@ -492,15 +492,15 @@ export default function CampaignProgressModalV2({
 
                 {/* Taxa de Sucesso */}
                 {totalLeads > 0 && (
-                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800">
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800 shadow-lg">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-md">
                           <TrendingUp className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm text-emerald-800 dark:text-emerald-300 font-medium drop-shadow-sm">Taxa de Sucesso</p>
-                          <p className="text-lg font-bold text-emerald-900 dark:text-emerald-100 drop-shadow-sm">
+                          <p className="text-sm text-emerald-900 dark:text-emerald-300 font-semibold drop-shadow-md">Taxa de Sucesso</p>
+                          <p className="text-xl font-black text-emerald-950 dark:text-emerald-100 drop-shadow-lg">
                             {Math.round((successCount / totalLeads) * 100)}%
                           </p>
                         </div>
