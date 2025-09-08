@@ -1273,6 +1273,253 @@ html.dark .gerador-paginacao-escuro .bg-muted\/50 {
   background: hsl(var(--muted)) !important;
 }
 
+/* ===== CLASSES ESPECÍFICAS PARA MODAL DE SUCESSO - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA MODAL DE SUCESSO - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Modal Background */
+html:not(.dark) .modal-sucesso-bg-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Modo Claro - Background Decoration */
+html:not(.dark) .modal-sucesso-decoration-claro {
+  background: linear-gradient(to bottom right, #f0fdf4, #eff6ff, #faf5ff) !important;
+}
+
+/* Modo Claro - Glow Effect */
+html:not(.dark) .modal-sucesso-glow-claro {
+  background: linear-gradient(to bottom right, #22c55e, #3b82f6) !important;
+  opacity: 0.15 !important;
+}
+
+/* Modo Claro - Success Icon */
+html:not(.dark) .modal-sucesso-icon-claro {
+  background: linear-gradient(to bottom right, #22c55e, #10b981) !important;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3) !important;
+}
+
+/* Modo Claro - Title */
+html:not(.dark) .modal-sucesso-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Description */
+html:not(.dark) .modal-sucesso-descricao-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Stats Container */
+html:not(.dark) .modal-sucesso-stats-claro {
+  background: linear-gradient(to right, #eff6ff, #faf5ff) !important;
+  border-color: #dbeafe !important;
+}
+
+/* Modo Claro - Stats Icons */
+html:not(.dark) .modal-sucesso-stats-icon-claro {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-icon-purple-claro {
+  background-color: #e9d5ff !important;
+  background: #e9d5ff !important;
+}
+
+/* Modo Claro - Stats Numbers */
+html:not(.dark) .modal-sucesso-stats-numero-claro {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-numero-purple-claro {
+  color: #7c3aed !important;
+  -webkit-text-fill-color: #7c3aed !important;
+  text-fill-color: #7c3aed !important;
+}
+
+/* Modo Claro - Stats Labels */
+html:not(.dark) .modal-sucesso-stats-label-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-label-purple-claro {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  text-fill-color: #6b21a8 !important;
+}
+
+/* Modo Claro - Primary Button */
+html:not(.dark) .modal-sucesso-botao-principal-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .modal-sucesso-botao-principal-claro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Claro - Secondary Button */
+html:not(.dark) .modal-sucesso-botao-secundario-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+}
+
+html:not(.dark) .modal-sucesso-botao-secundario-claro:hover {
+  background-color: #f9fafb !important;
+  background: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+/* Modo Claro - Success Message */
+html:not(.dark) .modal-sucesso-mensagem-claro {
+  background-color: #f0fdf4 !important;
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+}
+
+html:not(.dark) .modal-sucesso-mensagem-texto-claro {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+/* Modo Escuro - Modal Background */
+html.dark .modal-sucesso-bg-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Modo Escuro - Background Decoration */
+html.dark .modal-sucesso-decoration-escuro {
+  background: linear-gradient(to bottom right, #064e3b, #1e3a8a, #581c87) !important;
+}
+
+/* Modo Escuro - Glow Effect */
+html.dark .modal-sucesso-glow-escuro {
+  background: linear-gradient(to bottom right, #22c55e, #3b82f6) !important;
+  opacity: 0.2 !important;
+}
+
+/* Modo Escuro - Success Icon */
+html.dark .modal-sucesso-icon-escuro {
+  background: linear-gradient(to bottom right, #22c55e, #10b981) !important;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4) !important;
+}
+
+/* Modo Escuro - Title */
+html.dark .modal-sucesso-titulo-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Description */
+html.dark .modal-sucesso-descricao-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Stats Container */
+html.dark .modal-sucesso-stats-escuro {
+  background: linear-gradient(to right, #1e3a8a, #581c87) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Stats Icons */
+html.dark .modal-sucesso-stats-icon-escuro {
+  background-color: #1e40af !important;
+  background: #1e40af !important;
+}
+
+html.dark .modal-sucesso-stats-icon-purple-escuro {
+  background-color: #7c3aed !important;
+  background: #7c3aed !important;
+}
+
+/* Modo Escuro - Stats Numbers */
+html.dark .modal-sucesso-stats-numero-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+html.dark .modal-sucesso-stats-numero-purple-escuro {
+  color: #a78bfa !important;
+  -webkit-text-fill-color: #a78bfa !important;
+  text-fill-color: #a78bfa !important;
+}
+
+/* Modo Escuro - Stats Labels */
+html.dark .modal-sucesso-stats-label-escuro {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+html.dark .modal-sucesso-stats-label-purple-escuro {
+  color: #c4b5fd !important;
+  -webkit-text-fill-color: #c4b5fd !important;
+  text-fill-color: #c4b5fd !important;
+}
+
+/* Modo Escuro - Primary Button */
+html.dark .modal-sucesso-botao-principal-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .modal-sucesso-botao-principal-escuro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Secondary Button */
+html.dark .modal-sucesso-botao-secundario-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .modal-sucesso-botao-secundario-escuro:hover {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  border-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Success Message */
+html.dark .modal-sucesso-mensagem-escuro {
+  background-color: #064e3b !important;
+  background: #064e3b !important;
+  border-color: #059669 !important;
+}
+
+html.dark .modal-sucesso-mensagem-texto-escuro {
+  color: #6ee7b7 !important;
+  -webkit-text-fill-color: #6ee7b7 !important;
+  text-fill-color: #6ee7b7 !important;
+}
+
 /* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
 html:not(.dark) .bg-green-100 {
   background-color: #dcfce7 !important;
