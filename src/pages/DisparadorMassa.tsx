@@ -427,12 +427,7 @@ export default function DisparadorMassa() {
         setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c))
       }
       
-      // Limpar apenas a seleção de listas, mas manter os leads na campanha
-      setSelectedLists([])
-      setNewLeads([])
-      setDuplicateLeads([])
-
-      // Mostrar feedback
+      // Mostrar feedback ANTES de limpar os estados
       if (duplicateLeads.length > 0) {
         toast({
           title: '✅ Leads adicionados com sucesso',
@@ -446,6 +441,11 @@ export default function DisparadorMassa() {
           variant: 'success'
         })
       }
+
+      // Limpar apenas a seleção de listas, mas manter os leads na campanha
+      setSelectedLists([])
+      setNewLeads([])
+      setDuplicateLeads([])
     } catch (error) {
       console.error('Erro ao atualizar campanha:', error)
       toast({
@@ -1458,6 +1458,7 @@ export default function DisparadorMassa() {
                         )}
 
                         {/* Botão para Ver Detalhes de Leads Duplicados */}
+                        {console.log('🔍 DEBUG - duplicateLeads.length:', duplicateLeads.length, 'duplicateLeads:', duplicateLeads)}
                         {duplicateLeads.length > 0 && (
                           <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-800 rounded-lg">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
