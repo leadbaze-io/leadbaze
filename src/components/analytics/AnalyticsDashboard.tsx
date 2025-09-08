@@ -9,7 +9,14 @@ import {
   PieChart,
   Activity,
   Download,
-  RefreshCw
+  RefreshCw,
+  Database,
+  List,
+  Send,
+  Percent,
+  Clock,
+  FileText,
+  Zap
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
@@ -88,46 +95,57 @@ export default function AnalyticsDashboard() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="space-y-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Analytics Dashboard
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Última atualização: {lastUpdated.toLocaleTimeString()}
           </p>
         </div>
         
-        <div className="flex items-center space-x-3">
+        {/* Mobile-first responsive controls */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           {/* Time Range Selector */}
-          <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
+          <div className="flex items-center space-x-1 bg-muted rounded-lg p-1 w-full sm:w-auto">
             {(['7d', '30d', '90d'] as const).map((range) => (
               <Button
                 key={range}
                 variant={timeRange === range ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setTimeRange(range)}
-                className="text-xs"
+                className="text-xs flex-1 sm:flex-none"
               >
                 {range === '7d' ? '7 dias' : range === '30d' ? '30 dias' : '90 dias'}
               </Button>
             ))}
           </div>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={refreshData}
-            disabled={isLoading}
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
-          
-          <Button variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Exportar
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex gap-2 sm:gap-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={refreshData}
+              disabled={isLoading}
+              className="flex-1 sm:flex-none"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              <span className="hidden xs:inline">Atualizar</span>
+              <span className="xs:hidden">Atualizar</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="flex-1 sm:flex-none"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              <span className="hidden xs:inline">Exportar</span>
+              <span className="xs:hidden">Exportar</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -138,7 +156,7 @@ export default function AnalyticsDashboard() {
           value={analytics.totalLeads.toLocaleString()}
           change={`+${analytics.growthRate}%`}
           trend="up"
-          icon={Users}
+          icon={Database}
           color="blue"
         />
         
@@ -147,7 +165,7 @@ export default function AnalyticsDashboard() {
           value={analytics.totalLists.toString()}
           change="+12%"
           trend="up"
-          icon={Target}
+          icon={List}
           color="green"
         />
         
@@ -156,7 +174,7 @@ export default function AnalyticsDashboard() {
           value={analytics.messagesSent.toLocaleString()}
           change="+8%"
           trend="up"
-          icon={MessageSquare}
+          icon={Send}
           color="purple"
         />
         
@@ -165,7 +183,7 @@ export default function AnalyticsDashboard() {
           value={`${analytics.conversionRate}%`}
           change="+2.1%"
           trend="up"
-          icon={TrendingUp}
+          icon={Percent}
           color="orange"
         />
       </div>
@@ -176,7 +194,7 @@ export default function AnalyticsDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="w-5 h-5" />
+              <TrendingUp className="w-5 h-5 text-blue-600" />
               <span>Leads ao Longo do Tempo</span>
             </CardTitle>
             <CardDescription>
@@ -192,7 +210,7 @@ export default function AnalyticsDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <PieChart className="w-5 h-5" />
+              <Target className="w-5 h-5 text-green-600" />
               <span>Categorias</span>
             </CardTitle>
             <CardDescription>
@@ -225,7 +243,7 @@ export default function AnalyticsDashboard() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Activity className="w-5 h-5" />
+            <Clock className="w-5 h-5 text-purple-600" />
             <span>Atividade Recente</span>
           </CardTitle>
           <CardDescription>
@@ -297,10 +315,10 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-200',
-    green: 'bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-200',
-    purple: 'bg-purple-100 dark:bg-purple-800 text-purple-600 dark:text-purple-200',
-    orange: 'bg-orange-100 dark:bg-orange-800 text-orange-600 dark:text-orange-200',
+    blue: 'bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-900 text-blue-600 dark:text-blue-200',
+    green: 'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-800 dark:to-green-900 text-green-600 dark:text-green-200',
+    purple: 'bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-800 dark:to-purple-900 text-purple-600 dark:text-purple-200',
+    orange: 'bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-800 dark:to-orange-900 text-orange-600 dark:text-orange-200',
   }
 
   return (
@@ -310,29 +328,29 @@ function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCa
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
     >
-      <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-        <CardContent className="p-3 md:p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
-            <div className="flex-1">
-              <p className="text-xs md:text-sm font-medium text-muted-foreground truncate">
+      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">
                 {title}
               </p>
-              <p className="text-lg md:text-2xl font-bold text-foreground">
+              <p className="text-xl sm:text-2xl lg:text-3xl font-black text-foreground mt-1">
                 {value}
               </p>
-              <div className="flex items-center mt-1 md:mt-2">
-                <TrendingUp className={`w-3 h-3 md:w-4 md:h-4 mr-1 ${
+              <div className="flex items-center mt-2">
+                <TrendingUp className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${
                   trend === 'up' ? 'text-green-500' : 'text-red-500'
                 }`} />
-                <span className={`text-xs md:text-sm font-medium ${
+                <span className={`text-xs sm:text-sm font-bold ${
                   trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                 }`}>
                   {change}
                 </span>
               </div>
             </div>
-            <div className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center ${colorClasses[color]} self-end md:self-auto`}>
-              <Icon className="w-4 h-4 md:w-6 md:h-6" />
+            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg ${colorClasses[color]} ml-3 flex-shrink-0`}>
+              <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           </div>
         </CardContent>
@@ -363,13 +381,13 @@ function SimpleLineChart({ data }: { data: Array<{ date: string; count: number }
 function getActivityIcon(type: string) {
   switch (type) {
     case 'lead_generated':
-      return <Users className="w-4 h-4 text-blue-600" />
+      return <Database className="w-4 h-4 text-blue-600" />
     case 'list_created':
-      return <Target className="w-4 h-4 text-green-600" />
+      return <List className="w-4 h-4 text-green-600" />
     case 'message_sent':
-      return <MessageSquare className="w-4 h-4 text-purple-600" />
+      return <Send className="w-4 h-4 text-purple-600" />
     default:
-      return <Activity className="w-4 h-4 text-gray-600" />
+      return <Zap className="w-4 h-4 text-gray-600" />
   }
 }
 

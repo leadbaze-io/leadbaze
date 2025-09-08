@@ -10,7 +10,11 @@ import {
   Minimize2, 
   Maximize2,
   TrendingUp,
-  Timer
+  Timer,
+  Target,
+  MessageSquare,
+  XCircle,
+  Zap
 } from 'lucide-react'
 import { Button } from './ui/button'
 import { useTheme } from '../contexts/ThemeContext'
@@ -267,54 +271,63 @@ export default function CampaignProgressModalV2({
             {/* Stats Grid */}
             <div className="grid grid-cols-3 gap-3">
               <div className={`
-                p-3 rounded-lg text-center
-                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+                p-3 rounded-lg text-center border
+                ${isDark 
+                  ? 'bg-gray-800/50 border-gray-700' 
+                  : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm'
+                }
               `}>
                 <p className={`
-                  text-xs font-medium
-                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                  text-xs font-semibold uppercase tracking-wide
+                  ${isDark ? 'text-gray-400' : 'text-blue-700'}
                 `}>
                   Total
                 </p>
                 <p className={`
-                  text-lg font-bold
-                  ${isDark ? 'text-white' : 'text-gray-900'}
+                  text-lg font-black
+                  ${isDark ? 'text-white' : 'text-blue-900'}
                 `}>
                   {totalLeads}
                 </p>
               </div>
               
               <div className={`
-                p-3 rounded-lg text-center
-                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+                p-3 rounded-lg text-center border
+                ${isDark 
+                  ? 'bg-gray-800/50 border-gray-700' 
+                  : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-sm'
+                }
               `}>
                 <p className={`
-                  text-xs font-medium
-                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                  text-xs font-semibold uppercase tracking-wide
+                  ${isDark ? 'text-gray-400' : 'text-green-700'}
                 `}>
                   Enviados
                 </p>
                 <p className={`
-                  text-lg font-bold text-green-600
-                  ${isDark ? 'text-green-400' : 'text-green-600'}
+                  text-lg font-black
+                  ${isDark ? 'text-green-400' : 'text-green-900'}
                 `}>
                   {successCount}
                 </p>
               </div>
               
               <div className={`
-                p-3 rounded-lg text-center
-                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+                p-3 rounded-lg text-center border
+                ${isDark 
+                  ? 'bg-gray-800/50 border-gray-700' 
+                  : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-sm'
+                }
               `}>
                 <p className={`
-                  text-xs font-medium
-                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                  text-xs font-semibold uppercase tracking-wide
+                  ${isDark ? 'text-gray-400' : 'text-red-700'}
                 `}>
                   Falhas
                 </p>
                 <p className={`
-                  text-lg font-bold
-                  ${isDark ? 'text-red-400' : 'text-red-600'}
+                  text-lg font-black
+                  ${isDark ? 'text-red-400' : 'text-red-900'}
                 `}>
                   {failedCount}
                 </p>
@@ -492,22 +505,28 @@ export default function CampaignProgressModalV2({
                   p-4 rounded-xl border
                   ${isDark 
                     ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-blue-50 border-blue-200'
+                    : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <Users className="w-4 h-4 text-white" />
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                      ${isDark 
+                        ? 'bg-gradient-to-br from-blue-500 to-blue-600' 
+                        : 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                      }
+                    `}>
+                      <Target className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <p className={`
-                        text-xs font-medium
-                        ${isDark ? 'text-gray-400' : 'text-blue-600'}
+                        text-xs font-semibold uppercase tracking-wide
+                        ${isDark ? 'text-gray-400' : 'text-blue-700'}
                       `}>
                         Total
                       </p>
                       <p className={`
-                        text-xl font-bold
+                        text-2xl font-black
                         ${isDark ? 'text-white' : 'text-blue-900'}
                       `}>
                         {totalLeads}
@@ -521,22 +540,28 @@ export default function CampaignProgressModalV2({
                   p-4 rounded-xl border
                   ${isDark 
                     ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-green-50 border-green-200'
+                    : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-white" />
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                      ${isDark 
+                        ? 'bg-gradient-to-br from-green-500 to-green-600' 
+                        : 'bg-gradient-to-br from-green-500 to-emerald-600'
+                      }
+                    `}>
+                      <MessageSquare className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <p className={`
-                        text-xs font-medium
-                        ${isDark ? 'text-gray-400' : 'text-green-600'}
+                        text-xs font-semibold uppercase tracking-wide
+                        ${isDark ? 'text-gray-400' : 'text-green-700'}
                       `}>
                         Enviados
                       </p>
                       <p className={`
-                        text-xl font-bold
+                        text-2xl font-black
                         ${isDark ? 'text-white' : 'text-green-900'}
                       `}>
                         {successCount}
@@ -550,22 +575,28 @@ export default function CampaignProgressModalV2({
                   p-4 rounded-xl border
                   ${isDark 
                     ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-red-50 border-red-200'
+                    : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                      <AlertTriangle className="w-4 h-4 text-white" />
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                      ${isDark 
+                        ? 'bg-gradient-to-br from-red-500 to-red-600' 
+                        : 'bg-gradient-to-br from-red-500 to-rose-600'
+                      }
+                    `}>
+                      <XCircle className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <p className={`
-                        text-xs font-medium
-                        ${isDark ? 'text-gray-400' : 'text-red-600'}
+                        text-xs font-semibold uppercase tracking-wide
+                        ${isDark ? 'text-gray-400' : 'text-red-700'}
                       `}>
                         Falhas
                       </p>
                       <p className={`
-                        text-xl font-bold
+                        text-2xl font-black
                         ${isDark ? 'text-white' : 'text-red-900'}
                       `}>
                         {failedCount}
@@ -579,22 +610,28 @@ export default function CampaignProgressModalV2({
                   p-4 rounded-xl border
                   ${isDark 
                     ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-purple-50 border-purple-200'
+                    : 'bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                      <Timer className="w-4 h-4 text-white" />
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                      ${isDark 
+                        ? 'bg-gradient-to-br from-purple-500 to-purple-600' 
+                        : 'bg-gradient-to-br from-purple-500 to-violet-600'
+                      }
+                    `}>
+                      <Zap className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <p className={`
-                        text-xs font-medium
-                        ${isDark ? 'text-gray-400' : 'text-purple-600'}
+                        text-xs font-semibold uppercase tracking-wide
+                        ${isDark ? 'text-gray-400' : 'text-purple-700'}
                       `}>
                         Tempo
                       </p>
                       <p className={`
-                        text-xl font-bold
+                        text-2xl font-black
                         ${isDark ? 'text-white' : 'text-purple-900'}
                       `}>
                         {elapsedTime}
@@ -612,29 +649,35 @@ export default function CampaignProgressModalV2({
                     p-4 rounded-xl border
                     ${isDark 
                       ? 'bg-gray-800 border-gray-700' 
-                      : 'bg-yellow-50 border-yellow-200'
+                      : 'bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200 shadow-sm'
                     }
                   `}>
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                        <Clock className="w-4 h-4 text-white" />
+                      <div className={`
+                        w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                        ${isDark 
+                          ? 'bg-gradient-to-br from-amber-500 to-amber-600' 
+                          : 'bg-gradient-to-br from-amber-500 to-yellow-600'
+                        }
+                      `}>
+                        <Clock className="w-5 h-5 text-white" />
                       </div>
                       <div>
                         <p className={`
-                          text-xs font-medium
-                          ${isDark ? 'text-gray-400' : 'text-yellow-600'}
+                          text-xs font-semibold uppercase tracking-wide
+                          ${isDark ? 'text-gray-400' : 'text-amber-700'}
                         `}>
                           Tempo Estimado
                         </p>
                         <p className={`
-                          text-lg font-bold
-                          ${isDark ? 'text-white' : 'text-yellow-900'}
+                          text-xl font-black
+                          ${isDark ? 'text-white' : 'text-amber-900'}
                         `}>
                           {estimatedTime}
                         </p>
                         <p className={`
-                          text-xs
-                          ${isDark ? 'text-gray-500' : 'text-yellow-700'}
+                          text-xs font-medium
+                          ${isDark ? 'text-gray-500' : 'text-amber-800'}
                         `}>
                           Velocidade: 2 mensagens/minuto
                         </p>
@@ -648,22 +691,28 @@ export default function CampaignProgressModalV2({
                   p-4 rounded-xl border
                   ${isDark 
                     ? 'bg-gray-800 border-gray-700' 
-                    : 'bg-emerald-50 border-emerald-200'
+                    : 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-white" />
+                    <div className={`
+                      w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                      ${isDark 
+                        ? 'bg-gradient-to-br from-emerald-500 to-emerald-600' 
+                        : 'bg-gradient-to-br from-emerald-500 to-teal-600'
+                      }
+                    `}>
+                      <TrendingUp className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <p className={`
-                        text-xs font-medium
-                        ${isDark ? 'text-gray-400' : 'text-emerald-600'}
+                        text-xs font-semibold uppercase tracking-wide
+                        ${isDark ? 'text-gray-400' : 'text-emerald-700'}
                       `}>
                         Taxa de Sucesso
                       </p>
                       <p className={`
-                        text-lg font-bold
+                        text-xl font-black
                         ${isDark ? 'text-white' : 'text-emerald-900'}
                       `}>
                         {successRate}%

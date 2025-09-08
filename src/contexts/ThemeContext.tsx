@@ -118,6 +118,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       console.log('🎨 handleSetTheme - Aplicando tema do sistema:', shouldBeDark ? 'dark' : 'light')
     }
     
+    // Atualizar estado imediatamente para evitar bugs visuais
+    setIsDark(shouldBeDark)
+    
     if (shouldBeDark) {
       document.documentElement.classList.add('dark')
       console.log('✅ Tema aplicado imediatamente: dark')
