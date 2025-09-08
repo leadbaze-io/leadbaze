@@ -3,7 +3,7 @@ module.exports = {
     name: 'leadbaze-backend',
     script: 'backend/server.js',
     env: {
-      NODE_ENV: 'production',
+      NODE_ENV: 'development',
       PORT: 3001,
       CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       API_SECRET: 'your-secret-key-here',

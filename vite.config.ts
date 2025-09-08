@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Força NODE_ENV=development
+process.env.NODE_ENV = 'development'
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -50,6 +53,6 @@ export default defineConfig({
   },
   // Configurações para desenvolvimento
   define: {
-    __DEV__: process.env.NODE_ENV === 'development'
+    __DEV__: true
   }
 })

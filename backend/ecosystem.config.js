@@ -34,7 +34,7 @@ module.exports = {
       EMAIL_HASH_SALT: 'leadflow-blog-automation-2024'
     },
     env_production: {
-      NODE_ENV: 'production',
+      NODE_ENV: 'development',
       PORT: 3001,
       // Evolution API Configuration
       EVOLUTION_API_URL: 'https://n8n-evolution.kof6cn.easypanel.host',
