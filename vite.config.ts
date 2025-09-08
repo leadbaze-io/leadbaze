@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Força NODE_ENV=development
-process.env.NODE_ENV = 'development'
+// Força NODE_ENV=production
+process.env.NODE_ENV = 'production'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -51,8 +51,8 @@ export default defineConfig({
     port: 4173,
     host: true
   },
-  // Configurações para desenvolvimento
+  // Configurações para produção
   define: {
-    __DEV__: true
+    __DEV__: false
   }
 })
