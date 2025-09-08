@@ -1627,10 +1627,11 @@ html.dark .dashboard-header-escuro {
 
 /* Modo Escuro - Cards de Navegação */
 html.dark .dashboard-nav-card-escuro {
-  background-color: hsl(var(--card)) !important;
-  background: hsl(var(--card)) !important;
-  border-color: hsl(var(--border)) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Modo Escuro - Botões de Navegação */
@@ -1669,10 +1670,11 @@ html.dark .dashboard-action-card-purple-escuro {
 
 /* Modo Escuro - Cards de Informação */
 html.dark .dashboard-info-card-escuro {
-  background-color: hsl(var(--card)) !important;
-  background: hsl(var(--card)) !important;
-  border-color: hsl(var(--border)) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Modo Escuro - Títulos dos Cards */
@@ -1811,10 +1813,11 @@ html.dark .lista-bg-escuro {
 
 /* Modo Escuro - Header da Lista */
 html.dark .lista-header-escuro {
-  background-color: hsl(var(--card)) !important;
-  background: hsl(var(--card)) !important;
-  border-color: hsl(var(--border)) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Modo Escuro - Título da Lista */
@@ -1840,10 +1843,11 @@ html.dark .lista-texto-muted-escuro {
 
 /* Modo Escuro - Cards de Estatísticas */
 html.dark .lista-stats-card-escuro {
-  background-color: hsl(var(--card)) !important;
-  background: hsl(var(--card)) !important;
-  border-color: hsl(var(--border)) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
 }
 
 /* Modo Escuro - Botões de Ação */
@@ -1888,10 +1892,11 @@ html.dark .lista-btn-secondary-escuro:hover {
 
 /* Modo Escuro - Cards de Dicas */
 html.dark .lista-dicas-escuro {
-  background-color: hsl(var(--card)) !important;
-  background: hsl(var(--card)) !important;
-  border-color: hsl(var(--border)) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
 }
 
 html.dark .lista-dicas-texto-escuro {
