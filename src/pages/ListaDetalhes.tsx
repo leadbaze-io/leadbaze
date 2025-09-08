@@ -168,7 +168,7 @@ export default function ListaDetalhes() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen lista-bg-claro lista-bg-escuro flex items-center justify-center">
+      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -181,7 +181,7 @@ export default function ListaDetalhes() {
           >
             <Loader className="w-6 h-6 text-white" />
           </motion.div>
-          <p className="text-lg font-medium lista-texto-claro dark:text-muted-foreground">
+          <p className="text-lg font-medium dashboard-card-text-claro dark:text-muted-foreground">
             Carregando lista de leads...
           </p>
         </motion.div>
@@ -191,17 +191,17 @@ export default function ListaDetalhes() {
 
   if (error || !leadList) {
     return (
-      <div className="min-h-screen lista-bg-claro lista-bg-escuro flex items-center justify-center">
+      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md"
         >
           <AlertCircle className="w-16 h-16 text-red-500 dark:text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold lista-titulo-claro dark:text-foreground mb-2">
+          <h2 className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground mb-2">
             Ops! Algo deu errado
           </h2>
-          <p className="lista-texto-muted-claro dark:text-muted-foreground mb-6">
+          <p className="dashboard-card-muted-claro dark:text-muted-foreground mb-6">
             {error || 'Lista não encontrada'}
           </p>
           <div className="space-y-2">
@@ -236,7 +236,7 @@ export default function ListaDetalhes() {
           <div className="flex items-center space-x-4 mb-6">
             <Link
               to="/dashboard"
-              className="inline-flex items-center space-x-2 lista-texto-muted-claro dark:text-muted-foreground hover:lista-texto-claro dark:hover:text-foreground transition-colors"
+              className="inline-flex items-center space-x-2 dashboard-card-muted-claro dark:text-muted-foreground hover:dashboard-card-text-claro dark:hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Voltar ao Dashboard</span>
@@ -294,7 +294,7 @@ export default function ListaDetalhes() {
               >
                 <button
                   onClick={exportToCSV}
-                  className="lista-btn-export-claro lista-btn-export-escuro inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                  className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg"
                 >
                   <Download className="w-5 h-5" />
                   <span>Exportar CSV</span>
@@ -302,7 +302,7 @@ export default function ListaDetalhes() {
                 
                 <button
                   onClick={shareList}
-                  className="lista-btn-share-claro lista-btn-share-escuro inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                  className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg"
                 >
                   <Share2 className="w-5 h-5" />
                   <span>Compartilhar</span>
@@ -310,7 +310,7 @@ export default function ListaDetalhes() {
 
                 <Link
                   to="/gerador"
-                  className="lista-btn-secondary-claro lista-btn-secondary-escuro inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg"
                 >
                   <Plus className="w-5 h-5 mr-2" />
                   Criar Nova Lista
@@ -421,8 +421,8 @@ export default function ListaDetalhes() {
                 className="space-y-4"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                    <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Target className="w-5 h-5 text-white" />
                   </div>
                   <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Qualificação</h4>
                 </div>
@@ -449,8 +449,8 @@ export default function ListaDetalhes() {
                 className="space-y-4"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                    <MessageSquare className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <MessageSquare className="w-5 h-5 text-white" />
                   </div>
                   <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Abordagem</h4>
                 </div>
