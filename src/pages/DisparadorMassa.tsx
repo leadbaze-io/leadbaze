@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2, Eye, ChevronUp, ChevronDown, List, Check } from 'lucide-react'
+import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2, Eye, ChevronUp, ChevronDown, List, Check, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from '../hooks/use-toast'
 import { getCurrentUser } from '../lib/supabaseClient'
@@ -1469,34 +1469,6 @@ export default function DisparadorMassa() {
                           </div>
                         )}
 
-                        {/* Botão para Ver Detalhes de Leads Duplicados */}
-                        {/* DEBUG: duplicateLeads.length = {duplicateLeads.length} */}
-                        {duplicateLeads.length > 0 && (
-                          <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-800 rounded-lg">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                              <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-orange-100 dark:bg-orange-800 rounded-full flex items-center justify-center">
-                                  <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                                </div>
-                                <div>
-                                  <h4 className="text-sm font-semibold text-orange-800 dark:text-orange-200">
-                                    {duplicateLeads.length} lead(s) duplicado(s) detectado(s)
-                                  </h4>
-                                  <p className="text-xs text-orange-600 dark:text-orange-300">
-                                    Estes leads já existem em outras campanhas
-                                  </p>
-                                </div>
-                              </div>
-                              <Button
-                                onClick={showDuplicateLeadsModal}
-                                className="bg-orange-600 hover:bg-orange-700 text-white text-sm"
-                              >
-                                <AlertTriangle className="w-4 h-4 mr-2" />
-                                Ver Detalhes
-                              </Button>
-                            </div>
-                          </div>
-                        )}
 
                         {/* Feedback de Leads - Design Elegante */}
                         {/* DEBUG: newLeads.length = {newLeads.length}, duplicateLeads.length = {duplicateLeads.length} */}
@@ -1518,23 +1490,6 @@ export default function DisparadorMassa() {
                                     </p>
                                     <p className="text-sm text-purple-600 dark:text-purple-300">
                                       Sucesso na importação
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                            {duplicateLeads.length > 0 && (
-                              <div className="p-4 bg-pink-50 dark:bg-pink-900 border-2 border-pink-200 dark:border-pink-800 rounded-xl">
-                                <div className="flex items-center space-x-3">
-                                  <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
-                                    <span className="text-white font-bold text-sm">!</span>
-                                  </div>
-                                  <div>
-                                    <p className="font-semibold text-pink-800 dark:text-pink-200">
-                                      {duplicateLeads.length} leads duplicados ignorados
-                                    </p>
-                                    <p className="text-sm text-pink-600 dark:text-pink-300">
-                                      Evitando duplicação
                                     </p>
                                   </div>
                                 </div>
@@ -2076,6 +2031,44 @@ Entre em contato conosco para mais detalhes!"
         duplicateLeads={duplicateLeads}
         onLeadsProcessed={handleLeadsProcessed}
       />
+
+      {/* Botão Flutuante para Leads Duplicados */}
+      {duplicateLeads.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+          className="fixed bottom-6 right-6 z-40"
+        >
+          <div className="flex flex-col items-end space-y-3">
+            {/* Botão Principal - Ver Detalhes */}
+            <motion.button
+              onClick={showDuplicateLeadsModal}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-3 group"
+            >
+              <AlertTriangle className="w-5 h-5" />
+              <span className="hidden group-hover:block text-sm font-medium whitespace-nowrap">
+                {duplicateLeads.length} Duplicado(s)
+              </span>
+            </motion.button>
+
+            {/* Botão Secundário - Ignorar */}
+            <motion.button
+              onClick={() => setDuplicateLeads([])}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gray-500 hover:bg-gray-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2 group"
+            >
+              <X className="w-4 h-4" />
+              <span className="hidden group-hover:block text-xs font-medium whitespace-nowrap">
+                Ignorar
+              </span>
+            </motion.button>
+          </div>
+        </motion.div>
+      )}
       
       {/* Footer */}
       <Footer />
