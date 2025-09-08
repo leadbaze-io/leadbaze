@@ -580,30 +580,30 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       )}
                     </CardDescription>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={toggleSelectAll}
-                      className="text-xs"
+                      className="text-xs flex-1 sm:flex-none"
                     >
                       {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
                     </Button>
                     <Button
                       onClick={() => setShowSaveOptions(!showSaveOptions)}
                       size="sm"
-                      className={showSaveOptions ? "bg-gray-600 hover:bg-gray-700" : "bg-green-600 hover:bg-green-700"}
+                      className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none"
                     >
                       <Save className="w-4 h-4 mr-1" />
-                      {showSaveOptions ? 'Ocultar Opções' : 'Salvar Leads'}
+                      Salvar Leads
                     </Button>
                   </div>
                 </div>
 
                 {/* Filtros */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4 p-4 bg-muted rounded-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 mt-4 p-3 sm:p-4 bg-muted rounded-lg">
                   <div>
-                    <Label className="text-xs font-medium text-foreground">Buscar</Label>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Buscar</Label>
                     <Input
                       placeholder="Nome ou endereço..."
                       value={searchTerm}
@@ -611,12 +611,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         setSearchTerm(e.target.value)
                         resetPagination()
                       }}
-                      className="h-8 text-sm"
+                      className="h-9 text-sm w-full"
                     />
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-foreground">Cidade</Label>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Cidade</Label>
                     <Input
                       placeholder="Filtrar por cidade..."
                       value={cityFilter}
@@ -624,12 +624,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         setCityFilter(e.target.value)
                         resetPagination()
                       }}
-                      className="h-8 text-sm"
+                      className="h-9 text-sm w-full"
                     />
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-foreground">Avaliação Mínima</Label>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Avaliação Mínima</Label>
                     <Select 
                       value={ratingFilter} 
                       onValueChange={(value) => {
@@ -637,7 +637,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         resetPagination()
                       }}
                     >
-                      <SelectTrigger className="h-8 text-sm">
+                      <SelectTrigger className="h-9 text-sm w-full">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
@@ -650,7 +650,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-foreground">Avaliações</Label>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Avaliações</Label>
                     <Select 
                       value={reviewsFilter} 
                       onValueChange={(value) => {
@@ -658,55 +658,55 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         resetPagination()
                       }}
                     >
-                      <SelectTrigger className="h-8 text-sm">
+                      <SelectTrigger className="h-9 text-sm w-full">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
                         <SelectItem value="all">Todas</SelectItem>
-                                                 <SelectItem value="10">10+ Avaliações</SelectItem>
-                         <SelectItem value="25">25+ Avaliações</SelectItem>
-                         <SelectItem value="50">50+ Avaliações</SelectItem>
-                         <SelectItem value="100">100+ Avaliações</SelectItem>
-                         <SelectItem value="250">250+ Avaliações</SelectItem>
-                         <SelectItem value="500">500+ Avaliações</SelectItem>
+                        <SelectItem value="10">10+ Avaliações</SelectItem>
+                        <SelectItem value="25">25+ Avaliações</SelectItem>
+                        <SelectItem value="50">50+ Avaliações</SelectItem>
+                        <SelectItem value="100">100+ Avaliações</SelectItem>
+                        <SelectItem value="250">250+ Avaliações</SelectItem>
+                        <SelectItem value="500">500+ Avaliações</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   
                   <div>
-                    <Label className="text-xs font-medium text-foreground">Website</Label>
-                                         <Select 
-                       value={websiteFilter} 
-                       onValueChange={(value) => {
-                         setWebsiteFilter(value)
-                         resetPagination()
-                       }}
-                     >
-                       <SelectTrigger className="h-8 text-sm">
-                         <SelectValue />
-                       </SelectTrigger>
-                       <SelectContent className="bg-popover border border-border shadow-lg">
-                         <SelectItem value="all">Todos</SelectItem>
-                         <SelectItem value="with">Com website</SelectItem>
-                         <SelectItem value="without">Sem website</SelectItem>
-                       </SelectContent>
-                     </Select>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Website</Label>
+                    <Select 
+                      value={websiteFilter} 
+                      onValueChange={(value) => {
+                        setWebsiteFilter(value)
+                        resetPagination()
+                      }}
+                    >
+                      <SelectTrigger className="h-9 text-sm w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border border-border shadow-lg">
+                        <SelectItem value="all">Todos</SelectItem>
+                        <SelectItem value="with">Com website</SelectItem>
+                        <SelectItem value="without">Sem website</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
-                                     <div>
-                     <Label className="text-xs font-medium text-foreground">Leads por Página</Label>
-                     <Select 
-                       value={leadsPerPage} 
-                       onValueChange={(value) => {
-                         setLeadsPerPage(value)
-                         setCurrentPage(1)
-                       }}
-                     >
-                       <SelectTrigger className="h-8 text-sm">
-                         <SelectValue />
-                       </SelectTrigger>
-                       <SelectContent className="bg-popover border border-border shadow-lg">
-                         <SelectItem value="9">9 leads</SelectItem>
+                  <div>
+                    <Label className="text-xs font-medium text-foreground mb-1 block">Leads por Página</Label>
+                    <Select 
+                      value={leadsPerPage} 
+                      onValueChange={(value) => {
+                        setLeadsPerPage(value)
+                        setCurrentPage(1)
+                      }}
+                    >
+                      <SelectTrigger className="h-9 text-sm w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border border-border shadow-lg">
+                        <SelectItem value="9">9 leads</SelectItem>
                          <SelectItem value="18">18 leads</SelectItem>
                          <SelectItem value="27">27 leads</SelectItem>
                          <SelectItem value="36">36 leads</SelectItem>
