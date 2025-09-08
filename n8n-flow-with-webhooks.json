@@ -658,11 +658,6 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Preparar Dados Progresso",
             "type": "main",
             "index": 0

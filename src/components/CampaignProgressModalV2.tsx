@@ -90,7 +90,7 @@ export default function CampaignProgressModalV2({
           progress: Math.round((successCount + failedCount) / totalLeads * 100),
           message: 'Enviando mensagens...',
           icon: <Send className="w-5 h-5" />,
-          color: 'blue',
+          color: 'green',
           showProgress: true,
           showTimeEstimate: true
         }
@@ -152,44 +152,107 @@ export default function CampaignProgressModalV2({
   if (isMinimized) {
     return (
       <motion.div
-        initial={{ x: 400, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 400, opacity: 0 }}
-        transition={{ type: "spring", duration: 0.5 }}
-        className="fixed top-4 right-4 z-50"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        transition={{ type: "spring", duration: 0.6, bounce: 0.3 }}
+        className="fixed bottom-4 right-4 z-50 w-80 sm:w-96"
       >
         <div className={`
-          flex items-center space-x-3 p-3 rounded-xl border shadow-lg backdrop-blur-sm
+          rounded-2xl border-2 shadow-2xl backdrop-blur-md overflow-hidden
           ${isDark 
             ? 'bg-gray-900/95 border-gray-700 text-white' 
             : 'bg-white/95 border-gray-200 text-gray-900'
           }
         `}>
-          {/* Status Icon */}
+          {/* Header */}
           <div className={`
-            w-8 h-8 rounded-lg flex items-center justify-center
-            ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
-              statusInfo.color === 'green' ? 'bg-green-500' :
-              statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
-            }
+            flex items-center justify-between p-4 border-b
+            ${isDark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-gray-50/50'}
           `}>
-            {statusInfo.icon}
+            <div className="flex items-center space-x-3">
+              <div className={`
+                w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
+                ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                  statusInfo.color === 'green' ? 'bg-green-500' :
+                  statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
+                }
+              `}>
+                {statusInfo.icon}
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm truncate max-w-32">
+                  {campaignName}
+                </h4>
+                <p className={`
+                  text-xs
+                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                `}>
+                  {statusInfo.message}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onExpand}
+                className={`
+                  w-8 h-8 p-0 rounded-lg
+                  ${isDark 
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
+                    : 'hover:bg-gray-200 text-gray-500 hover:text-gray-900'
+                  }
+                `}
+                title="Expandir"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className={`
+                  w-8 h-8 p-0 rounded-lg
+                  ${isDark 
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
+                    : 'hover:bg-gray-200 text-gray-500 hover:text-gray-900'
+                  }
+                `}
+                title="Fechar"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
 
-          {/* Progress Info */}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">
-              {campaignName}
-            </p>
-            <div className="flex items-center space-x-2">
+          {/* Content */}
+          <div className="p-4 space-y-4">
+            {/* Progress Bar */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className={`
+                  text-sm font-medium
+                  ${isDark ? 'text-gray-300' : 'text-gray-700'}
+                `}>
+                  Progresso
+                </span>
+                <span className={`
+                  text-sm font-bold
+                  ${isDark ? 'text-white' : 'text-gray-900'}
+                `}>
+                  {statusInfo.progress}%
+                </span>
+              </div>
               <div className={`
-                w-16 h-1.5 rounded-full overflow-hidden
+                w-full h-2 rounded-full overflow-hidden
                 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}
               `}>
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${statusInfo.progress}%` }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   className={`
                     h-full rounded-full
                     ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
@@ -199,54 +262,91 @@ export default function CampaignProgressModalV2({
                   `}
                 />
               </div>
-              <span className={`
-                text-xs font-medium
-                ${isDark ? 'text-gray-400' : 'text-gray-600'}
-              `}>
-                {statusInfo.progress}%
-              </span>
             </div>
-          </div>
 
-          {/* Stats */}
-          <div className="flex items-center space-x-2 text-xs">
-            <span className={`
-              ${isDark ? 'text-gray-400' : 'text-gray-600'}
+            {/* Stats Grid */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className={`
+                p-3 rounded-lg text-center
+                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+              `}>
+                <p className={`
+                  text-xs font-medium
+                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                `}>
+                  Total
+                </p>
+                <p className={`
+                  text-lg font-bold
+                  ${isDark ? 'text-white' : 'text-gray-900'}
+                `}>
+                  {totalLeads}
+                </p>
+              </div>
+              
+              <div className={`
+                p-3 rounded-lg text-center
+                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+              `}>
+                <p className={`
+                  text-xs font-medium
+                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                `}>
+                  Enviados
+                </p>
+                <p className={`
+                  text-lg font-bold text-green-600
+                  ${isDark ? 'text-green-400' : 'text-green-600'}
+                `}>
+                  {successCount}
+                </p>
+              </div>
+              
+              <div className={`
+                p-3 rounded-lg text-center
+                ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
+              `}>
+                <p className={`
+                  text-xs font-medium
+                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                `}>
+                  Falhas
+                </p>
+                <p className={`
+                  text-lg font-bold
+                  ${isDark ? 'text-red-400' : 'text-red-600'}
+                `}>
+                  {failedCount}
+                </p>
+              </div>
+            </div>
+
+            {/* Time Info */}
+            <div className={`
+              p-3 rounded-lg
+              ${isDark ? 'bg-gray-800/50' : 'bg-gray-50'}
             `}>
-              {successCount}/{totalLeads}
-            </span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onExpand}
-              className={`
-                w-7 h-7 p-0
-                ${isDark 
-                  ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
-                  : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
-                }
-              `}
-            >
-              <Maximize2 className="w-3 h-3" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className={`
-                w-7 h-7 p-0
-                ${isDark 
-                  ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
-                  : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
-                }
-              `}
-            >
-              <X className="w-3 h-3" />
-            </Button>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Timer className={`
+                    w-4 h-4
+                    ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                  `} />
+                  <span className={`
+                    text-sm font-medium
+                    ${isDark ? 'text-gray-300' : 'text-gray-700'}
+                  `}>
+                    Tempo decorrido
+                  </span>
+                </div>
+                <span className={`
+                  text-sm font-bold
+                  ${isDark ? 'text-white' : 'text-gray-900'}
+                `}>
+                  {elapsedTime}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>
