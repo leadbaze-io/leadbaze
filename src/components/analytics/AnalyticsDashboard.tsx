@@ -255,8 +255,8 @@ export default function AnalyticsDashboard() {
                 className="flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-800 rounded-xl flex items-center justify-center shadow-sm border border-blue-100 dark:border-blue-700">
-                    <span className="text-blue-600 dark:text-blue-200 text-lg">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-white text-lg">
                       {getActivityIcon(activity.type)}
                     </span>
                   </div>
@@ -309,10 +309,10 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-800 dark:to-blue-900 text-blue-600 dark:text-blue-200',
-    green: 'bg-gradient-to-br from-green-100 to-green-200 dark:from-green-800 dark:to-green-900 text-green-600 dark:text-green-200',
-    purple: 'bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-800 dark:to-purple-900 text-purple-600 dark:text-purple-200',
-    orange: 'bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-800 dark:to-orange-900 text-orange-600 dark:text-orange-200',
+    blue: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white',
+    green: 'bg-gradient-to-r from-green-500 to-green-600 text-white',
+    purple: 'bg-gradient-to-r from-purple-500 to-purple-600 text-white',
+    orange: 'bg-gradient-to-r from-orange-500 to-orange-600 text-white',
   }
 
   return (
@@ -343,8 +343,8 @@ function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCa
                 </span>
               </div>
             </div>
-            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg ${colorClasses[color]} ml-3 flex-shrink-0`}>
-              <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shadow-lg ${colorClasses[color]} ml-3 flex-shrink-0`}>
+              <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
           </div>
         </CardContent>

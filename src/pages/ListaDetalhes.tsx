@@ -224,7 +224,7 @@ export default function ListaDetalhes() {
   }
 
   return (
-    <div className="min-h-screen lista-bg-claro lista-bg-escuro py-6 sm:py-8">
+    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Redesenhado */}
         <motion.div
@@ -243,7 +243,7 @@ export default function ListaDetalhes() {
             </Link>
           </div>
 
-          <div className="lista-header-claro lista-header-escuro rounded-3xl p-6 sm:p-8">
+          <div className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-3xl p-6 sm:p-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="space-y-4">
                 <motion.div
@@ -256,10 +256,10 @@ export default function ListaDetalhes() {
                     <Target className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold lista-titulo-claro dark:text-foreground">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold dashboard-card-title-claro dark:text-foreground">
                       {leadList.name}
                     </h1>
-                    <p className="lista-texto-muted-claro dark:text-muted-foreground text-sm sm:text-base">
+                    <p className="dashboard-card-muted-claro dark:text-muted-foreground text-sm sm:text-base">
                       Lista de leads qualificados
                     </p>
                   </div>
@@ -273,13 +273,13 @@ export default function ListaDetalhes() {
                 >
                   <div className="flex items-center space-x-2">
                     <Calendar className="w-4 h-4" />
-                    <span className="lista-texto-muted-claro dark:text-muted-foreground text-sm">
+                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-sm">
                       Criado em {formatDate(leadList.created_at)}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Users className="w-4 h-4" />
-                    <span className="lista-texto-muted-claro dark:text-muted-foreground text-sm">
+                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-sm">
                       {leadList.total_leads} leads encontrados
                     </span>
                   </div>
@@ -363,14 +363,14 @@ export default function ListaDetalhes() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
               whileHover={{ y: -4, scale: 1.02 }}
-              className="lista-stats-card-claro lista-stats-card-escuro rounded-2xl p-6 shadow-lg border"
+              className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl p-6 shadow-lg border"
             >
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold lista-texto-muted-claro dark:text-muted-foreground uppercase tracking-wide">
+                  <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
                     {stat.title}
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold lista-titulo-claro dark:text-foreground">
+                  <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
                     {stat.value}
                   </p>
                 </div>
@@ -403,12 +403,12 @@ export default function ListaDetalhes() {
           transition={{ delay: 0.6 }}
           className="mt-8"
         >
-          <div className="lista-dicas-claro lista-dicas-escuro rounded-3xl p-6 sm:p-8 border shadow-lg">
+          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl p-6 sm:p-8 border shadow-lg">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold lista-titulo-claro dark:text-foreground">
+              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
                 Dicas para usar estes leads
               </h3>
             </div>
@@ -424,9 +424,9 @@ export default function ListaDetalhes() {
                   <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
                     <Target className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h4 className="font-semibold lista-titulo-claro dark:text-foreground">Qualificação</h4>
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Qualificação</h4>
                 </div>
-                <div className="space-y-3 lista-texto-muted-claro dark:text-muted-foreground">
+                <div className="space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                     <p className="text-sm">Priorize estabelecimentos com 4+ estrelas</p>
@@ -452,9 +452,9 @@ export default function ListaDetalhes() {
                   <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
                     <MessageSquare className="w-4 h-4 text-green-600 dark:text-green-400" />
                   </div>
-                  <h4 className="font-semibold lista-titulo-claro dark:text-foreground">Abordagem</h4>
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Abordagem</h4>
                 </div>
-                <div className="space-y-3 lista-texto-muted-claro dark:text-muted-foreground">
+                <div className="space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                     <p className="text-sm">Mencione que encontrou no Google Maps</p>
@@ -480,10 +480,10 @@ export default function ListaDetalhes() {
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h4 className="font-semibold lista-titulo-claro dark:text-foreground mb-2">
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground mb-2">
                     Pronto para começar sua campanha?
                   </h4>
-                  <p className="text-sm lista-texto-muted-claro dark:text-muted-foreground">
+                  <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
                     Use o Disparador em Massa para enviar mensagens personalizadas via WhatsApp
                   </p>
                 </div>
