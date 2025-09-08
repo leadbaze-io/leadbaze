@@ -136,7 +136,7 @@ export async function getAdvancedAnalyticsData(timeRange: '7d' | '30d' | '90d' =
     const categoryPerformance = await getCategoryPerformance(userId)
 
     // 7. Performance de templates
-    const templatePerformance = await getTemplatePerformance(userId)
+    const templatePerformance = await getTemplatePerformance(userId, startDate)
 
     // 8. Dados para gráficos
     const chartData = await getChartData(days)
@@ -266,7 +266,7 @@ async function getTemporalAnalysis(userId: string, startDate: Date): Promise<Tem
     .map(([hour, stats]) => ({
       hour: parseInt(hour),
       performance: stats.sent > 0 ? Math.round((stats.positive / stats.sent) * 100) : 0,
-      recommendations: getHourRecommendations(parseInt(hour), stats)
+      recommendations: getHourRecommendations(parseInt(hour), { ...stats, rate: stats.sent > 0 ? (stats.positive / stats.sent) * 100 : 0 })
     }))
     .sort((a, b) => b.performance - a.performance)
     .slice(0, 5)
@@ -291,7 +291,7 @@ async function getTemporalAnalysis(userId: string, startDate: Date): Promise<Tem
     .map(([day, stats]) => ({
       day,
       performance: stats.sent > 0 ? Math.round((stats.positive / stats.sent) * 100) : 0,
-      recommendations: getDayRecommendations(day, stats)
+      recommendations: getDayRecommendations(day, { performance: stats.sent > 0 ? Math.round((stats.positive / stats.sent) * 100) : 0 })
     }))
     .sort((a, b) => b.performance - a.performance)
 
@@ -413,7 +413,7 @@ function getHourRecommendations(hour: number, stats: { sent: number; responses: 
     recommendations.push('Evitar envios - horário inadequado')
   }
   
-  if (stats.positive > stats.responses * 0.7) {
+  if (stats.rate > 70) {
     recommendations.push('Excelente taxa de respostas positivas')
   }
   
@@ -431,7 +431,7 @@ function getDayRecommendations(day: string, stats: { performance: number }): str
     recommendations.push('Fim de semana - performance reduzida')
   }
   
-  if (stats.positive > stats.responses * 0.6) {
+  if (stats.performance > 60) {
     recommendations.push('Dia com boa taxa de conversão')
   }
   
@@ -477,8 +477,8 @@ export async function calculateLeadQualityScore(lead: {
   if (probError) throw probError
 
   return {
-    leadId: lead.id,
-    listId: lead.list_id || '',
+    leadId: `lead-${Date.now()}`, // ID temporário
+    listId: '', // Lista não disponível neste contexto
     qualityScore,
     conversionProbability: probability || 0,
     factors: {

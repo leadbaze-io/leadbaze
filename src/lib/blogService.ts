@@ -1496,8 +1496,8 @@ export class BlogService {
           name: category.name,
           slug: category.slug,
           description: category.description || '',
-          color: category.color || 'bg-blue-500',
-          icon: category.icon || '📝',
+          color: (category as any).color || 'bg-blue-500',
+          icon: (category as any).icon || '📝',
           postCount: postCount
         };
       }));

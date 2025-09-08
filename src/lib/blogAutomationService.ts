@@ -79,7 +79,10 @@ class BlogAutomationServiceClient {
     
     // Escutar mudanças de autenticação
     supabase.auth.onAuthStateChange((_event, session) => {
-      this.currentUser = session?.user || null;
+      this.currentUser = session?.user ? {
+        id: session.user.id,
+        email: session.user.email || ''
+      } : null;
     });
   }
 
@@ -347,7 +350,7 @@ class BlogAutomationServiceClient {
     return supabase
       .channel('n8n_blog_queue_changes')
       .on(
-        'postgres_changes',
+        'postgres_changes' as any,
         {
           event: '*',
           schema: 'public',
@@ -365,7 +368,7 @@ class BlogAutomationServiceClient {
     return supabase
       .channel('blog_posts_changes')
       .on(
-        'postgres_changes',
+        'postgres_changes' as any,
         {
           event: 'INSERT',
           schema: 'public',
