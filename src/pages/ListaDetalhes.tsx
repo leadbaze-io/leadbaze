@@ -12,23 +12,16 @@ import {
   Star,
   Globe,
   Target,
-  TrendingUp,
-  Filter,
-  Search,
   Plus,
-  Eye,
   MessageSquare,
-  BarChart3,
   Sparkles,
-  Award,
-  Clock,
   CheckCircle,
   Zap
 } from 'lucide-react'
 import { supabase, getCurrentUser } from '../lib/supabaseClient'
 import type { LeadList, Lead } from '../types'
 import LeadTableWithActions from '../components/LeadTableWithActions'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 export default function ListaDetalhes() {
   const { id } = useParams<{ id: string }>()
