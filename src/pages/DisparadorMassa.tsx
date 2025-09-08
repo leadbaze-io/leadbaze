@@ -719,12 +719,20 @@ export default function DisparadorMassa() {
     const stopFunction = CampaignStatusServiceV2.startStatusTracking(
       campaignId,
       (progress) => {
+        console.log('📊 [DisparadorMassa] ===== CALLBACK ONPROGRESS CHAMADO =====');
         console.log('📊 [DisparadorMassa] Progresso da campanha atualizado (tempo real):', progress)
+        console.log('📊 [DisparadorMassa] progress.successCount:', progress.successCount);
+        console.log('📊 [DisparadorMassa] progress.failedCount:', progress.failedCount);
+        console.log('📊 [DisparadorMassa] progress.progress:', progress.progress);
+        console.log('📊 [DisparadorMassa] progress.campaignId:', progress.campaignId);
         
         // Atualizar estados do modal de progresso
+        console.log('🔄 [DisparadorMassa] Chamando setCurrentSuccessCount...');
         setCurrentSuccessCount(progress.successCount)
+        console.log('🔄 [DisparadorMassa] Chamando setCurrentFailedCount...');
         setCurrentFailedCount(progress.failedCount)
         console.log('🔄 [DisparadorMassa] Estados atualizados - Sucesso:', progress.successCount, 'Falhas:', progress.failedCount)
+        console.log('📊 [DisparadorMassa] ===== FIM CALLBACK ONPROGRESS =====');
       },
       (completion) => {
         console.log('✅ [DisparadorMassa] Campanha finalizada (tempo real):', completion)

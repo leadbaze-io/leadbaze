@@ -109,6 +109,10 @@ export class CampaignStatusServiceV2 {
    */
   static startRealTimeUpdates(campaignId: string, onProgress: (progress: CampaignProgress) => void, onComplete: (completion: CampaignCompletion) => void): () => void {
     console.log('🔌 [CampaignStatusServiceV2] Iniciando conexão SSE...');
+    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onProgress é uma função?', typeof onProgress);
+    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onComplete é uma função?', typeof onComplete);
+    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onProgress:', onProgress);
+    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onComplete:', onComplete);
     
     // Parar conexão anterior se existir
     this.stopRealTimeUpdates();
@@ -145,20 +149,29 @@ export class CampaignStatusServiceV2 {
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
           console.log('🔍 [CampaignStatusServiceV2] Callback onProgress é uma função?', typeof onProgress);
           console.log('🔍 [CampaignStatusServiceV2] Callback onProgress:', onProgress);
+          console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onProgress:', data.data);
+          console.log('🔍 [CampaignStatusServiceV2] onProgress.toString():', onProgress.toString());
           try {
+            console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onProgress(data.data)...');
             onProgress(data.data);
             console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onProgress:', error);
+            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error.stack);
           }
         } else if (data.type === 'complete') {
           console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onComplete...');
+          console.log('🔍 [CampaignStatusServiceV2] Callback onComplete é uma função?', typeof onComplete);
+          console.log('🔍 [CampaignStatusServiceV2] Callback onComplete:', onComplete);
+          console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onComplete:', data.data);
           try {
+            console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onComplete(data.data)...');
             onComplete(data.data);
             console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado com sucesso');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
+            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error.stack);
           }
         }
       } catch (error) {
@@ -279,6 +292,12 @@ export class CampaignStatusServiceV2 {
   ): () => void {
     console.log('🚀 [CampaignStatusServiceV2] Iniciando rastreamento da campanha:', campaignId);
     console.log('🔗 [CampaignStatusServiceV2] URL base:', API_BASE_URL);
+    console.log('🔍 [CampaignStatusServiceV2] onProgress é uma função?', typeof onProgress);
+    console.log('🔍 [CampaignStatusServiceV2] onComplete é uma função?', typeof onComplete);
+    console.log('🔍 [CampaignStatusServiceV2] onStatusUpdate é uma função?', typeof onStatusUpdate);
+    console.log('🔍 [CampaignStatusServiceV2] onProgress:', onProgress);
+    console.log('🔍 [CampaignStatusServiceV2] onComplete:', onComplete);
+    console.log('🔍 [CampaignStatusServiceV2] onStatusUpdate:', onStatusUpdate);
     
     // Tentar SSE primeiro
     try {
