@@ -71,29 +71,13 @@ export default function CampaignProgressModalV2({
     setProgress(Math.min(newProgress, 100))
   }, [successCount, failedCount, totalLeads])
 
-  // Monitorar status em tempo real
-  useEffect(() => {
-    if (!isVisible || !campaignId) return
-
-    const stopTracking = CampaignStatusServiceV2.startStatusTracking(
-      campaignId,
-      (progressData) => {
-        setCurrentProgress(progressData)
-        setProgress(progressData.progress)
-        setIsConnected(true)
-      },
-      (completion) => {
-        console.log('Campaign completed:', completion)
-        setIsConnected(true)
-      },
-      (statusUpdate) => {
-        console.log('Status updated:', statusUpdate)
-        setIsConnected(true)
-      }
-    )
-
-    return stopTracking
-  }, [isVisible, campaignId])
+  // Monitorar status em tempo real - REMOVIDO: chamada duplicada
+  // O monitoramento é feito pelo DisparadorMassa, não pelo modal
+  // useEffect(() => {
+  //   if (!isVisible || !campaignId) return
+  //   const stopTracking = CampaignStatusServiceV2.startStatusTracking(...)
+  //   return stopTracking
+  // }, [isVisible, campaignId])
 
   // Detectar desconexão
   useEffect(() => {
