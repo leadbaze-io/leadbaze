@@ -171,8 +171,11 @@ export default function Dashboard() {
                       <div className="w-full bg-white/20 rounded-full h-2">
                         <div className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full w-3/4"></div>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-white/80">
-                        <span>Status: Ativo</span>
+                      <div className="flex items-center justify-between text-xs text-white/80 space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                          <span>Status: Ativo</span>
+                        </div>
                         <span>Renova em 30 dias</span>
                       </div>
                     </div>

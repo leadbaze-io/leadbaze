@@ -5,10 +5,10 @@ import {
   Target,
   Download,
   RefreshCw,
-  Database,
-  List,
-  Send,
-  Percent,
+  Users,
+  FolderPlus,
+  MessageSquare,
+  TrendingDown,
   Clock,
   Zap
 } from 'lucide-react'
@@ -150,7 +150,7 @@ export default function AnalyticsDashboard() {
           value={analytics.totalLeads.toLocaleString()}
           change={`+${analytics.growthRate}%`}
           trend="up"
-          icon={Database}
+          icon={Users}
           color="blue"
         />
         
@@ -159,7 +159,7 @@ export default function AnalyticsDashboard() {
           value={analytics.totalLists.toString()}
           change="+12%"
           trend="up"
-          icon={List}
+          icon={FolderPlus}
           color="green"
         />
         
@@ -168,7 +168,7 @@ export default function AnalyticsDashboard() {
           value={analytics.messagesSent.toLocaleString()}
           change="+8%"
           trend="up"
-          icon={Send}
+          icon={MessageSquare}
           color="purple"
         />
         
@@ -177,7 +177,7 @@ export default function AnalyticsDashboard() {
           value={`${analytics.conversionRate}%`}
           change="+2.1%"
           trend="up"
-          icon={Percent}
+          icon={TrendingDown}
           color="orange"
         />
       </div>
@@ -375,11 +375,11 @@ function SimpleLineChart({ data }: { data: Array<{ date: string; count: number }
 function getActivityIcon(type: string) {
   switch (type) {
     case 'lead_generated':
-      return <Database className="w-4 h-4 text-blue-600" />
+      return <Users className="w-4 h-4 text-blue-600" />
     case 'list_created':
-      return <List className="w-4 h-4 text-green-600" />
+      return <FolderPlus className="w-4 h-4 text-green-600" />
     case 'message_sent':
-      return <Send className="w-4 h-4 text-purple-600" />
+      return <MessageSquare className="w-4 h-4 text-purple-600" />
     default:
       return <Zap className="w-4 h-4 text-gray-600" />
   }
