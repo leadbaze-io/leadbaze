@@ -350,7 +350,7 @@ class BlogAutomationServiceClient {
     return supabase
       .channel('n8n_blog_queue_changes')
       .on(
-        'postgres_changes' as any,
+        'postgres_changes' as const,
         {
           event: '*',
           schema: 'public',
@@ -368,7 +368,7 @@ class BlogAutomationServiceClient {
     return supabase
       .channel('blog_posts_changes')
       .on(
-        'postgres_changes' as any,
+        'postgres_changes' as const,
         {
           event: 'INSERT',
           schema: 'public',

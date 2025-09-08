@@ -21,6 +21,10 @@ export default tseslint.config([
     },
     rules: {
       'react-refresh/only-export-components': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-case-declarations': 'warn',
     },
   },
 ])

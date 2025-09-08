@@ -513,9 +513,9 @@ export class CampaignLeadsService {
         list_name: Array.isArray(item.lead_lists)
           ? (item.lead_lists[0] as { name: string })?.name || 'Lista desconhecida'
           : (item.lead_lists as { name: string })?.name || 'Lista desconhecida',
-        lead_name: (item.lead_data as any)?.name || 'Lead sem nome',
-        lead_phone: (item.lead_data as any)?.phone || phone,
-        lead_address: (item.lead_data as any)?.address || 'Endereço não disponível',
+        lead_name: (item.lead_data as Record<string, unknown>)?.name as string || 'Lead sem nome',
+        lead_phone: (item.lead_data as Record<string, unknown>)?.phone as string || phone,
+        lead_address: (item.lead_data as Record<string, unknown>)?.address as string || 'Endereço não disponível',
         added_at: item.added_at
       })) || []
 

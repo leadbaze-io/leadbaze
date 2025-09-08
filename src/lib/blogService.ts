@@ -1254,7 +1254,7 @@ export class BlogService {
       }
 
       // Transformar dados do Supabase para o formato esperado
-      const posts: BlogPost[] = (data || []).map((post: any) => ({
+      const posts: BlogPost[] = (data || []).map((post: Record<string, unknown>) => ({
         id: post.id,
         title: post.title,
         slug: post.slug,
@@ -1496,8 +1496,8 @@ export class BlogService {
           name: category.name,
           slug: category.slug,
           description: category.description || '',
-          color: (category as any).color || 'bg-blue-500',
-          icon: (category as any).icon || '📝',
+          color: (category as Record<string, unknown>).color as string || 'bg-blue-500',
+          icon: (category as Record<string, unknown>).icon as string || '📝',
           postCount: postCount
         };
       }));
