@@ -77,7 +77,7 @@ const processLimit = createRateLimit(
 
 const campaignLimit = createRateLimit(
   60 * 60 * 1000, // 1 hora
-  100, // 100 campanhas por hora (muito mais permissivo)
+  1000, // 1000 campanhas por hora (extremamente permissivo)
   'Limite de campanhas atingido. Tente novamente em 1 hora.'
 );
 

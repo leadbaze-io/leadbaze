@@ -15,7 +15,7 @@ import {
   Timer
 } from 'lucide-react'
 import { Button } from './ui/button'
-// import type { CampaignProgress } from '../lib/campaignStatusServiceV2' // Removido: não utilizado
+import { useTheme } from '../contexts/ThemeContext'
 
 // Sistema de status mais robusto
 export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending' | 'draft'
@@ -57,39 +57,39 @@ export default function CampaignProgressModalV2({
   onMinimize,
   onExpand
 }: CampaignProgressModalV2Props) {
-  const [progress, setProgress] = useState(0)
-  const [isConnected, setIsConnected] = useState(true)
+  const { isDark } = useTheme()
+  const [elapsedTime, setElapsedTime] = useState('0s')
 
-  // Calcular progresso baseado nos contadores
+  // Atualizar tempo decorrido
   useEffect(() => {
-    const totalProcessed = successCount + failedCount
-    const newProgress = totalLeads > 0 ? (totalProcessed / totalLeads) * 100 : 0
-    setProgress(Math.min(newProgress, 100))
-  }, [successCount, failedCount, totalLeads])
+    if (!startTime) return
 
-  // Monitorar status em tempo real - REMOVIDO: chamada duplicada
-  // O monitoramento é feito pelo DisparadorMassa, não pelo modal
-  // useEffect(() => {
-  //   if (!isVisible || !campaignId) return
-  //   const stopTracking = CampaignStatusServiceV2.startStatusTracking(...)
-  //   return stopTracking
-  // }, [isVisible, campaignId])
-
-  // Detectar desconexão
-  useEffect(() => {
     const interval = setInterval(() => {
-      setIsConnected(false)
-    }, 30000) // Considerar desconectado após 30s sem atualizações
+      const now = new Date()
+      const diff = now.getTime() - startTime.getTime()
+      const seconds = Math.floor(diff / 1000)
+      const minutes = Math.floor(seconds / 60)
+      const hours = Math.floor(minutes / 60)
+
+      if (hours > 0) {
+        setElapsedTime(`${hours}h ${minutes % 60}m`)
+      } else if (minutes > 0) {
+        setElapsedTime(`${minutes}m ${seconds % 60}s`)
+      } else {
+        setElapsedTime(`${seconds}s`)
+      }
+    }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [startTime])
 
+  // Informações de status
   const getStatusInfo = (): CampaignStatusInfo => {
     switch (status) {
       case 'sending':
         return {
           status: 'sending',
-          progress,
+          progress: Math.round((successCount + failedCount) / totalLeads * 100),
           message: 'Enviando mensagens...',
           icon: <Send className="w-5 h-5" />,
           color: 'blue',
@@ -100,7 +100,7 @@ export default function CampaignProgressModalV2({
         return {
           status: 'completed',
           progress: 100,
-          message: 'Campanha concluída com sucesso!',
+          message: 'Campanha finalizada com sucesso!',
           icon: <CheckCircle className="w-5 h-5" />,
           color: 'green',
           showProgress: false,
@@ -110,28 +110,18 @@ export default function CampaignProgressModalV2({
         return {
           status: 'failed',
           progress: 0,
-          message: 'Falha na campanha',
+          message: 'Campanha falhou',
           icon: <AlertTriangle className="w-5 h-5" />,
           color: 'red',
           showProgress: false,
           showTimeEstimate: false
         }
-      case 'pending':
+      default:
         return {
           status: 'pending',
           progress: 0,
-          message: 'Aguardando processamento...',
+          message: 'Aguardando...',
           icon: <Clock className="w-5 h-5" />,
-          color: 'yellow',
-          showProgress: false,
-          showTimeEstimate: false
-        }
-      default:
-        return {
-          status: 'draft',
-          progress: 0,
-          message: 'Preparando campanha...',
-          icon: <MessageSquare className="w-5 h-5" />,
           color: 'gray',
           showProgress: false,
           showTimeEstimate: false
@@ -141,421 +131,394 @@ export default function CampaignProgressModalV2({
 
   const statusInfo = getStatusInfo()
 
-  // Calcular tempo estimado
-  const getEstimatedTime = () => {
-    if (!statusInfo.showTimeEstimate || !startTime) return null
+  // Tempo estimado
+  const getEstimatedTime = (): string => {
+    if (status !== 'sending' || totalLeads === 0) return '0 min'
     
-    const remainingMessages = totalLeads - successCount - failedCount
-    if (remainingMessages <= 0) return 'Concluindo...'
+    const remaining = totalLeads - successCount - failedCount
+    if (remaining <= 0) return 'Concluindo...'
     
-    // Estimativa baseada em 30 segundos por mensagem
-    const estimatedMinutesRemaining = Math.ceil(remainingMessages * 0.5)
-    return estimatedMinutesRemaining > 0 ? 
-      `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
-      'Concluindo...'
+    // Estimativa baseada em 2 mensagens por minuto
+    const estimatedMinutes = Math.ceil(remaining / 2)
+    return estimatedMinutes === 1 ? '1 min' : `${estimatedMinutes} min`
   }
 
   const estimatedTime = getEstimatedTime()
 
-  // Calcular tempo decorrido
-  const getElapsedTime = () => {
-    if (!startTime) return '0s'
-    
-    const elapsed = Math.floor((Date.now() - startTime.getTime()) / 1000)
-    const minutes = Math.floor(elapsed / 60)
-    const seconds = elapsed % 60
-    
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`
-    }
-    return `${seconds}s`
-  }
+  // Taxa de sucesso
+  const successRate = totalLeads > 0 ? Math.round((successCount / totalLeads) * 100) : 0
 
-  // Modal minimizado - Design moderno e compacto
-  if (isVisible && isMinimized) {
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
-        >
-          <motion.div
-            onClick={onExpand}
-            className={`relative w-80 h-20 rounded-2xl shadow-2xl cursor-pointer overflow-hidden backdrop-blur-sm border transition-all duration-300 hover:scale-105 ${
-              status === 'sending' ? 'bg-gradient-to-r from-blue-500/90 to-blue-600/90 border-blue-400/50' :
-              status === 'completed' ? 'bg-gradient-to-r from-green-500/90 to-green-600/90 border-green-400/50' :
-              status === 'failed' ? 'bg-gradient-to-r from-red-500/90 to-red-600/90 border-red-400/50' :
-              'bg-gradient-to-r from-gray-500/90 to-gray-600/90 border-gray-400/50'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            animate={status === 'completed' || status === 'failed' ? {
-              boxShadow: [
-                '0 0 0 0 rgba(34, 197, 94, 0.7)',
-                '0 0 0 10px rgba(34, 197, 94, 0)',
-                '0 0 0 0 rgba(34, 197, 94, 0)'
-              ]
-            } : {}}
-            transition={status === 'completed' || status === 'failed' ? {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            } : {}}
-            title={`${campaignName} - ${statusInfo.message}`}
-          >
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-white/10 dark:bg-white/5">
-              <div className="absolute inset-0" style={{
-                backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
-                backgroundSize: '20px 20px',
-                opacity: 0.2
-              }}></div>
-            </div>
+  if (!isVisible) return null
 
-            <div className="relative z-10 flex items-center justify-between h-full px-4">
-              {/* Lado Esquerdo - Informações */}
-              <div className="flex items-center space-x-3 flex-1 min-w-0">
-                <motion.div
-                  animate={status === 'sending' ? { rotate: 360 } : {}}
-                  transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                  className="flex-shrink-0 text-white drop-shadow-lg"
-                >
-                  {statusInfo.icon}
-                </motion.div>
-
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-white truncate drop-shadow-md">
-                    {campaignName}
-                  </h3>
-                  <div className="flex items-center space-x-2 text-xs text-white/90 drop-shadow-sm">
-                    <span>{statusInfo.message}</span>
-                    {!isConnected && (
-                      <WifiOff className="w-3 h-3 text-yellow-300 drop-shadow-sm" />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Lado Direito - Progresso e Estatísticas */}
-              <div className="flex items-center space-x-3">
-                {/* Estatísticas Compactas */}
-                <div className="text-right">
-                  <div className="text-sm font-bold text-white drop-shadow-md">
-                    {status === 'sending' ? `${successCount}/${totalLeads}` :
-                     status === 'completed' ? 'Concluído' :
-                     status === 'failed' ? 'Falhou' : 'Aguardando'}
-                  </div>
-                  {status === 'sending' && (
-                    <div className="text-xs text-white/90 drop-shadow-sm">
-                      {Math.floor(progress)}%
-                    </div>
-                  )}
-                </div>
-
-                {/* Badge de Status */}
-                {status === 'completed' && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
-                  >
-                    <CheckCircle className="w-4 h-4 text-white" />
-                  </motion.div>
-                )}
-
-                {status === 'failed' && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
-                  >
-                    <AlertTriangle className="w-4 h-4 text-white" />
-                  </motion.div>
-                )}
-              </div>
-            </div>
-
-            {/* Barra de Progresso Linear */}
-            {status === 'sending' && (
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 overflow-hidden">
-                <motion.div
-                  className="h-full bg-white/60"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            )}
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    )
-  }
-
-  // Modal expandido - Design completo e moderno
-  if (isVisible && !isMinimized) {
-    return (
-      <AnimatePresence>
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      >
+        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={onClose}
+        />
+
+        {/* Modal */}
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          transition={{ type: "spring", duration: 0.3 }}
+          className={`
+            relative w-full max-w-2xl mx-auto
+            ${isDark 
+              ? 'bg-gray-900 border-gray-700 text-white' 
+              : 'bg-white border-gray-200 text-gray-900'
+            }
+            rounded-2xl border shadow-2xl
+            ${isMinimized ? 'max-h-20 overflow-hidden' : 'max-h-[90vh] overflow-y-auto'}
+          `}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
-          >
-            {/* Header com Gradiente */}
-            <div className={`relative p-6 text-white ${
-              status === 'sending' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
-              status === 'completed' ? 'bg-gradient-to-r from-green-500 to-green-600' :
-              status === 'failed' ? 'bg-gradient-to-r from-red-500 to-red-600' :
-              'bg-gradient-to-r from-gray-500 to-gray-600'
-            }`}>
-              {/* Background Pattern */}
-              <div className="absolute inset-0 bg-white/15 dark:bg-white/10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
-                  backgroundSize: '24px 24px',
-                  opacity: 0.2
-                }}></div>
+          {/* Header */}
+          <div className={`
+            flex items-center justify-between p-4 border-b
+            ${isDark ? 'border-gray-700' : 'border-gray-200'}
+          `}>
+            <div className="flex items-center space-x-3">
+              <div className={`
+                w-10 h-10 rounded-xl flex items-center justify-center
+                ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                  statusInfo.color === 'green' ? 'bg-green-500' :
+                  statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
+                }
+              `}>
+                {statusInfo.icon}
               </div>
-
-              <div className="relative z-10">
-                {/* Header Controls */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <motion.div
-                      animate={status === 'sending' ? { rotate: 360 } : {}}
-                      transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                      className="w-10 h-10 bg-white/25 dark:bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-lg"
-                    >
-                      <div className="text-white drop-shadow-lg">
-                        {statusInfo.icon}
-                      </div>
-                    </motion.div>
-                    <div>
-                      <h2 className="text-xl font-black text-white drop-shadow-lg">Status da Campanha</h2>
-                      <p className="text-white/95 text-sm font-semibold drop-shadow-md">Monitoramento em tempo real</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    {/* Indicador de Conexão */}
-                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs ${
-                      isConnected ? 'bg-green-500/20 text-green-200' : 'bg-yellow-500/20 text-yellow-200'
-                    }`}>
-                      {isConnected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-                      <span>{isConnected ? 'Conectado' : 'Desconectado'}</span>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={onMinimize}
-                      className="text-white hover:bg-white/20 rounded-xl"
-                    >
-                      <Minimize2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={onClose}
-                      className="text-white hover:bg-white/20 rounded-xl"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Nome da Campanha */}
-                <div className="mb-4">
-                  <h1 className="text-2xl font-black mb-1 text-white drop-shadow-lg">{campaignName}</h1>
-                  <p className="text-white/95 font-semibold drop-shadow-md">{statusInfo.message}</p>
-                </div>
-
-                {/* Barra de Progresso Principal */}
-                {statusInfo.showProgress && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-white drop-shadow-md">Progresso</span>
-                      <span className="text-lg font-black text-white drop-shadow-lg">{Math.floor(progress)}%</span>
-                    </div>
-                    <div className="w-full bg-white/25 dark:bg-white/20 rounded-full h-3 overflow-hidden shadow-inner">
-                      <motion.div
-                        className="h-full bg-white/90 dark:bg-white/80 rounded-full shadow-sm"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progress}%` }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                      />
-                    </div>
-                  </div>
-                )}
+              <div>
+                <h3 className="font-semibold text-lg">
+                  {isMinimized ? 'Campanha' : campaignName}
+                </h3>
+                <p className={`
+                  text-sm
+                  ${isDark ? 'text-gray-400' : 'text-gray-600'}
+                `}>
+                  {statusInfo.message}
+                </p>
               </div>
             </div>
+            
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={isMinimized ? onExpand : onMinimize}
+                className={`
+                  ${isDark 
+                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                    : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
+                  }
+                `}
+              >
+                <Minimize2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className={`
+                  ${isDark 
+                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                    : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
+                  }
+                `}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
-            {/* Conteúdo Principal */}
-            <div className="p-6">
-              {/* Estatísticas em Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-4 rounded-2xl border border-blue-200 dark:border-blue-800 shadow-lg">
+          {/* Content */}
+          {!isMinimized && (
+            <div className="p-6 space-y-6">
+              {/* Progress Bar */}
+              {statusInfo.showProgress && (
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className={`
+                      text-sm font-medium
+                      ${isDark ? 'text-gray-300' : 'text-gray-700'}
+                    `}>
+                      Progresso
+                    </span>
+                    <span className={`
+                      text-sm font-bold
+                      ${isDark ? 'text-white' : 'text-gray-900'}
+                    `}>
+                      {statusInfo.progress}%
+                    </span>
+                  </div>
+                  <div className={`
+                    w-full h-3 rounded-full overflow-hidden
+                    ${isDark ? 'bg-gray-700' : 'bg-gray-200'}
+                  `}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${statusInfo.progress}%` }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className={`
+                        h-full rounded-full
+                        ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                          statusInfo.color === 'green' ? 'bg-green-500' :
+                          statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
+                        }
+                      `}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Total */}
+                <div className={`
+                  p-4 rounded-xl border
+                  ${isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-blue-50 border-blue-200'
+                  }
+                `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-md">
-                      <Users className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <Users className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-black dark:text-blue-400 font-bold drop-shadow-md">Total</p>
-                      <p className="text-2xl font-black text-white dark:text-blue-100 drop-shadow-lg">{totalLeads}</p>
+                      <p className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-blue-600'}
+                      `}>
+                        Total
+                      </p>
+                      <p className={`
+                        text-xl font-bold
+                        ${isDark ? 'text-white' : 'text-blue-900'}
+                      `}>
+                        {totalLeads}
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 rounded-2xl border border-green-200 dark:border-green-800 shadow-lg">
+                {/* Enviados */}
+                <div className={`
+                  p-4 rounded-xl border
+                  ${isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-green-50 border-green-200'
+                  }
+                `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-md">
-                      <CheckCircle className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                      <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-black dark:text-green-400 font-bold drop-shadow-md">Enviados</p>
-                      <p className="text-2xl font-black text-white dark:text-green-100 drop-shadow-lg">{successCount}</p>
+                      <p className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-green-600'}
+                      `}>
+                        Enviados
+                      </p>
+                      <p className={`
+                        text-xl font-bold
+                        ${isDark ? 'text-white' : 'text-green-900'}
+                      `}>
+                        {successCount}
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-4 rounded-2xl border border-red-200 dark:border-red-800 shadow-lg">
+                {/* Falhas */}
+                <div className={`
+                  p-4 rounded-xl border
+                  ${isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-red-50 border-red-200'
+                  }
+                `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center shadow-md">
-                      <AlertTriangle className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-black dark:text-red-400 font-bold drop-shadow-md">Falhas</p>
-                      <p className="text-2xl font-black text-white dark:text-red-100 drop-shadow-lg">{failedCount}</p>
+                      <p className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-red-600'}
+                      `}>
+                        Falhas
+                      </p>
+                      <p className={`
+                        text-xl font-bold
+                        ${isDark ? 'text-white' : 'text-red-900'}
+                      `}>
+                        {failedCount}
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-4 rounded-2xl border border-purple-200 dark:border-purple-800 shadow-lg">
+                {/* Tempo */}
+                <div className={`
+                  p-4 rounded-xl border
+                  ${isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-purple-50 border-purple-200'
+                  }
+                `}>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center shadow-md">
-                      <Timer className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <Timer className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-black dark:text-purple-400 font-bold drop-shadow-md">Tempo</p>
-                      <p className="text-2xl font-black text-white dark:text-purple-100 drop-shadow-lg">{getElapsedTime()}</p>
+                      <p className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-purple-600'}
+                      `}>
+                        Tempo
+                      </p>
+                      <p className={`
+                        text-xl font-bold
+                        ${isDark ? 'text-white' : 'text-purple-900'}
+                      `}>
+                        {elapsedTime}
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Informações Adicionais */}
-              <div className="space-y-4">
+              {/* Additional Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Tempo Estimado */}
-                {estimatedTime && (
-                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-2xl border border-yellow-200 dark:border-yellow-800 shadow-lg">
+                {statusInfo.showTimeEstimate && (
+                  <div className={`
+                    p-4 rounded-xl border
+                    ${isDark 
+                      ? 'bg-gray-800 border-gray-700' 
+                      : 'bg-yellow-50 border-yellow-200'
+                    }
+                  `}>
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center shadow-md">
+                      <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
                         <Clock className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm text-black dark:text-yellow-300 font-bold drop-shadow-md">Tempo Estimado</p>
-                        <p className="text-xl font-black text-white dark:text-yellow-100 drop-shadow-lg">{estimatedTime}</p>
-                        <p className="text-xs text-black dark:text-yellow-400 drop-shadow-md">Velocidade: 2 mensagens/minuto</p>
+                        <p className={`
+                          text-xs font-medium
+                          ${isDark ? 'text-gray-400' : 'text-yellow-600'}
+                        `}>
+                          Tempo Estimado
+                        </p>
+                        <p className={`
+                          text-lg font-bold
+                          ${isDark ? 'text-white' : 'text-yellow-900'}
+                        `}>
+                          {estimatedTime}
+                        </p>
+                        <p className={`
+                          text-xs
+                          ${isDark ? 'text-gray-500' : 'text-yellow-700'}
+                        `}>
+                          Velocidade: 2 mensagens/minuto
+                        </p>
                       </div>
                     </div>
                   </div>
                 )}
-
-                {/* Lead Atual (se disponível) - REMOVIDO: currentProgress não disponível */}
-                {/* {currentProgress?.currentLead && (
-                  <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                        <Target className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">Processando</p>
-                        <p className="text-lg font-bold text-indigo-900 dark:text-indigo-100">
-                          {currentProgress.currentLead.name}
-                        </p>
-                        <p className="text-xs text-indigo-600 dark:text-indigo-400">
-                          {currentProgress.currentLead.phone}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )} */}
 
                 {/* Taxa de Sucesso */}
-                {totalLeads > 0 && (
-                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800 shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-md">
-                          <TrendingUp className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-black dark:text-emerald-300 font-bold drop-shadow-md">Taxa de Sucesso</p>
-                          <p className="text-xl font-black text-white dark:text-emerald-100 drop-shadow-lg">
-                            {Math.round((successCount / totalLeads) * 100)}%
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="w-16 h-16 relative">
-                          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                            <path
-                              className="text-emerald-200 dark:text-emerald-800"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              fill="none"
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                            <path
-                              className="text-emerald-500"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              fill="none"
-                              strokeDasharray={`${(successCount / totalLeads) * 100}, 100`}
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                            />
-                          </svg>
-                        </div>
-                      </div>
+                <div className={`
+                  p-4 rounded-xl border
+                  ${isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-emerald-50 border-emerald-200'
+                  }
+                `}>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className={`
+                        text-xs font-medium
+                        ${isDark ? 'text-gray-400' : 'text-emerald-600'}
+                      `}>
+                        Taxa de Sucesso
+                      </p>
+                      <p className={`
+                        text-lg font-bold
+                        ${isDark ? 'text-white' : 'text-emerald-900'}
+                      `}>
+                        {successRate}%
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
 
-              {/* Ações */}
-              <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Button
-                  variant="outline"
-                  onClick={onMinimize}
-                  className="rounded-xl"
+              {/* Status Message */}
+              {status === 'completed' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`
+                    p-4 rounded-xl border-2 border-green-500
+                    ${isDark ? 'bg-green-900/20' : 'bg-green-50'}
+                  `}
                 >
-                  <Minimize2 className="w-4 h-4 mr-2" />
-                  Minimizar
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={onClose}
-                  className="rounded-xl"
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <div>
+                      <p className="font-semibold text-green-700 dark:text-green-300">
+                        Campanha Finalizada!
+                      </p>
+                      <p className="text-sm text-green-600 dark:text-green-400">
+                        Todas as mensagens foram enviadas com sucesso.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {status === 'failed' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`
+                    p-4 rounded-xl border-2 border-red-500
+                    ${isDark ? 'bg-red-900/20' : 'bg-red-50'}
+                  `}
                 >
-                  <X className="w-4 h-4 mr-2" />
-                  Fechar
-                </Button>
-              </div>
+                  <div className="flex items-center space-x-3">
+                    <AlertTriangle className="w-6 h-6 text-red-500" />
+                    <div>
+                      <p className="font-semibold text-red-700 dark:text-red-300">
+                        Campanha Falhou
+                      </p>
+                      <p className="text-sm text-red-600 dark:text-red-400">
+                        Houve um problema durante o envio das mensagens.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
-          </motion.div>
+          )}
         </motion.div>
-      </AnimatePresence>
-    )
-  }
-
-  return null
+      </motion.div>
+    </AnimatePresence>
+  )
 }
