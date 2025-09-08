@@ -7,10 +7,7 @@ import {
   AlertTriangle, 
   Clock, 
   Users, 
-  MessageSquare, 
   Minimize2, 
-  Wifi, 
-  WifiOff,
   TrendingUp,
   Timer
 } from 'lucide-react'
