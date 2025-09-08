@@ -1050,6 +1050,229 @@ html.dark .text-gray-300 {
   text-fill-color: #d1d5db !important;
 }
 
+/* ===== CLASSES ESPECÍFICAS PARA GERADOR DE LEADS - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA GERADOR DE LEADS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .gerador-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Cards Principais */
+html:not(.dark) .gerador-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .gerador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Títulos */
+html:not(.dark) .gerador-titulo-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Modo Claro - Descrições */
+html:not(.dark) .gerador-descricao-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Inputs e Selects */
+html:not(.dark) .gerador-input-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .gerador-input-claro:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Claro - Botões */
+html:not(.dark) .gerador-botao-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html:not(.dark) .gerador-botao-claro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Claro - Cards de Leads */
+html:not(.dark) .gerador-lead-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-lead-card-claro:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Cards Selecionados */
+html:not(.dark) .gerador-lead-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Header dos Cards de Leads */
+html:not(.dark) .gerador-lead-header-claro {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-lead-header-selecionado-claro {
+  background-color: #eff6ff !important;
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Modo Claro - Filtros */
+html:not(.dark) .gerador-filtros-claro {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Paginação */
+html:not(.dark) .gerador-paginacao-claro {
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-paginacao-claro .bg-muted\/50 {
+  background-color: #f1f5f9 !important;
+  background: #f1f5f9 !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .gerador-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Cards Principais */
+html.dark .gerador-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .gerador-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Títulos */
+html.dark .gerador-titulo-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Descrições */
+html.dark .gerador-descricao-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Inputs e Selects */
+html.dark .gerador-input-escuro {
+  background-color: hsl(var(--input)) !important;
+  background: hsl(var(--input)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .gerador-input-escuro:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Modo Escuro - Botões */
+html.dark .gerador-botao-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html.dark .gerador-botao-escuro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Cards de Leads */
+html.dark .gerador-lead-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+html.dark .gerador-lead-card-escuro:hover {
+  border-color: #60a5fa !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Cards Selecionados */
+html.dark .gerador-lead-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(30, 58, 138, 0.3) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+/* Modo Escuro - Header dos Cards de Leads */
+html.dark .gerador-lead-header-escuro {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+html.dark .gerador-lead-header-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  background: rgba(30, 58, 138, 0.4) !important;
+  border-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Filtros */
+html.dark .gerador-filtros-escuro {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Modo Escuro - Paginação */
+html.dark .gerador-paginacao-escuro {
+  border-color: hsl(var(--border)) !important;
+}
+
+html.dark .gerador-paginacao-escuro .bg-muted\/50 {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+}
+
 /* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
 html:not(.dark) .bg-green-100 {
   background-color: #dcfce7 !important;

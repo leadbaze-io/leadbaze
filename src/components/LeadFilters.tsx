@@ -51,32 +51,32 @@ export function LeadFilters({
   return (
     <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 p-4 sm:p-6 bg-muted/50 rounded-xl border border-border/50 ${className}`}>
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Buscar</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Buscar</Label>
         <Input
           placeholder="Nome ou endereço..."
           value={searchTerm}
           onChange={(e) => handleFilterChange(setSearchTerm, e.target.value)}
-          className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+          className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
         />
       </div>
       
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Cidade</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Cidade</Label>
         <Input
           placeholder="Filtrar por cidade..."
           value={cityFilter}
           onChange={(e) => handleFilterChange(setCityFilter, e.target.value)}
-          className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
+          className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
         />
       </div>
       
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Avaliação Mínima</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Avaliação Mínima</Label>
         <Select 
           value={ratingFilter} 
           onValueChange={(value) => handleFilterChange(setRatingFilter, value)}
         >
-          <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+          <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
             <SelectValue placeholder="Todas" />
           </SelectTrigger>
           <SelectContent className="bg-popover border border-border shadow-lg">
@@ -89,12 +89,12 @@ export function LeadFilters({
       </div>
       
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Avaliações</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Avaliações</Label>
         <Select 
           value={reviewsFilter} 
           onValueChange={(value) => handleFilterChange(setReviewsFilter, value)}
         >
-          <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+          <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
             <SelectValue placeholder="Todas" />
           </SelectTrigger>
           <SelectContent className="bg-popover border border-border shadow-lg">
@@ -110,12 +110,12 @@ export function LeadFilters({
       </div>
       
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Website</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Website</Label>
         <Select 
           value={websiteFilter} 
           onValueChange={(value) => handleFilterChange(setWebsiteFilter, value)}
         >
-          <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+          <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-popover border border-border shadow-lg">
@@ -127,12 +127,12 @@ export function LeadFilters({
       </div>
       
       <div className="space-y-2">
-        <Label className="text-sm font-semibold text-foreground">Leads por Página</Label>
+        <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Leads por Página</Label>
         <Select 
           value={leadsPerPage} 
           onValueChange={(value) => handleFilterChange(setLeadsPerPage, value)}
         >
-          <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+          <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-popover border border-border shadow-lg">

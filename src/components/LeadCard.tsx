@@ -66,16 +66,16 @@ export function LeadCard({
       transition={{ delay: index * 0.05 }}
       className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
         lead.selected 
-          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md card-selecionado-claro card-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
-          : 'border-gray-200 dark:border-border bg-card hover:border-blue-300 dark:hover:border-blue-200'
+          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md gerador-lead-selecionado-claro gerador-lead-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
+          : 'gerador-lead-card-claro gerador-lead-card-escuro hover:border-blue-300 dark:hover:border-blue-200'
       } ${className}`}
       onClick={handleClick}
     >
       {/* Header do Card */}
       <div className={`p-4 border-b-2 rounded-b-none ${
         lead.selected 
-          ? 'border-blue-200 dark:border-blue-700 card-header-selecionado-claro card-header-selecionado-escuro' 
-          : 'border-gray-200 dark:border-border bg-muted/30'
+          ? 'border-blue-200 dark:border-blue-700 gerador-lead-header-selecionado-claro gerador-lead-header-selecionado-escuro' 
+          : 'border-gray-200 dark:border-border gerador-lead-header-claro gerador-lead-header-escuro'
       }`}>
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center space-x-3">
@@ -104,14 +104,14 @@ export function LeadCard({
         </div>
         
         {/* Nome do estabelecimento */}
-        <h3 className="font-semibold disparador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
+        <h3 className="font-semibold gerador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
           {lead.name}
         </h3>
         
         {/* Endereço */}
         <div className="flex items-center space-x-2 text-muted-foreground">
           <MapPin className="w-4 h-4" />
-          <span className="text-sm disparador-texto-claro dark:text-muted-foreground">{lead.address}</span>
+          <span className="text-sm gerador-descricao-claro dark:text-muted-foreground">{lead.address}</span>
         </div>
       </div>
 
@@ -122,19 +122,19 @@ export function LeadCard({
           {lead.phone && (
             <div className="flex items-center space-x-2 text-sm">
               <Phone className="w-4 h-4 text-green-600" />
-              <span className="text-green-700 dark:text-green-300 font-medium disparador-texto-claro">{lead.phone}</span>
+              <span className="text-green-700 dark:text-green-300 font-medium gerador-texto-claro">{lead.phone}</span>
             </div>
           )}
           {lead.website && (
             <div className="flex items-center space-x-2 text-sm">
               <Globe className="w-4 h-4 text-blue-600" />
-              <span className="text-blue-700 dark:text-blue-300 font-medium disparador-texto-claro">Website disponível</span>
+              <span className="text-blue-700 dark:text-blue-300 font-medium gerador-texto-claro">Website disponível</span>
             </div>
           )}
           {!lead.phone && !lead.website && (
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Eye className="w-4 h-4" />
-              <span className="disparador-texto-claro dark:text-muted-foreground">Contato não disponível</span>
+              <span className="gerador-descricao-claro dark:text-muted-foreground">Contato não disponível</span>
             </div>
           )}
         </div>
