@@ -28,12 +28,13 @@ import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { useToast } from "../hooks/use-toast"
 import { LeadService } from "../lib/leadService"
-import { Loader2, Search, MapPin, Star, Phone, Globe, Save, Eye } from "lucide-react"
+import { Loader2, Search, MapPin, Save, Zap, Target, Users, CheckCircle } from "lucide-react"
 import { Label } from "./ui/label"
-import { Badge } from "./ui/badge"
 import type { Lead, LeadList } from "../types"
 import { motion, AnimatePresence } from "framer-motion"
 import SuccessModal from './SuccessModal'
+import { LeadCard } from './LeadCard'
+import { LeadFilters } from './LeadFilters'
 
 const urlFormSchema = z.object({
   searchUrl: z
@@ -420,610 +421,137 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     }
   }
 
-  const renderStars = (rating?: number) => {
-    if (!rating) return null
-    
-    return (
-      <div className="flex items-center space-x-1">
-        {Array.from({ length: 5 }, (_, i) => (
-          <Star
-            key={i}
-            className={`w-3 h-3 ${
-              i < Math.floor(rating) 
-                ? 'text-yellow-400 fill-current' 
-                : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className="text-xs disparador-texto-claro dark:text-gray-600 ml-1">{rating}</span>
-      </div>
-    )
-  }
-
-  const renderReviewsCount = (reviewsCount?: number) => {
-    // Sempre mostrar, mesmo quando não há avaliações
-    const count = reviewsCount || 0
-    
-    return (
-      <div className="flex items-center space-x-2">
-        <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 disparador-texto-claro">
-          {count}
-        </div>
-        <div className="text-xs disparador-texto-claro dark:text-muted-foreground">
-          Avaliações
-        </div>
-      </div>
-    )
-  }
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Formulário de Extração */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Search className="w-5 h-5" />
-            <span>Extrair Leads do Google Maps</span>
-          </CardTitle>
-          <CardDescription>
-            Cole o link de pesquisa do Google Maps e extraia leads qualificados
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...urlForm}>
-            <form
-              onSubmit={urlForm.handleSubmit(onUrlSubmit)}
-              className="flex flex-col space-y-4 sm:space-y-6"
-            >
-              <FormField
-                control={urlForm.control}
-                name="searchUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL de Pesquisa do Google Maps</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Cole aqui o link de pesquisa do Google Maps..."
-                        {...field}
-                        disabled={isGenerating}
-                        className="text-base"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-semibold">Quantidade de Leads</Label>
-                  <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
-                    <SelectTrigger className="h-11 border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover border border-border shadow-lg">
-                      <SelectItem value="10">10 Leads</SelectItem>
-                      <SelectItem value="20">20 Leads</SelectItem>
-                      <SelectItem value="30">30 Leads</SelectItem>
-                      <SelectItem value="40">40 Leads</SelectItem>
-                      <SelectItem value="50">50 Leads</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <motion.div
-                initial={{ scale: 1 }}
-                animate={{ 
-                  scale: isFormValid ? 1.02 : 1,
-                  boxShadow: isFormValid ? "0 10px 25px rgba(59, 130, 246, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)"
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                <Button
-                  type="submit"
-                  className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold ${
-                    isFormValid 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                  disabled={isGenerating || !isFormValid}
-                  size="lg"
-                >
-                  {isGenerating ? (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center"
-                    >
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Extraindo leads...
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center"
-                    >
-                      <Search className="mr-2 h-4 w-4" />
-                      {isFormValid ? '🚀 Iniciar Extração' : 'Preencha os campos acima'}
-                    </motion.div>
-                  )}
-                </Button>
-              </motion.div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-
-      {/* Lista de Leads Gerados */}
-      <AnimatePresence>
-        {generatedLeads.length > 0 && (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Section */}
+        <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6"
           >
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center space-x-2">
-                      <MapPin className="w-5 h-5" />
-                      <span>Leads Encontrados ({filteredLeads.length})</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Selecione os leads que deseja salvar
-                    </CardDescription>
-                  </div>
-                  <div className="flex justify-end">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={toggleSelectAll}
-                      className="text-xs"
-                    >
-                      {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Filtros */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 mt-4 p-4 sm:p-6 bg-muted/50 rounded-xl border border-border/50">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Buscar</Label>
-                    <Input
-                      placeholder="Nome ou endereço..."
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value)
-                        resetPagination()
-                      }}
-                      className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Cidade</Label>
-                    <Input
-                      placeholder="Filtrar por cidade..."
-                      value={cityFilter}
-                      onChange={(e) => {
-                        setCityFilter(e.target.value)
-                        resetPagination()
-                      }}
-                      className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Avaliação Mínima</Label>
-                    <Select 
-                      value={ratingFilter} 
-                      onValueChange={(value) => {
-                        setRatingFilter(value)
-                        resetPagination()
-                      }}
-                    >
-                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
-                        <SelectValue placeholder="Todas" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border shadow-lg">
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="4">4+ estrelas</SelectItem>
-                        <SelectItem value="3">3+ estrelas</SelectItem>
-                        <SelectItem value="2">2+ estrelas</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Avaliações</Label>
-                    <Select 
-                      value={reviewsFilter} 
-                      onValueChange={(value) => {
-                        setReviewsFilter(value)
-                        resetPagination()
-                      }}
-                    >
-                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
-                        <SelectValue placeholder="Todas" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border shadow-lg">
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="10">10+ Avaliações</SelectItem>
-                        <SelectItem value="25">25+ Avaliações</SelectItem>
-                        <SelectItem value="50">50+ Avaliações</SelectItem>
-                        <SelectItem value="100">100+ Avaliações</SelectItem>
-                        <SelectItem value="250">250+ Avaliações</SelectItem>
-                        <SelectItem value="500">500+ Avaliações</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Website</Label>
-                    <Select 
-                      value={websiteFilter} 
-                      onValueChange={(value) => {
-                        setWebsiteFilter(value)
-                        resetPagination()
-                      }}
-                    >
-                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border shadow-lg">
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="with">Com website</SelectItem>
-                        <SelectItem value="without">Sem website</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-sm font-semibold text-foreground">Leads por Página</Label>
-                    <Select 
-                      value={leadsPerPage} 
-                      onValueChange={(value) => {
-                        setLeadsPerPage(value)
-                        setCurrentPage(1)
-                      }}
-                    >
-                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border shadow-lg">
-                        <SelectItem value="9">9 leads</SelectItem>
-                         <SelectItem value="18">18 leads</SelectItem>
-                         <SelectItem value="27">27 leads</SelectItem>
-                         <SelectItem value="36">36 leads</SelectItem>
-                         <SelectItem value="45">45 leads</SelectItem>
-                       </SelectContent>
-                     </Select>
-                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {paginatedLeads.map((lead, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
-                        lead.selected 
-                          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md card-selecionado-claro card-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
-                          : 'border-gray-200 dark:border-border bg-card hover:border-blue-300 dark:hover:border-blue-200'
-                      }`}
-                      data-debug={`selected: ${lead.selected}, classes: ${lead.selected ? 'selected' : 'not-selected'}`}
-                      onClick={() => toggleLeadSelectionByFilteredIndex(index)}
-                    >
-                      {/* Header do Card */}
-                      <div className={`p-4 border-b-2 rounded-b-none ${
-                        lead.selected 
-                          ? 'border-blue-200 dark:border-blue-700 card-header-selecionado-claro card-header-selecionado-escuro' 
-                          : 'border-gray-200 dark:border-border bg-muted/30'
-                      }`}
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center space-x-3">
-                            <input
-                              type="checkbox"
-                              checked={lead.selected}
-                              onChange={() => toggleLeadSelectionByFilteredIndex(index)}
-                              onClick={(e) => e.stopPropagation()}
-                              className={`rounded w-4 h-4 focus:ring-2 focus:ring-blue-500 ${
-                                lead.selected 
-                                  ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white' 
-                                  : 'border-gray-300 text-blue-600 dark:border-gray-600'
-                              }`}
-                            />
-                            <div className="flex items-center space-x-2">
-                              {renderReviewsCount(lead.reviews_count)}
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            {renderStars(lead.rating)}
-                          </div>
-                        </div>
-                        
-                        {/* Nome do estabelecimento */}
-                        <h3 className="font-semibold disparador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
-                          {lead.name}
-                        </h3>
-                        
-                        {/* Endereço */}
-                        <div className="flex items-center space-x-2 text-muted-foreground">
-                          <MapPin className="w-4 h-4" />
-                          <span className="text-sm disparador-texto-claro dark:text-muted-foreground">{lead.address}</span>
-                        </div>
-                      </div>
-
-                      {/* Conteúdo do Card */}
-                      <div className="p-4 space-y-3">
-                        {/* Informações de contato */}
-                        <div className="space-y-2">
-                          {lead.phone && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Phone className="w-4 h-4 text-green-600" />
-                              <span className="text-green-700 dark:text-green-300 font-medium disparador-texto-claro">{lead.phone}</span>
-                            </div>
-                          )}
-                          {lead.website && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Globe className="w-4 h-4 text-blue-600" />
-                              <span className="text-blue-700 dark:text-blue-300 font-medium disparador-texto-claro">Website disponível</span>
-                            </div>
-                          )}
-                          {!lead.phone && !lead.website && (
-                            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                              <Eye className="w-4 h-4" />
-                              <span className="disparador-texto-claro dark:text-muted-foreground">Contato não disponível</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Badges Profissionais - Máximo 3 por card */}
-                        <div className="flex flex-wrap gap-2 pt-2">
-                          {/* Badge de Qualidade (Baseado na avaliação) */}
-                          {lead.rating && lead.rating >= 4.5 && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 font-medium">
-                              ⭐ Alta Qualidade
-                            </Badge>
-                          )}
-                          {lead.rating && lead.rating >= 4 && lead.rating < 4.5 && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
-                              ⭐ Boa Qualidade
-                            </Badge>
-                          )}
-                          
-                          {/* Badge de Reputação (Baseado no número de avaliações) */}
-                                                     {lead.reviews_count && lead.reviews_count >= 500 && (
-                             <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-600 dark:text-white dark:border-purple-500 font-medium">
-                               🏆 Estabelecido
-                             </Badge>
-                           )}
-                          {lead.reviews_count && lead.reviews_count >= 100 && lead.reviews_count < 500 && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 font-medium">
-                              🔥 Consolidado
-                            </Badge>
-                          )}
-                          {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
-                              📈 Em Crescimento
-                            </Badge>
-                          )}
-                          
-                          {/* Badge de Contato (Baseado na disponibilidade de informações) */}
-                          {lead.phone && lead.website && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300 dark:border-cyan-800 font-medium">
-                              🌐 Contato Completo
-                            </Badge>
-                          )}
-                          
-                          {!lead.phone && lead.website && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
-                              🌐 Online
-                            </Badge>
-                          )}
-                          {!lead.phone && !lead.website && (
-                            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800 font-medium">
-                              📋 Informações Básicas
-                            </Badge>
-                          )}
-                        </div>
-
-
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Paginação */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t">
-                    <div className="text-sm disparador-texto-claro dark:text-muted-foreground">
-                      Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                      >
-                        Anterior
-                      </Button>
-                      <span className="flex items-center px-3 text-sm disparador-texto-claro dark:text-foreground">
-                        Página {currentPage} de {totalPages}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                      >
-                        Próxima
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
+              <Target className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              Gerador de Leads
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Extraia leads qualificados do Google Maps de forma rápida e eficiente
+            </p>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
 
-      {/* Opções de Salvamento */}
-      <AnimatePresence>
-        {generatedLeads.length > 0 && showSaveOptions && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle>Salvar Leads Selecionados</CardTitle>
-                <CardDescription>
-                  {getSelectedLeads().length} leads selecionados
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
-                  <div className="flex space-x-4">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="saveMode"
-                        checked={saveMode === 'new'}
-                        onChange={() => {
-                          setSaveMode('new')
-                          setShowDuplicateInfo(false)
-                          setNewLeads([])
-                          setDuplicateLeads([])
-                        }}
-                      />
-                      <span className="disparador-texto-claro dark:text-foreground">Criar nova lista</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="saveMode"
-                        checked={saveMode === 'existing'}
-                        onChange={() => {
-                          setSaveMode('existing')
-                          setShowDuplicateInfo(false)
-                          setNewLeads([])
-                          setDuplicateLeads([])
-                        }}
-                        disabled={existingLists.length === 0}
-                      />
-                      <span className="disparador-texto-claro dark:text-foreground">Adicionar à lista existente</span>
-                    </label>
-                  </div>
-
-                  {saveMode === 'new' && (
-                    <Input
-                      placeholder="Nome da nova lista"
-                      value={newListName}
-                      onChange={(e) => setNewListName(e.target.value)}
-                    />
-                  )}
-
-                  {saveMode === 'existing' && (
+        {/* Formulário de Extração */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-8"
+        >
+          <Card className="border-0 shadow-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+            <CardHeader className="text-center pb-6">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                  <Search className="w-6 h-6 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold">Extrair Leads do Google Maps</CardTitle>
+              </div>
+              <CardDescription className="text-lg">
+                Cole o link de pesquisa do Google Maps e configure a quantidade de leads desejada
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-8 pb-8">
+              <Form {...urlForm}>
+                <form
+                  onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                  className="space-y-6"
+                >
+                  <FormField
+                    control={urlForm.control}
+                    name="searchUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-semibold flex items-center space-x-2">
+                          <MapPin className="w-4 h-4" />
+                          <span>URL de Pesquisa do Google Maps</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="https://www.google.com/maps/search/..."
+                            {...field}
+                            disabled={isGenerating}
+                            className="h-12 text-base border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Select value={selectedListId} onValueChange={handleListSelection}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione uma lista..." />
+                      <Label className="text-base font-semibold flex items-center space-x-2">
+                        <Users className="w-4 h-4" />
+                        <span>Quantidade de Leads</span>
+                      </Label>
+                      <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
+                        <SelectTrigger className="h-12 border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                          <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                         <SelectContent className="bg-popover border border-border shadow-lg">
-                          {existingLists.map((list) => (
-                            <SelectItem key={list.id} value={list.id}>
-                              {list.name} ({list.total_leads} leads)
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="10">10 Leads</SelectItem>
+                          <SelectItem value="20">20 Leads</SelectItem>
+                          <SelectItem value="30">30 Leads</SelectItem>
+                          <SelectItem value="40">40 Leads</SelectItem>
+                          <SelectItem value="50">50 Leads</SelectItem>
                         </SelectContent>
                       </Select>
-
-                      {/* Feedback de Duplicatas */}
-                      {showDuplicateInfo && selectedListId && (
-                        <div className="space-y-2">
-                          {newLeads.length > 0 && (
-                            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                <span className="text-green-800 text-sm font-medium">
-                                  ✅ {newLeads.length} leads novos serão adicionados
-                                </span>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {duplicateLeads.length > 0 && (
-                            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                <span className="text-yellow-800 text-sm font-medium">
-                                  ⚠️ {duplicateLeads.length} leads duplicados serão ignorados
-                                </span>
-                              </div>
-                              <div className="mt-2 text-xs text-yellow-700">
-                                <p>Leads duplicados encontrados:</p>
-                                <div className="mt-1 space-y-1">
-                                  {duplicateLeads.slice(0, 3).map((lead, index) => (
-                                    <div key={index} className="flex items-center space-x-2">
-                                      <span>• {lead.name}</span>
-                                      {lead.phone && <span className="text-yellow-600">({lead.phone})</span>}
-                                    </div>
-                                  ))}
-                                  {duplicateLeads.length > 3 && (
-                                    <span className="text-yellow-600">
-                                      ... e mais {duplicateLeads.length - 3} leads
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </div>
-                  )}
-                </div>
+                    
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold flex items-center space-x-2">
+                        <Zap className="w-4 h-4" />
+                        <span>Status</span>
+                      </Label>
+                      <div className="h-12 flex items-center px-4 bg-muted/50 rounded-lg border-2 border-dashed">
+                        <span className="text-sm text-muted-foreground">
+                          {isGenerating ? "Extraindo leads..." : "Pronto para extrair"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="flex space-x-3">
                   <motion.div
                     initial={{ scale: 1 }}
                     animate={{ 
-                      scale: getSelectedLeads().length > 0 ? 1.02 : 1,
-                      boxShadow: getSelectedLeads().length > 0 ? "0 10px 25px rgba(34, 197, 94, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)"
+                      scale: isFormValid ? 1.02 : 1,
+                      boxShadow: isFormValid ? "0 20px 40px rgba(59, 130, 246, 0.3)" : "0 4px 12px rgba(0, 0, 0, 0.1)"
                     }}
                     transition={{ duration: 0.3 }}
-                    className="flex-1"
+                    className="pt-4"
                   >
                     <Button
-                      onClick={handleSaveLeads}
-                      disabled={isSaving || getSelectedLeads().length === 0}
-                      className={`w-full transition-all duration-300 ${
-                        getSelectedLeads().length > 0 
-                          ? 'bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
+                      type="submit"
+                      className={`w-full h-14 transition-all duration-300 text-lg font-semibold rounded-xl ${
+                        isFormValid 
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
+                      disabled={isGenerating || !isFormValid}
                       size="lg"
                     >
-                      {isSaving ? (
+                      {isGenerating ? (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           className="flex items-center"
                         >
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Salvando...
+                          <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                          Extraindo leads...
                         </motion.div>
                       ) : (
                         <motion.div
@@ -1031,40 +559,359 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           animate={{ opacity: 1 }}
                           className="flex items-center"
                         >
-                          <Save className="mr-2 h-4 w-4" />
-                          {getSelectedLeads().length > 0 ? `💾 Salvar ${getSelectedLeads().length} leads` : 'Selecione leads para salvar'}
+                          <Search className="mr-3 h-5 w-5" />
+                          {isFormValid ? '🚀 Iniciar Extração' : 'Preencha os campos acima'}
                         </motion.div>
                       )}
                     </Button>
                   </motion.div>
-                  
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowSaveOptions(false)
-                      setGeneratedLeads([])
-                    }}
-                  >
-                    Cancelar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-      {/* Modal de Sucesso */}
-      {successData && (
-        <SuccessModal
-          isOpen={showSuccessModal}
-          onClose={handleCloseSuccessModal}
-          onGoToDashboard={handleGoToDashboard}
-          listName={successData.listName}
-          leadsCount={successData.leadsCount}
-          isNewList={successData.isNewList}
-        />
-      )}
+        {/* Lista de Leads Gerados */}
+        <AnimatePresence>
+          {generatedLeads.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mb-8"
+            >
+              <Card className="border-0 shadow-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                <CardHeader className="text-center pb-6">
+                  <div className="flex items-center justify-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-6 h-6 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold">
+                      Leads Encontrados ({filteredLeads.length})
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="text-lg">
+                    Selecione os leads que deseja salvar em sua lista
+                  </CardDescription>
+                  
+                  {/* Botão Selecionar Todos */}
+                  <div className="flex justify-center mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={toggleSelectAll}
+                      className="border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950"
+                    >
+                      {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
+                    </Button>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="px-8">
+                  {/* Filtros */}
+                  <LeadFilters
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    cityFilter={cityFilter}
+                    setCityFilter={setCityFilter}
+                    ratingFilter={ratingFilter}
+                    setRatingFilter={setRatingFilter}
+                    reviewsFilter={reviewsFilter}
+                    setReviewsFilter={setReviewsFilter}
+                    websiteFilter={websiteFilter}
+                    setWebsiteFilter={setWebsiteFilter}
+                    leadsPerPage={leadsPerPage}
+                    setLeadsPerPage={setLeadsPerPage}
+                    onFilterChange={resetPagination}
+                    className="mb-8"
+                  />
+
+                  {/* Grid de Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {paginatedLeads.map((lead, index) => (
+                      <LeadCard
+                        key={index}
+                        lead={lead}
+                        index={index}
+                        onToggleSelection={toggleLeadSelectionByFilteredIndex}
+                        showCheckbox={true}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Paginação */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between mt-8 pt-6 border-t border-border/50">
+                      <div className="text-sm text-muted-foreground">
+                        Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className="border-2"
+                        >
+                          Anterior
+                        </Button>
+                        <span className="flex items-center px-4 py-2 text-sm font-medium text-foreground bg-muted/50 rounded-lg">
+                          Página {currentPage} de {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages}
+                          className="border-2"
+                        >
+                          Próxima
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Opções de Salvamento */}
+        <AnimatePresence>
+          {generatedLeads.length > 0 && showSaveOptions && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mb-8"
+            >
+              <Card className="border-0 shadow-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                <CardHeader className="text-center pb-6">
+                  <div className="flex items-center justify-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                      <Save className="w-6 h-6 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold">Salvar Leads Selecionados</CardTitle>
+                  </div>
+                  <CardDescription className="text-lg">
+                    {getSelectedLeads().length} leads selecionados para salvar
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="px-8 pb-8">
+                  <div className="space-y-6">
+                    {/* Opções de Salvamento */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                          saveMode === 'new' 
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
+                            : 'border-border hover:border-blue-300'
+                        }`}>
+                          <input
+                            type="radio"
+                            name="saveMode"
+                            checked={saveMode === 'new'}
+                            onChange={() => {
+                              setSaveMode('new')
+                              setShowDuplicateInfo(false)
+                              setNewLeads([])
+                              setDuplicateLeads([])
+                            }}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                              <Users className="w-4 h-4 text-blue-600 dark:text-blue-300" />
+                            </div>
+                            <span className="font-medium text-foreground">Criar nova lista</span>
+                          </div>
+                        </label>
+                        
+                        <label className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                          saveMode === 'existing' 
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
+                            : 'border-border hover:border-blue-300'
+                        } ${existingLists.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                          <input
+                            type="radio"
+                            name="saveMode"
+                            checked={saveMode === 'existing'}
+                            onChange={() => {
+                              setSaveMode('existing')
+                              setShowDuplicateInfo(false)
+                              setNewLeads([])
+                              setDuplicateLeads([])
+                            }}
+                            disabled={existingLists.length === 0}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                              <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-300" />
+                            </div>
+                            <span className="font-medium text-foreground">Adicionar à lista existente</span>
+                          </div>
+                        </label>
+                      </div>
+
+                      {saveMode === 'new' && (
+                        <div className="space-y-3">
+                          <Label className="text-base font-semibold flex items-center space-x-2">
+                            <Users className="w-4 h-4" />
+                            <span>Nome da Nova Lista</span>
+                          </Label>
+                          <Input
+                            placeholder="Ex: Restaurantes em São Paulo"
+                            value={newListName}
+                            onChange={(e) => setNewListName(e.target.value)}
+                            className="h-12 text-base border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                          />
+                        </div>
+                      )}
+
+                      {saveMode === 'existing' && (
+                        <div className="space-y-4">
+                          <div className="space-y-3">
+                            <Label className="text-base font-semibold flex items-center space-x-2">
+                              <CheckCircle className="w-4 h-4" />
+                              <span>Selecionar Lista Existente</span>
+                            </Label>
+                            <Select value={selectedListId} onValueChange={handleListSelection}>
+                              <SelectTrigger className="h-12 border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                <SelectValue placeholder="Selecione uma lista..." />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border border-border shadow-lg">
+                                {existingLists.map((list) => (
+                                  <SelectItem key={list.id} value={list.id}>
+                                    {list.name} ({list.total_leads} leads)
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Feedback de Duplicatas */}
+                          {showDuplicateInfo && selectedListId && (
+                            <div className="space-y-3">
+                              {newLeads.length > 0 && (
+                                <div className="p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-xl">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <span className="text-green-800 dark:text-green-200 font-medium">
+                                      ✅ {newLeads.length} leads novos serão adicionados
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {duplicateLeads.length > 0 && (
+                                <div className="p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+                                  <div className="flex items-center space-x-3 mb-3">
+                                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                    <span className="text-yellow-800 dark:text-yellow-200 font-medium">
+                                      ⚠️ {duplicateLeads.length} leads duplicados serão ignorados
+                                    </span>
+                                  </div>
+                                  <div className="text-sm text-yellow-700 dark:text-yellow-300">
+                                    <p className="font-medium mb-2">Leads duplicados encontrados:</p>
+                                    <div className="space-y-1">
+                                      {duplicateLeads.slice(0, 3).map((lead, index) => (
+                                        <div key={index} className="flex items-center space-x-2">
+                                          <span>• {lead.name}</span>
+                                          {lead.phone && <span className="text-yellow-600 dark:text-yellow-400">({lead.phone})</span>}
+                                        </div>
+                                      ))}
+                                      {duplicateLeads.length > 3 && (
+                                        <span className="text-yellow-600 dark:text-yellow-400">
+                                          ... e mais {duplicateLeads.length - 3} leads
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Botões de Ação */}
+                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                      <motion.div
+                        initial={{ scale: 1 }}
+                        animate={{ 
+                          scale: getSelectedLeads().length > 0 ? 1.02 : 1,
+                          boxShadow: getSelectedLeads().length > 0 ? "0 20px 40px rgba(34, 197, 94, 0.3)" : "0 4px 12px rgba(0, 0, 0, 0.1)"
+                        }}
+                        transition={{ duration: 0.3 }}
+                        className="flex-1"
+                      >
+                        <Button
+                          onClick={handleSaveLeads}
+                          disabled={isSaving || getSelectedLeads().length === 0}
+                          className={`w-full h-14 transition-all duration-300 text-lg font-semibold rounded-xl ${
+                            getSelectedLeads().length > 0 
+                              ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
+                              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          }`}
+                          size="lg"
+                        >
+                          {isSaving ? (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="flex items-center"
+                            >
+                              <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                              Salvando...
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="flex items-center"
+                            >
+                              <Save className="mr-3 h-5 w-5" />
+                              {getSelectedLeads().length > 0 ? `💾 Salvar ${getSelectedLeads().length} leads` : 'Selecione leads para salvar'}
+                            </motion.div>
+                          )}
+                        </Button>
+                      </motion.div>
+                      
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowSaveOptions(false)
+                          setGeneratedLeads([])
+                        }}
+                        className="h-14 border-2 hover:bg-muted/50"
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Modal de Sucesso */}
+        {successData && (
+          <SuccessModal
+            isOpen={showSuccessModal}
+            onClose={handleCloseSuccessModal}
+            onGoToDashboard={handleGoToDashboard}
+            listName={successData.listName}
+            leadsCount={successData.leadsCount}
+            isNewList={successData.isNewList}
+          />
+        )}
+      </div>
     </div>
   )
 }
