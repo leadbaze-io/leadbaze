@@ -8,6 +8,7 @@ import {
   Clock, 
   Users, 
   Minimize2, 
+  Maximize2,
   TrendingUp,
   Timer
 } from 'lucide-react'
@@ -147,6 +148,112 @@ export default function CampaignProgressModalV2({
 
   if (!isVisible) return null
 
+  // Mini Player Flutuante (quando minimizado)
+  if (isMinimized) {
+    return (
+      <motion.div
+        initial={{ x: 400, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 400, opacity: 0 }}
+        transition={{ type: "spring", duration: 0.5 }}
+        className="fixed top-4 right-4 z-50"
+      >
+        <div className={`
+          flex items-center space-x-3 p-3 rounded-xl border shadow-lg backdrop-blur-sm
+          ${isDark 
+            ? 'bg-gray-900/95 border-gray-700 text-white' 
+            : 'bg-white/95 border-gray-200 text-gray-900'
+          }
+        `}>
+          {/* Status Icon */}
+          <div className={`
+            w-8 h-8 rounded-lg flex items-center justify-center
+            ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+              statusInfo.color === 'green' ? 'bg-green-500' :
+              statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
+            }
+          `}>
+            {statusInfo.icon}
+          </div>
+
+          {/* Progress Info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">
+              {campaignName}
+            </p>
+            <div className="flex items-center space-x-2">
+              <div className={`
+                w-16 h-1.5 rounded-full overflow-hidden
+                ${isDark ? 'bg-gray-700' : 'bg-gray-200'}
+              `}>
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${statusInfo.progress}%` }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className={`
+                    h-full rounded-full
+                    ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                      statusInfo.color === 'green' ? 'bg-green-500' :
+                      statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
+                    }
+                  `}
+                />
+              </div>
+              <span className={`
+                text-xs font-medium
+                ${isDark ? 'text-gray-400' : 'text-gray-600'}
+              `}>
+                {statusInfo.progress}%
+              </span>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center space-x-2 text-xs">
+            <span className={`
+              ${isDark ? 'text-gray-400' : 'text-gray-600'}
+            `}>
+              {successCount}/{totalLeads}
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onExpand}
+              className={`
+                w-7 h-7 p-0
+                ${isDark 
+                  ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                  : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
+                }
+              `}
+            >
+              <Maximize2 className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className={`
+                w-7 h-7 p-0
+                ${isDark 
+                  ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                  : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
+                }
+              `}
+            >
+              <X className="w-3 h-3" />
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    )
+  }
+
+  // Modal Completo (quando expandido)
   return (
     <AnimatePresence>
       <motion.div
@@ -176,8 +283,7 @@ export default function CampaignProgressModalV2({
               ? 'bg-gray-900 border-gray-700 text-white' 
               : 'bg-white border-gray-200 text-gray-900'
             }
-            rounded-2xl border shadow-2xl
-            ${isMinimized ? 'max-h-20 overflow-hidden' : 'max-h-[90vh] overflow-y-auto'}
+            rounded-2xl border shadow-2xl max-h-[90vh] overflow-y-auto
           `}
         >
           {/* Header */}
@@ -212,13 +318,14 @@ export default function CampaignProgressModalV2({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={isMinimized ? onExpand : onMinimize}
+                onClick={onMinimize}
                 className={`
                   ${isDark 
                     ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
                     : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
                   }
                 `}
+                title="Minimizar para canto da tela"
               >
                 <Minimize2 className="w-4 h-4" />
               </Button>
@@ -232,6 +339,7 @@ export default function CampaignProgressModalV2({
                     : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
                   }
                 `}
+                title="Fechar campanha"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -239,8 +347,7 @@ export default function CampaignProgressModalV2({
           </div>
 
           {/* Content */}
-          {!isMinimized && (
-            <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6">
               {/* Progress Bar */}
               {statusInfo.showProgress && (
                 <div className="space-y-2">
@@ -512,8 +619,7 @@ export default function CampaignProgressModalV2({
                   </div>
                 </motion.div>
               )}
-            </div>
-          )}
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
