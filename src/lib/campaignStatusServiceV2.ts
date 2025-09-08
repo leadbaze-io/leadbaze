@@ -157,7 +157,7 @@ export class CampaignStatusServiceV2 {
             console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onProgress:', error);
-            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error.stack);
+            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
         } else if (data.type === 'complete') {
           console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
@@ -171,7 +171,7 @@ export class CampaignStatusServiceV2 {
             console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado com sucesso');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
-            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error.stack);
+            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
         }
       } catch (error) {
