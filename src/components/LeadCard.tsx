@@ -139,53 +139,61 @@ export function LeadCard({
           )}
         </div>
 
-        {/* Badges Profissionais - Máximo 3 por card */}
-        <div className="flex flex-wrap gap-2 pt-2">
+        {/* Badges Premium - Máximo 3 por card */}
+        <div className="flex flex-wrap gap-2 pt-3">
           {/* Badge de Qualidade (Baseado na avaliação) */}
           {lead.rating && lead.rating >= 4.5 && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg border border-emerald-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
               ⭐ Alta Qualidade
-            </Badge>
+            </div>
           )}
           {lead.rating && lead.rating >= 4 && lead.rating < 4.5 && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border border-blue-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               ⭐ Boa Qualidade
-            </Badge>
+            </div>
           )}
           
           {/* Badge de Reputação (Baseado no número de avaliações) */}
           {lead.reviews_count && lead.reviews_count >= 500 && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-600 dark:text-white dark:border-purple-500 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border border-purple-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               🏆 Estabelecido
-            </Badge>
+            </div>
           )}
           {lead.reviews_count && lead.reviews_count >= 100 && lead.reviews_count < 500 && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg border border-amber-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               🔥 Consolidado
-            </Badge>
+            </div>
           )}
           {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg border border-indigo-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               📈 Em Crescimento
-            </Badge>
+            </div>
           )}
           
           {/* Badge de Contato (Baseado na disponibilidade de informações) */}
           {lead.phone && lead.website && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300 dark:border-cyan-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-lg border border-cyan-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               🌐 Contato Completo
-            </Badge>
+            </div>
           )}
           
           {!lead.phone && lead.website && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-sky-500 to-sky-600 text-white shadow-lg border border-sky-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               🌐 Online
-            </Badge>
+            </div>
           )}
           {!lead.phone && !lead.website && (
-            <Badge variant="secondary" className="text-xs px-3 py-1.5 bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800 font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-slate-500 to-slate-600 text-white shadow-lg border border-slate-400/20">
+              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               📋 Informações Básicas
-            </Badge>
+            </div>
           )}
         </div>
       </div>
