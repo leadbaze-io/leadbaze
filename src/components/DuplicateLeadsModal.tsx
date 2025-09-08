@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, MapPin, Calendar, Users, AlertTriangle, CheckCircle } from 'lucide-react'
+import { X, Phone, MapPin, Calendar, AlertTriangle, CheckCircle } from 'lucide-react'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
