@@ -26,3 +26,5 @@ SELECT
 FROM public.lead_lists 
 WHERE name = 'Teste Disparo';
 
+
+

@@ -29,3 +29,5 @@ console.log('\n📏 Tamanho do conteúdo:', formatted.content.length, 'caractere
 console.log('📝 Excerpt:', formatted.excerpt);
 
 
+
+

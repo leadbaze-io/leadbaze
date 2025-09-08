@@ -67,3 +67,5 @@ WHERE event_object_table = 'n8n_blog_queue';
 -- VALUES ('Teste Trigger', 'Conteúdo de teste', 'Automação de Vendas', CURRENT_DATE, 'Sistema', false);
 
 
+
+

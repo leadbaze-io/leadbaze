@@ -10,56 +10,57 @@ import {
   MessageSquare,
   TrendingDown,
   Clock,
-  Zap
+  Zap,
+  BarChart3,
+  Activity
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
+import { getRealAnalyticsData, getConversionMetrics, type RealAnalyticsData } from '../../lib/analyticsService'
+import { getAdvancedAnalyticsData, type AdvancedAnalyticsData } from '../../lib/advancedAnalyticsService'
+import { getCurrentUser } from '../../lib/supabaseClient'
+import InsightsPanel from './InsightsPanel'
+import TemporalAnalysis from './TemporalAnalysis'
+import LeadQualityAnalysis from './LeadQualityAnalysis'
 import type { LeadList } from '../../types'
 
-interface AnalyticsData {
-  totalLeads: number
-  totalLists: number
-  messagesSent: number
-  conversionRate: number
-  growthRate: number
-  averageRating: number
-  topCategories: Array<{ name: string; count: number; percentage: number }>
-  recentActivity: Array<{ 
-    id: string
-    type: 'lead_generated' | 'list_created' | 'message_sent'
-    description: string
-    timestamp: string
-    count?: number
-  }>
-  chartData: {
-    leadsOverTime: Array<{ date: string; count: number }>
-    categoryDistribution: Array<{ category: string; count: number; color: string }>
-  }
-}
+// Usando a interface do analyticsService
+type AnalyticsData = RealAnalyticsData
 
 export default function AnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+  const [advancedAnalytics, setAdvancedAnalytics] = useState<AdvancedAnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
+  const [activeTab, setActiveTab] = useState<'overview' | 'temporal' | 'quality' | 'insights'>('overview')
   
   const { data: leadLists, isLoading: listsLoading } = useLeadLists()
 
-  // Simular carregamento de analytics
+  // Carregar dados reais de analytics
   useEffect(() => {
     const loadAnalytics = async () => {
       setIsLoading(true)
       
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      if (leadLists) {
-        const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
-        setAnalytics(mockAnalytics)
+      try {
+        const [realAnalytics, advancedData] = await Promise.all([
+          getRealAnalyticsData(timeRange),
+          getAdvancedAnalyticsData(timeRange)
+        ])
+        setAnalytics(realAnalytics)
+        setAdvancedAnalytics(advancedData)
         setLastUpdated(new Date())
+      } catch (error) {
+        console.error('Erro ao carregar analytics:', error)
+        // Em caso de erro, usar dados básicos das listas
+        if (leadLists) {
+          const fallbackAnalytics = generateFallbackAnalytics(leadLists, timeRange)
+          setAnalytics(fallbackAnalytics)
+          setLastUpdated(new Date())
+        }
       }
       
       setIsLoading(false)
@@ -70,16 +71,28 @@ export default function AnalyticsDashboard() {
     }
   }, [leadLists, timeRange, listsLoading])
 
-  const refreshData = () => {
+  const refreshData = async () => {
     setIsLoading(true)
-    setTimeout(() => {
+    
+    try {
+      const [realAnalytics, advancedData] = await Promise.all([
+        getRealAnalyticsData(timeRange),
+        getAdvancedAnalyticsData(timeRange)
+      ])
+      setAnalytics(realAnalytics)
+      setAdvancedAnalytics(advancedData)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error('Erro ao atualizar analytics:', error)
+      // Em caso de erro, usar dados básicos das listas
       if (leadLists) {
-        const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
-        setAnalytics(mockAnalytics)
+        const fallbackAnalytics = generateFallbackAnalytics(leadLists, timeRange)
+        setAnalytics(fallbackAnalytics)
         setLastUpdated(new Date())
       }
-      setIsLoading(false)
-    }, 1000)
+    }
+    
+    setIsLoading(false)
   }
 
   if (isLoading || !analytics) {
@@ -148,8 +161,8 @@ export default function AnalyticsDashboard() {
         <MetricCard
           title="Total de Leads"
           value={analytics.totalLeads.toLocaleString()}
-          change={`+${analytics.growthRate}%`}
-          trend="up"
+          change={`${analytics.growthRate >= 0 ? '+' : ''}${analytics.growthRate}%`}
+          trend={analytics.growthRate >= 0 ? "up" : "down"}
           icon={Users}
           color="blue"
         />
@@ -157,27 +170,27 @@ export default function AnalyticsDashboard() {
         <MetricCard
           title="Listas Criadas"
           value={analytics.totalLists.toString()}
-          change="+12%"
+          change={`${analytics.totalLists > 0 ? '+' : ''}${analytics.totalLists}`}
           trend="up"
           icon={FolderPlus}
           color="green"
         />
         
         <MetricCard
-          title="Mensagens Enviadas"
-          value={analytics.messagesSent.toLocaleString()}
-          change="+8%"
+          title="Campanhas Enviadas"
+          value={analytics.totalCampaigns.toString()}
+          change={`${analytics.totalCampaigns > 0 ? '+' : ''}${analytics.totalCampaigns}`}
           trend="up"
-          icon={MessageSquare}
+          icon={BarChart3}
           color="purple"
         />
         
         <MetricCard
-          title="Taxa de Conversão"
+          title="Taxa de Entrega"
           value={`${analytics.conversionRate}%`}
-          change="+2.1%"
-          trend="up"
-          icon={TrendingDown}
+          change={`${analytics.conversionRate > 0 ? '+' : ''}${analytics.conversionRate}%`}
+          trend={analytics.conversionRate > 0 ? "up" : "down"}
+          icon={TrendingUp}
           color="orange"
         />
       </div>
@@ -213,25 +226,50 @@ export default function AnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {analytics.topCategories.map((category, index) => (
-                <div key={category.name} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div 
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: analytics.chartData.categoryDistribution[index]?.color || '#3B82F6' }}
-                    />
-                    <span className="text-sm font-medium">{category.name}</span>
+              {analytics.topCategories.length > 0 ? (
+                analytics.topCategories.map((category, index) => (
+                  <div key={category.name} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div 
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: analytics.chartData.categoryDistribution[index]?.color || '#3B82F6' }}
+                      />
+                      <span className="text-sm font-medium">{category.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-semibold">{category.count}</div>
+                      <div className="text-xs text-gray-500">{category.percentage}%</div>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">{category.count}</div>
-                    <div className="text-xs text-gray-500">{category.percentage}%</div>
-                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-muted-foreground">
+                  <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Nenhuma categoria encontrada</p>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Campaigns Performance */}
+      {analytics.totalCampaigns > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Activity className="w-5 h-5 text-purple-600" />
+              <span>Performance das Campanhas</span>
+            </CardTitle>
+            <CardDescription>
+              Taxa de entrega e mensagens enviadas
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CampaignsChart data={analytics.chartData.campaignsOverTime} />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recent Activity */}
       <Card>
@@ -294,6 +332,72 @@ export default function AnalyticsDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Tabs para Análises Avançadas */}
+      <div className="space-y-6">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={activeTab === 'overview' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveTab('overview')}
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Visão Geral
+          </Button>
+          <Button
+            variant={activeTab === 'temporal' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveTab('temporal')}
+          >
+            <Clock className="w-4 h-4 mr-2" />
+            Análise Temporal
+          </Button>
+          <Button
+            variant={activeTab === 'quality' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveTab('quality')}
+          >
+            <Target className="w-4 h-4 mr-2" />
+            Qualidade de Leads
+          </Button>
+          <Button
+            variant={activeTab === 'insights' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setActiveTab('insights')}
+          >
+            <Bell className="w-4 h-4 mr-2" />
+            Insights
+          </Button>
+        </div>
+
+        {/* Conteúdo das Tabs */}
+        {activeTab === 'temporal' && advancedAnalytics && (
+          <TemporalAnalysis
+            hourlyPerformance={advancedAnalytics.chartData.hourlyPerformance}
+            bestSendingHours={advancedAnalytics.bestSendingHours}
+            bestSendingDays={advancedAnalytics.bestSendingDays}
+          />
+        )}
+
+        {activeTab === 'quality' && leadLists && (
+          <LeadQualityAnalysis
+            leads={leadLists.flatMap(list => list.leads || [])}
+            onQualityCalculated={(scores) => {
+              console.log('Scores de qualidade calculados:', scores)
+            }}
+          />
+        )}
+
+        {activeTab === 'insights' && advancedAnalytics && (
+          <InsightsPanel
+            insights={advancedAnalytics.insights}
+            onInsightRead={(insightId) => {
+              console.log('Insight marcado como lido:', insightId)
+            }}
+            onRefresh={refreshData}
+          />
+        )}
+      </div>
     </div>
   )
 }
@@ -378,14 +482,16 @@ function getActivityIcon(type: string) {
       return <Users className="w-4 h-4 text-white" />
     case 'list_created':
       return <FolderPlus className="w-4 h-4 text-white" />
-    case 'message_sent':
+    case 'campaign_sent':
       return <MessageSquare className="w-4 h-4 text-white" />
+    case 'campaign_completed':
+      return <BarChart3 className="w-4 h-4 text-white" />
     default:
       return <Zap className="w-4 h-4 text-white" />
   }
 }
 
-function generateMockAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
+function generateFallbackAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
   const totalLeads = leadLists.reduce((sum, list) => sum + (list.total_leads || 0), 0)
   const totalLists = leadLists.length
 
@@ -396,64 +502,100 @@ function generateMockAnalytics(leadLists: LeadList[], timeRange: string): Analyt
     date.setDate(date.getDate() - (days - 1 - i))
     return {
       date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      count: Math.floor(Math.random() * 50) + 10
+      count: Math.floor(Math.random() * 10) + 1
     }
   })
 
-  // Generate category distribution
-  const categories = ['Restaurantes', 'Clínicas', 'Lojas', 'Escritórios', 'Academias']
-  const colors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444']
-  
-  const topCategories = categories.map((name) => {
-    const count = Math.floor(Math.random() * 100) + 20
-    return {
+  // Generate category distribution from actual leads
+  const allLeads = leadLists.flatMap(list => list.leads || [])
+  const categoryCounts: Record<string, number> = {}
+  allLeads.forEach(lead => {
+    if (lead.business_type) {
+      categoryCounts[lead.business_type] = (categoryCounts[lead.business_type] || 0) + 1
+    }
+  })
+
+  const topCategories = Object.entries(categoryCounts)
+    .map(([name, count]) => ({
       name,
       count,
-      percentage: Math.round((count / totalLeads) * 100)
+      percentage: totalLeads > 0 ? Math.round((count / totalLeads) * 100) : 0
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+
+  const colors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444']
+  const categoryDistribution = topCategories.map((category, index) => ({
+    category: category.name,
+    count: category.count,
+    color: colors[index % colors.length]
+  }))
+
+  // Generate campaigns data
+  const campaignsOverTime = Array.from({ length: days }, (_, i) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (days - 1 - i))
+    return {
+      date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+      count: 0,
+      success: 0,
+      failed: 0
     }
   })
 
-  const categoryDistribution = categories.map((category, index) => ({
-    category,
-    count: topCategories[index].count,
-    color: colors[index]
+  // Generate recent activity from actual lists
+  const recentActivity = leadLists.slice(0, 3).map(list => ({
+    id: `list-${list.id}`,
+    type: 'list_created' as const,
+    description: `Lista "${list.name}" criada`,
+    timestamp: list.created_at,
+    count: list.total_leads
   }))
-
-  const recentActivity = [
-    {
-      id: '1',
-      type: 'lead_generated' as const,
-      description: 'Novos leads extraídos do Google Maps',
-      timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      count: 25
-    },
-    {
-      id: '2',
-      type: 'list_created' as const,
-      description: 'Lista "Restaurantes SP" criada',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-    },
-    {
-      id: '3',
-      type: 'message_sent' as const,
-      description: 'Campanha WhatsApp enviada',
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
-      count: 50
-    }
-  ]
 
   return {
     totalLeads,
     totalLists,
-    messagesSent: Math.floor(Math.random() * 1000) + 200,
-    conversionRate: Math.round((Math.random() * 20 + 5) * 10) / 10,
-    growthRate: Math.round((Math.random() * 50 + 10) * 10) / 10,
-    averageRating: Math.round((Math.random() * 2 + 3) * 10) / 10,
+    totalCampaigns: 0,
+    messagesSent: 0,
+    conversionRate: 0,
+    growthRate: 0,
+    averageRating: 0,
     topCategories,
     recentActivity,
     chartData: {
       leadsOverTime,
-      categoryDistribution
+      categoryDistribution,
+      campaignsOverTime
     }
   }
+}
+
+function CampaignsChart({ data }: { data: Array<{ date: string; count: number; success: number; failed: number }> }) {
+  const maxValue = Math.max(...data.map(d => Math.max(d.success, d.failed)))
+  
+  return (
+    <div className="h-64 flex items-end space-x-2">
+      {data.map((point, index) => (
+        <div key={point.date} className="flex-1 flex flex-col items-center space-y-1">
+          <div className="flex flex-col space-y-1 w-full">
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: `${maxValue > 0 ? (point.success / maxValue) * 100 : 0}%` }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="bg-green-500 rounded-t-sm min-h-[2px] hover:bg-green-600 transition-colors"
+              title={`${point.date}: ${point.success} sucessos`}
+            />
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: `${maxValue > 0 ? (point.failed / maxValue) * 100 : 0}%` }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="bg-red-500 rounded-t-sm min-h-[2px] hover:bg-red-600 transition-colors"
+              title={`${point.date}: ${point.failed} falhas`}
+            />
+          </div>
+          <span className="text-xs text-muted-foreground mt-2">{point.date}</span>
+        </div>
+      ))}
+    </div>
+  )
 }
