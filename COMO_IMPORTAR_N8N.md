@@ -129,3 +129,4 @@ Após importar o fluxo:
 **O sistema agora enviará status em tempo real para o frontend!** 🎉
 
 
+

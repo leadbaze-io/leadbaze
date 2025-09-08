@@ -268,3 +268,4 @@ CREATE TABLE message_templates (
 - "Restaurantes têm 23% mais conversão que outros setores"
 - "Melhor horário para envio: 14h-16h"
 - "Template 'Oferta Especial' tem 34% mais respostas"
+

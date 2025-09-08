@@ -164,3 +164,4 @@ ORDER BY tablename, indexname;
 SELECT 
   '🎉 VERIFICAÇÃO COMPLETA' as status,
   'Execute este script para verificar se o setup de Analytics está funcionando corretamente.' as descricao;
+

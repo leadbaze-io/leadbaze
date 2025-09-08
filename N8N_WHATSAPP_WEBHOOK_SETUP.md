@@ -312,3 +312,4 @@ curl -X GET http://localhost:3000/api/whatsapp/webhook/status
 ---
 
 **🎉 Com esta configuração, o sistema de Analytics estará 100% funcional com tracking em tempo real!**
+

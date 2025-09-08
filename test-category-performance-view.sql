@@ -20,3 +20,4 @@ SELECT
   ROUND((leads_with_phone::DECIMAL / total_leads) * 100, 2) as phone_percentage
 FROM category_performance
 ORDER BY total_leads DESC;
+
