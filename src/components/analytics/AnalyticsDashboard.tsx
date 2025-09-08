@@ -322,7 +322,7 @@ function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCa
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
     >
-      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm">
+      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border border-border shadow-sm">
         <CardContent className="p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">

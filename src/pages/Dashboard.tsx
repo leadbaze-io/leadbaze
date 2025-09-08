@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Loader, Send, Plus, BarChart3, Users } from 'lucide-react'
+import { Loader, Send, Plus, BarChart3, Home } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
@@ -133,7 +133,7 @@ export default function Dashboard() {
                 }`}
               >
                 <div className="flex items-center space-x-2">
-                  <Users className="w-4 h-4" />
+                  <Home className="w-4 h-4" />
                   <span>Visão Geral</span>
                 </div>
                 {activeTab === 'overview' && (
