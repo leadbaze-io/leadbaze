@@ -1705,6 +1705,201 @@ html.dark .dashboard-badge-escuro {
   text-fill-color: #93c5fd !important;
 }
 
+/* ===== CLASSES ESPECÍFICAS PARA PÁGINA DE LISTA - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA PÁGINA DE LISTA - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .lista-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Header da Lista */
+html:not(.dark) .lista-header-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Título da Lista */
+html:not(.dark) .lista-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos da Lista */
+html:not(.dark) .lista-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .lista-texto-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Cards de Estatísticas */
+html:not(.dark) .lista-stats-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Botões de Ação */
+html:not(.dark) .lista-btn-export-claro {
+  background: linear-gradient(to right, #10b981, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+html:not(.dark) .lista-btn-export-claro:hover {
+  background: linear-gradient(to right, #059669, #047857) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+html:not(.dark) .lista-btn-share-claro {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .lista-btn-share-claro:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+html:not(.dark) .lista-btn-secondary-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .lista-btn-secondary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Cards de Dicas */
+html:not(.dark) .lista-dicas-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .lista-dicas-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .lista-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Header da Lista */
+html.dark .lista-header-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Título da Lista */
+html.dark .lista-titulo-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Textos da Lista */
+html.dark .lista-texto-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .lista-texto-muted-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Cards de Estatísticas */
+html.dark .lista-stats-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Botões de Ação */
+html.dark .lista-btn-export-escuro {
+  background: linear-gradient(to right, #10b981, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+}
+
+html.dark .lista-btn-export-escuro:hover {
+  background: linear-gradient(to right, #059669, #047857) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+}
+
+html.dark .lista-btn-share-escuro {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .lista-btn-share-escuro:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+html.dark .lista-btn-secondary-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+html.dark .lista-btn-secondary-escuro:hover {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Cards de Dicas */
+html.dark .lista-dicas-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .lista-dicas-texto-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
 /* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
 html:not(.dark) .bg-green-100 {
   background-color: #dcfce7 !important;
