@@ -496,7 +496,7 @@ export default function CampaignProgressModal({
                     <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
                   </div>
                   <p className="text-green-800 dark:text-green-200 font-semibold">
-                    🎉 Campanha Enviada com Sucesso!
+                    🎉 Campanha Enviada! ✅
                   </p>
                   <p className="text-sm text-green-600 dark:text-green-300 mt-1">
                     {successCount} mensagens enviadas

@@ -1230,17 +1230,20 @@ export default function DisparadorMassa() {
                                 <span className="text-xs text-gray-600 dark:text-gray-400">leads</span>
                               </div>
                               
-                              {/* Status Badge - FORMATO ESPECÍFICO SOLICITADO */}
-                              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                campaign.status === 'draft' ? 'bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800' :
-                                campaign.status === 'sending' ? 'bg-pink-50 text-pink-700 border border-pink-200 dark:bg-pink-950 dark:text-pink-300 dark:border-pink-800' :
-                                campaign.status === 'completed' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800' :
-                                campaign.status === 'failed' ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800' :
-                                'bg-gray-50 text-gray-700 border border-gray-200 dark:bg-gray-950 dark:text-gray-300 dark:border-gray-800'
+                              {/* Status Badge Premium */}
+                              <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border ${
+                                campaign.status === 'draft' ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-purple-400/20' :
+                                campaign.status === 'sending' ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white border-pink-400/20' :
+                                campaign.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-emerald-400/20' :
+                                campaign.status === 'failed' ? 'bg-gradient-to-r from-red-500 to-red-600 text-white border-red-400/20' :
+                                'bg-gradient-to-r from-slate-500 to-slate-600 text-white border-slate-400/20'
                               }`}>
+                                <div className={`w-1.5 h-1.5 bg-white rounded-full ${
+                                  campaign.status === 'completed' ? 'animate-pulse' : ''
+                                }`}></div>
                                 {campaign.status === 'draft' ? '📝 Em Preparação' :
                                  campaign.status === 'sending' ? (isPollingStatus ? '🔄 Verificando...' : '📤 Enviando') :
-                                 campaign.status === 'completed' ? '✅ Campanha Enviada com Sucesso!' :
+                                 campaign.status === 'completed' ? 'Campanha Enviada! ✅' :
                                  campaign.status === 'failed' ? '❌ Falhou' : '❓ Desconhecido'}
                               </div>
                             </div>
@@ -1302,7 +1305,7 @@ export default function DisparadorMassa() {
                                 <span className="text-xs md:text-sm font-medium">
                                   {selectedCampaign.status === 'draft' ? 'Rascunho' : 
                                    selectedCampaign.status === 'sending' ? (isPollingStatus ? 'Verificando...' : 'Enviando') : 
-                                   selectedCampaign.status === 'completed' ? 'Campanha Enviada com Sucesso!' : 
+                                   selectedCampaign.status === 'completed' ? 'Campanha Enviada! ✅' : 
                                    selectedCampaign.status === 'failed' ? 'Falhou' :
                                    selectedCampaign.status}
                                 </span>
