@@ -312,6 +312,12 @@ export default function DisparadorMassa() {
     setShowDuplicateModal(true)
   }
 
+  // Função para fechar modal e limpar duplicatas
+  const closeDuplicateModal = () => {
+    setShowDuplicateModal(false)
+    setDuplicateLeads([]) // Limpar duplicatas quando fechar o modal
+  }
+
   // Função para processar leads após seleção no modal
   const handleLeadsProcessed = (selectedLeads: Lead[], remainingDuplicates: Lead[]) => {
     setNewLeads(prev => [...prev, ...selectedLeads])
@@ -450,7 +456,8 @@ export default function DisparadorMassa() {
       // Limpar apenas a seleção de listas, mas manter os leads na campanha
       setSelectedLists([])
       setNewLeads([])
-      setDuplicateLeads([])
+      // NÃO limpar duplicateLeads aqui - deixar para o usuário ver e interagir
+      // setDuplicateLeads([])
     } catch (error) {
       console.error('Erro ao atualizar campanha:', error)
       toast({
@@ -2065,7 +2072,7 @@ Entre em contato conosco para mais detalhes!"
       {/* Modal de Leads Duplicados */}
       <DuplicateLeadsModal
         isOpen={showDuplicateModal}
-        onClose={() => setShowDuplicateModal(false)}
+        onClose={closeDuplicateModal}
         duplicateLeads={duplicateLeads}
         onLeadsProcessed={handleLeadsProcessed}
       />
