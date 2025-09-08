@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2, Eye, ChevronUp, ChevronDown, List, Check, X } from 'lucide-react'
+import { Send, MessageSquare, Users, CheckCircle, AlertTriangle, Loader, ArrowLeft, Plus, FolderOpen, Trash2, Eye, ChevronUp, ChevronDown, List, Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from '../hooks/use-toast'
 import { getCurrentUser } from '../lib/supabaseClient'
@@ -2038,35 +2038,23 @@ Entre em contato conosco para mais detalhes!"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          className="fixed bottom-6 right-6 z-40"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40"
         >
-          <div className="flex flex-col items-end space-y-3">
-            {/* Botão Principal - Ver Detalhes */}
-            <motion.button
-              onClick={showDuplicateLeadsModal}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-3 group"
-            >
-              <AlertTriangle className="w-5 h-5" />
-              <span className="hidden group-hover:block text-sm font-medium whitespace-nowrap">
-                {duplicateLeads.length} Duplicado(s)
-              </span>
-            </motion.button>
-
-            {/* Botão Secundário - Ignorar */}
-            <motion.button
-              onClick={() => setDuplicateLeads([])}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gray-500 hover:bg-gray-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2 group"
-            >
-              <X className="w-4 h-4" />
-              <span className="hidden group-hover:block text-xs font-medium whitespace-nowrap">
-                Ignorar
-              </span>
-            </motion.button>
-          </div>
+          <motion.button
+            onClick={showDuplicateLeadsModal}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white p-3 sm:p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2 sm:space-x-3 group backdrop-blur-sm border border-orange-400/20"
+          >
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:group-hover:block text-sm font-medium whitespace-nowrap">
+              {duplicateLeads.length} Duplicado(s)
+            </span>
+            {/* Badge com contador para mobile */}
+            <span className="sm:hidden bg-white/20 text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">
+              {duplicateLeads.length}
+            </span>
+          </motion.button>
         </motion.div>
       )}
       
