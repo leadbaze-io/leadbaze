@@ -14,6 +14,7 @@ import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import WhatsAppConnection from '../components/WhatsAppConnection'
 import CampaignProgressModalV2 from '../components/CampaignProgressModalV2'
+import Footer from '../components/Footer'
 import { EvolutionApiService } from '../lib/evolutionApiService'
 import type { LeadList, EvolutionAPIConfig, BulkCampaign, Lead, CampaignLead, UsedListSummary } from '../types'
 import type { User } from '@supabase/supabase-js'
@@ -991,8 +992,9 @@ export default function DisparadorMassa() {
   }
 
   return (
-    <div className="app-page min-h-screen bg-background py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="app-page min-h-screen bg-background">
+      <div className="py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -1855,6 +1857,7 @@ Entre em contato conosco para mais detalhes!"
             <span>Voltar para Dashboard</span>
           </button>
         </div>
+        </div>
       </div>
 
       {/* Botão Flutuante para Adicionar Leads */}
@@ -2000,6 +2003,9 @@ Entre em contato conosco para mais detalhes!"
         onMinimize={handleMinimizeProgressModal}
         onExpand={handleExpandProgressModal}
       />
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

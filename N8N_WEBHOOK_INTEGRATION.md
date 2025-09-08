@@ -316,3 +316,5 @@ curl -X GET http://localhost:3001/api/campaign/status/test-campaign-id
 ---
 
 **Status**: ✅ Implementação completa e pronta para integração com N8N
+
+

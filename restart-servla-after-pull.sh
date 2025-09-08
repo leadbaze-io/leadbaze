@@ -39,3 +39,5 @@ echo "✅ Reinicialização concluída!"
 echo "🔗 Acesse: https://leadbaze.io"
 
 
+
+

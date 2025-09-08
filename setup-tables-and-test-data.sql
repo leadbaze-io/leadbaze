@@ -88,3 +88,5 @@ JOIN leads l ON ll.id = l.lead_list_id
 WHERE ll.name = 'Teste Disparo'
 ORDER BY l.name;
 
+
+

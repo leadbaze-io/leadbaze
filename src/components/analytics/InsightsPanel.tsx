@@ -11,7 +11,6 @@ import {
   MessageSquare,
   DollarSign,
   Users,
-  X,
   ExternalLink,
   Bell,
   BellOff
@@ -60,7 +59,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
   const handleGenerateInsights = async () => {
     setIsGenerating(true)
     try {
-      await generateAutomaticInsights()
+      await generateAutomaticInsights('current-user-id')
       onRefresh?.()
     } catch (error) {
       console.error('Erro ao gerar insights:', error)

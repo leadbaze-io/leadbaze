@@ -6,9 +6,6 @@ import {
   TrendingUp, 
   TrendingDown,
   Target,
-  MessageSquare,
-  Users,
-  BarChart3,
   Lightbulb,
   CheckCircle
 } from 'lucide-react'
@@ -37,20 +34,12 @@ interface TemporalAnalysisProps {
 
 export default function TemporalAnalysis({ 
   hourlyPerformance, 
-  bestSendingHours, 
   bestSendingDays 
 }: TemporalAnalysisProps) {
   const [activeTab, setActiveTab] = useState<'hours' | 'days' | 'recommendations'>('hours')
 
   const formatHour = (hour: number) => {
     return `${hour.toString().padStart(2, '0')}:00`
-  }
-
-  const getPerformanceColor = (rate: number) => {
-    if (rate >= 80) return 'text-green-600 dark:text-green-400'
-    if (rate >= 60) return 'text-yellow-600 dark:text-yellow-400'
-    if (rate >= 40) return 'text-orange-600 dark:text-orange-400'
-    return 'text-red-600 dark:text-red-400'
   }
 
   const getPerformanceBadge = (rate: number) => {

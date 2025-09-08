@@ -6,8 +6,6 @@ import {
   Globe, 
   Phone, 
   Target,
-  TrendingUp,
-  TrendingDown,
   Award,
   AlertTriangle,
   CheckCircle,
@@ -16,7 +14,6 @@ import {
   Search
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
@@ -70,12 +67,6 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
     }
   }
 
-  const getQualityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 dark:text-green-400'
-    if (score >= 60) return 'text-yellow-600 dark:text-yellow-400'
-    if (score >= 40) return 'text-orange-600 dark:text-orange-400'
-    return 'text-red-600 dark:text-red-400'
-  }
 
   const getQualityBadge = (score: number) => {
     if (score >= 80) return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'

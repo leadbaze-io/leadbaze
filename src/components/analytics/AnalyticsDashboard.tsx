@@ -8,20 +8,19 @@ import {
   Users,
   FolderPlus,
   MessageSquare,
-  TrendingDown,
   Clock,
   Zap,
   BarChart3,
-  Activity
+  Activity,
+  Bell
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
-import { getRealAnalyticsData, getConversionMetrics, type RealAnalyticsData } from '../../lib/analyticsService'
+import { getRealAnalyticsData, type RealAnalyticsData } from '../../lib/analyticsService'
 import { getAdvancedAnalyticsData, type AdvancedAnalyticsData } from '../../lib/advancedAnalyticsService'
-import { getCurrentUser } from '../../lib/supabaseClient'
 import InsightsPanel from './InsightsPanel'
 import TemporalAnalysis from './TemporalAnalysis'
 import LeadQualityAnalysis from './LeadQualityAnalysis'
@@ -373,9 +372,15 @@ export default function AnalyticsDashboard() {
         {/* Conteúdo das Tabs */}
         {activeTab === 'temporal' && advancedAnalytics && (
           <TemporalAnalysis
-            hourlyPerformance={advancedAnalytics.chartData.hourlyPerformance}
+            hourlyPerformance={advancedAnalytics.chartData.hourlyPerformance.map(item => ({
+              ...item,
+              recommendations: []
+            }))}
             bestSendingHours={advancedAnalytics.bestSendingHours}
-            bestSendingDays={advancedAnalytics.bestSendingDays}
+            bestSendingDays={advancedAnalytics.bestSendingDays.map(item => ({
+              ...item,
+              recommendations: []
+            }))}
           />
         )}
 
@@ -390,7 +395,10 @@ export default function AnalyticsDashboard() {
 
         {activeTab === 'insights' && advancedAnalytics && (
           <InsightsPanel
-            insights={advancedAnalytics.insights}
+            insights={advancedAnalytics.insights.map(insight => ({
+              ...insight,
+              isRead: false
+            }))}
             onInsightRead={(insightId) => {
               console.log('Insight marcado como lido:', insightId)
             }}

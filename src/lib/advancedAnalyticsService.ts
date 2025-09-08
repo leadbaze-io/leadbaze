@@ -302,7 +302,7 @@ async function getTemporalAnalysis(userId: string, startDate: Date): Promise<Tem
   }
 }
 
-async function getCategoryPerformance(userId: string, startDate: Date) {
+async function getCategoryPerformance(userId: string) {
   const { data, error } = await supabase
     .from('category_performance')
     .select('*')
@@ -339,7 +339,7 @@ async function getTemplatePerformance(userId: string, startDate: Date) {
   })) || []
 }
 
-async function getChartData(userId: string, startDate: Date, days: number) {
+async function getChartData(days: number) {
   // Leads ao longo do tempo
   const leadsOverTime = Array.from({ length: days }, (_, i) => {
     const date = new Date()

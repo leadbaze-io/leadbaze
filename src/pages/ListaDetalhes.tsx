@@ -21,6 +21,7 @@ import {
 import { supabase, getCurrentUser } from '../lib/supabaseClient'
 import type { LeadList, Lead } from '../types'
 import LeadTableWithActions from '../components/LeadTableWithActions'
+import Footer from '../components/Footer'
 import { motion } from 'framer-motion'
 
 export default function ListaDetalhes() {
@@ -224,8 +225,9 @@ export default function ListaDetalhes() {
   }
 
   return (
-    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro">
+      <div className="py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Redesenhado */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -233,33 +235,34 @@ export default function ListaDetalhes() {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <div className="flex items-center space-x-4 mb-6">
+          <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-6">
             <Link
               to="/dashboard"
-              className="inline-flex items-center space-x-2 dashboard-card-muted-claro dark:text-muted-foreground hover:dashboard-card-text-claro dark:hover:text-foreground transition-colors"
+              className="inline-flex items-center space-x-1 sm:space-x-2 dashboard-card-muted-claro dark:text-muted-foreground hover:dashboard-card-text-claro dark:hover:text-foreground transition-colors text-sm sm:text-base"
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Voltar ao Dashboard</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Voltar ao Dashboard</span>
+              <span className="sm:hidden">Voltar</span>
             </Link>
           </div>
 
-          <div className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-3xl p-6 sm:p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="space-y-4">
+          <div className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
+              <div className="space-y-3 sm:space-y-4">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center space-x-3"
+                  className="flex items-center space-x-2 sm:space-x-3"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center">
-                    <Target className="w-6 h-6 text-white" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                    <Target className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold dashboard-card-title-claro dark:text-foreground">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold dashboard-card-title-claro dark:text-foreground">
                       {leadList.name}
                     </h1>
-                    <p className="dashboard-card-muted-claro dark:text-muted-foreground text-sm sm:text-base">
+                    <p className="dashboard-card-muted-claro dark:text-muted-foreground text-xs sm:text-sm lg:text-base">
                       Lista de leads qualificados
                     </p>
                   </div>
@@ -269,17 +272,17 @@ export default function ListaDetalhes() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0"
+                  className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 lg:space-x-6 space-y-1 sm:space-y-0"
                 >
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4" />
-                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-sm">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-xs sm:text-sm">
                       Criado em {formatDate(leadList.created_at)}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4" />
-                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-sm">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="dashboard-card-muted-claro dark:text-muted-foreground text-xs sm:text-sm">
                       {leadList.total_leads} leads encontrados
                     </span>
                   </div>
@@ -290,30 +293,33 @@ export default function ListaDetalhes() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
+                className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 lg:space-x-3"
               >
                 <button
                   onClick={exportToCSV}
-                  className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg"
+                  className="inline-flex items-center justify-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg text-sm sm:text-base"
                 >
-                  <Download className="w-5 h-5" />
-                  <span>Exportar CSV</span>
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Exportar CSV</span>
+                  <span className="sm:hidden">Exportar</span>
                 </button>
                 
                 <button
                   onClick={shareList}
-                  className="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg"
+                  className="inline-flex items-center justify-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg text-sm sm:text-base"
                 >
-                  <Share2 className="w-5 h-5" />
-                  <span>Compartilhar</span>
+                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Compartilhar</span>
+                  <span className="sm:hidden">Share</span>
                 </button>
 
                 <Link
                   to="/gerador"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg"
+                  className="inline-flex items-center justify-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg text-sm sm:text-base"
                 >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Criar Nova Lista
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Criar Nova Lista</span>
+                  <span className="sm:hidden">Nova Lista</span>
                 </Link>
               </motion.div>
             </div>
@@ -325,7 +331,7 @@ export default function ListaDetalhes() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8"
         >
           {[
             {
@@ -363,19 +369,19 @@ export default function ListaDetalhes() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
               whileHover={{ y: -4, scale: 1.02 }}
-              className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl p-6 shadow-lg border"
+              className="dashboard-info-card-claro dashboard-info-card-escuro rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-lg border"
             >
               <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
+                <div className="space-y-1 sm:space-y-2">
+                  <p className="text-xs sm:text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
                     {stat.title}
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                  <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
                     {stat.value}
                   </p>
                 </div>
-                <div className={`w-12 h-12 bg-gradient-to-r ${stat.bgColor} rounded-xl flex items-center justify-center shadow-lg`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-r ${stat.bgColor} rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg`}>
+                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                 </div>
               </div>
             </motion.div>
@@ -401,43 +407,43 @@ export default function ListaDetalhes() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-8"
+          className="mt-6 sm:mt-8"
         >
-          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl p-6 sm:p-8 border shadow-lg">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border shadow-lg">
+            <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+              <h3 className="text-lg sm:text-xl font-bold dashboard-card-title-claro dark:text-foreground">
                 Dicas para usar estes leads
               </h3>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.7 }}
-                className="space-y-4"
+                className="space-y-3 sm:space-y-4"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Target className="w-5 h-5 text-white" />
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                    <Target className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Qualificação</h4>
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground text-sm sm:text-base">Qualificação</h4>
                 </div>
-                <div className="space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Priorize estabelecimentos com 4+ estrelas</p>
+                <div className="space-y-2 sm:space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Priorize estabelecimentos com 4+ estrelas</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Leads com telefone têm maior taxa de conversão</p>
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Leads com telefone têm maior taxa de conversão</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Verifique se possuem website ativo</p>
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Verifique se possuem website ativo</p>
                   </div>
                 </div>
               </motion.div>
@@ -446,26 +452,26 @@ export default function ListaDetalhes() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
-                className="space-y-4"
+                className="space-y-3 sm:space-y-4"
               >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <MessageSquare className="w-5 h-5 text-white" />
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground">Abordagem</h4>
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground text-sm sm:text-base">Abordagem</h4>
                 </div>
-                <div className="space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Mencione que encontrou no Google Maps</p>
+                <div className="space-y-2 sm:space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Mencione que encontrou no Google Maps</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Personalize a mensagem por tipo de negócio</p>
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Personalize a mensagem por tipo de negócio</p>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">Use os filtros para segmentar sua abordagem</p>
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm">Use os filtros para segmentar sua abordagem</p>
                   </div>
                 </div>
               </motion.div>
@@ -476,29 +482,34 @@ export default function ListaDetalhes() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
-              className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl border border-blue-200 dark:border-blue-800"
+              className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl sm:rounded-2xl border border-blue-200 dark:border-blue-800"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
-                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground mb-2">
+                  <h4 className="font-semibold dashboard-card-title-claro dark:text-foreground mb-1 sm:mb-2 text-sm sm:text-base">
                     Pronto para começar sua campanha?
                   </h4>
-                  <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
+                  <p className="text-xs sm:text-sm dashboard-card-muted-claro dark:text-muted-foreground">
                     Use o Disparador em Massa para enviar mensagens personalizadas via WhatsApp
                   </p>
                 </div>
                 <Link
                   to="/disparador"
-                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 hover:scale-105 shadow-lg"
+                  className="inline-flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 hover:scale-105 shadow-lg text-sm sm:text-base"
                 >
-                  <Zap className="w-5 h-5" />
-                  <span>Iniciar Campanha</span>
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Iniciar Campanha</span>
+                  <span className="sm:hidden">Iniciar</span>
                 </Link>
               </div>
             </motion.div>
           </div>
         </motion.div>
+        </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

@@ -18,6 +18,7 @@ import {
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
+import Footer from '../components/Footer'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LeadList } from '../types'
@@ -96,8 +97,9 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro">
+      <div className="py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Boas-vindas Redesenhado */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -457,7 +459,11 @@ export default function Dashboard() {
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

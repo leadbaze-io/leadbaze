@@ -1,9 +1,21 @@
 import { useNavigate } from 'react-router-dom'
 import { Mail, Phone } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { getCurrentUser } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
+import type { User } from '@supabase/supabase-js'
 
 export default function Footer() {
   const navigate = useNavigate()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const currentUser = await getCurrentUser()
+      setUser(currentUser)
+    }
+    checkUser()
+  }, [])
 
   const handleNavigation = (path: string) => {
     navigate(path)
@@ -42,36 +54,151 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
             <div className="space-y-2">
-              <button 
-                onClick={() => handleNavigation('/')}
-                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
-              >
-                Início
-              </button>
-              <button 
-                onClick={() => handleNavigation('/dashboard')}
-                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={() => handleNavigation('/gerador')}
-                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
-              >
-                Gerar Leads
-              </button>
-              <button 
-                onClick={() => handleNavigation('/disparador')}
-                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
-              >
-                Disparador
-              </button>
-              <button 
-                onClick={() => handleNavigation('/blog')}
-                className="block text-gray-300 hover:text-white transition-colors text-left w-full"
-              >
-                Blog
-              </button>
+              {/* Links para usuários NÃO logados */}
+              {!user && (
+                <>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Início
+                  </button>
+                  <button 
+                    onClick={() => {
+                      // Verificar se estamos na landing page
+                      if (window.location.pathname === '/') {
+                        document.getElementById('pricing-plans-section')?.scrollIntoView({ 
+                          behavior: 'smooth' 
+                        })
+                      } else {
+                        // Se não estiver na landing page, navegar para lá
+                        navigate('/')
+                        setTimeout(() => {
+                          // Tentar múltiplos métodos para encontrar a seção
+                          let pricingSection = document.getElementById('pricing-plans-section')
+                          
+                          // Verificar se é a seção correta (não mobile)
+                          if (pricingSection && pricingSection.classList.contains('md:hidden')) {
+                            pricingSection = null
+                          }
+                          
+                          // Se não encontrar, tentar por classe (desktop)
+                          if (!pricingSection) {
+                            pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
+                          }
+                          
+                          // Se ainda não encontrar, tentar por texto (desktop)
+                          if (!pricingSection) {
+                            const sections = document.querySelectorAll('section:not(.md\\:hidden)')
+                            for (const section of sections) {
+                              if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                                pricingSection = section as HTMLElement
+                                break
+                              }
+                            }
+                          }
+                          
+                          // Fallback: usar qualquer seção com pricing
+                          if (!pricingSection) {
+                            pricingSection = document.querySelector('[id*="pricing"]')
+                          }
+                          
+                          if (pricingSection) {
+                            const elementPosition = pricingSection.getBoundingClientRect().top
+                            const offsetPosition = elementPosition + window.pageYOffset - 80
+                            
+                            window.scrollTo({
+                              top: offsetPosition,
+                              behavior: 'smooth'
+                            })
+                          } else {
+                            // Método alternativo: scroll para o final da página
+                            window.scrollTo({
+                              top: document.body.scrollHeight,
+                              behavior: 'smooth'
+                            })
+                          }
+                        }, 1000)
+                      }
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Planos
+                  </button>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/blog/sobre')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Sobre
+                  </button>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/blog')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Blog
+                  </button>
+                </>
+              )}
+              
+              {/* Links para usuários logados */}
+              {user && (
+                <>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/dashboard')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Dashboard
+                  </button>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/gerador')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Gerar Leads
+                  </button>
+                  <button 
+                    onClick={() => {
+                      handleNavigation('/disparador')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Disparador
+                  </button>
+                </>
+              )}
             </div>
           </div>
 

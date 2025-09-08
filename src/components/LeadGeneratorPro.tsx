@@ -34,7 +34,7 @@ import type { Lead, LeadList } from "../types"
 import { motion, AnimatePresence } from "framer-motion"
 import SuccessModal from './SuccessModal'
 import { LeadCard } from './LeadCard'
-import { LeadFilters } from './LeadFilters'
+import { LeadFiltersPro } from './LeadFiltersPro'
 import { StatusIndicator } from './StatusIndicator'
 
 const urlFormSchema = z.object({
@@ -83,6 +83,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [leadsPerPage, setLeadsPerPage] = useState("9")
   const [currentPage, setCurrentPage] = useState(1)
   
+  // Novos filtros
+  const [sortBy, setSortBy] = useState("relevance")
+  const [sortOrder, setSortOrder] = useState("desc")
+  const [maxReviews, setMaxReviews] = useState("none")
+  
   const { toast } = useToast()
 
   const urlForm = useForm<z.infer<typeof urlFormSchema>>({
@@ -99,7 +104,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const filteredLeads = generatedLeads.filter(lead => {
     const matchesSearch = searchTerm === "" || 
       lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.address?.toLowerCase().includes(searchTerm.toLowerCase())
+      lead.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.phone?.toLowerCase().includes(searchTerm.toLowerCase())
     
     const matchesCity = cityFilter === "" || 
       lead.address?.toLowerCase().includes(cityFilter.toLowerCase())
@@ -110,19 +116,47 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     const matchesReviews = reviewsFilter === "all" || 
       (lead.reviews_count && lead.reviews_count >= parseInt(reviewsFilter))
     
+    const matchesMaxReviews = maxReviews === "" || maxReviews === "none" || 
+      (lead.reviews_count && lead.reviews_count <= parseInt(maxReviews))
+    
     const matchesWebsite = websiteFilter === "all" || 
       (websiteFilter === "with" && lead.website) ||
       (websiteFilter === "without" && !lead.website)
     
-    return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesWebsite
+    return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite
+  })
+
+  // Ordenar leads
+  const sortedLeads = [...filteredLeads].sort((a, b) => {
+    let comparison = 0
+    
+    switch (sortBy) {
+      case "rating":
+        comparison = (a.rating || 0) - (b.rating || 0)
+        break
+      case "reviews":
+        comparison = (a.reviews_count || 0) - (b.reviews_count || 0)
+        break
+      case "name":
+        comparison = (a.name || "").localeCompare(b.name || "")
+        break
+      case "relevance":
+      default:
+        // Para relevância, usar número de avaliações como critério secundário
+        comparison = (a.reviews_count || 0) - (b.reviews_count || 0)
+        break
+    }
+    
+    // Aplicar a ordem selecionada (Maior para Menor / Menor para Maior)
+    return sortOrder === "desc" ? -comparison : comparison
   })
 
   // Paginação
   const leadsPerPageNum = parseInt(leadsPerPage)
-  const totalPages = Math.ceil(filteredLeads.length / leadsPerPageNum)
+  const totalPages = Math.ceil(sortedLeads.length / leadsPerPageNum)
   const startIndex = (currentPage - 1) * leadsPerPageNum
   const endIndex = startIndex + leadsPerPageNum
-  const paginatedLeads = filteredLeads.slice(startIndex, endIndex)
+  const paginatedLeads = sortedLeads.slice(startIndex, endIndex)
 
   // Resetar página quando filtros mudam
   const resetPagination = () => setCurrentPage(1)
@@ -229,9 +263,17 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   const toggleLeadSelectionByFilteredIndex = (filteredIndex: number) => {
-    const actualIndex = startIndex + filteredIndex
-    if (actualIndex < generatedLeads.length) {
-      toggleLeadSelection(actualIndex)
+    // Encontrar o lead correto na lista filtrada
+    const filteredLead = paginatedLeads[filteredIndex]
+    if (filteredLead) {
+      // Encontrar o índice real na lista original
+      const actualIndex = generatedLeads.findIndex(lead => 
+        lead.name === filteredLead.name && 
+        lead.phone === filteredLead.phone
+      )
+      if (actualIndex !== -1) {
+        toggleLeadSelection(actualIndex)
+      }
     }
   }
 
@@ -459,21 +501,21 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <Card className="border-0 shadow-2xl gerador-card-claro gerador-card-escuro backdrop-blur-sm">
-            <CardHeader className="text-center pb-6">
-              <div className="flex items-center justify-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                  <Search className="w-6 h-6 text-white" />
+            <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
+              <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                  <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <CardTitle className="text-2xl font-bold gerador-titulo-claro dark:text-foreground">Extrair Leads do Google Maps</CardTitle>
+                <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground">Extrair Leads do Google Maps</CardTitle>
               </div>
-              <CardDescription className="text-lg gerador-descricao-claro dark:text-muted-foreground">
+              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-muted-foreground">
                 Cole o link de pesquisa do Google Maps e configure a quantidade de leads desejada
               </CardDescription>
             </CardHeader>
-            <CardContent className="px-8 pb-8">
+            <CardContent className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
               <Form {...urlForm}>
                 <form
                   onSubmit={urlForm.handleSubmit(onUrlSubmit)}
@@ -501,14 +543,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     )}
                   />
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2 sm:space-y-3">
+                      <Label className="text-sm sm:text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
                         <Users className="w-4 h-4" />
                         <span>Quantidade de Leads</span>
                       </Label>
                       <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
-                        <SelectTrigger className="h-12 border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        <SelectTrigger className="h-10 sm:h-12 border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                         <SelectContent className="bg-popover border border-border shadow-lg">
@@ -521,8 +563,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       </Select>
                     </div>
                     
-                    <div className="space-y-3">
-                      <Label className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
+                    <div className="space-y-2 sm:space-y-3">
+                      <Label className="text-sm sm:text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
                         <Zap className="w-4 h-4" />
                         <span>Status</span>
                       </Label>
@@ -544,7 +586,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   >
                     <Button
                       type="submit"
-                      className={`w-full h-14 transition-all duration-300 text-lg font-semibold rounded-xl ${
+                      className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl ${
                         isFormValid 
                           ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -609,7 +651,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       variant="outline"
                       size="sm"
                       onClick={toggleSelectAll}
-                      className="border-2 border-blue-200 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950"
+                      className="gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
                     >
                       {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
                     </Button>
@@ -618,8 +660,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 
                 <CardContent className="px-8">
                   {/* Filtros */}
-                  <div className="gerador-filtros-claro gerador-filtros-escuro rounded-xl border border-border/50 mb-8">
-                    <LeadFilters
+                  <div className="gerador-filtros-claro gerador-filtros-escuro rounded-xl border border-border/50 mb-8 p-6">
+                    <LeadFiltersPro
                       searchTerm={searchTerm}
                       setSearchTerm={setSearchTerm}
                       cityFilter={cityFilter}
@@ -632,13 +674,31 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       setWebsiteFilter={setWebsiteFilter}
                       leadsPerPage={leadsPerPage}
                       setLeadsPerPage={setLeadsPerPage}
+                      sortBy={sortBy}
+                      setSortBy={setSortBy}
+                      sortOrder={sortOrder}
+                      setSortOrder={setSortOrder}
+                      maxReviews={maxReviews}
+                      setMaxReviews={setMaxReviews}
                       onFilterChange={resetPagination}
-                      className="p-4 sm:p-6"
+                      onResetFilters={() => {
+                        setSearchTerm("")
+                        setCityFilter("")
+                        setRatingFilter("all")
+                        setReviewsFilter("all")
+                        setWebsiteFilter("all")
+                        setSortBy("relevance")
+                        setSortOrder("desc")
+                        setMaxReviews("none")
+                        setCurrentPage(1)
+                      }}
+                      totalLeads={generatedLeads.length}
+                      filteredCount={sortedLeads.length}
                     />
                   </div>
 
                   {/* Grid de Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {paginatedLeads.map((lead, index) => (
                       <LeadCard
                         key={index}
@@ -652,29 +712,29 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
                   {/* Paginação */}
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-between mt-8 pt-6 border-t gerador-paginacao-claro gerador-paginacao-escuro">
-                      <div className="text-sm gerador-descricao-claro dark:text-muted-foreground">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t gerador-paginacao-claro gerador-paginacao-escuro">
+                      <div className="text-xs sm:text-sm gerador-descricao-claro dark:text-muted-foreground text-center sm:text-left">
                         Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex items-center justify-center space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                           disabled={currentPage === 1}
-                          className="border-2 gerador-input-claro gerador-input-escuro"
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4"
                         >
                           Anterior
                         </Button>
-                        <span className="flex items-center px-4 py-2 text-sm font-medium gerador-texto-claro dark:text-foreground bg-muted/50 rounded-lg">
-                          Página {currentPage} de {totalPages}
+                        <span className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium gerador-texto-claro dark:text-foreground bg-muted/50 rounded-lg">
+                          {currentPage} de {totalPages}
                         </span>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                           disabled={currentPage === totalPages}
-                          className="border-2 gerador-input-claro gerador-input-escuro"
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4"
                         >
                           Próxima
                         </Button>
@@ -714,8 +774,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   <div className="space-y-6">
                     {/* Opções de Salvamento */}
                     <div className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <label className={`flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                           saveMode === 'new' 
                             ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
                             : 'border-border hover:border-blue-300'
@@ -733,14 +793,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             className="w-4 h-4 text-blue-600"
                           />
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                              <Users className="w-4 h-4 text-blue-600 dark:text-blue-300" />
+                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                              <Users className="w-4 h-4 text-white" />
                             </div>
                             <span className="font-medium gerador-texto-claro dark:text-foreground">Criar nova lista</span>
                           </div>
                         </label>
                         
-                        <label className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                        <label className={`flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all duration-200 ${
                           saveMode === 'existing' 
                             ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
                             : 'border-border hover:border-blue-300'
@@ -759,8 +819,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             className="w-4 h-4 text-blue-600"
                           />
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                              <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-300" />
+                            <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center shadow-md">
+                              <CheckCircle className="w-4 h-4 text-white" />
                             </div>
                             <span className="font-medium gerador-texto-claro dark:text-foreground">Adicionar à lista existente</span>
                           </div>
@@ -790,13 +850,20 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               <span>Selecionar Lista Existente</span>
                             </Label>
                             <Select value={selectedListId} onValueChange={handleListSelection}>
-                              <SelectTrigger className="h-12 border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                              <SelectTrigger className="h-12 border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 hover:border-blue-400">
                                 <SelectValue placeholder="Selecione uma lista..." />
                               </SelectTrigger>
-                              <SelectContent className="bg-popover border border-border shadow-lg">
+                              <SelectContent className="gerador-lista-select-claro gerador-lista-select-escuro border-2 shadow-xl max-h-60">
                                 {existingLists.map((list) => (
-                                  <SelectItem key={list.id} value={list.id}>
-                                    {list.name} ({list.total_leads} leads)
+                                  <SelectItem 
+                                    key={list.id} 
+                                    value={list.id}
+                                    className="gerador-lista-item-claro gerador-lista-item-escuro hover:gerador-lista-item-hover-claro hover:gerador-lista-item-hover-escuro transition-all duration-200 cursor-pointer"
+                                  >
+                                    <div className="flex items-center justify-between w-full">
+                                      <span className="font-medium">{list.name}</span>
+                                      <span className="text-sm opacity-70 ml-2">({list.total_leads} leads)</span>
+                                    </div>
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -818,24 +885,24 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               )}
                               
                               {duplicateLeads.length > 0 && (
-                                <div className="p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+                                <div className="gerador-aviso-duplicados-claro gerador-aviso-duplicados-escuro p-4 border-2 rounded-xl shadow-sm">
                                   <div className="flex items-center space-x-3 mb-3">
-                                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                    <span className="text-yellow-800 dark:text-yellow-200 font-medium">
+                                    <div className="w-3 h-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full shadow-sm"></div>
+                                    <span className="gerador-aviso-titulo-claro gerador-aviso-titulo-escuro font-medium">
                                       ⚠️ {duplicateLeads.length} leads duplicados serão ignorados
                                     </span>
                                   </div>
-                                  <div className="text-sm text-yellow-700 dark:text-yellow-300">
+                                  <div className="gerador-aviso-texto-claro gerador-aviso-texto-escuro text-sm">
                                     <p className="font-medium mb-2">Leads duplicados encontrados:</p>
                                     <div className="space-y-1">
                                       {duplicateLeads.slice(0, 3).map((lead, index) => (
                                         <div key={index} className="flex items-center space-x-2">
                                           <span>• {lead.name}</span>
-                                          {lead.phone && <span className="text-yellow-600 dark:text-yellow-400">({lead.phone})</span>}
+                                          {lead.phone && <span className="gerador-aviso-phone-claro gerador-aviso-phone-escuro">({lead.phone})</span>}
                                         </div>
                                       ))}
                                       {duplicateLeads.length > 3 && (
-                                        <span className="text-yellow-600 dark:text-yellow-400">
+                                        <span className="gerador-aviso-phone-claro gerador-aviso-phone-escuro">
                                           ... e mais {duplicateLeads.length - 3} leads
                                         </span>
                                       )}
@@ -850,12 +917,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </div>
 
                     {/* Botões de Ação */}
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                       <motion.div
                         initial={{ scale: 1 }}
                         animate={{ 
                           scale: getSelectedLeads().length > 0 ? 1.02 : 1,
-                          boxShadow: getSelectedLeads().length > 0 ? "0 20px 40px rgba(34, 197, 94, 0.3)" : "0 4px 12px rgba(0, 0, 0, 0.1)"
+                          boxShadow: getSelectedLeads().length > 0 ? "0 8px 16px rgba(34, 197, 94, 0.2)" : "0 2px 8px rgba(0, 0, 0, 0.1)"
                         }}
                         transition={{ duration: 0.3 }}
                         className="flex-1"
@@ -863,12 +930,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         <Button
                           onClick={handleSaveLeads}
                           disabled={isSaving || getSelectedLeads().length === 0}
-                          className={`w-full h-14 transition-all duration-300 text-lg font-semibold rounded-xl ${
+                          className={`w-full h-11 transition-all duration-300 text-base font-semibold rounded-lg ${
                             getSelectedLeads().length > 0 
-                              ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
+                              ? 'gerador-botao-claro gerador-botao-escuro shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-102 active:scale-98' 
                               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           }`}
-                          size="lg"
+                          size="default"
                         >
                           {isSaving ? (
                             <motion.div
@@ -885,8 +952,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               animate={{ opacity: 1 }}
                               className="flex items-center"
                             >
-                              <Save className="mr-3 h-5 w-5" />
-                              {getSelectedLeads().length > 0 ? `💾 Salvar ${getSelectedLeads().length} leads` : 'Selecione leads para salvar'}
+                              <motion.div
+                                initial={{ scale: 1 }}
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                              >
+                                <Save className="mr-2 h-4 w-4" />
+                              </motion.div>
+                              {getSelectedLeads().length > 0 ? `Salvar ${getSelectedLeads().length} leads` : 'Selecione leads para salvar'}
                             </motion.div>
                           )}
                         </Button>
@@ -898,7 +971,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           setShowSaveOptions(false)
                           setGeneratedLeads([])
                         }}
-                        className="h-14 border-2 hover:bg-muted/50"
+                        className="h-11 border-2 hover:bg-muted/50 text-base font-semibold rounded-lg"
                       >
                         Cancelar
                       </Button>

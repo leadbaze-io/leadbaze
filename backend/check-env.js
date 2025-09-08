@@ -19,3 +19,5 @@ if (process.env.N8N_WEBHOOK_URL) {
 } else {
   console.log('❌ N8N_WEBHOOK_URL não está definida');
 }
+
+

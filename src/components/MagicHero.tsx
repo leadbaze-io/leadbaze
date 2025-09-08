@@ -60,9 +60,61 @@ export default function MagicHero() {
             <div className="flex justify-center mb-12">
               <ShimmerButton 
                 onClick={() => {
-                  document.getElementById('pricing-plans-section')?.scrollIntoView({ 
-                    behavior: 'smooth' 
-                  })
+                  console.log('🔍 Botão Ver Planos clicado!')
+                  
+                  // Tentar múltiplos métodos para encontrar a seção
+                  let pricingSection = document.getElementById('pricing-plans-section')
+                  
+                  // Verificar se é a seção correta (não mobile)
+                  if (pricingSection && pricingSection.classList.contains('md:hidden')) {
+                    console.log('📍 Seção mobile encontrada, procurando versão desktop...')
+                    pricingSection = null
+                  }
+                  
+                  // Se não encontrar, tentar por classe (desktop)
+                  if (!pricingSection) {
+                    pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
+                    console.log('📍 Tentando por classe pricing desktop:', pricingSection)
+                  }
+                  
+                  // Se ainda não encontrar, tentar por texto (desktop)
+                  if (!pricingSection) {
+                    const sections = document.querySelectorAll('section:not(.md\\:hidden)')
+                    for (const section of sections) {
+                      if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                        pricingSection = section as HTMLElement
+                        console.log('📍 Encontrado por texto desktop:', pricingSection)
+                        break
+                      }
+                    }
+                  }
+                  
+                  // Fallback: usar qualquer seção com pricing
+                  if (!pricingSection) {
+                    pricingSection = document.querySelector('[id*="pricing"]')
+                    console.log('📍 Fallback - qualquer seção pricing:', pricingSection)
+                  }
+                  
+                  console.log('📍 Seção encontrada:', pricingSection)
+                  
+                  if (pricingSection) {
+                    // Scroll com offset para compensar navbar fixa
+                    const elementPosition = pricingSection.getBoundingClientRect().top
+                    const offsetPosition = elementPosition + window.pageYOffset - 80
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    })
+                    console.log('✅ Scroll executado com offset!')
+                  } else {
+                    console.log('❌ Seção não encontrada! Tentando método alternativo...')
+                    // Método alternativo: scroll para o final da página
+                    window.scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: 'smooth'
+                    })
+                  }
                 }}
                 className="px-8 py-4 text-lg"
               >

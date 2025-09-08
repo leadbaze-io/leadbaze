@@ -127,3 +127,5 @@ Após importar o fluxo:
 3. **Teste com o frontend** para ver o status em tempo real
 
 **O sistema agora enviará status em tempo real para o frontend!** 🎉
+
+

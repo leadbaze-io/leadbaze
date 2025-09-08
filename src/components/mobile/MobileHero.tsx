@@ -59,9 +59,54 @@ export default function MobileHero() {
             >
               <ShimmerButton 
                 onClick={() => {
-                  const pricingSection = document.getElementById('pricing-plans-section');
+                  console.log('🔍 Botão Ver Planos Mobile clicado!')
+                  
+                  // Tentar múltiplos métodos para encontrar a seção
+                  let pricingSection = document.getElementById('pricing-plans-section')
+                  
+                  // Para mobile, usar a seção mobile (md:hidden)
+                  if (pricingSection && !pricingSection.classList.contains('md:hidden')) {
+                    console.log('📍 Seção desktop encontrada no mobile, procurando versão mobile...')
+                    pricingSection = document.querySelector('section[id*="pricing"].md\\:hidden')
+                  }
+                  
+                  // Se não encontrar, tentar por classe
+                  if (!pricingSection) {
+                    pricingSection = document.querySelector('[id*="pricing"]')
+                    console.log('📍 Tentando por classe pricing:', pricingSection)
+                  }
+                  
+                  // Se ainda não encontrar, tentar por texto
+                  if (!pricingSection) {
+                    const sections = document.querySelectorAll('section')
+                    for (const section of sections) {
+                      if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                        pricingSection = section
+                        console.log('📍 Encontrado por texto:', pricingSection)
+                        break
+                      }
+                    }
+                  }
+                  
+                  console.log('📍 Seção encontrada:', pricingSection)
+                  
                   if (pricingSection) {
-                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                    // Scroll com offset para compensar navbar fixa
+                    const elementPosition = pricingSection.getBoundingClientRect().top
+                    const offsetPosition = elementPosition + window.pageYOffset - 80
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    })
+                    console.log('✅ Scroll executado com offset!')
+                  } else {
+                    console.log('❌ Seção não encontrada! Tentando método alternativo...')
+                    // Método alternativo: scroll para o final da página
+                    window.scrollTo({
+                      top: document.body.scrollHeight,
+                      behavior: 'smooth'
+                    })
                   }
                 }}
                 className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 w-full"

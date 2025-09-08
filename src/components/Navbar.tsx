@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight } from 'lucide-react'
+import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
@@ -146,11 +146,12 @@ const isActiveLink = (path: string) => {
   }
 
   // Componente para links da NavBar com animações
-  const NavLink = ({ to, children, className = "", variants = linkVariants }: { 
+  const NavLink = ({ to, children, className = "", variants = linkVariants, onClick }: { 
     to: string; 
     children: React.ReactNode; 
     className?: string;
     variants?: any;
+    onClick?: () => void;
   }) => (
     <motion.div
       variants={variants}
@@ -161,6 +162,7 @@ const isActiveLink = (path: string) => {
       <Link 
         to={to} 
         className={`relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 ${className}`}
+        onClick={onClick}
       >
         {/* Efeito de fundo no hover - com z-index menor */}
         <motion.div
@@ -220,30 +222,200 @@ const isActiveLink = (path: string) => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-2">
-            <NavLink 
-              to="/" 
-              className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                isActiveLink('/') ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Início
-            </NavLink>
-            <NavLink 
-              to="/blog" 
-              className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                isActiveLink('/blog') ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Blog
-            </NavLink>
-            <NavLink 
-              to="/blog/sobre" 
-              className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                isActiveLink('/blog/sobre') ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Sobre
-            </NavLink>
+            {/* Links para usuários NÃO logados */}
+            {!user && (
+              <>
+                <NavLink 
+                  to="/" 
+                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                    isActiveLink('/') ? 'text-blue-600 font-semibold' : ''
+                  }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
+                >
+                  Início
+                </NavLink>
+                <motion.div
+                  variants={linkVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="relative"
+                >
+                  <motion.button
+                    onClick={() => {
+                      console.log('🔍 Botão Planos clicado!')
+                      console.log('📍 Página atual:', location.pathname)
+                      
+                      // Verificar se estamos na landing page
+                      if (location.pathname === '/') {
+                        console.log('📍 Estamos na landing page, fazendo scroll...')
+                        
+                        // Tentar múltiplos métodos para encontrar a seção
+                        let pricingSection = document.getElementById('pricing-plans-section')
+                        
+                        // Verificar se é a seção correta (não mobile)
+                        if (pricingSection && pricingSection.classList.contains('md:hidden')) {
+                          console.log('📍 Seção mobile encontrada, procurando versão desktop...')
+                          pricingSection = null
+                        }
+                        
+                        // Se não encontrar, tentar por classe (desktop)
+                        if (!pricingSection) {
+                          pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
+                          console.log('📍 Tentando por classe pricing desktop:', pricingSection)
+                        }
+                        
+                        // Se ainda não encontrar, tentar por texto (desktop)
+                        if (!pricingSection) {
+                          const sections = document.querySelectorAll('section:not(.md\\:hidden)')
+                          for (const section of sections) {
+                            if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                              pricingSection = section as HTMLElement
+                              console.log('📍 Encontrado por texto desktop:', pricingSection)
+                              break
+                            }
+                          }
+                        }
+                        
+                        // Fallback: usar qualquer seção com pricing
+                        if (!pricingSection) {
+                          pricingSection = document.querySelector('[id*="pricing"]')
+                          console.log('📍 Fallback - qualquer seção pricing:', pricingSection)
+                        }
+                        
+                        console.log('📍 Seção encontrada:', pricingSection)
+                        
+                        if (pricingSection) {
+                          // Scroll com offset para compensar navbar fixa
+                          const elementPosition = pricingSection.getBoundingClientRect().top
+                          const offsetPosition = elementPosition + window.pageYOffset - 80
+                          
+                          window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                          })
+                          console.log('✅ Scroll executado com offset!')
+                        } else {
+                          console.log('❌ Seção não encontrada! Tentando método alternativo...')
+                          // Método alternativo: scroll para o final da página
+                          window.scrollTo({
+                            top: document.body.scrollHeight,
+                            behavior: 'smooth'
+                          })
+                        }
+                      } else {
+                        console.log('📍 Não estamos na landing page, navegando...')
+                        // Se não estiver na landing page, navegar para lá
+                        navigate('/')
+                        setTimeout(() => {
+                          console.log('📍 Fazendo scroll após navegação...')
+                          
+                          // Tentar múltiplos métodos para encontrar a seção
+                          let pricingSection = document.getElementById('pricing-plans-section')
+                          
+                          // Verificar se é a seção correta (não mobile)
+                          if (pricingSection && pricingSection.classList.contains('md:hidden')) {
+                            console.log('📍 Seção mobile encontrada, procurando versão desktop...')
+                            pricingSection = null
+                          }
+                          
+                          // Se não encontrar, tentar por classe (desktop)
+                          if (!pricingSection) {
+                            pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
+                            console.log('📍 Tentando por classe pricing desktop:', pricingSection)
+                          }
+                          
+                          // Se ainda não encontrar, tentar por texto (desktop)
+                          if (!pricingSection) {
+                            const sections = document.querySelectorAll('section:not(.md\\:hidden)')
+                            for (const section of sections) {
+                              if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                                pricingSection = section as HTMLElement
+                                console.log('📍 Encontrado por texto desktop:', pricingSection)
+                                break
+                              }
+                            }
+                          }
+                          
+                          // Fallback: usar qualquer seção com pricing
+                          if (!pricingSection) {
+                            pricingSection = document.querySelector('[id*="pricing"]')
+                            console.log('📍 Fallback - qualquer seção pricing:', pricingSection)
+                          }
+                          
+                          if (pricingSection) {
+                            const elementPosition = pricingSection.getBoundingClientRect().top
+                            const offsetPosition = elementPosition + window.pageYOffset - 80
+                            
+                            window.scrollTo({
+                              top: offsetPosition,
+                              behavior: 'smooth'
+                            })
+                            console.log('✅ Scroll após navegação executado!')
+                          } else {
+                            console.log('❌ Seção não encontrada após navegação!')
+                          }
+                        }, 1000)
+                      }
+                    }}
+                    className="relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 text-gray-700 hover:text-blue-600"
+                  >
+                    {/* Efeito de fundo no hover - com z-index menor */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg opacity-0"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ zIndex: -1 }}
+                    />
+                    Planos
+                    {/* Linha inferior sutil */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+                      initial={{ scaleX: 0, opacity: 0 }}
+                      whileHover={{ scaleX: 1, opacity: 1 }}
+                      transition={{
+                        duration: 0.4,
+                        ease: "easeOut"
+                      }}
+                      style={{ transformOrigin: "left" }}
+                    />
+                  </motion.button>
+                </motion.div>
+                <NavLink 
+                  to="/blog/sobre" 
+                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                    isActiveLink('/blog/sobre') ? 'text-blue-600 font-semibold' : ''
+                  }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
+                >
+                  Sobre
+                </NavLink>
+                <NavLink 
+                  to="/blog" 
+                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                    isActiveLink('/blog') ? 'text-blue-600 font-semibold' : ''
+                  }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
+                >
+                  Blog
+                </NavLink>
+              </>
+            )}
             
             {user ? (
               <>
@@ -252,6 +424,12 @@ const isActiveLink = (path: string) => {
                   className={`text-gray-700 hover:text-blue-600 transition-colors ${
                     isActiveLink('/dashboard') ? 'text-blue-600 font-semibold' : ''
                   }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
                 >
                   Dashboard
                 </NavLink>
@@ -260,6 +438,12 @@ const isActiveLink = (path: string) => {
                   className={`text-gray-700 hover:text-blue-600 transition-colors ${
                     isActiveLink('/gerador') ? 'text-blue-600 font-semibold' : ''
                   }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
                 >
                   Gerar Leads
                 </NavLink>
@@ -268,6 +452,12 @@ const isActiveLink = (path: string) => {
                   className={`text-gray-700 hover:text-blue-600 transition-colors ${
                     isActiveLink('/disparador') ? 'text-blue-600 font-semibold' : ''
                   }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
                 >
                   Disparador
                 </NavLink>
@@ -428,160 +618,302 @@ const isActiveLink = (path: string) => {
 
                   {/* Links de navegação */}
                   <motion.div className="py-2">
-                    {/* Links principais */}
-                    <motion.div
-                      className="px-2 py-1"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: 0.15 }}
-                    >
-                                                                    <Link
-                        to="/"
-                        className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                          isActiveLink('/') 
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
-                            : 'hover:bg-gray-50'
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
+                    {/* Links para usuários NÃO logados */}
+                    {!user && (
+                      <motion.div
+                        className="px-2 py-1"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.15 }}
                       >
-                        <motion.div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                        <Link
+                          to="/"
+                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/') 
-                              ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
-                              : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
                           }`}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ duration: 0.2 }}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
                         >
-                          <Home className="w-4 h-4" />
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className={`text-sm font-medium transition-colors ${
-                            isActiveLink('/') 
-                              ? 'text-blue-700' 
-                              : 'text-gray-700 group-hover:text-blue-600'
-                          }`}>
-                            Início
-                          </span>
+                          <motion.div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              isActiveLink('/') 
+                                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
+                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                            }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Home className="w-4 h-4" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-medium transition-colors ${
+                              isActiveLink('/') 
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
+                            }`}>
+                              Início
+                            </span>
+                            {isActiveLink('/') && (
+                              <motion.div
+                                className="text-xs text-blue-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                Página atual
+                              </motion.div>
+                            )}
+                          </div>
                           {isActiveLink('/') && (
                             <motion.div
-                              className="text-xs text-blue-600 mt-1"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                            >
-                              Página atual
-                            </motion.div>
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                            />
                           )}
-                        </div>
-                        {isActiveLink('/') && (
-                          <motion.div
-                            className="w-2 h-2 bg-blue-500 rounded-full"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
-                          />
-                        )}
-                      </Link>
+                        </Link>
 
-                                            <Link
-                        to="/blog"
-                        className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                          isActiveLink('/blog') 
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
-                            : 'hover:bg-gray-50'
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <motion.div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
-                            isActiveLink('/blog') 
-                              ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
-                              : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
-                          }`}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ duration: 0.2 }}
+                        {/* Botão Planos para mobile */}
+                        <motion.button
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Verificar se estamos na landing page
+                            if (location.pathname === '/') {
+                              setTimeout(() => {
+                                // Tentar múltiplos métodos para encontrar a seção
+                                let pricingSection = document.getElementById('pricing-plans-section')
+                                
+                                // Para mobile, usar a seção mobile (md:hidden)
+                                if (pricingSection && !pricingSection.classList.contains('md:hidden')) {
+                                  console.log('📍 Seção desktop encontrada no mobile, procurando versão mobile...')
+                                  pricingSection = document.querySelector('section[id*="pricing"].md\\:hidden')
+                                }
+                                
+                                // Se não encontrar, tentar por classe
+                                if (!pricingSection) {
+                                  pricingSection = document.querySelector('[id*="pricing"]')
+                                }
+                                
+                                // Se ainda não encontrar, tentar por texto
+                                if (!pricingSection) {
+                                  const sections = document.querySelectorAll('section')
+                                  for (const section of sections) {
+                                    if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                                      pricingSection = section
+                                      break
+                                    }
+                                  }
+                                }
+                                
+                                if (pricingSection) {
+                                  // Scroll com offset para compensar navbar fixa
+                                  const elementPosition = pricingSection.getBoundingClientRect().top
+                                  const offsetPosition = elementPosition + window.pageYOffset - 80
+                                  
+                                  window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                  })
+                                } else {
+                                  // Método alternativo: scroll para o final da página
+                                  window.scrollTo({
+                                    top: document.body.scrollHeight,
+                                    behavior: 'smooth'
+                                  })
+                                }
+                              }, 300)
+                            } else {
+                              // Se não estiver na landing page, navegar para lá
+                              navigate('/')
+                              setTimeout(() => {
+                                // Tentar múltiplos métodos para encontrar a seção
+                                let pricingSection = document.getElementById('pricing-plans-section')
+                                
+                                // Para mobile, usar a seção mobile (md:hidden)
+                                if (pricingSection && !pricingSection.classList.contains('md:hidden')) {
+                                  console.log('📍 Seção desktop encontrada no mobile, procurando versão mobile...')
+                                  pricingSection = document.querySelector('section[id*="pricing"].md\\:hidden')
+                                }
+                                
+                                // Se não encontrar, tentar por classe
+                                if (!pricingSection) {
+                                  pricingSection = document.querySelector('[id*="pricing"]')
+                                }
+                                
+                                // Se ainda não encontrar, tentar por texto
+                                if (!pricingSection) {
+                                  const sections = document.querySelectorAll('section')
+                                  for (const section of sections) {
+                                    if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
+                                      pricingSection = section
+                                      break
+                                    }
+                                  }
+                                }
+                                
+                                if (pricingSection) {
+                                  const elementPosition = pricingSection.getBoundingClientRect().top
+                                  const offsetPosition = elementPosition + window.pageYOffset - 80
+                                  
+                                  window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                  })
+                                } else {
+                                  // Método alternativo: scroll para o final da página
+                                  window.scrollTo({
+                                    top: document.body.scrollHeight,
+                                    behavior: 'smooth'
+                                  })
+                                }
+                              }, 1000)
+                            }
+                          }}
+                          className="group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-gray-50 w-full text-left"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <FileText className="w-4 h-4" />
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className={`text-sm font-medium transition-colors ${
-                            isActiveLink('/blog') 
-                              ? 'text-blue-700' 
-                              : 'text-gray-700 group-hover:text-blue-600'
-                          }`}>
-                            Blog
-                          </span>
-                          {isActiveLink('/blog') && (
+                          <motion.div
+                            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Crown className="w-4 h-4" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className="text-sm font-medium transition-colors text-gray-700 group-hover:text-blue-600">
+                              Planos
+                            </span>
                             <motion.div
-                              className="text-xs text-blue-600 mt-1"
+                              className="text-xs text-gray-500 mt-1"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                             >
-                              Página atual
+                              Ver preços
                             </motion.div>
-                          )}
-                        </div>
-                        {isActiveLink('/blog') && (
-                          <motion.div
-                            className="w-2 h-2 bg-blue-500 rounded-full"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
-                          />
-                        )}
-                      </Link>
+                          </div>
+                        </motion.button>
 
-                                            <Link
-                        to="/blog/sobre"
-                        className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                          isActiveLink('/blog/sobre') 
-                            ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
-                            : 'hover:bg-gray-50'
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <motion.div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                        <Link
+                          to="/blog/sobre"
+                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/blog/sobre') 
-                              ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
-                              : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
                           }`}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ duration: 0.2 }}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
                         >
-                          <Info className="w-4 h-4" />
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className={`text-sm font-medium transition-colors ${
-                            isActiveLink('/blog/sobre') 
-                              ? 'text-blue-700' 
-                              : 'text-gray-700 group-hover:text-blue-600'
-                          }`}>
-                            Sobre
-                          </span>
+                          <motion.div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              isActiveLink('/blog/sobre') 
+                                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
+                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                            }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Info className="w-4 h-4" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-medium transition-colors ${
+                              isActiveLink('/blog/sobre') 
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
+                            }`}>
+                              Sobre
+                            </span>
+                            {isActiveLink('/blog/sobre') && (
+                              <motion.div
+                                className="text-xs text-blue-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                Página atual
+                              </motion.div>
+                            )}
+                          </div>
                           {isActiveLink('/blog/sobre') && (
                             <motion.div
-                              className="text-xs text-blue-600 mt-1"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                            >
-                              Página atual
-                            </motion.div>
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                            />
                           )}
-                        </div>
-                        {isActiveLink('/blog/sobre') && (
+                        </Link>
+
+                        <Link
+                          to="/blog"
+                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                            isActiveLink('/blog') 
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
+                          }`}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
+                        >
                           <motion.div
-                            className="w-2 h-2 bg-blue-500 rounded-full"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              isActiveLink('/blog') 
+                                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg' 
+                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                            }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <FileText className="w-4 h-4" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-medium transition-colors ${
+                              isActiveLink('/blog') 
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
+                            }`}>
+                              Blog
+                            </span>
+                            {isActiveLink('/blog') && (
+                              <motion.div
+                                className="text-xs text-blue-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                Página atual
+                              </motion.div>
+                            )}
+                          </div>
+                          {isActiveLink('/blog') && (
+                            <motion.div
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                            />
+                          )}
+                        </Link>
+                      </motion.div>
+                    )}
 
                     {/* Links do usuário logado */}
                     {user && (
@@ -604,7 +936,13 @@ const isActiveLink = (path: string) => {
                               ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
                               : 'hover:bg-gray-50'
                           }`}
-                          onClick={() => setIsMenuOpen(false)}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
                         >
                           <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
@@ -653,7 +991,13 @@ const isActiveLink = (path: string) => {
                               ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
                               : 'hover:bg-gray-50'
                           }`}
-                          onClick={() => setIsMenuOpen(false)}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
                         >
                           <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
@@ -702,7 +1046,13 @@ const isActiveLink = (path: string) => {
                               ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
                               : 'hover:bg-gray-50'
                           }`}
-                          onClick={() => setIsMenuOpen(false)}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            // Scroll para o topo após navegação
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
                         >
                           <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${

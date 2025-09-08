@@ -9,6 +9,7 @@ const blogQueueRoutes = require('./routes/blogQueue');
 const blogPostsRoutes = require('./routes/blogPosts');
 const { router: autoProcessRoutes } = require('./routes/autoProcess');
 const campaignStatusRoutes = require('./routes/campaignStatus');
+const whatsappWebhookRoutes = require('./routes/whatsappWebhook');
 require('dotenv').config({ path: './config.env' });
 
 const app = express();
@@ -876,6 +877,7 @@ console.log('🔧 [Server] Registrando rotas do blog...');
 app.use('/api/blog/queue', blogQueueRoutes);
 app.use('/api/blog', blogPostsRoutes);
 app.use('/api/blog/auto', autoProcessRoutes);
+app.use('/api/whatsapp/webhook', whatsappWebhookRoutes);
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Rotas de status de campanhas

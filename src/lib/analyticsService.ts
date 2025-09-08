@@ -54,7 +54,7 @@ export async function getRealAnalyticsData(timeRange: '7d' | '30d' | '90d' = '30
     if (campaignsError) throw campaignsError
 
     // 3. Buscar leads das campanhas para calcular conversão
-    const { data: campaignLeads, error: campaignLeadsError } = await supabase
+    const { error: campaignLeadsError } = await supabase
       .from('campaign_leads')
       .select(`
         *,
@@ -172,7 +172,13 @@ export async function getRealAnalyticsData(timeRange: '7d' | '30d' | '90d' = '30
     }))
 
     // 12. Gerar atividade recente
-    const recentActivity = []
+    const recentActivity: Array<{
+      id: string
+      type: 'list_created' | 'campaign_sent' | 'campaign_completed' | 'lead_added'
+      description: string
+      timestamp: string
+      count?: number
+    }> = []
     
     // Adicionar listas criadas recentemente
     const recentLists = leadLists?.slice(0, 3) || []

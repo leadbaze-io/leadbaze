@@ -17,3 +17,5 @@ VALUES
   ('Jean Lopes', '31983323121', 'jean.lopes@email.com', (SELECT id FROM lead_lists WHERE name = 'Teste Disparo' LIMIT 1), NOW(), NOW()),
   ('Matheus Moura', '3199766846', 'matheus.moura@email.com', (SELECT id FROM lead_lists WHERE name = 'Teste Disparo' LIMIT 1), NOW(), NOW());
 
+
+
