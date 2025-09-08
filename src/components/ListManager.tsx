@@ -35,7 +35,8 @@ interface ListManagerProps {
   onSelectList?: (list: LeadList) => void
 }
 
-export function ListManager({ onSelectList }: ListManagerProps) {
+export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
+  // onSelectList is intentionally unused for now
   const [lists, setLists] = useState<LeadList[]>([])
   const [filteredLists, setFilteredLists] = useState<LeadList[]>([])
   const [isLoading, setIsLoading] = useState(true)

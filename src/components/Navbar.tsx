@@ -187,7 +187,7 @@ const isActiveLink = (path: string) => {
     to: string; 
     children: React.ReactNode; 
     className?: string;
-    variants?: Record<string, unknown>;
+    variants?: any;
     onClick?: () => void;
   }) => (
     <motion.div

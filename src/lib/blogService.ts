@@ -1254,7 +1254,7 @@ export class BlogService {
       }
 
       // Transformar dados do Supabase para o formato esperado
-      const posts: BlogPost[] = (data || []).map((post: Record<string, unknown>) => ({
+      const posts: BlogPost[] = (data || []).map((post: any) => ({
         id: post.id,
         title: post.title,
         slug: post.slug,
