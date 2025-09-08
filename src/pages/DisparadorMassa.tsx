@@ -298,6 +298,27 @@ export default function DisparadorMassa() {
     setIsCreatingCampaign(false)
   }
 
+  // Função para debug de leads duplicados
+  const debugDuplicateLead = async (lead: Lead) => {
+    if (!lead.phone) return
+    
+    try {
+      const result = await CampaignLeadsService.checkPhoneExists(lead.phone)
+      if (result.exists) {
+        console.log('🔍 DEBUG - Lead duplicado encontrado:')
+        console.log('- Nome:', lead.name)
+        console.log('- Telefone:', lead.phone)
+        console.log('- Endereço:', lead.address)
+        console.log('- Já existe em:', result.campaigns.length, 'campanha(s)')
+        result.campaigns.forEach((campaign, index) => {
+          console.log(`  ${index + 1}. Campanha: "${campaign.campaign_name}" | Lista: "${campaign.list_name}" | Lead: "${campaign.lead_name}"`)
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao verificar lead duplicado:', error)
+    }
+  }
+
   // Verificar leads duplicados (baseado PRINCIPALMENTE no telefone)
   const checkDuplicateLeads = (selectedListIds: string[]): { newLeads: Lead[], duplicateLeads: Lead[] } => {
     if (!selectedCampaign) {
@@ -329,6 +350,8 @@ export default function DisparadorMassa() {
       if (normalizedPhone) {
         if (existingPhones.has(normalizedPhone)) {
           duplicateLeads.push(lead)
+          // Debug: verificar onde o telefone já existe
+          debugDuplicateLead(lead)
         } else {
           newLeads.push(lead)
           existingPhones.add(normalizedPhone)
@@ -1431,6 +1454,34 @@ export default function DisparadorMassa() {
                                 </div>
                               );
                             })}
+                          </div>
+                        )}
+
+                        {/* Botão de Debug para Leads Duplicados */}
+                        {duplicateLeads.length > 0 && (
+                          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                                <span className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                                  {duplicateLeads.length} lead(s) duplicado(s) detectado(s)
+                                </span>
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  console.log('🔍 DEBUG - Verificando todos os leads duplicados:')
+                                  duplicateLeads.forEach((lead, index) => {
+                                    console.log(`${index + 1}. ${lead.name} - ${lead.phone}`)
+                                    debugDuplicateLead(lead)
+                                  })
+                                }}
+                                className="text-xs"
+                              >
+                                Ver Detalhes no Console
+                              </Button>
+                            </div>
                           </div>
                         )}
 

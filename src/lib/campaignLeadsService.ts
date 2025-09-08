@@ -468,6 +468,55 @@ export class CampaignLeadsService {
   }
 
   /**
+   * Verificar se um número de telefone específico já existe em qualquer campanha
+   */
+  static async checkPhoneExists(phone: string): Promise<{
+    exists: boolean
+    campaigns: Array<{
+      campaign_id: string
+      campaign_name: string
+      list_name: string
+      lead_name: string
+    }>
+  }> {
+    try {
+      const normalizedPhone = phone.replace(/\D/g, '')
+      if (!normalizedPhone) {
+        return { exists: false, campaigns: [] }
+      }
+
+      const phoneHash = this.simpleHash(normalizedPhone)
+      
+      const { data, error } = await supabase
+        .from('campaign_leads')
+        .select(`
+          campaign_id,
+          lead_data,
+          bulk_campaigns!inner(name),
+          lead_lists!inner(name)
+        `)
+        .eq('lead_hash', phoneHash)
+
+      if (error) throw error
+
+      const campaigns = data?.map(item => ({
+        campaign_id: item.campaign_id,
+        campaign_name: (item.bulk_campaigns as { name: string })?.name || 'Campanha desconhecida',
+        list_name: (item.lead_lists as { name: string })?.name || 'Lista desconhecida',
+        lead_name: (item.lead_data as any)?.name || 'Lead sem nome'
+      })) || []
+
+      return {
+        exists: campaigns.length > 0,
+        campaigns
+      }
+    } catch (error) {
+      console.error('Erro ao verificar telefone:', error)
+      return { exists: false, campaigns: [] }
+    }
+  }
+
+  /**
    * Inserir leads individualmente para identificar duplicatas
    */
   private static async insertLeadsIndividually(
