@@ -133,13 +133,13 @@ export async function getAdvancedAnalyticsData(timeRange: '7d' | '30d' | '90d' =
     const temporalAnalysis = await getTemporalAnalysis(userId, startDate)
 
     // 6. Performance por categoria
-    const categoryPerformance = await getCategoryPerformance(userId, startDate)
+    const categoryPerformance = await getCategoryPerformance(userId)
 
     // 7. Performance de templates
-    const templatePerformance = await getTemplatePerformance(userId, startDate)
+    const templatePerformance = await getTemplatePerformance(userId)
 
     // 8. Dados para gráficos
-    const chartData = await getChartData(userId, startDate, days)
+    const chartData = await getChartData(days)
 
     return {
       totalLeads,

@@ -376,7 +376,10 @@ export default function AnalyticsDashboard() {
               ...item,
               recommendations: []
             }))}
-            bestSendingHours={advancedAnalytics.bestSendingHours}
+            bestSendingHours={advancedAnalytics.bestSendingHours.map(item => ({
+              ...item,
+              recommendations: []
+            }))}
             bestSendingDays={advancedAnalytics.bestSendingDays.map(item => ({
               ...item,
               recommendations: []
@@ -397,7 +400,8 @@ export default function AnalyticsDashboard() {
           <InsightsPanel
             insights={advancedAnalytics.insights.map(insight => ({
               ...insight,
-              isRead: false
+              isRead: false,
+              severity: insight.severity as 'info' | 'warning' | 'critical'
             }))}
             onInsightRead={(insightId) => {
               console.log('Insight marcado como lido:', insightId)

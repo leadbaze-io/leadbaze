@@ -174,7 +174,7 @@ export async function getRealAnalyticsData(timeRange: '7d' | '30d' | '90d' = '30
     // 12. Gerar atividade recente
     const recentActivity: Array<{
       id: string
-      type: 'list_created' | 'campaign_sent' | 'campaign_completed' | 'lead_added'
+      type: 'lead_generated' | 'list_created' | 'campaign_sent' | 'campaign_completed'
       description: string
       timestamp: string
       count?: number
