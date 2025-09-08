@@ -6,7 +6,6 @@ import {
   CheckCircle, 
   AlertTriangle, 
   Clock, 
-  Users, 
   Minimize2, 
   Maximize2,
   TrendingUp,

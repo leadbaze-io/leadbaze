@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
-  Users, 
   TrendingUp, 
-  MessageSquare, 
   Target,
-  BarChart3,
-  PieChart,
-  Activity,
   Download,
   RefreshCw,
   Database,
@@ -15,7 +10,6 @@ import {
   Send,
   Percent,
   Clock,
-  FileText,
   Zap
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
