@@ -160,6 +160,7 @@ export class CampaignStatusServiceV2 {
             console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
         } else if (data.type === 'complete') {
+          console.log('🎉 [CampaignStatusServiceV2] ===== EVENTO COMPLETE RECEBIDO =====');
           console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onComplete...');
           console.log('🔍 [CampaignStatusServiceV2] Callback onComplete é uma função?', typeof onComplete);
@@ -169,10 +170,14 @@ export class CampaignStatusServiceV2 {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onComplete(data.data)...');
             onComplete(data.data);
             console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado com sucesso');
+            console.log('🎉 [CampaignStatusServiceV2] ===== FIM EVENTO COMPLETE =====');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
             console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
+        } else {
+          console.log('❓ [CampaignStatusServiceV2] Tipo de evento desconhecido:', data.type);
+          console.log('❓ [CampaignStatusServiceV2] Dados completos:', data);
         }
       } catch (error) {
         console.error('❌ [CampaignStatusServiceV2] Erro ao processar mensagem genérica:', error);

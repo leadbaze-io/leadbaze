@@ -409,8 +409,8 @@ export default function CampaignProgressModalV2({
                       <Users className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Total</p>
-                      <p className="text-xl font-bold text-blue-900 dark:text-blue-100">{totalLeads}</p>
+                      <p className="text-sm text-blue-700 dark:text-blue-400 font-medium drop-shadow-sm">Total</p>
+                      <p className="text-xl font-bold text-blue-900 dark:text-blue-100 drop-shadow-sm">{totalLeads}</p>
                     </div>
                   </div>
                 </div>
@@ -421,8 +421,8 @@ export default function CampaignProgressModalV2({
                       <CheckCircle className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">Enviados</p>
-                      <p className="text-xl font-bold text-green-900 dark:text-green-100">{successCount}</p>
+                      <p className="text-sm text-green-700 dark:text-green-400 font-medium drop-shadow-sm">Enviados</p>
+                      <p className="text-xl font-bold text-green-900 dark:text-green-100 drop-shadow-sm">{successCount}</p>
                     </div>
                   </div>
                 </div>
@@ -433,8 +433,8 @@ export default function CampaignProgressModalV2({
                       <AlertTriangle className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-red-600 dark:text-red-400 font-medium">Falhas</p>
-                      <p className="text-xl font-bold text-red-900 dark:text-red-100">{failedCount}</p>
+                      <p className="text-sm text-red-700 dark:text-red-400 font-medium drop-shadow-sm">Falhas</p>
+                      <p className="text-xl font-bold text-red-900 dark:text-red-100 drop-shadow-sm">{failedCount}</p>
                     </div>
                   </div>
                 </div>
@@ -445,8 +445,8 @@ export default function CampaignProgressModalV2({
                       <Timer className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Tempo</p>
-                      <p className="text-xl font-bold text-purple-900 dark:text-purple-100">{getElapsedTime()}</p>
+                      <p className="text-sm text-purple-700 dark:text-purple-400 font-medium drop-shadow-sm">Tempo</p>
+                      <p className="text-xl font-bold text-purple-900 dark:text-purple-100 drop-shadow-sm">{getElapsedTime()}</p>
                     </div>
                   </div>
                 </div>
@@ -462,9 +462,9 @@ export default function CampaignProgressModalV2({
                         <Clock className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm text-yellow-700 dark:text-yellow-300 font-medium">Tempo Estimado</p>
-                        <p className="text-lg font-bold text-yellow-900 dark:text-yellow-100">{estimatedTime}</p>
-                        <p className="text-xs text-yellow-600 dark:text-yellow-400">Velocidade: 2 mensagens/minuto</p>
+                        <p className="text-sm text-yellow-800 dark:text-yellow-300 font-medium drop-shadow-sm">Tempo Estimado</p>
+                        <p className="text-lg font-bold text-yellow-900 dark:text-yellow-100 drop-shadow-sm">{estimatedTime}</p>
+                        <p className="text-xs text-yellow-700 dark:text-yellow-400 drop-shadow-sm">Velocidade: 2 mensagens/minuto</p>
                       </div>
                     </div>
                   </div>
@@ -499,8 +499,8 @@ export default function CampaignProgressModalV2({
                           <TrendingUp className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm text-emerald-700 dark:text-emerald-300 font-medium">Taxa de Sucesso</p>
-                          <p className="text-lg font-bold text-emerald-900 dark:text-emerald-100">
+                          <p className="text-sm text-emerald-800 dark:text-emerald-300 font-medium drop-shadow-sm">Taxa de Sucesso</p>
+                          <p className="text-lg font-bold text-emerald-900 dark:text-emerald-100 drop-shadow-sm">
                             {Math.round((successCount / totalLeads) * 100)}%
                           </p>
                         </div>

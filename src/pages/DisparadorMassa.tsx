@@ -735,14 +735,22 @@ export default function DisparadorMassa() {
         console.log('📊 [DisparadorMassa] ===== FIM CALLBACK ONPROGRESS =====');
       },
       (completion) => {
+        console.log('✅ [DisparadorMassa] ===== CALLBACK ONCOMPLETE CHAMADO =====');
         console.log('✅ [DisparadorMassa] Campanha finalizada (tempo real):', completion)
+        console.log('✅ [DisparadorMassa] completion.status:', completion.status);
+        console.log('✅ [DisparadorMassa] completion.successCount:', completion.successCount);
+        console.log('✅ [DisparadorMassa] completion.failedCount:', completion.failedCount);
         
         // Atualizar estados do modal de progresso
+        console.log('🔄 [DisparadorMassa] Chamando setCurrentCampaignStatus...');
         setCurrentCampaignStatus(completion.status)
+        console.log('🔄 [DisparadorMassa] Chamando setCurrentSuccessCount...');
         setCurrentSuccessCount(completion.successCount)
+        console.log('🔄 [DisparadorMassa] Chamando setCurrentFailedCount...');
         setCurrentFailedCount(completion.failedCount)
         
         // Atualizar campanha na lista
+        console.log('🔄 [DisparadorMassa] Atualizando lista de campanhas...');
         setCampaigns(prev => prev.map(c => 
           c.id === campaignId 
             ? { 
@@ -761,6 +769,7 @@ export default function DisparadorMassa() {
           console.log('⏰ [DisparadorMassa] Fechando modal após 3 segundos...');
           setShowProgressModal(false)
         }, 3000) // Fechar após 3 segundos
+        console.log('✅ [DisparadorMassa] ===== FIM CALLBACK ONCOMPLETE =====');
       },
       (status) => {
         console.log('📊 [DisparadorMassa] Status da campanha atualizado (tempo real):', status)
