@@ -2038,7 +2038,7 @@ Entre em contato conosco para mais detalhes!"
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-40"
+          className="fixed bottom-32 right-4 sm:bottom-36 sm:right-6 z-40"
         >
           <motion.button
             onClick={showDuplicateLeadsModal}
