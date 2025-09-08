@@ -16,7 +16,7 @@ import {
   Timer
 } from 'lucide-react'
 import { Button } from './ui/button'
-import { CampaignStatusServiceV2, type CampaignProgress } from '../lib/campaignStatusServiceV2'
+import type { CampaignProgress } from '../lib/campaignStatusServiceV2'
 
 // Sistema de status mais robusto
 export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending' | 'draft'
@@ -33,7 +33,6 @@ export interface CampaignStatusInfo {
 
 interface CampaignProgressModalV2Props {
   isVisible: boolean
-  campaignId: string
   campaignName: string
   totalLeads: number
   status: CampaignStatus
@@ -48,7 +47,6 @@ interface CampaignProgressModalV2Props {
 
 export default function CampaignProgressModalV2({
   isVisible,
-  campaignId,
   campaignName,
   totalLeads,
   status,
@@ -61,7 +59,6 @@ export default function CampaignProgressModalV2({
   onExpand
 }: CampaignProgressModalV2Props) {
   const [progress, setProgress] = useState(0)
-  const [currentProgress, setCurrentProgress] = useState<CampaignProgress | null>(null)
   const [isConnected, setIsConnected] = useState(true)
 
   // Calcular progresso baseado nos contadores

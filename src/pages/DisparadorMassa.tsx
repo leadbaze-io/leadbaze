@@ -1985,7 +1985,6 @@ Entre em contato conosco para mais detalhes!"
       {/* Modal de Progresso da Campanha V2 - Tempo Real */}
       <CampaignProgressModalV2
         isVisible={showProgressModal}
-        campaignId={selectedCampaign?.id || ''}
         campaignName={selectedCampaign?.name || 'Campanha'}
         totalLeads={campaignLeads.length}
         status={currentCampaignStatus}
