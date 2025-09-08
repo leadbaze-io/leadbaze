@@ -1905,6 +1905,181 @@ html.dark .lista-dicas-texto-escuro {
   text-fill-color: hsl(var(--muted-foreground)) !important;
 }
 
+/* ===== CLASSES ESPECÍFICAS PARA CARDS DE LISTAS - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA CARDS DE LISTAS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Cards de Listas */
+html:not(.dark) .lista-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .lista-card-claro:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  border-color: #d1d5db !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Claro - Título da Lista */
+html:not(.dark) .lista-card-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos da Lista */
+html:not(.dark) .lista-card-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .lista-card-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Botões da Lista */
+html:not(.dark) .lista-card-btn-primary-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .lista-card-btn-primary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .lista-card-btn-secondary-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .lista-card-btn-secondary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .lista-card-btn-danger-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #dc2626 !important;
+  -webkit-text-fill-color: #dc2626 !important;
+  text-fill-color: #dc2626 !important;
+}
+
+html:not(.dark) .lista-card-btn-danger-claro:hover {
+  background-color: #fef2f2 !important;
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+/* Modo Escuro - Cards de Listas */
+html.dark .lista-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .lista-card-escuro:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+  border-color: #475569 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Título da Lista */
+html.dark .lista-card-titulo-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Modo Escuro - Textos da Lista */
+html.dark .lista-card-texto-escuro {
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .lista-card-muted-escuro {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  text-fill-color: #94a3b8 !important;
+}
+
+/* Modo Escuro - Botões da Lista */
+html.dark .lista-card-btn-primary-escuro {
+  background-color: #334155 !important;
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+html.dark .lista-card-btn-primary-escuro:hover {
+  background-color: #475569 !important;
+  background: #475569 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .lista-card-btn-secondary-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  text-fill-color: #94a3b8 !important;
+}
+
+html.dark .lista-card-btn-secondary-escuro:hover {
+  background-color: #334155 !important;
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+html.dark .lista-card-btn-danger-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #f87171 !important;
+  -webkit-text-fill-color: #f87171 !important;
+  text-fill-color: #f87171 !important;
+}
+
+html.dark .lista-card-btn-danger-escuro:hover {
+  background-color: #7f1d1d !important;
+  background: #7f1d1d !important;
+  color: #fca5a5 !important;
+  -webkit-text-fill-color: #fca5a5 !important;
+  text-fill-color: #fca5a5 !important;
+}
+
 /* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
 html:not(.dark) .bg-green-100 {
   background-color: #dcfce7 !important;
