@@ -1,6 +1,5 @@
 import { Star, Phone, Globe, MapPin, Eye } from "lucide-react"
 import { motion } from "framer-motion"
-import { Badge } from "./ui/badge"
 import type { Lead } from "../types"
 
 interface LeadCardProps {
