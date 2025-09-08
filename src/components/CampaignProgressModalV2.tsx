@@ -16,7 +16,7 @@ import {
   Timer
 } from 'lucide-react'
 import { Button } from './ui/button'
-import type { CampaignProgress } from '../lib/campaignStatusServiceV2'
+// import type { CampaignProgress } from '../lib/campaignStatusServiceV2' // Removido: não utilizado
 
 // Sistema de status mais robusto
 export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending' | 'draft'
@@ -471,8 +471,8 @@ export default function CampaignProgressModalV2({
                   </div>
                 )}
 
-                {/* Lead Atual (se disponível) */}
-                {currentProgress?.currentLead && (
+                {/* Lead Atual (se disponível) - REMOVIDO: currentProgress não disponível */}
+                {/* {currentProgress?.currentLead && (
                   <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
@@ -489,7 +489,7 @@ export default function CampaignProgressModalV2({
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {/* Taxa de Sucesso */}
                 {totalLeads > 0 && (
