@@ -1254,11 +1254,11 @@ export class BlogService {
       }
 
       // Transformar dados do Supabase para o formato esperado
-      const posts: BlogPost[] = (data || []).map((post: { id: string; title: string; content: string; category: string; status: string; created_at: string; updated_at: string; author: string; featured_image?: string; tags?: string[]; slug: string; excerpt?: string; published_at?: string; views?: number; likes?: number; comments_count?: number }) => ({
+      const posts: BlogPost[] = (data || []).map((post: any) => ({
         id: post.id,
         title: post.title,
         slug: post.slug,
-        excerpt: post.excerpt,
+        excerpt: post.excerpt || '',
         content: post.content,
         author: {
           name: post.author_name || 'LeadBaze Team',
@@ -1276,7 +1276,7 @@ export class BlogService {
         } : mockCategories[0],
         tags: [],
         featuredImage: post.featured_image,
-        published: post.published,
+        published: post.published || post.status === 'published',
         publishedAt: post.published_at,
         createdAt: post.created_at,
         updatedAt: post.updated_at,
@@ -1284,8 +1284,8 @@ export class BlogService {
         views: post.views || 0,
         likes: post.likes || 0,
         seoTitle: post.seo_title || post.title,
-        seoDescription: post.seo_description || post.excerpt,
-        seoKeywords: post.seo_keywords ? post.seo_keywords.split(',') : []
+        seoDescription: post.seo_description || post.excerpt || '',
+        seoKeywords: post.seo_keywords || []
       }));
 
       // Buscar total de posts para paginação (aplicando os mesmos filtros)

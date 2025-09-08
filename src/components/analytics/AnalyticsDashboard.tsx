@@ -11,58 +11,61 @@ import {
   Clock,
   Zap,
   BarChart3,
-  Activity,
-  Bell
+  Activity
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
-import { getRealAnalyticsData, type RealAnalyticsData } from '../../lib/analyticsService'
-import { getAdvancedAnalyticsData, type AdvancedAnalyticsData } from '../../lib/advancedAnalyticsService'
-import InsightsPanel from './InsightsPanel'
-import TemporalAnalysis from './TemporalAnalysis'
-import LeadQualityAnalysis from './LeadQualityAnalysis'
 import type { LeadList } from '../../types'
 
-// Usando a interface do analyticsService
-type AnalyticsData = RealAnalyticsData
+// Interface para dados mockup
+interface AnalyticsData {
+  totalLeads: number
+  totalLists: number
+  totalCampaigns: number
+  messagesSent: number
+  conversionRate: number
+  growthRate: number
+  averageRating: number
+  topCategories: Array<{ name: string; count: number; percentage: number }>
+  recentActivity: Array<{
+    id: string
+    type: 'lead_generated' | 'list_created' | 'campaign_sent' | 'campaign_completed'
+    description: string
+    timestamp: string
+    count?: number
+  }>
+  chartData: {
+    leadsOverTime: Array<{ date: string; count: number }>
+    categoryDistribution: Array<{ category: string; count: number; color: string }>
+    campaignsOverTime: Array<{ date: string; count: number; success: number; failed: number }>
+  }
+}
 
 export default function AnalyticsDashboard() {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
-  const [advancedAnalytics, setAdvancedAnalytics] = useState<AdvancedAnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
-  const [activeTab, setActiveTab] = useState<'overview' | 'temporal' | 'quality' | 'insights'>('overview')
   
   const { data: leadLists, isLoading: listsLoading } = useLeadLists()
 
-  // Carregar dados reais de analytics
+  // Carregar dados mockup de analytics
   useEffect(() => {
-    const loadAnalytics = async () => {
+    const loadAnalytics = () => {
       setIsLoading(true)
       
-      try {
-        const [realAnalytics, advancedData] = await Promise.all([
-          getRealAnalyticsData(timeRange),
-          getAdvancedAnalyticsData(timeRange)
-        ])
-        setAnalytics(realAnalytics)
-        setAdvancedAnalytics(advancedData)
-        setLastUpdated(new Date())
-      } catch (error) {
-        console.error('Erro ao carregar analytics:', error)
-        // Em caso de erro, usar dados básicos das listas
+      // Simular delay de carregamento
+      setTimeout(() => {
         if (leadLists) {
-          const fallbackAnalytics = generateFallbackAnalytics(leadLists, timeRange)
-          setAnalytics(fallbackAnalytics)
+          const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
+          setAnalytics(mockAnalytics)
           setLastUpdated(new Date())
         }
-      }
-      
-      setIsLoading(false)
+        setIsLoading(false)
+      }, 1000)
     }
 
     if (!listsLoading) {
@@ -70,28 +73,18 @@ export default function AnalyticsDashboard() {
     }
   }, [leadLists, timeRange, listsLoading])
 
-  const refreshData = async () => {
+  const refreshData = () => {
     setIsLoading(true)
     
-    try {
-      const [realAnalytics, advancedData] = await Promise.all([
-        getRealAnalyticsData(timeRange),
-        getAdvancedAnalyticsData(timeRange)
-      ])
-      setAnalytics(realAnalytics)
-      setAdvancedAnalytics(advancedData)
-      setLastUpdated(new Date())
-    } catch (error) {
-      console.error('Erro ao atualizar analytics:', error)
-      // Em caso de erro, usar dados básicos das listas
+    // Simular delay de carregamento
+    setTimeout(() => {
       if (leadLists) {
-        const fallbackAnalytics = generateFallbackAnalytics(leadLists, timeRange)
-        setAnalytics(fallbackAnalytics)
+        const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
+        setAnalytics(mockAnalytics)
         setLastUpdated(new Date())
       }
-    }
-    
-    setIsLoading(false)
+      setIsLoading(false)
+    }, 1000)
   }
 
   if (isLoading || !analytics) {
@@ -332,84 +325,6 @@ export default function AnalyticsDashboard() {
         </CardContent>
       </Card>
 
-      {/* Tabs para Análises Avançadas */}
-      <div className="space-y-6">
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={activeTab === 'overview' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('overview')}
-          >
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Visão Geral
-          </Button>
-          <Button
-            variant={activeTab === 'temporal' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('temporal')}
-          >
-            <Clock className="w-4 h-4 mr-2" />
-            Análise Temporal
-          </Button>
-          <Button
-            variant={activeTab === 'quality' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('quality')}
-          >
-            <Target className="w-4 h-4 mr-2" />
-            Qualidade de Leads
-          </Button>
-          <Button
-            variant={activeTab === 'insights' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setActiveTab('insights')}
-          >
-            <Bell className="w-4 h-4 mr-2" />
-            Insights
-          </Button>
-        </div>
-
-        {/* Conteúdo das Tabs */}
-        {activeTab === 'temporal' && advancedAnalytics && (
-          <TemporalAnalysis
-            hourlyPerformance={advancedAnalytics.chartData.hourlyPerformance.map(item => ({
-              ...item,
-              recommendations: []
-            }))}
-            bestSendingHours={advancedAnalytics.bestSendingHours.map(item => ({
-              ...item,
-              recommendations: []
-            }))}
-            bestSendingDays={advancedAnalytics.bestSendingDays.map(item => ({
-              ...item,
-              recommendations: []
-            }))}
-          />
-        )}
-
-        {activeTab === 'quality' && leadLists && (
-          <LeadQualityAnalysis
-            leads={leadLists.flatMap(list => list.leads || [])}
-            onQualityCalculated={(scores) => {
-              console.log('Scores de qualidade calculados:', scores)
-            }}
-          />
-        )}
-
-        {activeTab === 'insights' && advancedAnalytics && (
-          <InsightsPanel
-            insights={advancedAnalytics.insights.map(insight => ({
-              ...insight,
-              isRead: false,
-              severity: insight.severity as 'info' | 'warning' | 'critical'
-            }))}
-            onInsightRead={(insightId) => {
-              console.log('Insight marcado como lido:', insightId)
-            }}
-            onRefresh={refreshData}
-          />
-        )}
-      </div>
     </div>
   )
 }
@@ -503,7 +418,7 @@ function getActivityIcon(type: string) {
   }
 }
 
-function generateFallbackAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
+function generateMockAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
   const totalLeads = leadLists.reduce((sum, list) => sum + (list.total_leads || 0), 0)
   const totalLists = leadLists.length
 
@@ -514,7 +429,7 @@ function generateFallbackAnalytics(leadLists: LeadList[], timeRange: string): An
     date.setDate(date.getDate() - (days - 1 - i))
     return {
       date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      count: Math.floor(Math.random() * 10) + 1
+      count: Math.floor(Math.random() * 20) + 5
     }
   })
 
@@ -526,6 +441,14 @@ function generateFallbackAnalytics(leadLists: LeadList[], timeRange: string): An
       categoryCounts[lead.business_type] = (categoryCounts[lead.business_type] || 0) + 1
     }
   })
+
+  // Se não há categorias reais, usar categorias mockup
+  if (Object.keys(categoryCounts).length === 0) {
+    categoryCounts['Estabelecimento'] = Math.floor(totalLeads * 0.4)
+    categoryCounts['Serviços'] = Math.floor(totalLeads * 0.3)
+    categoryCounts['E-commerce'] = Math.floor(totalLeads * 0.2)
+    categoryCounts['Consultoria'] = Math.floor(totalLeads * 0.1)
+  }
 
   const topCategories = Object.entries(categoryCounts)
     .map(([name, count]) => ({
@@ -543,35 +466,52 @@ function generateFallbackAnalytics(leadLists: LeadList[], timeRange: string): An
     color: colors[index % colors.length]
   }))
 
-  // Generate campaigns data
+  // Generate campaigns data with mockup values
+  const totalCampaigns = Math.floor(totalLists * 0.8) // 80% das listas têm campanhas
+  const messagesSent = Math.floor(totalLeads * 0.6) // 60% dos leads receberam mensagens
+  const conversionRate = Math.floor(Math.random() * 15) + 5 // 5-20% de conversão
+  const growthRate = Math.floor(Math.random() * 30) + 10 // 10-40% de crescimento
+
   const campaignsOverTime = Array.from({ length: days }, (_, i) => {
     const date = new Date()
     date.setDate(date.getDate() - (days - 1 - i))
+    const success = Math.floor(Math.random() * 10) + 1
+    const failed = Math.floor(Math.random() * 3)
     return {
       date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      count: 0,
-      success: 0,
-      failed: 0
+      count: success + failed,
+      success,
+      failed
     }
   })
 
   // Generate recent activity from actual lists
-  const recentActivity = leadLists.slice(0, 3).map(list => ({
-    id: `list-${list.id}`,
-    type: 'list_created' as const,
-    description: `Lista "${list.name}" criada`,
-    timestamp: list.created_at,
-    count: list.total_leads
-  }))
+  const recentActivity = leadLists.slice(0, 5).map((list, index) => {
+    const activities = [
+      { type: 'list_created' as const, description: `Lista "${list.name}" criada` },
+      { type: 'lead_generated' as const, description: `${list.total_leads} leads adicionados` },
+      { type: 'campaign_sent' as const, description: `Campanha enviada para "${list.name}"` },
+      { type: 'campaign_completed' as const, description: `Campanha finalizada` }
+    ]
+    
+    const activity = activities[index % activities.length]
+    return {
+      id: `activity-${list.id}-${index}`,
+      type: activity.type,
+      description: activity.description,
+      timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+      count: list.total_leads
+    }
+  })
 
   return {
     totalLeads,
     totalLists,
-    totalCampaigns: 0,
-    messagesSent: 0,
-    conversionRate: 0,
-    growthRate: 0,
-    averageRating: 0,
+    totalCampaigns,
+    messagesSent,
+    conversionRate,
+    growthRate,
+    averageRating: 4.2,
     topCategories,
     recentActivity,
     chartData: {

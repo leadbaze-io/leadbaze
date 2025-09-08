@@ -246,8 +246,7 @@ export class CampaignStatusServiceV2 {
     maxAttempts: number = 120 // 10 minutos máximo
   ): () => void {
     let attempts = 0;
-    const intervalId: NodeJS.Timeout = setInterval(checkStatus, intervalMs);
-
+    
     const checkStatus = async () => {
       attempts++;
       
@@ -281,6 +280,9 @@ export class CampaignStatusServiceV2 {
         }
       }
     };
+
+    // Iniciar o polling
+    const intervalId: NodeJS.Timeout = setInterval(checkStatus, intervalMs);
 
     // Verificar imediatamente
     checkStatus();
