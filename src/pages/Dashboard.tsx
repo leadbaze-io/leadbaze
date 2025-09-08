@@ -1,6 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Loader, Send, Plus, BarChart3, Home } from 'lucide-react'
+import { 
+  Loader, 
+  BarChart3, 
+  Home, 
+  Users, 
+  Target, 
+  CheckCircle,
+  ArrowRight,
+  Sparkles,
+  MessageSquare,
+  Database,
+  Crown,
+  Award,
+  Rocket
+} from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
@@ -21,7 +35,6 @@ export default function Dashboard() {
         const currentUser = await getCurrentUser()
         if (!currentUser) {
           navigate('/login')
-          // Scroll para o topo após navegação
           setTimeout(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }, 100)
@@ -31,7 +44,6 @@ export default function Dashboard() {
       } catch (error) {
         console.error('Erro ao verificar usuário:', error)
         navigate('/login')
-        // Scroll para o topo após navegação
         setTimeout(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }, 100)
@@ -44,122 +56,186 @@ export default function Dashboard() {
   }, [navigate])
 
   const handleSelectList = (list: LeadList) => {
-    // Callback quando uma lista é selecionada
     console.log('Lista selecionada:', list.name)
     navigate(`/lista/${list.id}`)
   }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-muted-foreground">Carregando seu dashboard...</p>
-        </div>
+      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <Loader className="w-6 h-6 text-white" />
+          </motion.div>
+          <p className="text-lg font-medium dashboard-card-text-claro dark:text-muted-foreground">
+            Carregando seu dashboard...
+          </p>
+        </motion.div>
       </div>
     )
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground">Redirecionando para login...</p>
+          <p className="dashboard-card-text-claro dark:text-muted-foreground">
+            Redirecionando para login...
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="app-page min-h-screen bg-background py-8">
+    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header de Boas-vindas */}
-        <div className="mb-8">
-          <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl p-8 text-white shadow-2xl">
+        {/* Header de Boas-vindas Redesenhado */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="relative overflow-hidden dashboard-header-claro dashboard-header-escuro rounded-3xl p-6 sm:p-8 text-white shadow-2xl">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-white/5">
               <div className="absolute inset-0" style={{
                 backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
-                backgroundSize: '24px 24px',
+                backgroundSize: '32px 32px',
                 opacity: 0.1
               }}></div>
             </div>
             
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="space-y-3">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2">
-                  <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                    Bem-vindo de volta!
-                  </span>
-                  <span className="text-yellow-300 filter drop-shadow-sm">👋</span>
-                </h1>
-                <p className="text-blue-100 text-lg max-w-md">
-                  Gerencie suas listas de leads e maximize suas conversões com nossa plataforma inteligente
-                </p>
-              </div>
-              <div className="mt-6 md:mt-0">
-                <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 border border-white/30">
-                  <div className="text-sm text-white font-bold mb-3">
-                    Plano Start
-                  </div>
+            <div className="relative z-10">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex items-center space-x-3"
+                  >
+                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                      <Crown className="w-6 h-6 text-yellow-300" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                        Bem-vindo de volta!
+                      </h1>
+                      <p className="text-blue-100 text-sm sm:text-base">
+                        {user.user_metadata?.name || user.email}
+                      </p>
+                    </div>
+                  </motion.div>
                   
-                  <div className="text-sm font-semibold text-white mb-3 truncate">
-                    {user.user_metadata?.name || user.email}
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-xs text-white/80">
-                    <span className="text-white font-medium">Leads: 1.000 restantes</span>
-                    <div className="flex items-center space-x-1 ml-4">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
-                      <span className="text-white font-medium">Ativo</span>
+                  <motion.p
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-blue-100 text-base sm:text-lg max-w-2xl leading-relaxed"
+                  >
+                    Gerencie suas listas de leads e maximize suas conversões com nossa plataforma inteligente
+                  </motion.p>
+                </div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex flex-col sm:flex-row lg:flex-col gap-4"
+                >
+                  {/* Status Card */}
+                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
+                        <span className="text-sm font-semibold text-white">Plano Start</span>
+                      </div>
+                      <Award className="w-5 h-5 text-yellow-300" />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-white/80">Leads restantes</span>
+                        <span className="text-sm font-bold text-white">1.000</span>
+                      </div>
+                      <div className="w-full bg-white/20 rounded-full h-2">
+                        <div className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full w-3/4"></div>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-white/80">
+                        <span>Status: Ativo</span>
+                        <span>Renova em 30 dias</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Navigation Tabs */}
-        <div className="mb-8">
-          <div className="bg-card rounded-xl p-2 shadow-lg border border-border">
+        {/* Navigation Tabs Redesenhados */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <div className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-2xl p-2 shadow-lg border">
             <nav className="flex space-x-2">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`relative py-3 px-6 rounded-lg font-medium text-sm transition-all duration-200 ${
+                className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
                   activeTab === 'overview'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25 transform scale-105'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
+                    : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
                 }`}
               >
-                <div className="flex items-center space-x-2">
-                  <Home className="w-4 h-4" />
+                <div className="flex items-center space-x-3">
+                  <Home className="w-5 h-5" />
                   <span>Visão Geral</span>
                 </div>
                 {activeTab === 'overview' && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-30 -z-10"></div>
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
                 )}
               </button>
               
               <button
                 onClick={() => setActiveTab('analytics')}
-                className={`relative py-3 px-6 rounded-lg font-medium text-sm transition-all duration-200 ${
+                className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
                   activeTab === 'analytics'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25 transform scale-105'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
+                    : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
                 }`}
               >
-                <div className="flex items-center space-x-2">
-                  <BarChart3 className="w-4 h-4" />
+                <div className="flex items-center space-x-3">
+                  <BarChart3 className="w-5 h-5" />
                   <span>Analytics</span>
                 </div>
                 {activeTab === 'analytics' && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-30 -z-10"></div>
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
                 )}
               </button>
             </nav>
           </div>
-        </div>
+        </motion.div>
 
         {/* Tab Content */}
         <AnimatePresence mode="wait">
@@ -190,12 +266,26 @@ export default function Dashboard() {
           )}
         </AnimatePresence>
 
-        {/* Ações Rápidas */}
-        <div className="mt-12">
-          <h3 className="text-xl font-bold text-foreground mb-6 text-center">Ações Rápidas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Ações Rápidas Redesenhadas */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-12"
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground mb-2">
+              Ações Rápidas
+            </h3>
+            <p className="dashboard-card-muted-claro dark:text-muted-foreground">
+              Comece a gerar leads e maximizar suas conversões
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <motion.div 
-              whileHover={{ scale: 1.02, y: -4 }}
+              whileHover={{ scale: 1.02, y: -8 }}
+              whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
               onClick={() => {
                 navigate('/gerador')
@@ -204,25 +294,40 @@ export default function Dashboard() {
                 }, 100)
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl p-8 text-white shadow-xl border border-white/10">
+              <div className="absolute inset-0 dashboard-action-card-claro dashboard-action-card-escuro rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
+              <div className="relative dashboard-action-card-claro dashboard-action-card-escuro rounded-3xl p-8 text-white shadow-xl border border-white/10">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Plus className="w-6 h-6" />
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                        <Target className="w-7 h-7" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold">Gerar Novos Leads</h3>
+                        <p className="text-green-100 text-sm">Extraia leads qualificados do Google Maps</p>
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold">Gerar Novos Leads</h3>
-                    <p className="text-green-100 text-sm">Extraia leads qualificados do Google Maps com nossa IA</p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>IA Avançada</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Dados Completos</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="text-white/60">
-                    <Plus className="w-8 h-8" />
+                    <ArrowRight className="w-8 h-8" />
                   </div>
                 </div>
               </div>
             </motion.div>
 
             <motion.div 
-              whileHover={{ scale: 1.02, y: -4 }}
+              whileHover={{ scale: 1.02, y: -8 }}
+              whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
               onClick={() => {
                 navigate('/disparador')
@@ -231,87 +336,119 @@ export default function Dashboard() {
                 }, 100)
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-8 text-white shadow-xl border border-white/10">
+              <div className="absolute inset-0 dashboard-action-card-purple-claro dashboard-action-card-purple-escuro rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
+              <div className="relative dashboard-action-card-purple-claro dashboard-action-card-purple-escuro rounded-3xl p-8 text-white shadow-xl border border-white/10">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Send className="w-6 h-6" />
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                        <MessageSquare className="w-7 h-7" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold">Disparador em Massa</h3>
+                        <p className="text-purple-100 text-sm">Envie mensagens personalizadas via WhatsApp</p>
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold">Disparador em Massa</h3>
-                    <p className="text-purple-100 text-sm">Envie mensagens personalizadas via WhatsApp</p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Personalização</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Automação</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="text-white/60">
-                    <Send className="w-8 h-8" />
+                    <ArrowRight className="w-8 h-8" />
                   </div>
                 </div>
               </div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Dicas e Recursos Adicionais */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">
-              🚀 Recursos Disponíveis
-            </h3>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium text-foreground">Extração Inteligente</p>
-                  <p className="text-sm text-muted-foreground">Extraia dados precisos do Google Maps com nossa IA</p>
-                </div>
+        {/* Recursos e Dicas Redesenhados */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8"
+        >
+          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                <Rocket className="w-5 h-5 text-white" />
               </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium text-foreground">Seleção Individual</p>
-                  <p className="text-sm text-muted-foreground">Escolha exatamente quais leads deseja salvar</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-purple-600 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium text-foreground">Exportação CSV</p>
-                  <p className="text-sm text-muted-foreground">Integre facilmente com seu CRM favorito</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-orange-600 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium text-foreground">Disparador em Massa</p>
-                  <p className="text-sm text-muted-foreground">Envie mensagens WhatsApp para suas listas automaticamente</p>
-                </div>
-              </div>
+              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                Recursos Disponíveis
+              </h3>
+            </div>
+            <div className="space-y-4">
+              {[
+                { icon: Target, title: "Extração Inteligente", desc: "Extraia dados precisos do Google Maps com nossa IA", color: "blue" },
+                { icon: Users, title: "Seleção Individual", desc: "Escolha exatamente quais leads deseja salvar", color: "green" },
+                { icon: Database, title: "Exportação CSV", desc: "Integre facilmente com seu CRM favorito", color: "purple" },
+                { icon: MessageSquare, title: "Disparador em Massa", desc: "Envie mensagens WhatsApp automaticamente", color: "orange" }
+              ].map((resource, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  className="flex items-start space-x-4 p-3 rounded-xl hover:bg-muted/50 transition-colors"
+                >
+                  <div className={`w-10 h-10 bg-${resource.color}-100 dark:bg-${resource.color}-900 rounded-xl flex items-center justify-center flex-shrink-0`}>
+                    <resource.icon className={`w-5 h-5 text-${resource.color}-600 dark:text-${resource.color}-400`} />
+                  </div>
+                  <div>
+                    <p className="font-semibold dashboard-card-text-claro dark:text-foreground">
+                      {resource.title}
+                    </p>
+                    <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
+                      {resource.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
 
-          <div className="bg-card rounded-2xl shadow-lg border border-border p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">
-              💡 Dicas de Uso
-            </h3>
-            <div className="space-y-3 text-sm text-muted-foreground">
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                <p>Seja específico nas buscas do Google Maps para obter leads mais qualificados</p>
+          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                <p>Priorize estabelecimentos com 4+ estrelas para melhor taxa de conversão</p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                <p>Use os filtros nas listas para encontrar leads com telefone e website</p>
-              </div>
-              <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-5 h-5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                <p>Organize seus leads em listas temáticas para melhor gestão</p>
-              </div>
+              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                Dicas de Uso
+              </h3>
+            </div>
+            <div className="space-y-4">
+              {[
+                "Seja específico nas buscas do Google Maps para obter leads mais qualificados",
+                "Priorize estabelecimentos com 4+ estrelas para melhor taxa de conversão",
+                "Use os filtros nas listas para encontrar leads com telefone e website",
+                "Organize seus leads em listas temáticas para melhor gestão"
+              ].map((tip, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  className="flex items-start space-x-3 p-3 rounded-xl hover:bg-muted/50 transition-colors"
+                >
+                  <span className="flex-shrink-0 w-6 h-6 dashboard-badge-claro dashboard-badge-escuro rounded-full flex items-center justify-center text-xs font-bold">
+                    {index + 1}
+                  </span>
+                  <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground leading-relaxed">
+                    {tip}
+                  </p>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )

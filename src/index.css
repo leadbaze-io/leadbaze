@@ -1520,6 +1520,191 @@ html.dark .modal-sucesso-mensagem-texto-escuro {
   text-fill-color: #6ee7b7 !important;
 }
 
+/* ===== CLASSES ESPECÍFICAS PARA DASHBOARD - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA DASHBOARD - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .dashboard-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Header de Boas-vindas */
+html:not(.dark) .dashboard-header-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #1e40af) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Cards de Navegação */
+html:not(.dark) .dashboard-nav-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Botões de Navegação */
+html:not(.dark) .dashboard-nav-button-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .dashboard-nav-button-claro:hover {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+}
+
+html:not(.dark) .dashboard-nav-button-active-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Claro - Cards de Ação Rápida */
+html:not(.dark) .dashboard-action-card-claro {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html:not(.dark) .dashboard-action-card-purple-claro {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modo Claro - Cards de Informação */
+html:not(.dark) .dashboard-info-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Títulos dos Cards */
+html:not(.dark) .dashboard-card-title-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .dashboard-card-text-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .dashboard-card-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Badges e Indicadores */
+html:not(.dark) .dashboard-badge-claro {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .dashboard-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Header de Boas-vindas */
+html.dark .dashboard-header-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #1e40af) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Cards de Navegação */
+html.dark .dashboard-nav-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Botões de Navegação */
+html.dark .dashboard-nav-button-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+html.dark .dashboard-nav-button-escuro:hover {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+}
+
+html.dark .dashboard-nav-button-active-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Modo Escuro - Cards de Ação Rápida */
+html.dark .dashboard-action-card-escuro {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .dashboard-action-card-purple-escuro {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modo Escuro - Cards de Informação */
+html.dark .dashboard-info-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Títulos dos Cards */
+html.dark .dashboard-card-title-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .dashboard-card-text-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .dashboard-card-muted-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Badges e Indicadores */
+html.dark .dashboard-badge-escuro {
+  background-color: #1e40af !important;
+  background: #1e40af !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
 /* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
 html:not(.dark) .bg-green-100 {
   background-color: #dcfce7 !important;
