@@ -76,9 +76,7 @@ export default function DisparadorMassa() {
 
   // Debug para leads duplicados
   useEffect(() => {
-    if (duplicateLeads.length > 0) {
-      console.log('🔍 DEBUG - duplicateLeads.length:', duplicateLeads.length, 'duplicateLeads:', duplicateLeads)
-    }
+    console.log('🔍 DEBUG - duplicateLeads changed:', duplicateLeads.length, 'duplicateLeads:', duplicateLeads)
   }, [duplicateLeads])
 
   const loadData = useCallback(async () => {
@@ -1465,6 +1463,7 @@ export default function DisparadorMassa() {
                         )}
 
                         {/* Botão para Ver Detalhes de Leads Duplicados */}
+                        {/* DEBUG: duplicateLeads.length = {duplicateLeads.length} */}
                         {duplicateLeads.length > 0 && (
                           <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900 border border-orange-200 dark:border-orange-800 rounded-lg">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -1493,6 +1492,7 @@ export default function DisparadorMassa() {
                         )}
 
                         {/* Feedback de Leads - Design Elegante */}
+                        {/* DEBUG: newLeads.length = {newLeads.length}, duplicateLeads.length = {duplicateLeads.length} */}
                         {(newLeads.length > 0 || duplicateLeads.length > 0) && (
                           <motion.div 
                             initial={{ opacity: 0, y: 10 }}
