@@ -1254,7 +1254,7 @@ export class BlogService {
       }
 
       // Transformar dados do Supabase para o formato esperado
-      const posts: BlogPost[] = (data || []).map((post: any) => ({
+      const posts: BlogPost[] = (data || []).map((post: { id: string; title: string; content: string; category: string; status: string; created_at: string; updated_at: string; author: string; featured_image?: string; tags?: string[]; slug: string; excerpt?: string; published_at?: string; views?: number; likes?: number; comments_count?: number }) => ({
         id: post.id,
         title: post.title,
         slug: post.slug,
@@ -1480,7 +1480,7 @@ export class BlogService {
       }
       
       // Transformar dados do Supabase para o formato esperado
-      const categories: BlogCategory[] = await Promise.all((data || []).map(async (category: any) => {
+      const categories: BlogCategory[] = await Promise.all((data || []).map(async (category: { id: string; name: string; slug: string; description?: string; created_at: string; updated_at: string; post_count?: number }) => {
         // Buscar contagem real de posts para cada categoria
         const { count } = await supabase
           .from('blog_posts')

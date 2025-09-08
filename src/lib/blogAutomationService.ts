@@ -54,9 +54,9 @@ export interface ProcessResult {
   success: boolean;
   processed?: number;
   errors?: number;
-  details?: any[];
+  details?: Array<{ id: string; status: string; message?: string }>;
   message?: string;
-  error?: any;
+  error?: string;
 }
 
 export interface HealthStatus {
@@ -72,7 +72,7 @@ export interface HealthStatus {
 
 class BlogAutomationServiceClient {
   private baseUrl: string;
-  private currentUser: any = null;
+  private currentUser: { id: string; email: string } | null = null;
 
   constructor() {
     this.baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io';
@@ -326,7 +326,7 @@ class BlogAutomationServiceClient {
   /**
    * Obter logs
    */
-  async getLogs(limit: number = 100): Promise<{ success: boolean; logs: any[] }> {
+  async getLogs(limit: number = 100): Promise<{ success: boolean; logs: Array<{ id: string; message: string; timestamp: string; level: string }> }> {
     this.ensureAdminAccess();
     return this.request(`/api/blog/automation/admin/logs?limit=${limit}`);
   }
@@ -338,7 +338,7 @@ class BlogAutomationServiceClient {
   /**
    * Subscription para mudanças na fila (usando Supabase Realtime)
    */
-  subscribeToQueueChanges(callback: (payload: any) => void) {
+  subscribeToQueueChanges(callback: (payload: { id: string; status: string; message?: string }) => void) {
     if (!this.isAuthorizedAdmin()) {
       console.warn('Subscription para fila requer acesso admin');
       return null;
@@ -361,7 +361,7 @@ class BlogAutomationServiceClient {
   /**
    * Subscription para novos posts criados
    */
-  subscribeToNewPosts(callback: (payload: any) => void) {
+  subscribeToNewPosts(callback: (payload: { id: string; title: string; status: string }) => void) {
     return supabase
       .channel('blog_posts_changes')
       .on(

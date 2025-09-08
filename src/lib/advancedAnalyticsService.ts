@@ -400,7 +400,7 @@ async function getChartData(days: number) {
 }
 
 // Funções auxiliares para recomendações
-function getHourRecommendations(hour: number, stats: any): string[] {
+function getHourRecommendations(hour: number, stats: { sent: number; responses: number; rate: number }): string[] {
   const recommendations = []
   
   if (hour >= 9 && hour <= 11) {
@@ -420,7 +420,7 @@ function getHourRecommendations(hour: number, stats: any): string[] {
   return recommendations
 }
 
-function getDayRecommendations(day: string, stats: any): string[] {
+function getDayRecommendations(day: string, stats: { performance: number }): string[] {
   const recommendations = []
   
   if (['Segunda', 'Terça', 'Quarta', 'Quinta'].includes(day)) {
@@ -439,7 +439,13 @@ function getDayRecommendations(day: string, stats: any): string[] {
 }
 
 // Função para calcular score de qualidade de um lead
-export async function calculateLeadQualityScore(lead: any): Promise<LeadQualityScore> {
+export async function calculateLeadQualityScore(lead: { 
+  rating?: number; 
+  reviews_count?: number; 
+  website?: string; 
+  phone?: string; 
+  business_type?: string; 
+}): Promise<LeadQualityScore> {
   const rating = lead.rating || 0
   const reviewsCount = lead.reviews_count || 0
   const hasWebsite = !!lead.website
