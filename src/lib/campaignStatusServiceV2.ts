@@ -143,13 +143,21 @@ export class CampaignStatusServiceV2 {
         if (data.type === 'progress') {
           console.log('📈 [CampaignStatusServiceV2] Processando progresso via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
-          onProgress(data.data);
-          console.log('✅ [CampaignStatusServiceV2] Callback onProgress chamado com sucesso');
+          try {
+            onProgress(data.data);
+            console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
+          } catch (error) {
+            console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onProgress:', error);
+          }
         } else if (data.type === 'complete') {
           console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onComplete...');
-          onComplete(data.data);
-          console.log('✅ [CampaignStatusServiceV2] Callback onComplete chamado com sucesso');
+          try {
+            onComplete(data.data);
+            console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado com sucesso');
+          } catch (error) {
+            console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
+          }
         }
       } catch (error) {
         console.error('❌ [CampaignStatusServiceV2] Erro ao processar mensagem genérica:', error);
