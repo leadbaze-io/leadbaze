@@ -457,7 +457,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Formulário de Extração */}
       <Card>
         <CardHeader>
@@ -473,7 +473,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           <Form {...urlForm}>
             <form
               onSubmit={urlForm.handleSubmit(onUrlSubmit)}
-              className="flex flex-col space-y-4"
+              className="flex flex-col space-y-4 sm:space-y-6"
             >
               <FormField
                 control={urlForm.control}
@@ -494,20 +494,22 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 )}
               />
               
-              <div className="space-y-2">
-                <Label>Quantidade de Leads</Label>
-                <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover border border-border shadow-lg">
-                    <SelectItem value="10">10 Leads</SelectItem>
-                    <SelectItem value="20">20 Leads</SelectItem>
-                    <SelectItem value="30">30 Leads</SelectItem>
-                    <SelectItem value="40">40 Leads</SelectItem>
-                    <SelectItem value="50">50 Leads</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">Quantidade de Leads</Label>
+                  <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
+                    <SelectTrigger className="h-11 border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-popover border border-border shadow-lg">
+                      <SelectItem value="10">10 Leads</SelectItem>
+                      <SelectItem value="20">20 Leads</SelectItem>
+                      <SelectItem value="30">30 Leads</SelectItem>
+                      <SelectItem value="40">40 Leads</SelectItem>
+                      <SelectItem value="50">50 Leads</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <motion.div
@@ -520,7 +522,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
               >
                 <Button
                   type="submit"
-                  className={`w-full transition-all duration-300 ${
+                  className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold ${
                     isFormValid 
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -571,39 +573,26 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       <MapPin className="w-5 h-5" />
                       <span>Leads Encontrados ({filteredLeads.length})</span>
                     </CardTitle>
-                    <CardDescription className="flex items-center space-x-2">
-                      <span>Selecione os leads que deseja salvar</span>
-                      {!showSaveOptions && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                          💾 Opções de salvar disponíveis
-                        </span>
-                      )}
+                    <CardDescription>
+                      Selecione os leads que deseja salvar
                     </CardDescription>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  <div className="flex justify-end">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={toggleSelectAll}
-                      className="text-xs flex-1 sm:flex-none"
+                      className="text-xs"
                     >
                       {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
-                    </Button>
-                    <Button
-                      onClick={() => setShowSaveOptions(!showSaveOptions)}
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none"
-                    >
-                      <Save className="w-4 h-4 mr-1" />
-                      Salvar Leads
                     </Button>
                   </div>
                 </div>
 
                 {/* Filtros */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 mt-4 p-3 sm:p-4 bg-muted rounded-lg">
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Buscar</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 mt-4 p-4 sm:p-6 bg-muted/50 rounded-xl border border-border/50">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Buscar</Label>
                     <Input
                       placeholder="Nome ou endereço..."
                       value={searchTerm}
@@ -611,12 +600,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         setSearchTerm(e.target.value)
                         resetPagination()
                       }}
-                      className="h-9 text-sm w-full"
+                      className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                     />
                   </div>
                   
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Cidade</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Cidade</Label>
                     <Input
                       placeholder="Filtrar por cidade..."
                       value={cityFilter}
@@ -624,12 +613,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         setCityFilter(e.target.value)
                         resetPagination()
                       }}
-                      className="h-9 text-sm w-full"
+                      className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
                     />
                   </div>
                   
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Avaliação Mínima</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Avaliação Mínima</Label>
                     <Select 
                       value={ratingFilter} 
                       onValueChange={(value) => {
@@ -637,7 +626,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         resetPagination()
                       }}
                     >
-                      <SelectTrigger className="h-9 text-sm w-full">
+                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
@@ -649,8 +638,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </Select>
                   </div>
                   
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Avaliações</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Avaliações</Label>
                     <Select 
                       value={reviewsFilter} 
                       onValueChange={(value) => {
@@ -658,7 +647,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         resetPagination()
                       }}
                     >
-                      <SelectTrigger className="h-9 text-sm w-full">
+                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
                         <SelectValue placeholder="Todas" />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
@@ -673,8 +662,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </Select>
                   </div>
                   
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Website</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Website</Label>
                     <Select 
                       value={websiteFilter} 
                       onValueChange={(value) => {
@@ -682,7 +671,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         resetPagination()
                       }}
                     >
-                      <SelectTrigger className="h-9 text-sm w-full">
+                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
@@ -693,8 +682,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </Select>
                   </div>
                   
-                  <div>
-                    <Label className="text-xs font-medium text-foreground mb-1 block">Leads por Página</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold text-foreground">Leads por Página</Label>
                     <Select 
                       value={leadsPerPage} 
                       onValueChange={(value) => {
@@ -702,7 +691,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-9 text-sm w-full">
+                      <SelectTrigger className="h-10 text-sm w-full border-border/60 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border border-border shadow-lg">
