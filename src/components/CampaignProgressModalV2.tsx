@@ -12,7 +12,6 @@ import {
   Wifi, 
   WifiOff,
   TrendingUp,
-  Target,
   Timer
 } from 'lucide-react'
 import { Button } from './ui/button'
