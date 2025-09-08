@@ -146,11 +146,11 @@ export default function DuplicateLeadsModal({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-200"
+          className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[85vh] sm:max-h-[90vh] overflow-hidden border border-gray-200"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-orange-50">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-orange-50">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-orange-600" />
@@ -186,7 +186,7 @@ export default function DuplicateLeadsModal({
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(85vh-180px)] sm:max-h-[calc(90vh-200px)]">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12 space-y-4">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-600"></div>
@@ -317,25 +317,25 @@ export default function DuplicateLeadsModal({
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
             <div className="text-sm text-gray-600 flex items-center space-x-2">
               <span className="text-lg">💡</span>
               <span>
                 <strong className="text-gray-800">Dica:</strong> Você pode selecionar leads para adicioná-los mesmo sendo duplicados
               </span>
             </div>
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
               <Button 
                 variant="outline" 
                 onClick={onClose}
-                className="border-gray-300 hover:bg-gray-100"
+                className="border-gray-300 hover:bg-gray-100 w-full sm:w-auto"
               >
                 Cancelar
               </Button>
               {selectedLeads.size > 0 && (
                 <Button
                   onClick={handleForceAdd}
-                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                  className="bg-orange-600 hover:bg-orange-700 text-white w-full sm:w-auto"
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Adicionar Selecionados ({selectedLeads.size})
