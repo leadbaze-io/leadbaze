@@ -257,22 +257,79 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Campaigns Performance */}
-      {analytics.overview.totalCampaigns > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Activity className="w-5 h-5 text-purple-600" />
-              <span>Performance das Campanhas</span>
-            </CardTitle>
-            <CardDescription>
-              Taxa de entrega e mensagens enviadas
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CampaignsChart data={analytics.campaigns} />
-          </CardContent>
-        </Card>
-      )}
+      {/* MELHORIA: Performance das Campanhas reformulada */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Activity className="w-5 h-5 text-purple-600" />
+            <span>Performance das Campanhas</span>
+          </CardTitle>
+          <CardDescription>
+            Estatísticas detalhadas de campanhas e mensagens
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {/* Métricas de Performance */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="text-2xl font-bold text-green-600">
+                  {analytics.overview.performance?.successMessages || 0}
+                </div>
+                <div className="text-sm text-green-600">Mensagens Enviadas</div>
+              </div>
+              <div className="text-center p-4 bg-red-50 rounded-lg">
+                <div className="text-2xl font-bold text-red-600">
+                  {analytics.overview.performance?.failedMessages || 0}
+                </div>
+                <div className="text-sm text-red-600">Mensagens Falharam</div>
+              </div>
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="text-2xl font-bold text-blue-600">
+                  {analytics.overview.performance?.successRate || 0}%
+                </div>
+                <div className="text-sm text-blue-600">Taxa de Sucesso</div>
+              </div>
+              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                <div className="text-2xl font-bold text-purple-600">
+                  {analytics.overview.campaignStats?.total || 0}
+                </div>
+                <div className="text-sm text-purple-600">Total Campanhas</div>
+              </div>
+            </div>
+
+            {/* Status das Campanhas */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-lg font-semibold text-gray-600">
+                  {analytics.overview.campaignStats?.completed || 0}
+                </div>
+                <div className="text-xs text-gray-500">Finalizadas</div>
+              </div>
+              <div className="text-center p-3 bg-yellow-50 rounded-lg">
+                <div className="text-lg font-semibold text-yellow-600">
+                  {analytics.overview.campaignStats?.sending || 0}
+                </div>
+                <div className="text-xs text-yellow-600">Em Andamento</div>
+              </div>
+              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-lg font-semibold text-blue-600">
+                  {analytics.overview.campaignStats?.draft || 0}
+                </div>
+                <div className="text-xs text-blue-600">Rascunhos</div>
+              </div>
+            </div>
+
+            {/* Gráfico de Campanhas */}
+            {analytics.campaigns.length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium mb-3">Campanhas por Dia</h4>
+                <CampaignsChart data={analytics.campaigns} />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Activity */}
       <Card>
@@ -308,28 +365,45 @@ export default function AnalyticsDashboard() {
                     </p>
                   </div>
                 </div>
-                {activity.count && (
-                  <div 
-                    className="inline-flex items-center rounded-full text-xs font-bold px-3 py-1 shadow-lg border-0"
-                    style={{
-                      backgroundColor: 'rgb(59, 130, 246)',
-                      minWidth: '32px',
-                      height: '24px',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <span 
-                      className="text-xs font-bold"
+                {/* MELHORIA: Dados mais robustos na atividade recente */}
+                <div className="flex items-center space-x-2">
+                  {activity.count && (
+                    <div 
+                      className="inline-flex items-center rounded-full text-xs font-bold px-3 py-1 shadow-lg border-0"
                       style={{
-                        color: 'rgb(255, 255, 255)',
-                        textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
-                        lineHeight: '1'
+                        backgroundColor: 'rgb(59, 130, 246)',
+                        minWidth: '32px',
+                        height: '24px',
+                        justifyContent: 'center'
                       }}
                     >
-                      {activity.count}
-                    </span>
-                  </div>
-                )}
+                      <span 
+                        className="text-xs font-bold"
+                        style={{
+                          color: 'rgb(255, 255, 255)',
+                          textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
+                          lineHeight: '1'
+                        }}
+                      >
+                        {activity.count}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* MELHORIA: Mostrar taxa de sucesso para campanhas */}
+                  {activity.successRate && activity.successRate > 0 && (
+                    <div className="text-xs text-green-600 font-medium">
+                      {activity.successRate}% sucesso
+                    </div>
+                  )}
+                  
+                  {/* MELHORIA: Mostrar progresso para campanhas em andamento */}
+                  {activity.progress && activity.progress > 0 && (
+                    <div className="text-xs text-blue-600 font-medium">
+                      {activity.progress}% concluído
+                    </div>
+                  )}
+                </div>
               </motion.div>
             ))}
           </div>

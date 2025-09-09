@@ -11,9 +11,28 @@ export interface AnalyticsOverview {
   totalCampaigns: number;
   messagesSent: number;
   conversionRate: number;
+  successRate: number;
+  failureRate: number;
   growthRate: number;
   averageRating: number;
   timeRange: string;
+  // MELHORIA: Dados adicionais
+  campaignStats: {
+    total: number;
+    completed: number;
+    sending: number;
+    draft: number;
+    successCount: number;
+    failedCount: number;
+  };
+  performance: {
+    totalMessages: number;
+    successMessages: number;
+    failedMessages: number;
+    successRate: number;
+    failureRate: number;
+    conversionRate: number;
+  };
 }
 
 export interface LeadsOverTime {
@@ -38,14 +57,25 @@ export interface CampaignData {
   count: number;
   success: number;
   failed: number;
+  // MELHORIA: Dados adicionais
+  totalLeads: number;
+  completedCampaigns: number;
+  sendingCampaigns: number;
+  successRate: number;
+  totalMessages: number;
 }
 
 export interface RecentActivity {
   id: string;
-  type: 'lead_generated' | 'list_created' | 'campaign_sent' | 'campaign_completed';
+  type: 'lead_generated' | 'list_created' | 'campaign_sent' | 'campaign_completed' | 'campaign_created';
   description: string;
   timestamp: string;
   count?: number;
+  // MELHORIA: Dados adicionais
+  successCount?: number;
+  failedCount?: number;
+  successRate?: number;
+  progress?: number;
 }
 
 export class AnalyticsService {

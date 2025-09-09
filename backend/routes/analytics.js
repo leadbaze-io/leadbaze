@@ -87,11 +87,23 @@ router.get('/overview', async (req, res) => {
     const totalLists = leadLists.length;
     const totalCampaigns = campaigns.length;
     
+    // MELHORIA: Incluir todas as campanhas, não apenas as completadas
+    const allCampaigns = campaigns;
     const completedCampaigns = campaigns.filter(c => c.status === 'completed');
-    const totalMessagesSent = completedCampaigns.reduce((sum, c) => sum + (c.success_count || 0) + (c.failed_count || 0), 0);
+    const sendingCampaigns = campaigns.filter(c => c.status === 'sending');
+    const draftCampaigns = campaigns.filter(c => c.status === 'draft');
     
-    const successCount = completedCampaigns.reduce((sum, c) => sum + (c.success_count || 0), 0);
+    // MELHORIA: Calcular mensagens enviadas de todas as campanhas
+    const totalMessagesSent = allCampaigns.reduce((sum, c) => sum + (c.success_count || 0) + (c.failed_count || 0), 0);
+    const successCount = allCampaigns.reduce((sum, c) => sum + (c.success_count || 0), 0);
+    const failedCount = allCampaigns.reduce((sum, c) => sum + (c.failed_count || 0), 0);
+    
+    // MELHORIA: Calcular taxa de conversão mais robusta
     const conversionRate = totalMessagesSent > 0 ? Math.round((successCount / totalMessagesSent) * 100) : 0;
+    
+    // MELHORIA: Calcular taxa de sucesso
+    const successRate = totalMessagesSent > 0 ? Math.round((successCount / totalMessagesSent) * 100) : 0;
+    const failureRate = totalMessagesSent > 0 ? Math.round((failedCount / totalMessagesSent) * 100) : 0;
 
     // Calcular crescimento (comparar com período anterior)
     const previousPeriodStart = new Date(startDate.getTime() - (days * 24 * 60 * 60 * 1000));
@@ -107,15 +119,36 @@ router.get('/overview', async (req, res) => {
       ? Math.round(((currentPeriodLeads - previousPeriodLeads) / previousPeriodLeads) * 100)
       : currentPeriodLeads > 0 ? 100 : 0;
 
+    // MELHORIA: Dados mais robustos e detalhados
     const overview = {
       totalLeads,
       totalLists,
       totalCampaigns,
       messagesSent: totalMessagesSent,
       conversionRate,
+      successRate,
+      failureRate,
       growthRate,
       averageRating: 4.2, // Mockup por enquanto
-      timeRange
+      timeRange,
+      // MELHORIA: Dados adicionais para melhor visualização
+      campaignStats: {
+        total: totalCampaigns,
+        completed: completedCampaigns.length,
+        sending: sendingCampaigns.length,
+        draft: draftCampaigns.length,
+        successCount,
+        failedCount
+      },
+      // MELHORIA: Métricas de performance
+      performance: {
+        totalMessages: totalMessagesSent,
+        successMessages: successCount,
+        failedMessages: failedCount,
+        successRate: successRate,
+        failureRate: failureRate,
+        conversionRate: conversionRate
+      }
     };
 
     console.log('✅ [Analytics] Overview calculado:', overview);
@@ -353,26 +386,48 @@ router.get('/campaigns', async (req, res) => {
       dailyData[dateKey] = { success: 0, failed: 0, count: 0 };
     }
 
-    // Somar campanhas por dia
+    // MELHORIA: Somar campanhas por dia com dados mais robustos
     campaigns.forEach(campaign => {
       const campaignDate = new Date(campaign.created_at).toISOString().split('T')[0];
       if (dailyData.hasOwnProperty(campaignDate)) {
         dailyData[campaignDate].success += campaign.success_count || 0;
         dailyData[campaignDate].failed += campaign.failed_count || 0;
         dailyData[campaignDate].count += 1;
+        
+        // MELHORIA: Adicionar dados de performance
+        if (!dailyData[campaignDate].totalLeads) dailyData[campaignDate].totalLeads = 0;
+        if (!dailyData[campaignDate].completedCampaigns) dailyData[campaignDate].completedCampaigns = 0;
+        if (!dailyData[campaignDate].sendingCampaigns) dailyData[campaignDate].sendingCampaigns = 0;
+        
+        dailyData[campaignDate].totalLeads += campaign.total_leads || 0;
+        
+        if (campaign.status === 'completed') {
+          dailyData[campaignDate].completedCampaigns += 1;
+        } else if (campaign.status === 'sending') {
+          dailyData[campaignDate].sendingCampaigns += 1;
+        }
       }
     });
 
-    // Converter para array ordenado
+    // MELHORIA: Converter para array ordenado com dados mais robustos
     const campaignsOverTime = Object.entries(dailyData)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, data]) => {
         const dateObj = new Date(date);
+        const totalMessages = data.success + data.failed;
+        const successRate = totalMessages > 0 ? Math.round((data.success / totalMessages) * 100) : 0;
+        
         return {
           date: dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
           count: data.count,
           success: data.success,
-          failed: data.failed
+          failed: data.failed,
+          // MELHORIA: Dados adicionais
+          totalLeads: data.totalLeads || 0,
+          completedCampaigns: data.completedCampaigns || 0,
+          sendingCampaigns: data.sendingCampaigns || 0,
+          successRate: successRate,
+          totalMessages: totalMessages
         };
       });
 
@@ -456,7 +511,7 @@ router.get('/recent-activity', async (req, res) => {
       });
     });
 
-    // Adicionar atividades de campanhas
+    // MELHORIA: Adicionar atividades de campanhas mais detalhadas
     campaigns.forEach(campaign => {
       if (campaign.status === 'completed') {
         activities.push({
@@ -464,13 +519,33 @@ router.get('/recent-activity', async (req, res) => {
           type: 'campaign_completed',
           description: `Campanha "${campaign.name}" finalizada`,
           timestamp: campaign.completed_at || campaign.created_at,
-          count: (campaign.success_count || 0) + (campaign.failed_count || 0)
+          count: (campaign.success_count || 0) + (campaign.failed_count || 0),
+          // MELHORIA: Dados adicionais
+          successCount: campaign.success_count || 0,
+          failedCount: campaign.failed_count || 0,
+          successRate: campaign.success_count && campaign.failed_count 
+            ? Math.round((campaign.success_count / (campaign.success_count + campaign.failed_count)) * 100)
+            : 0
         });
       } else if (campaign.status === 'sending') {
         activities.push({
           id: `campaign-sent-${campaign.id}`,
           type: 'campaign_sent',
-          description: `Campanha "${campaign.name}" enviada`,
+          description: `Campanha "${campaign.name}" em andamento`,
+          timestamp: campaign.created_at,
+          count: campaign.total_leads || 0,
+          // MELHORIA: Dados adicionais
+          successCount: campaign.success_count || 0,
+          failedCount: campaign.failed_count || 0,
+          progress: campaign.total_leads > 0 
+            ? Math.round(((campaign.success_count || 0) + (campaign.failed_count || 0)) / campaign.total_leads * 100)
+            : 0
+        });
+      } else if (campaign.status === 'draft') {
+        activities.push({
+          id: `campaign-draft-${campaign.id}`,
+          type: 'campaign_created',
+          description: `Campanha "${campaign.name}" criada`,
           timestamp: campaign.created_at,
           count: campaign.total_leads || 0
         });
