@@ -662,11 +662,49 @@ export const AnalyticsDashboard: React.FC = () => {
                     Leads ao Longo do Tempo
                   </h3>
                 </div>
-                <div className="h-64 flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground">
-                  <div className="text-center">
-                    <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Gráfico de leads em desenvolvimento</p>
-                  </div>
+                <div className="h-64">
+                  {analytics.leadsOverTime && analytics.leadsOverTime.length > 0 ? (
+                    <div className="h-full flex flex-col">
+                      {/* Gráfico simples com barras */}
+                      <div className="flex-1 flex items-end justify-between space-x-1 p-4">
+                        {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
+                          const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count));
+                          const height = maxValue > 0 ? (item.count / maxValue) * 100 : 0;
+                          
+                          return (
+                            <div key={index} className="flex flex-col items-center flex-1">
+                              <div 
+                                className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500"
+                                style={{ height: `${Math.max(height, 5)}%` }}
+                                title={`${item.count} leads em ${item.date}`}
+                              />
+                              <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
+                                {item.date}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* Legenda */}
+                      <div className="flex justify-between items-center p-4 border-t border-border/50">
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
+                          Últimos 7 dias
+                        </div>
+                        <div className="text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
+                          Total: {analytics.leadsOverTime.reduce((sum: number, item: any) => sum + item.count, 0)} leads
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-full flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground">
+                      <div className="text-center">
+                        <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">Nenhum dado de leads encontrado</p>
+                        <p className="text-xs opacity-75">Crie listas de leads para ver o gráfico</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -681,50 +719,95 @@ export const AnalyticsDashboard: React.FC = () => {
                   </h3>
                 </div>
                 <div className="space-y-6">
-                  {/* Métricas Resumidas */}
+                  {/* Métricas Específicas de Performance */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-4 rounded-2xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
                       <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        {analytics.overview.performance?.successRate || 0}%
+                        {analytics.overview.performance?.conversionRate || 0}%
                       </div>
-                      <div className="text-sm text-green-600 dark:text-green-400 font-medium">Taxa de Sucesso</div>
+                      <div className="text-sm text-green-600 dark:text-green-400 font-medium">Taxa de Conversão</div>
                     </div>
-                    <div className="text-center p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
-                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {analytics.overview.performance?.totalMessages || 0}
+                    <div className="text-center p-4 rounded-2xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800/30">
+                      <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                        {analytics.overview.performance?.totalMessages > 0 ? 
+                          Math.round(analytics.overview.performance.totalMessages / (analytics.overview.campaignStats?.total || 1)) : 0
+                        }
                       </div>
-                      <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">Total Mensagens</div>
+                      <div className="text-sm text-orange-600 dark:text-orange-400 font-medium">Média por Campanha</div>
                     </div>
                   </div>
 
-                  {/* Gráfico Placeholder */}
-                  <div className="h-48 flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground rounded-2xl bg-muted/30 border-2 border-dashed">
-                    <div className="text-center">
-                      <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Gráfico de performance em desenvolvimento</p>
-                      <p className="text-xs opacity-75">Dados de campanhas por período</p>
-                    </div>
+                  {/* Gráfico de Performance */}
+                  <div className="h-48">
+                    {analytics.campaigns && analytics.campaigns.length > 0 ? (
+                      <div className="h-full flex flex-col">
+                        {/* Gráfico de barras para campanhas */}
+                        <div className="flex-1 flex items-end justify-between space-x-1 p-4">
+                          {analytics.campaigns.slice(-7).map((campaign: any, index: number) => {
+                            const maxValue = Math.max(...analytics.campaigns.map((c: any) => c.totalMessages || 0));
+                            const height = maxValue > 0 ? ((campaign.totalMessages || 0) / maxValue) * 100 : 0;
+                            
+                            return (
+                              <div key={index} className="flex flex-col items-center flex-1">
+                                <div 
+                                  className="w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500"
+                                  style={{ height: `${Math.max(height, 5)}%` }}
+                                  title={`${campaign.totalMessages || 0} mensagens em ${campaign.date}`}
+                                />
+                                <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
+                                  {campaign.date}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        
+                        {/* Legenda */}
+                        <div className="flex justify-between items-center p-4 border-t border-border/50">
+                          <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
+                            Últimos 7 dias
+                          </div>
+                          <div className="text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
+                            Total: {analytics.campaigns.reduce((sum: number, campaign: any) => sum + (campaign.totalMessages || 0), 0)} mensagens
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="h-full flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground rounded-2xl bg-muted/30 border-2 border-dashed">
+                        <div className="text-center">
+                          <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Nenhuma campanha encontrada</p>
+                          <p className="text-xs opacity-75">Crie campanhas para ver o gráfico</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Estatísticas Adicionais */}
+                  {/* Estatísticas de Eficiência */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="text-center p-3 rounded-xl bg-muted/50">
                       <div className="text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.campaignStats?.completed || 0}
+                        {analytics.overview.performance?.totalMessages > 0 ? 
+                          Math.round((analytics.overview.performance.successMessages || 0) / analytics.overview.performance.totalMessages * 100) : 0
+                        }%
                       </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Finalizadas</div>
+                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Eficiência</div>
                     </div>
                     <div className="text-center p-3 rounded-xl bg-muted/50">
                       <div className="text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.campaignStats?.sending || 0}
+                        {analytics.overview.campaignStats?.total > 0 ? 
+                          Math.round((analytics.overview.campaignStats.completed || 0) / analytics.overview.campaignStats.total * 100) : 0
+                        }%
                       </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Ativas</div>
+                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Taxa Conclusão</div>
                     </div>
                     <div className="text-center p-3 rounded-xl bg-muted/50">
                       <div className="text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.campaignStats?.draft || 0}
+                        {analytics.overview.totalLeads > 0 ? 
+                          Math.round((analytics.overview.performance?.totalMessages || 0) / analytics.overview.totalLeads * 100) : 0
+                        }%
                       </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Rascunhos</div>
+                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Cobertura</div>
                     </div>
                   </div>
                 </div>
