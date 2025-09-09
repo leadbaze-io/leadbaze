@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
   Users, 
-  Target,
+  Target, 
   Activity, 
   Clock, 
   CheckCircle, 
@@ -16,7 +16,12 @@ import {
   Award,
   ArrowUpRight,
   ArrowDownRight,
-  Minus
+  Minus,
+  MessageSquare,
+  Phone,
+  Mail,
+  MapPin,
+  Star
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -24,9 +29,8 @@ import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AnalyticsService } from '../../lib/analyticsService';
-import { useTheme } from '../../hooks/use-theme';
 
-// Componente de KPI Card otimizado
+// Componente de KPI Card otimizado seguindo o padrão do site
 const KPICard = ({ 
   title, 
   value, 
@@ -44,40 +48,46 @@ const KPICard = ({
 }) => {
   const colorClasses = {
     blue: {
-      bg: 'bg-blue-50 dark:bg-blue-950/50',
-      text: 'text-blue-600',
-      icon: 'text-blue-500',
-      border: 'border-blue-200 dark:border-blue-800/30'
+      bg: 'bg-blue-50 dark:bg-blue-950/30',
+      text: 'text-blue-600 dark:text-blue-400',
+      icon: 'text-blue-500 dark:text-blue-400',
+      border: 'border-blue-200 dark:border-blue-800/30',
+      iconBg: 'bg-blue-100 dark:bg-blue-900/50'
     },
     green: {
-      bg: 'bg-green-50 dark:bg-green-950/50',
-      text: 'text-green-600',
-      icon: 'text-green-500',
-      border: 'border-green-200 dark:border-green-800/30'
+      bg: 'bg-green-50 dark:bg-green-950/30',
+      text: 'text-green-600 dark:text-green-400',
+      icon: 'text-green-500 dark:text-green-400',
+      border: 'border-green-200 dark:border-green-800/30',
+      iconBg: 'bg-green-100 dark:bg-green-900/50'
     },
     red: {
-      bg: 'bg-red-50 dark:bg-red-950/50',
-      text: 'text-red-600',
-      icon: 'text-red-500',
-      border: 'border-red-200 dark:border-red-800/30'
+      bg: 'bg-red-50 dark:bg-red-950/30',
+      text: 'text-red-600 dark:text-red-400',
+      icon: 'text-red-500 dark:text-red-400',
+      border: 'border-red-200 dark:border-red-800/30',
+      iconBg: 'bg-red-100 dark:bg-red-900/50'
     },
     purple: {
-      bg: 'bg-purple-50 dark:bg-purple-950/50',
-      text: 'text-purple-600',
-      icon: 'text-purple-500',
-      border: 'border-purple-200 dark:border-purple-800/30'
+      bg: 'bg-purple-50 dark:bg-purple-950/30',
+      text: 'text-purple-600 dark:text-purple-400',
+      icon: 'text-purple-500 dark:text-purple-400',
+      border: 'border-purple-200 dark:border-purple-800/30',
+      iconBg: 'bg-purple-100 dark:bg-purple-900/50'
     },
     orange: {
-      bg: 'bg-orange-50 dark:bg-orange-950/50',
-      text: 'text-orange-600',
-      icon: 'text-orange-500',
-      border: 'border-orange-200 dark:border-orange-800/30'
+      bg: 'bg-orange-50 dark:bg-orange-950/30',
+      text: 'text-orange-600 dark:text-orange-400',
+      icon: 'text-orange-500 dark:text-orange-400',
+      border: 'border-orange-200 dark:border-orange-800/30',
+      iconBg: 'bg-orange-100 dark:bg-orange-900/50'
     },
     indigo: {
-      bg: 'bg-indigo-50 dark:bg-indigo-950/50',
-      text: 'text-indigo-600',
-      icon: 'text-indigo-500',
-      border: 'border-indigo-200 dark:border-indigo-800/30'
+      bg: 'bg-indigo-50 dark:bg-indigo-950/30',
+      text: 'text-indigo-600 dark:text-indigo-400',
+      icon: 'text-indigo-500 dark:text-indigo-400',
+      border: 'border-indigo-200 dark:border-indigo-800/30',
+      iconBg: 'bg-indigo-100 dark:bg-indigo-900/50'
     }
   };
 
@@ -89,7 +99,7 @@ const KPICard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className={`h-full ${colors.bg} ${colors.border} border transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}>
+      <Card className={`h-full ${colors.bg} ${colors.border} border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] backdrop-blur-sm`}>
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex-1">
@@ -104,7 +114,9 @@ const KPICard = ({
                 </h3>
                 {change !== undefined && !loading && (
                   <div className={`flex items-center space-x-1 text-sm ${
-                    change > 0 ? 'text-green-600' : change < 0 ? 'text-red-600' : 'text-muted-foreground'
+                    change > 0 ? 'text-green-600 dark:text-green-400' : 
+                    change < 0 ? 'text-red-600 dark:text-red-400' : 
+                    'text-muted-foreground'
                   }`}>
                     {change > 0 ? <ArrowUpRight className="w-4 h-4" /> : 
                      change < 0 ? <ArrowDownRight className="w-4 h-4" /> : 
@@ -114,7 +126,7 @@ const KPICard = ({
                 )}
               </div>
             </div>
-            <div className={`p-3 rounded-xl ${colors.bg} ${colors.icon}`}>
+            <div className={`p-3 rounded-xl ${colors.iconBg} ${colors.icon}`}>
               <Icon className="w-6 h-6" />
             </div>
           </div>
@@ -132,7 +144,6 @@ const ActivityItem = ({
   activity: any; 
   index: number; 
 }) => {
-  
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'campaign_completed': return <CheckCircle className="w-5 h-5" />;
@@ -145,11 +156,11 @@ const ActivityItem = ({
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case 'campaign_completed': return 'text-green-600 bg-green-100 dark:bg-green-900/30';
-      case 'campaign_sent': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30';
-      case 'campaign_created': return 'text-purple-600 bg-purple-100 dark:bg-purple-900/30';
-      case 'list_created': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30';
-      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/30';
+      case 'campaign_completed': return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400';
+      case 'campaign_sent': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400';
+      case 'campaign_created': return 'text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400';
+      case 'list_created': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-400';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400';
     }
   };
 
@@ -160,7 +171,7 @@ const ActivityItem = ({
       transition={{ delay: index * 0.1, duration: 0.3 }}
       className="group"
     >
-      <div className="flex items-center space-x-4 p-4 rounded-xl border border-border/50 hover:border-border hover:shadow-md transition-all duration-300 bg-card/50 hover:bg-card">
+      <div className="flex items-center space-x-4 p-4 rounded-xl border border-border/50 hover:border-border hover:shadow-md transition-all duration-300 bg-card/50 hover:bg-card backdrop-blur-sm">
         <div className={`p-3 rounded-xl ${getActivityColor(activity.type)} transition-all duration-300 group-hover:scale-110`}>
           {getActivityIcon(activity.type)}
         </div>
@@ -188,13 +199,13 @@ const ActivityItem = ({
           )}
           
           {activity.successRate && activity.successRate > 0 && (
-            <Badge variant="outline" className="text-green-600 border-green-200 dark:border-green-800">
+            <Badge variant="outline" className="text-green-600 border-green-200 dark:border-green-800 dark:text-green-400">
               {activity.successRate}% sucesso
             </Badge>
           )}
           
           {activity.progress && activity.progress > 0 && (
-            <Badge variant="outline" className="text-blue-600 border-blue-200 dark:border-blue-800">
+            <Badge variant="outline" className="text-blue-600 border-blue-200 dark:border-blue-800 dark:text-blue-400">
               {activity.progress}% concluído
             </Badge>
           )}
@@ -288,7 +299,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 p-6 max-w-7xl mx-auto">
-      {/* Header */}
+      {/* Header seguindo o padrão do site */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -315,20 +326,20 @@ export const AnalyticsDashboard: React.FC = () => {
             </SelectContent>
           </Select>
           
-            <Button 
+          <Button
             onClick={handleRefresh}
-              variant="outline" 
-              size="sm" 
+            variant="outline"
+            size="sm"
             disabled={refreshing}
-            >
+          >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
-            </Button>
-            
+          </Button>
+          
           <Button onClick={handleExport} variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
+            <Download className="w-4 h-4 mr-2" />
             Exportar
-            </Button>
+          </Button>
         </div>
       </motion.div>
 
@@ -368,13 +379,9 @@ export const AnalyticsDashboard: React.FC = () => {
         />
       </div>
 
-      {/* Main Content Tabs */}
-      <Tabs defaultValue="overview" className="space-y-6">
+      {/* Main Content Tabs - ORDEM CORRIGIDA: Performance, Atividade, Visão Geral */}
+      <Tabs defaultValue="performance" className="space-y-6">
         <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 lg:w-auto lg:grid-cols-3">
-          <TabsTrigger value="overview" className="flex items-center space-x-2">
-            <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">Visão Geral</span>
-          </TabsTrigger>
           <TabsTrigger value="performance" className="flex items-center space-x-2">
             <Activity className="w-4 h-4" />
             <span className="hidden sm:inline">Performance</span>
@@ -383,156 +390,96 @@ export const AnalyticsDashboard: React.FC = () => {
             <Clock className="w-4 h-4" />
             <span className="hidden sm:inline">Atividade</span>
           </TabsTrigger>
+          <TabsTrigger value="overview" className="flex items-center space-x-2">
+            <BarChart3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Visão Geral</span>
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Leads Over Time */}
-            <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
-              <span>Leads ao Longo do Tempo</span>
-            </CardTitle>
-            <CardDescription>
-              Crescimento de leads nos últimos {timeRange}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-                <div className="h-64 flex items-center justify-center text-muted-foreground">
-                  <div className="text-center">
-                    <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Gráfico de leads em desenvolvimento</p>
-                  </div>
-                </div>
-          </CardContent>
-        </Card>
-
-        {/* Category Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-                  <PieChart className="w-5 h-5 text-green-600" />
-                  <span>Distribuição por Categoria</span>
-            </CardTitle>
-            <CardDescription>
-                  Segmentação dos seus leads
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-                  {analytics.categories.length > 0 ? (
-                    analytics.categories.map((category: any, index: number) => (
-                      <div key={category.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div className="flex items-center space-x-3">
-                      <div 
-                            className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
-                      />
-                          <span className="font-medium">{category.name}</span>
-                    </div>
-                    <div className="text-right">
-                          <div className="font-semibold">{category.count}</div>
-                          <div className="text-sm text-muted-foreground">{category.percentage}%</div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p>Nenhuma categoria encontrada</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-        </TabsContent>
-
         <TabsContent value="performance" className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Activity className="w-5 h-5 text-purple-600" />
-              <span>Performance das Campanhas</span>
-            </CardTitle>
-            <CardDescription>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Activity className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <span>Performance das Campanhas</span>
+              </CardTitle>
+              <CardDescription>
                 Estatísticas detalhadas de campanhas e mensagens
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-6">
                 {/* Métricas de Performance */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800/30">
-                    <div className="text-2xl font-bold text-green-600">
+                  <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
+                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {analytics.overview.performance?.successMessages || 0}
                     </div>
-                    <div className="text-sm text-green-600 font-medium">Mensagens Enviadas</div>
+                    <div className="text-sm text-green-600 dark:text-green-400 font-medium">Mensagens Enviadas</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/30">
-                    <div className="text-2xl font-bold text-red-600">
+                  <div className="text-center p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/30">
+                    <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {analytics.overview.performance?.failedMessages || 0}
                     </div>
-                    <div className="text-sm text-red-600 font-medium">Mensagens Falharam</div>
+                    <div className="text-sm text-red-600 dark:text-red-400 font-medium">Mensagens Falharam</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/30">
-                    <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {analytics.overview.performance?.successRate || 0}%
                     </div>
-                    <div className="text-sm text-blue-600 font-medium">Taxa de Sucesso</div>
+                    <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">Taxa de Sucesso</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800/30">
-                    <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-center p-4 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30">
+                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                       {analytics.overview.campaignStats?.total || 0}
                     </div>
-                    <div className="text-sm text-purple-600 font-medium">Total Campanhas</div>
+                    <div className="text-sm text-purple-600 dark:text-purple-400 font-medium">Total Campanhas</div>
                   </div>
                 </div>
 
                 {/* Status das Campanhas */}
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-950/50 border border-gray-200 dark:border-gray-800/30">
+                  <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800/30">
                     <div className="text-xl font-bold text-gray-600 dark:text-gray-400">
                       {analytics.overview.campaignStats?.completed || 0}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-500">Finalizadas</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-yellow-50 dark:bg-yellow-950/50 border border-yellow-200 dark:border-yellow-800/30">
-                    <div className="text-xl font-bold text-yellow-600">
+                  <div className="text-center p-4 rounded-xl bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800/30">
+                    <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
                       {analytics.overview.campaignStats?.sending || 0}
                     </div>
-                    <div className="text-sm text-yellow-600">Em Andamento</div>
+                    <div className="text-sm text-yellow-600 dark:text-yellow-400">Em Andamento</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/30">
-                    <div className="text-xl font-bold text-blue-600">
+                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
+                    <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
                       {analytics.overview.campaignStats?.draft || 0}
                     </div>
-                    <div className="text-sm text-blue-600">Rascunhos</div>
+                    <div className="text-sm text-blue-600 dark:text-blue-400">Rascunhos</div>
                   </div>
                 </div>
               </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-purple-600" />
-            <span>Atividade Recente</span>
-          </CardTitle>
-          <CardDescription>
-            Últimas ações realizadas na plataforma
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <span>Atividade Recente</span>
+              </CardTitle>
+              <CardDescription>
+                Últimas ações realizadas na plataforma
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <AnimatePresence>
                   {analytics.recentActivity.map((activity: any, index: number) => (
                     <ActivityItem
-                key={activity.id}
+                      key={activity.id}
                       activity={activity}
                       index={index}
                     />
@@ -545,9 +492,73 @@ export const AnalyticsDashboard: React.FC = () => {
                     <p>Nenhuma atividade recente encontrada</p>
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Leads Over Time */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <span>Leads ao Longo do Tempo</span>
+                </CardTitle>
+                <CardDescription>
+                  Crescimento de leads nos últimos {timeRange}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 flex items-center justify-center text-muted-foreground">
+                  <div className="text-center">
+                    <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p>Gráfico de leads em desenvolvimento</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Category Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <PieChart className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  <span>Distribuição por Categoria</span>
+                </CardTitle>
+                <CardDescription>
+                  Segmentação dos seus leads
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {analytics.categories.length > 0 ? (
+                    analytics.categories.map((category: any, index: number) => (
+                      <div key={category.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center space-x-3">
+                          <div 
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
+                          />
+                          <span className="font-medium">{category.name}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold">{category.count}</div>
+                          <div className="text-sm text-muted-foreground">{category.percentage}%</div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Nenhuma categoria encontrada</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
         </TabsContent>
       </Tabs>
     </div>
