@@ -3,6 +3,9 @@
 /* Import blog styles */
 @import './styles/blog.css';
 
+/* Import landing page styles */
+@import './styles/landing.css';
+
 /* Estilos base */
 * {
   box-sizing: border-box;

@@ -1,0 +1,595 @@
+/* ============================================== */
+/* LANDING PAGE - CLASSES ESPECÍFICAS */
+/* ============================================== */
+
+/* Separar completamente o design da Landing Page das outras páginas */
+/* Usar prefixo 'landing-' para evitar conflitos */
+
+/* ===== GRADIENTES E CORES ESPECÍFICAS PARA LANDING PAGE ===== */
+
+/* Modo Claro - Gradientes de Texto */
+html:not(.dark) .landing-text-gradient-blue-purple {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html:not(.dark) .landing-text-gradient-blue-cyan {
+  background: linear-gradient(to right, #2563eb, #0891b2) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html:not(.dark) .landing-text-gradient-orange-red {
+  background: linear-gradient(to right, #ea580c, #dc2626) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html:not(.dark) .landing-text-gradient-green-emerald {
+  background: linear-gradient(to right, #16a34a, #059669) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html:not(.dark) .landing-text-gradient-purple-pink {
+  background: linear-gradient(to right, #7c3aed, #db2777) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html:not(.dark) .landing-text-gradient-yellow-orange {
+  background: linear-gradient(to right, #eab308, #ea580c) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Modo Claro - Gradientes de Fundo */
+html:not(.dark) .landing-bg-gradient-blue-purple {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-blue-cyan {
+  background: linear-gradient(to right, #2563eb, #0891b2) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-orange-red {
+  background: linear-gradient(to right, #ea580c, #dc2626) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-green-emerald {
+  background: linear-gradient(to right, #16a34a, #059669) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-purple-pink {
+  background: linear-gradient(to right, #7c3aed, #db2777) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-yellow-orange {
+  background: linear-gradient(to right, #eab308, #ea580c) !important;
+}
+
+/* Modo Claro - Cores Sólidas */
+html:not(.dark) .landing-text-blue-600 {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-fill-color: #2563eb !important;
+}
+
+html:not(.dark) .landing-text-purple-600 {
+  color: #7c3aed !important;
+  -webkit-text-fill-color: #7c3aed !important;
+  text-fill-color: #7c3aed !important;
+}
+
+html:not(.dark) .landing-text-orange-600 {
+  color: #ea580c !important;
+  -webkit-text-fill-color: #ea580c !important;
+  text-fill-color: #ea580c !important;
+}
+
+html:not(.dark) .landing-text-green-600 {
+  color: #16a34a !important;
+  -webkit-text-fill-color: #16a34a !important;
+  text-fill-color: #16a34a !important;
+}
+
+html:not(.dark) .landing-text-red-600 {
+  color: #dc2626 !important;
+  -webkit-text-fill-color: #dc2626 !important;
+  text-fill-color: #dc2626 !important;
+}
+
+html:not(.dark) .landing-text-yellow-400 {
+  color: #eab308 !important;
+  -webkit-text-fill-color: #eab308 !important;
+  text-fill-color: #eab308 !important;
+}
+
+/* Modo Claro - Cores de Fundo */
+html:not(.dark) .landing-bg-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+html:not(.dark) .landing-bg-purple-500 {
+  background-color: #8b5cf6 !important;
+}
+
+html:not(.dark) .landing-bg-orange-500 {
+  background-color: #f97316 !important;
+}
+
+html:not(.dark) .landing-bg-green-500 {
+  background-color: #22c55e !important;
+}
+
+html:not(.dark) .landing-bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+html:not(.dark) .landing-bg-yellow-400 {
+  background-color: #eab308 !important;
+}
+
+/* Modo Claro - Cores de Fundo com Gradiente */
+html:not(.dark) .landing-bg-gradient-blue-500 {
+  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-purple-500 {
+  background: linear-gradient(to right, #8b5cf6, #7c3aed) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-orange-500 {
+  background: linear-gradient(to right, #f97316, #ea580c) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-green-500 {
+  background: linear-gradient(to right, #22c55e, #16a34a) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-red-500 {
+  background: linear-gradient(to right, #ef4444, #dc2626) !important;
+}
+
+html:not(.dark) .landing-bg-gradient-yellow-400 {
+  background: linear-gradient(to right, #eab308, #ca8a04) !important;
+}
+
+/* ===== MODO ESCURO - MANTER CORES EXISTENTES ===== */
+
+/* Modo Escuro - Gradientes de Texto */
+html.dark .landing-text-gradient-blue-purple {
+  background: linear-gradient(to right, #60a5fa, #a78bfa) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html.dark .landing-text-gradient-blue-cyan {
+  background: linear-gradient(to right, #60a5fa, #22d3ee) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html.dark .landing-text-gradient-orange-red {
+  background: linear-gradient(to right, #fb923c, #f87171) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html.dark .landing-text-gradient-green-emerald {
+  background: linear-gradient(to right, #4ade80, #10b981) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html.dark .landing-text-gradient-purple-pink {
+  background: linear-gradient(to right, #a78bfa, #f472b6) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+html.dark .landing-text-gradient-yellow-orange {
+  background: linear-gradient(to right, #fbbf24, #fb923c) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Modo Escuro - Gradientes de Fundo */
+html.dark .landing-bg-gradient-blue-purple {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+html.dark .landing-bg-gradient-blue-cyan {
+  background: linear-gradient(to right, #3b82f6, #06b6d4) !important;
+}
+
+html.dark .landing-bg-gradient-orange-red {
+  background: linear-gradient(to right, #f97316, #ef4444) !important;
+}
+
+html.dark .landing-bg-gradient-green-emerald {
+  background: linear-gradient(to right, #22c55e, #10b981) !important;
+}
+
+html.dark .landing-bg-gradient-purple-pink {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+}
+
+html.dark .landing-bg-gradient-yellow-orange {
+  background: linear-gradient(to right, #eab308, #f97316) !important;
+}
+
+/* Modo Escuro - Cores Sólidas */
+html.dark .landing-text-blue-600 {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+html.dark .landing-text-purple-600 {
+  color: #a78bfa !important;
+  -webkit-text-fill-color: #a78bfa !important;
+  text-fill-color: #a78bfa !important;
+}
+
+html.dark .landing-text-orange-600 {
+  color: #fb923c !important;
+  -webkit-text-fill-color: #fb923c !important;
+  text-fill-color: #fb923c !important;
+}
+
+html.dark .landing-text-green-600 {
+  color: #4ade80 !important;
+  -webkit-text-fill-color: #4ade80 !important;
+  text-fill-color: #4ade80 !important;
+}
+
+html.dark .landing-text-red-600 {
+  color: #f87171 !important;
+  -webkit-text-fill-color: #f87171 !important;
+  text-fill-color: #f87171 !important;
+}
+
+html.dark .landing-text-yellow-400 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  text-fill-color: #fbbf24 !important;
+}
+
+/* Modo Escuro - Cores de Fundo */
+html.dark .landing-bg-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+html.dark .landing-bg-purple-500 {
+  background-color: #8b5cf6 !important;
+}
+
+html.dark .landing-bg-orange-500 {
+  background-color: #f97316 !important;
+}
+
+html.dark .landing-bg-green-500 {
+  background-color: #22c55e !important;
+}
+
+html.dark .landing-bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+html.dark .landing-bg-yellow-400 {
+  background-color: #eab308 !important;
+}
+
+/* Modo Escuro - Cores de Fundo com Gradiente */
+html.dark .landing-bg-gradient-blue-500 {
+  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+}
+
+html.dark .landing-bg-gradient-purple-500 {
+  background: linear-gradient(to right, #8b5cf6, #7c3aed) !important;
+}
+
+html.dark .landing-bg-gradient-orange-500 {
+  background: linear-gradient(to right, #f97316, #ea580c) !important;
+}
+
+html.dark .landing-bg-gradient-green-500 {
+  background: linear-gradient(to right, #22c55e, #16a34a) !important;
+}
+
+html.dark .landing-bg-gradient-red-500 {
+  background: linear-gradient(to right, #ef4444, #dc2626) !important;
+}
+
+html.dark .landing-bg-gradient-yellow-400 {
+  background: linear-gradient(to right, #eab308, #ca8a04) !important;
+}
+
+/* ===== SOBRESCREVER CLASSES TAILWIND PADRÃO APENAS NA LANDING PAGE ===== */
+
+/* Aplicar apenas quando estiver na Landing Page */
+.landing-page html:not(.dark) .from-blue-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-purple-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-blue-800 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-cyan-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-orange-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-red-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-green-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-emerald-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-purple-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-pink-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-yellow-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-orange-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-green-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-emerald-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-purple-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-pink-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .from-blue-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .to-purple-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* ===== SOBRESCREVER GRADIENTES DE FUNDO APENAS NA LANDING PAGE ===== */
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-purple-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-orange-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-red-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-green-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-emerald-500 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-yellow-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-orange-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-green-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-emerald-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-purple-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-pink-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.to-purple-400 {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+/* ===== SOBRESCREVER CORES DE FUNDO SÓLIDAS APENAS NA LANDING PAGE ===== */
+
+.landing-page html:not(.dark) .from-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-purple-500 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-orange-500 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-red-500 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-green-500 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-emerald-500 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-yellow-400 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-orange-400 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-green-400 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-emerald-400 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-purple-400 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-pink-400 {
+  background-color: #8b5cf6 !important;
+}
+
+.landing-page html:not(.dark) .from-blue-400 {
+  background-color: #3b82f6 !important;
+}
+
+.landing-page html:not(.dark) .to-purple-400 {
+  background-color: #8b5cf6 !important;
+}

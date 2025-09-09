@@ -193,31 +193,52 @@ export const AnalyticsDashboard: React.FC = () => {
         console.log('Campaigns data:', data.campaigns?.slice(-7));
         
         // Verificar se os elementos estão sendo renderizados
-        const leadBars = document.querySelectorAll('[title*="leads em"]');
-        const campaignBars = document.querySelectorAll('[title*="mensagens em"]');
+        const leadBars = document.querySelectorAll('[data-debug="lead-bar"]');
+        const campaignBars = document.querySelectorAll('[data-debug="campaign-bar"]');
         console.log('Lead bars found:', leadBars.length);
         console.log('Campaign bars found:', campaignBars.length);
         
-        leadBars.forEach((bar, index) => {
-          const element = bar as HTMLElement;
-          console.log(`Lead bar ${index}:`, {
-            height: element.style.height,
-            minHeight: element.style.minHeight,
-            backgroundColor: element.style.backgroundColor,
-            className: element.className
-          });
-        });
+        // Tentar seletores alternativos
+        const allBars = document.querySelectorAll('div[style*="height:"]');
+        console.log('All bars with height style:', allBars.length);
         
-        campaignBars.forEach((bar, index) => {
-          const element = bar as HTMLElement;
-          console.log(`Campaign bar ${index}:`, {
-            height: element.style.height,
-            minHeight: element.style.minHeight,
-            backgroundColor: element.style.backgroundColor,
-            className: element.className
+        // Verificar se estamos na aba correta
+        const overviewTab = document.querySelector('[data-tab="overview"]') as HTMLElement;
+        const performanceTab = document.querySelector('[data-tab="performance"]') as HTMLElement;
+        console.log('Overview tab visible:', overviewTab?.classList.contains('block') || overviewTab?.style.display !== 'none');
+        console.log('Performance tab visible:', performanceTab?.classList.contains('block') || performanceTab?.style.display !== 'none');
+        
+        // Debug adicional dos elementos encontrados
+        if (leadBars.length > 0) {
+          console.log('Lead bars details:');
+          leadBars.forEach((bar, index) => {
+            const element = bar as HTMLElement;
+            console.log(`Lead bar ${index}:`, {
+              date: element.dataset.date,
+              count: element.dataset.count,
+              height: element.dataset.height,
+              styleHeight: element.style.height,
+              styleMinHeight: element.style.minHeight,
+              className: element.className
+            });
           });
-        });
-      }, 1000);
+        }
+        
+        if (campaignBars.length > 0) {
+          console.log('Campaign bars details:');
+          campaignBars.forEach((bar, index) => {
+            const element = bar as HTMLElement;
+            console.log(`Campaign bar ${index}:`, {
+              date: element.dataset.date,
+              messages: element.dataset.messages,
+              height: element.dataset.height,
+              styleHeight: element.style.height,
+              styleMinHeight: element.style.minHeight,
+              className: element.className
+            });
+          });
+        }
+      }, 2000);
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
     } finally {
@@ -714,6 +735,10 @@ export const AnalyticsDashboard: React.FC = () => {
                                     backgroundColor: finalHeight > 0 ? 'rgb(59 130 246)' : 'transparent'
                                   }}
                                   title={`${item.count || 0} leads em ${item.date}`}
+                                  data-debug="lead-bar"
+                                  data-date={item.date}
+                                  data-count={item.count}
+                                  data-height={finalHeight}
                                 />
                               </div>
                               <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
@@ -798,6 +823,10 @@ export const AnalyticsDashboard: React.FC = () => {
                                       backgroundColor: finalHeight > 0 ? 'rgb(147 51 234)' : 'transparent'
                                     }}
                                     title={`${totalMessages} mensagens em ${campaign.date}`}
+                                    data-debug="campaign-bar"
+                                    data-date={campaign.date}
+                                    data-messages={totalMessages}
+                                    data-height={finalHeight}
                                   />
                                 </div>
                                 <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
