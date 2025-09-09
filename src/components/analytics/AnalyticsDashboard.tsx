@@ -16,21 +16,11 @@ import {
   Award,
   ArrowUpRight,
   ArrowDownRight,
-  Minus,
-  MessageSquare,
-  Phone,
-  Mail,
-  MapPin,
-  Star
+  Minus
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { AnalyticsService } from '../../lib/analyticsService';
 
-// Componente de KPI Card otimizado seguindo o padrão do site
+// Componente de KPI Card seguindo o padrão do Dashboard
 const KPICard = ({ 
   title, 
   value, 
@@ -46,97 +36,62 @@ const KPICard = ({
   color?: 'blue' | 'green' | 'red' | 'purple' | 'orange' | 'indigo';
   loading?: boolean;
 }) => {
-  const colorClasses = {
-    blue: {
-      bg: 'bg-blue-50 dark:bg-blue-950/30',
-      text: 'text-blue-600 dark:text-blue-400',
-      icon: 'text-blue-500 dark:text-blue-400',
-      border: 'border-blue-200 dark:border-blue-800/30',
-      iconBg: 'bg-blue-100 dark:bg-blue-900/50'
-    },
-    green: {
-      bg: 'bg-green-50 dark:bg-green-950/30',
-      text: 'text-green-600 dark:text-green-400',
-      icon: 'text-green-500 dark:text-green-400',
-      border: 'border-green-200 dark:border-green-800/30',
-      iconBg: 'bg-green-100 dark:bg-green-900/50'
-    },
-    red: {
-      bg: 'bg-red-50 dark:bg-red-950/30',
-      text: 'text-red-600 dark:text-red-400',
-      icon: 'text-red-500 dark:text-red-400',
-      border: 'border-red-200 dark:border-red-800/30',
-      iconBg: 'bg-red-100 dark:bg-red-900/50'
-    },
-    purple: {
-      bg: 'bg-purple-50 dark:bg-purple-950/30',
-      text: 'text-purple-600 dark:text-purple-400',
-      icon: 'text-purple-500 dark:text-purple-400',
-      border: 'border-purple-200 dark:border-purple-800/30',
-      iconBg: 'bg-purple-100 dark:bg-purple-900/50'
-    },
-    orange: {
-      bg: 'bg-orange-50 dark:bg-orange-950/30',
-      text: 'text-orange-600 dark:text-orange-400',
-      icon: 'text-orange-500 dark:text-orange-400',
-      border: 'border-orange-200 dark:border-orange-800/30',
-      iconBg: 'bg-orange-100 dark:bg-orange-900/50'
-    },
-    indigo: {
-      bg: 'bg-indigo-50 dark:bg-indigo-950/30',
-      text: 'text-indigo-600 dark:text-indigo-400',
-      icon: 'text-indigo-500 dark:text-indigo-400',
-      border: 'border-indigo-200 dark:border-indigo-800/30',
-      iconBg: 'bg-indigo-100 dark:bg-indigo-900/50'
-    }
+  const getGradientClasses = (color: string) => {
+    const gradients = {
+      blue: 'from-blue-500 to-blue-600',
+      green: 'from-green-500 to-green-600',
+      red: 'from-red-500 to-red-600',
+      purple: 'from-purple-500 to-purple-600',
+      orange: 'from-orange-500 to-orange-600',
+      indigo: 'from-indigo-500 to-indigo-600'
+    };
+    return gradients[color as keyof typeof gradients] || gradients.blue;
   };
-
-  const colors = colorClasses[color];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      whileHover={{ y: -4, scale: 1.02 }}
+      className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8"
     >
-      <Card className={`h-full ${colors.bg} ${colors.border} border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] backdrop-blur-sm`}>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
-              <div className="flex items-center space-x-2">
-                <h3 className="text-2xl font-bold text-foreground">
-                  {loading ? (
-                    <div className="h-8 w-16 bg-muted animate-pulse rounded" />
-                  ) : (
-                    value
-                  )}
-                </h3>
-                {change !== undefined && !loading && (
-                  <div className={`flex items-center space-x-1 text-sm ${
-                    change > 0 ? 'text-green-600 dark:text-green-400' : 
-                    change < 0 ? 'text-red-600 dark:text-red-400' : 
-                    'text-muted-foreground'
-                  }`}>
-                    {change > 0 ? <ArrowUpRight className="w-4 h-4" /> : 
-                     change < 0 ? <ArrowDownRight className="w-4 h-4" /> : 
-                     <Minus className="w-4 h-4" />}
-                    <span className="font-medium">{Math.abs(change)}%</span>
-                  </div>
-                )}
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <p className="text-sm font-medium dashboard-card-muted-claro dark:text-muted-foreground mb-2">
+            {title}
+          </p>
+          <div className="flex items-center space-x-3">
+            <h3 className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+              {loading ? (
+                <div className="h-8 w-20 bg-muted animate-pulse rounded" />
+              ) : (
+                value
+              )}
+            </h3>
+            {change !== undefined && !loading && (
+              <div className={`flex items-center space-x-1 text-sm font-medium ${
+                change > 0 ? 'text-green-600 dark:text-green-400' : 
+                change < 0 ? 'text-red-600 dark:text-red-400' : 
+                'dashboard-card-muted-claro dark:text-muted-foreground'
+              }`}>
+                {change > 0 ? <ArrowUpRight className="w-4 h-4" /> : 
+                 change < 0 ? <ArrowDownRight className="w-4 h-4" /> : 
+                 <Minus className="w-4 h-4" />}
+                <span>{Math.abs(change)}%</span>
               </div>
-            </div>
-            <div className={`p-3 rounded-xl ${colors.iconBg} ${colors.icon}`}>
-              <Icon className="w-6 h-6" />
-            </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className={`w-12 h-12 bg-gradient-to-r ${getGradientClasses(color)} rounded-2xl flex items-center justify-center shadow-lg`}>
+          <Icon className="w-6 h-6 text-white" />
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-// Componente de Activity Item otimizado
+// Componente de Activity Item seguindo o padrão do Dashboard
 const ActivityItem = ({ 
   activity, 
   index 
@@ -154,13 +109,13 @@ const ActivityItem = ({
     }
   };
 
-  const getActivityColor = (type: string) => {
+  const getActivityGradient = (type: string) => {
     switch (type) {
-      case 'campaign_completed': return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400';
-      case 'campaign_sent': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400';
-      case 'campaign_created': return 'text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400';
-      case 'list_created': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-400';
-      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400';
+      case 'campaign_completed': return 'from-green-500 to-green-600';
+      case 'campaign_sent': return 'from-blue-500 to-blue-600';
+      case 'campaign_created': return 'from-purple-500 to-purple-600';
+      case 'list_created': return 'from-orange-500 to-orange-600';
+      default: return 'from-gray-500 to-gray-600';
     }
   };
 
@@ -169,46 +124,43 @@ const ActivityItem = ({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1, duration: 0.3 }}
+      whileHover={{ x: 4, scale: 1.01 }}
       className="group"
     >
-      <div className="flex items-center space-x-4 p-4 rounded-xl border border-border/50 hover:border-border hover:shadow-md transition-all duration-300 bg-card/50 hover:bg-card backdrop-blur-sm">
-        <div className={`p-3 rounded-xl ${getActivityColor(activity.type)} transition-all duration-300 group-hover:scale-110`}>
-          {getActivityIcon(activity.type)}
-        </div>
-        
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
-            {activity.description}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {new Date(activity.timestamp).toLocaleString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-          </p>
-        </div>
+      <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl p-4 sm:p-6 shadow-lg border transition-all duration-300 group-hover:shadow-xl">
+        <div className="flex items-center space-x-4">
+          <div className={`w-10 h-10 bg-gradient-to-r ${getActivityGradient(activity.type)} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+            {getActivityIcon(activity.type)}
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold dashboard-card-text-claro dark:text-foreground truncate">
+              {activity.description}
+            </p>
+            <p className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">
+              {new Date(activity.timestamp).toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </p>
+          </div>
 
-        <div className="flex items-center space-x-2">
-          {activity.count && (
-            <Badge variant="secondary" className="font-semibold">
-              {activity.count}
-            </Badge>
-          )}
-          
-          {activity.successRate && activity.successRate > 0 && (
-            <Badge variant="outline" className="text-green-600 border-green-200 dark:border-green-800 dark:text-green-400">
-              {activity.successRate}% sucesso
-            </Badge>
-          )}
-          
-          {activity.progress && activity.progress > 0 && (
-            <Badge variant="outline" className="text-blue-600 border-blue-200 dark:border-blue-800 dark:text-blue-400">
-              {activity.progress}% concluído
-            </Badge>
-          )}
+          <div className="flex items-center space-x-2">
+            {activity.count && (
+              <span className="dashboard-badge-claro dashboard-badge-escuro px-3 py-1 rounded-full text-xs font-bold">
+                {activity.count}
+              </span>
+            )}
+            
+            {activity.successRate && activity.successRate > 0 && (
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                {activity.successRate}% sucesso
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
@@ -219,8 +171,9 @@ const ActivityItem = ({
 export const AnalyticsDashboard: React.FC = () => {
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState('30d');
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'performance' | 'activity' | 'overview'>('performance');
 
   const loadAnalytics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -246,30 +199,32 @@ export const AnalyticsDashboard: React.FC = () => {
   };
 
   const handleExport = () => {
-    // Implementar exportação de dados
     console.log('Exportando dados...');
   };
 
   if (loading) {
     return (
-      <div className="space-y-6 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="h-8 w-48 bg-muted animate-pulse rounded mb-2" />
-            <div className="h-4 w-64 bg-muted animate-pulse rounded" />
+      <div className="space-y-6">
+        {/* Header Skeleton */}
+        <div className="dashboard-header-claro dashboard-header-escuro rounded-3xl p-6 sm:p-8 text-white shadow-2xl">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+              <BarChart3 className="w-6 h-6 text-yellow-300" />
+            </div>
+            <div>
+              <div className="h-8 w-48 bg-white/20 animate-pulse rounded mb-2" />
+              <div className="h-4 w-64 bg-white/20 animate-pulse rounded" />
+            </div>
           </div>
-          <div className="h-10 w-32 bg-muted animate-pulse rounded" />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* KPI Cards Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-muted animate-pulse rounded-xl" />
+            <div key={i} className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+              <div className="h-32 bg-muted animate-pulse rounded" />
+            </div>
           ))}
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="h-96 bg-muted animate-pulse rounded-xl" />
-          <div className="h-96 bg-muted animate-pulse rounded-xl" />
         </div>
       </div>
     );
@@ -279,67 +234,100 @@ export const AnalyticsDashboard: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="w-8 h-8 text-muted-foreground" />
+          <div className="w-16 h-16 dashboard-badge-claro dashboard-badge-escuro rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-8 h-8" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
+          <h3 className="text-lg font-semibold dashboard-card-title-claro dark:text-foreground mb-2">
             Nenhum dado disponível
           </h3>
-          <p className="text-muted-foreground mb-4">
+          <p className="dashboard-card-muted-claro dark:text-muted-foreground mb-4">
             Não há dados de analytics para exibir no momento.
           </p>
-          <Button onClick={handleRefresh} variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <button 
+            onClick={handleRefresh} 
+            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+          >
+            <RefreshCw className="w-4 h-4 mr-2 inline" />
             Tentar novamente
-          </Button>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6 max-w-7xl mx-auto">
-      {/* Header seguindo o padrão do site */}
+    <div className="space-y-6">
+      {/* Header seguindo o padrão do Dashboard */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        transition={{ duration: 0.6 }}
+        className="relative overflow-hidden dashboard-header-claro dashboard-header-escuro rounded-3xl p-6 sm:p-8 text-white shadow-2xl"
       >
-        <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Analytics Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Acompanhe o desempenho das suas campanhas e leads
-          </p>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-white/5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+            backgroundSize: '32px 32px',
+            opacity: 0.1
+          }}></div>
         </div>
         
-        <div className="flex items-center space-x-3">
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7d">7 dias</SelectItem>
-              <SelectItem value="30d">30 dias</SelectItem>
-              <SelectItem value="90d">90 dias</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button
-            onClick={handleRefresh}
-            variant="outline"
-            size="sm"
-            disabled={refreshing}
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
-          
-          <Button onClick={handleExport} variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Exportar
-          </Button>
+        <div className="relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex items-center space-x-3"
+              >
+                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <BarChart3 className="w-6 h-6 text-yellow-300" />
+                </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                    Analytics Dashboard
+                  </h1>
+                  <p className="text-blue-100 text-sm sm:text-base">
+                    Acompanhe o desempenho das suas campanhas
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center space-x-3"
+            >
+              <select 
+                value={timeRange} 
+                onChange={(e) => setTimeRange(e.target.value as '7d' | '30d' | '90d')}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-xl text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
+              >
+                <option value="7d" className="text-gray-900">7 dias</option>
+                <option value="30d" className="text-gray-900">30 dias</option>
+                <option value="90d" className="text-gray-900">90 dias</option>
+              </select>
+              
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-xl text-white border border-white/20 hover:bg-white/30 transition-all duration-300 disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              
+              <button 
+                onClick={handleExport}
+                className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-xl text-white border border-white/20 hover:bg-white/30 transition-all duration-300"
+              >
+                <Download className="w-4 h-4" />
+              </button>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
@@ -379,57 +367,119 @@ export const AnalyticsDashboard: React.FC = () => {
         />
       </div>
 
-      {/* Main Content Tabs - ORDEM CORRIGIDA: Performance, Atividade, Visão Geral */}
-      <Tabs defaultValue="performance" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 lg:w-auto lg:grid-cols-3">
-          <TabsTrigger value="performance" className="flex items-center space-x-2">
-            <Activity className="w-4 h-4" />
-            <span className="hidden sm:inline">Performance</span>
-          </TabsTrigger>
-          <TabsTrigger value="activity" className="flex items-center space-x-2">
-            <Clock className="w-4 h-4" />
-            <span className="hidden sm:inline">Atividade</span>
-          </TabsTrigger>
-          <TabsTrigger value="overview" className="flex items-center space-x-2">
-            <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">Visão Geral</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Navigation Tabs seguindo o padrão do Dashboard */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-2xl p-2 shadow-lg border"
+      >
+        <nav className="flex space-x-2">
+          <button
+            onClick={() => setActiveTab('performance')}
+            className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
+              activeTab === 'performance'
+                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
+                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <Activity className="w-5 h-5" />
+              <span>Performance</span>
+            </div>
+            {activeTab === 'performance' && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+              />
+            )}
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('activity')}
+            className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
+              activeTab === 'activity'
+                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
+                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <Clock className="w-5 h-5" />
+              <span>Atividade</span>
+            </div>
+            {activeTab === 'activity' && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+              />
+            )}
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
+              activeTab === 'overview'
+                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
+                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <BarChart3 className="w-5 h-5" />
+              <span>Visão Geral</span>
+            </div>
+            {activeTab === 'overview' && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+              />
+            )}
+          </button>
+        </nav>
+      </motion.div>
 
-        <TabsContent value="performance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                <span>Performance das Campanhas</span>
-              </CardTitle>
-              <CardDescription>
-                Estatísticas detalhadas de campanhas e mensagens
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+      {/* Content Tabs */}
+      <AnimatePresence mode="wait">
+        {activeTab === 'performance' && (
+          <motion.div
+            key="performance"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                  Performance das Campanhas
+                </h3>
+              </div>
+              
               <div className="space-y-6">
                 {/* Métricas de Performance */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
                     <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {analytics.overview.performance?.successMessages || 0}
                     </div>
                     <div className="text-sm text-green-600 dark:text-green-400 font-medium">Mensagens Enviadas</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/30">
                     <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {analytics.overview.performance?.failedMessages || 0}
                     </div>
                     <div className="text-sm text-red-600 dark:text-red-400 font-medium">Mensagens Falharam</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {analytics.overview.performance?.successRate || 0}%
                     </div>
                     <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">Taxa de Sucesso</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30">
                     <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                       {analytics.overview.campaignStats?.total || 0}
                     </div>
@@ -439,19 +489,19 @@ export const AnalyticsDashboard: React.FC = () => {
 
                 {/* Status das Campanhas */}
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800/30">
                     <div className="text-xl font-bold text-gray-600 dark:text-gray-400">
                       {analytics.overview.campaignStats?.completed || 0}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-500">Finalizadas</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800/30">
                     <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
                       {analytics.overview.campaignStats?.sending || 0}
                     </div>
                     <div className="text-sm text-yellow-600 dark:text-yellow-400">Em Andamento</div>
                   </div>
-                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
+                  <div className="text-center p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
                     <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
                       {analytics.overview.campaignStats?.draft || 0}
                     </div>
@@ -459,22 +509,29 @@ export const AnalyticsDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </motion.div>
+        )}
 
-        <TabsContent value="activity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                <span>Atividade Recente</span>
-              </CardTitle>
-              <CardDescription>
-                Últimas ações realizadas na plataforma
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+        {activeTab === 'activity' && (
+          <motion.div
+            key="activity"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                  Atividade Recente
+                </h3>
+              </div>
+              
               <div className="space-y-3">
                 <AnimatePresence>
                   {analytics.recentActivity.map((activity: any, index: number) => (
@@ -487,80 +544,83 @@ export const AnalyticsDashboard: React.FC = () => {
                 </AnimatePresence>
                 
                 {analytics.recentActivity.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
+                  <div className="text-center py-12 dashboard-card-muted-claro dark:text-muted-foreground">
                     <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>Nenhuma atividade recente encontrada</p>
                   </div>
                 )}
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </motion.div>
+        )}
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Leads Over Time */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span>Leads ao Longo do Tempo</span>
-                </CardTitle>
-                <CardDescription>
-                  Crescimento de leads nos últimos {timeRange}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center text-muted-foreground">
+        {activeTab === 'overview' && (
+          <motion.div
+            key="overview"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Leads Over Time */}
+              <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                    Leads ao Longo do Tempo
+                  </h3>
+                </div>
+                <div className="h-64 flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground">
                   <div className="text-center">
                     <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>Gráfico de leads em desenvolvimento</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Category Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <PieChart className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  <span>Distribuição por Categoria</span>
-                </CardTitle>
-                <CardDescription>
-                  Segmentação dos seus leads
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+              {/* Category Distribution */}
+              <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <PieChart className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+                    Distribuição por Categoria
+                  </h3>
+                </div>
                 <div className="space-y-4">
                   {analytics.categories.length > 0 ? (
                     analytics.categories.map((category: any, index: number) => (
-                      <div key={category.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                      <div key={category.name} className="flex items-center justify-between p-3 rounded-xl bg-muted/50">
                         <div className="flex items-center space-x-3">
                           <div 
                             className="w-4 h-4 rounded-full"
                             style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
                           />
-                          <span className="font-medium">{category.name}</span>
+                          <span className="font-medium dashboard-card-text-claro dark:text-foreground">{category.name}</span>
                         </div>
                         <div className="text-right">
-                          <div className="font-semibold">{category.count}</div>
-                          <div className="text-sm text-muted-foreground">{category.percentage}%</div>
+                          <div className="font-semibold dashboard-card-text-claro dark:text-foreground">{category.count}</div>
+                          <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">{category.percentage}%</div>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="text-center py-8 dashboard-card-muted-claro dark:text-muted-foreground">
                       <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma categoria encontrada</p>
                     </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

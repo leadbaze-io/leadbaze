@@ -1,3 +1,16 @@
+// Carregar variáveis de ambiente PRIMEIRO
+require('dotenv').config({ path: './config.env' });
+
+// Verificar se as variáveis essenciais estão carregadas
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ Variáveis de ambiente do Supabase não encontradas!');
+  console.error('SUPABASE_URL:', process.env.SUPABASE_URL ? '✅' : '❌');
+  console.error('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅' : '❌');
+  process.exit(1);
+}
+
+console.log('✅ Variáveis de ambiente carregadas com sucesso!');
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -10,7 +23,6 @@ const blogPostsRoutes = require('./routes/blogPosts');
 const { router: autoProcessRoutes } = require('./routes/autoProcess');
 const campaignStatusRoutes = require('./routes/campaignStatus');
 const whatsappWebhookRoutes = require('./routes/whatsappWebhook');
-require('dotenv').config({ path: './config.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
