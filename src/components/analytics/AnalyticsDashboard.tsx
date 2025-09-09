@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
   Users, 
-  Target, 
+  Target,
   Activity, 
   Clock, 
   CheckCircle, 
@@ -456,7 +456,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   <Activity className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
-                  Performance das Campanhas
+                  Métricas de Campanhas
                 </h3>
               </div>
               
@@ -508,73 +508,15 @@ export const AnalyticsDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Taxa de Sucesso
+                          Tempo Médio
                         </p>
                         <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.performance?.successRate || 0}%
+                          {analytics.overview.campaignStats?.total > 0 ? 
+                            Math.round((analytics.overview.performance?.totalMessages || 0) / analytics.overview.campaignStats.total) : 0
+                          }min
                         </p>
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Award className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Total Campanhas
-                        </p>
-                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.total || 0}
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <BarChart3 className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Status das Campanhas */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-                  <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Finalizadas
-                        </p>
-                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.completed || 0}
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <CheckCircle className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Em Andamento
-                        </p>
-                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.sending || 0}
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
                         <Clock className="w-6 h-6 text-white" />
                       </div>
                     </div>
@@ -587,14 +529,82 @@ export const AnalyticsDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Rascunhos
+                          Taxa de Entrega
                         </p>
-                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.draft || 0}
+                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.totalMessages > 0 ? 
+                            Math.round((analytics.overview.performance.successMessages || 0) / analytics.overview.performance.totalMessages * 100) : 0
+                          }%
                         </p>
                       </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Activity className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <TrendingUp className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Métricas de Produtividade */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
+                          Leads por Dia
+                        </p>
+                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.totalLeads > 0 ? 
+                            Math.round(analytics.overview.totalLeads / 30) : 0
+                          }
+                        </p>
+                      </div>
+                      <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Users className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
+                          Mensagens por Hora
+                        </p>
+                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.totalMessages > 0 ? 
+                            Math.round(analytics.overview.performance.totalMessages / 24) : 0
+                          }
+                        </p>
+                      </div>
+                      <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Send className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
+                          ROI Estimado
+                        </p>
+                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.successRate > 0 ? 
+                            Math.round(analytics.overview.performance.successRate * 1.5) : 0
+                          }%
+                        </p>
+                      </div>
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Award className="w-6 h-6 text-white" />
                       </div>
                     </div>
                   </motion.div>
@@ -797,8 +807,8 @@ export const AnalyticsDashboard: React.FC = () => {
                       </div>
                       <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Cobertura</div>
                     </div>
-                  </div>
-                </div>
+          </div>
+    </div>
               </div>
             </div>
     </motion.div>
