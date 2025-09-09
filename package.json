@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "vite preview --port 3000 --host",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "echo 'No tests configured yet' && exit 0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
