@@ -180,6 +180,9 @@ export const AnalyticsDashboard: React.FC = () => {
     
     try {
       const data = await AnalyticsService.getAllAnalytics(timeRange);
+      console.log('Analytics data loaded:', data);
+      console.log('Leads over time:', data.leadsOverTime);
+      console.log('Campaigns data:', data.campaigns);
       setAnalytics(data);
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
@@ -663,20 +666,20 @@ export const AnalyticsDashboard: React.FC = () => {
                   </h3>
                 </div>
                 <div className="h-64">
-                  {analytics.leadsOverTime && analytics.leadsOverTime.length > 0 ? (
+                  {analytics.leadsOverTime && Array.isArray(analytics.leadsOverTime) && analytics.leadsOverTime.length > 0 ? (
                     <div className="h-full flex flex-col">
                       {/* Gráfico simples com barras */}
                       <div className="flex-1 flex items-end justify-between space-x-1 p-4">
                         {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
-                          const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count));
-                          const height = maxValue > 0 ? (item.count / maxValue) * 100 : 0;
+                          const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count || 0));
+                          const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
                           
                           return (
                             <div key={index} className="flex flex-col items-center flex-1">
                               <div 
                                 className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500"
                                 style={{ height: `${Math.max(height, 5)}%` }}
-                                title={`${item.count} leads em ${item.date}`}
+                                title={`${item.count || 0} leads em ${item.date}`}
                               />
                               <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
                                 {item.date}
@@ -692,7 +695,7 @@ export const AnalyticsDashboard: React.FC = () => {
                           Últimos 7 dias
                         </div>
                         <div className="text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
-                          Total: {analytics.leadsOverTime.reduce((sum: number, item: any) => sum + item.count, 0)} leads
+                          Total: {analytics.leadsOverTime.reduce((sum: number, item: any) => sum + (item.count || 0), 0)} leads
                         </div>
                       </div>
                     </div>
@@ -702,6 +705,7 @@ export const AnalyticsDashboard: React.FC = () => {
                         <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                         <p className="text-sm">Nenhum dado de leads encontrado</p>
                         <p className="text-xs opacity-75">Crie listas de leads para ver o gráfico</p>
+                        <p className="text-xs opacity-50 mt-2">Debug: {JSON.stringify(analytics.leadsOverTime)}</p>
                       </div>
                     </div>
                   )}
@@ -719,27 +723,10 @@ export const AnalyticsDashboard: React.FC = () => {
                   </h3>
                 </div>
                 <div className="space-y-6">
-                  {/* Métricas Específicas de Performance */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 rounded-2xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
-                      <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        {analytics.overview.performance?.conversionRate || 0}%
-                      </div>
-                      <div className="text-sm text-green-600 dark:text-green-400 font-medium">Taxa de Conversão</div>
-                    </div>
-                    <div className="text-center p-4 rounded-2xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800/30">
-                      <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                        {analytics.overview.performance?.totalMessages > 0 ? 
-                          Math.round(analytics.overview.performance.totalMessages / (analytics.overview.campaignStats?.total || 1)) : 0
-                        }
-                      </div>
-                      <div className="text-sm text-orange-600 dark:text-orange-400 font-medium">Média por Campanha</div>
-                    </div>
-                  </div>
 
                   {/* Gráfico de Performance */}
                   <div className="h-48">
-                    {analytics.campaigns && analytics.campaigns.length > 0 ? (
+                    {analytics.campaigns && Array.isArray(analytics.campaigns) && analytics.campaigns.length > 0 ? (
                       <div className="h-full flex flex-col">
                         {/* Gráfico de barras para campanhas */}
                         <div className="flex-1 flex items-end justify-between space-x-1 p-4">
@@ -778,6 +765,7 @@ export const AnalyticsDashboard: React.FC = () => {
                           <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                           <p className="text-sm">Nenhuma campanha encontrada</p>
                           <p className="text-xs opacity-75">Crie campanhas para ver o gráfico</p>
+                          <p className="text-xs opacity-50 mt-2">Debug: {JSON.stringify(analytics.campaigns)}</p>
                         </div>
                       </div>
                     )}
