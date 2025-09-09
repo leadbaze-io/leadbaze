@@ -50,6 +50,7 @@ interface LeadFiltersProProps {
   showSelectAllButton?: boolean
   onSelectAll?: () => void
   allSelected?: boolean
+  selectedCount?: number
   onResetFilters?: () => void
   className?: string
   totalLeads?: number
@@ -79,7 +80,11 @@ export function LeadFiltersPro({
   onResetFilters,
   className = "",
   totalLeads = 0,
-  filteredCount = 0
+  filteredCount = 0,
+  showSelectAllButton = false,
+  onSelectAll,
+  allSelected = false,
+  selectedCount
 }: LeadFiltersProProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
 
@@ -248,7 +253,7 @@ export function LeadFiltersPro({
 
       {/* Botão Selecionar Todos - embaixo dos Filtros Avançados */}
       {showSelectAllButton && onSelectAll && (
-        <div className="flex justify-center mt-4">
+        <div className="flex flex-col items-center space-y-3 mt-4">
           <Button
             variant="outline"
             size="sm"
@@ -257,6 +262,15 @@ export function LeadFiltersPro({
           >
             {allSelected ? 'Desmarcar Todos' : 'Selecionar Todos'}
           </Button>
+          
+          {/* Contador de leads selecionados */}
+          {selectedCount !== undefined && (
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {selectedCount} leads selecionados para salvar
+              </p>
+            </div>
+          )}
         </div>
       )}
 

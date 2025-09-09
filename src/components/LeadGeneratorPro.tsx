@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -125,6 +125,35 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     
     return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite
   })
+
+  // Desmarcar automaticamente leads que não estão mais visíveis quando filtros mudam
+  useEffect(() => {
+    if (generatedLeads.length === 0) return
+    
+    const filteredLeadIds = new Set(filteredLeads.map(lead => 
+      `${lead.name}-${lead.phone}` // Usar combinação única para identificar leads
+    ))
+    
+    // Verificar se há leads selecionados que não estão mais visíveis
+    const hasInvisibleSelected = generatedLeads.some(lead => {
+      const leadKey = `${lead.name}-${lead.phone}`
+      return !filteredLeadIds.has(leadKey) && lead.selected
+    })
+    
+    // Só atualizar se necessário para evitar loops
+    if (hasInvisibleSelected) {
+      setGeneratedLeads(prev => 
+        prev.map(lead => {
+          const leadKey = `${lead.name}-${lead.phone}`
+          // Se o lead não está mais visível e estava selecionado, desmarcá-lo
+          if (!filteredLeadIds.has(leadKey) && lead.selected) {
+            return { ...lead, selected: false }
+          }
+          return lead
+        })
+      )
+    }
+  }, [searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
 
   // Ordenar leads
   const sortedLeads = [...filteredLeads].sort((a, b) => {
@@ -649,15 +678,15 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             >
               <Card className="border-0 shadow-2xl gerador-card-claro gerador-card-escuro backdrop-blur-sm">
                 <CardHeader className="text-center pb-6">
-                  <div className="flex items-center justify-center space-x-3 mb-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-2xl font-bold gerador-titulo-claro dark:text-foreground">
+                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">
                       Leads Encontrados ({filteredLeads.length})
                     </CardTitle>
                   </div>
-                  <CardDescription className="text-lg gerador-descricao-claro dark:text-muted-foreground">
+                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro dark:text-muted-foreground text-center">
                     Selecione os leads que deseja salvar em sua lista
                   </CardDescription>
                   
@@ -702,8 +731,27 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       showSelectAllButton={true}
                       onSelectAll={toggleSelectAll}
                       allSelected={filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected)}
+                      selectedCount={getSelectedLeads().length}
                     />
                   </div>
+
+                  {/* Aviso flutuante para mobile - leads selecionados */}
+                  {getSelectedLeads().length > 0 && (
+                    <div className="sm:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg border-2 border-white/20 backdrop-blur-sm"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4" />
+                          <span className="text-sm font-semibold">
+                            {getSelectedLeads().length} leads selecionados
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  )}
 
                   {/* Grid de Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -767,13 +815,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             >
               <Card className="border-0 shadow-2xl gerador-card-claro gerador-card-escuro backdrop-blur-sm">
                 <CardHeader className="text-center pb-6">
-                  <div className="flex items-center justify-center space-x-3 mb-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                       <Save className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-2xl font-bold gerador-titulo-claro dark:text-foreground">Salvar Leads Selecionados</CardTitle>
+                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">Salvar Leads Selecionados</CardTitle>
                   </div>
-                  <CardDescription className="text-lg gerador-descricao-claro dark:text-muted-foreground">
+                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro dark:text-muted-foreground text-center">
                     {getSelectedLeads().length} leads selecionados para salvar
                   </CardDescription>
                   

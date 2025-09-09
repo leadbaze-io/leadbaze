@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Trash2, Star, Phone, Globe, Users, Check, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Lead } from '../types'
@@ -62,6 +62,28 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
     })
   }, [leads, searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
 
+  // Desmarcar automaticamente leads que não estão mais visíveis quando filtros mudam
+  useEffect(() => {
+    const filteredLeadIds = new Set(filteredLeads.map(lead => lead.id || '').filter(id => id))
+    
+    // Verificar se há leads selecionados que não estão mais visíveis
+    const hasInvisibleSelected = Array.from(selectedLeads).some(leadId => !filteredLeadIds.has(leadId))
+    
+    // Só atualizar se necessário para evitar loops
+    if (hasInvisibleSelected) {
+      const newSelected = new Set<string>()
+      
+      // Manter apenas os leads selecionados que ainda estão visíveis
+      selectedLeads.forEach(leadId => {
+        if (filteredLeadIds.has(leadId)) {
+          newSelected.add(leadId)
+        }
+      })
+      
+      setSelectedLeads(newSelected)
+    }
+  }, [searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
+
   // Ordenar leads
   const sortedLeads = useMemo(() => {
     return [...filteredLeads].sort((a, b) => {
@@ -110,18 +132,19 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   }
 
   const toggleSelectAll = () => {
-    const allLeadIds = paginatedLeads.map(lead => lead.id || '').filter(id => id)
-    const allSelected = allLeadIds.every(id => selectedLeads.has(id))
+    // Trabalhar com todos os leads filtrados, não apenas os da página atual
+    const allFilteredLeadIds = sortedLeads.map(lead => lead.id || '').filter(id => id)
+    const allFilteredSelected = allFilteredLeadIds.every(id => selectedLeads.has(id))
     
-    if (allSelected) {
-      // Desmarcar todos os leads da página atual
+    if (allFilteredSelected) {
+      // Desmarcar todos os leads filtrados
       const newSelected = new Set(selectedLeads)
-      allLeadIds.forEach(id => newSelected.delete(id))
+      allFilteredLeadIds.forEach(id => newSelected.delete(id))
       setSelectedLeads(newSelected)
     } else {
-      // Selecionar todos os leads da página atual
+      // Selecionar todos os leads filtrados
       const newSelected = new Set(selectedLeads)
-      allLeadIds.forEach(id => newSelected.add(id))
+      allFilteredLeadIds.forEach(id => newSelected.add(id))
       setSelectedLeads(newSelected)
     }
   }
@@ -269,7 +292,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
             onClick={toggleSelectAll}
             className="gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5"
           >
-            {paginatedLeads.every(lead => selectedLeads.has(lead.id || '')) ? 'Desmarcar Todos' : 'Selecionar Todos'}
+            {sortedLeads.length > 0 && sortedLeads.every(lead => selectedLeads.has(lead.id || '')) ? 'Desmarcar Todos' : 'Selecionar Todos'}
           </Button>
         </div>
       )}
