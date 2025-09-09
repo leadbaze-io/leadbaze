@@ -686,19 +686,74 @@ html.dark .landing-bg-gradient-yellow-400 {
   background-color: #8b5cf6 !important;
 }
 
-/* ===== FORÇA MÁXIMA - SOBRESCREVER QUALQUER OUTRA REGRA ===== */
+/* ===== PADRÃO ELEGANTE BASEADO NO FAQ ===== */
 
-/* Forçar cores azul-roxo em TODOS os gradientes de texto na Landing Page */
+/* HERO SECTION - Padrão FAQ Desktop: azul-ciano */
 .landing-page *[class*="from-blue-600"][class*="via-purple-600"][class*="to-blue-800"] {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  background: linear-gradient(to right, #60a5fa, #22d3ee) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
 }
 
+/* CTA SECTION - Padrão FAQ Desktop: roxo-rosa */
 .landing-page *[class*="from-blue-400"][class*="via-purple-400"][class*="to-pink-400"] {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  background: linear-gradient(to right, #a78bfa, #f472b6) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* PRICING SECTION - Padrão FAQ Mobile: azul-roxo */
+.landing-page *[class*="from-blue-600"][class*="to-cyan-600"] {
+  background: linear-gradient(to right, #60a5fa, #a78bfa) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* GUARANTEE SECTION - Padrão FAQ Mobile: azul-roxo */
+.landing-page *[class*="from-green-600"][class*="to-emerald-600"] {
+  background: linear-gradient(to right, #60a5fa, #a78bfa) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* PLANS SECTION - Padrão FAQ Desktop: roxo-rosa */
+.landing-page *[class*="from-purple-600"][class*="to-pink-600"] {
+  background: linear-gradient(to right, #a78bfa, #f472b6) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* BONUS SECTION - Padrão FAQ Mobile: azul-roxo */
+.landing-page *[class*="from-orange-600"][class*="to-red-600"] {
+  background: linear-gradient(to right, #60a5fa, #a78bfa) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* TESTIMONIALS SECTION - Padrão FAQ Desktop: azul-ciano */
+.landing-page *[class*="from-blue-600"][class*="to-purple-600"] {
+  background: linear-gradient(to right, #60a5fa, #22d3ee) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* STEPS SECTION - Padrão FAQ Mobile: azul-roxo */
+.landing-page *[class*="from-blue-600"][class*="to-purple-600"] {
+  background: linear-gradient(to right, #60a5fa, #a78bfa) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
