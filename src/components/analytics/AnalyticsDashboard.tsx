@@ -18,30 +18,25 @@ import { Button } from '../ui/button'
 
 import { useLeadLists } from '../../hooks/useLeadLists'
 import { AnalyticsSkeleton } from '../LoadingScreen'
+import { AnalyticsService } from '../../lib/analyticsService'
 import type { LeadList } from '../../types'
+import type { 
+  AnalyticsOverview, 
+  LeadsOverTime, 
+  CategoryData, 
+  CategoryDistribution, 
+  CampaignData, 
+  RecentActivity 
+} from '../../lib/analyticsService'
 
-// Interface para dados mockup
+// Interface para dados reais de analytics
 interface AnalyticsData {
-  totalLeads: number
-  totalLists: number
-  totalCampaigns: number
-  messagesSent: number
-  conversionRate: number
-  growthRate: number
-  averageRating: number
-  topCategories: Array<{ name: string; count: number; percentage: number }>
-  recentActivity: Array<{
-    id: string
-    type: 'lead_generated' | 'list_created' | 'campaign_sent' | 'campaign_completed'
-    description: string
-    timestamp: string
-    count?: number
-  }>
-  chartData: {
-    leadsOverTime: Array<{ date: string; count: number }>
-    categoryDistribution: Array<{ category: string; count: number; color: string }>
-    campaignsOverTime: Array<{ date: string; count: number; success: number; failed: number }>
-  }
+  overview: AnalyticsOverview
+  leadsOverTime: LeadsOverTime[]
+  categories: CategoryData[]
+  categoryDistribution: CategoryDistribution[]
+  campaigns: CampaignData[]
+  recentActivity: RecentActivity[]
 }
 
 export default function AnalyticsDashboard() {
@@ -52,20 +47,28 @@ export default function AnalyticsDashboard() {
   
   const { data: leadLists, isLoading: listsLoading } = useLeadLists()
 
-  // Carregar dados mockup de analytics
+  // Carregar dados reais de analytics
   useEffect(() => {
-    const loadAnalytics = () => {
+    const loadAnalytics = async () => {
       setIsLoading(true)
       
-      // Simular delay de carregamento
-      setTimeout(() => {
+      try {
+        console.log(`📊 [AnalyticsDashboard] Carregando dados para período: ${timeRange}`);
+        const analyticsData = await AnalyticsService.getAllAnalytics(timeRange)
+        setAnalytics(analyticsData)
+        setLastUpdated(new Date())
+        console.log('✅ [AnalyticsDashboard] Dados carregados com sucesso');
+      } catch (error) {
+        console.error('❌ [AnalyticsDashboard] Erro ao carregar dados:', error);
+        // Fallback para dados mockup em caso de erro
         if (leadLists) {
           const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
           setAnalytics(mockAnalytics)
           setLastUpdated(new Date())
         }
+      } finally {
         setIsLoading(false)
-      }, 1000)
+      }
     }
 
     if (!listsLoading) {
@@ -73,18 +76,26 @@ export default function AnalyticsDashboard() {
     }
   }, [leadLists, timeRange, listsLoading])
 
-  const refreshData = () => {
+  const refreshData = async () => {
     setIsLoading(true)
     
-    // Simular delay de carregamento
-    setTimeout(() => {
+    try {
+      console.log(`🔄 [AnalyticsDashboard] Atualizando dados para período: ${timeRange}`);
+      const analyticsData = await AnalyticsService.getAllAnalytics(timeRange)
+      setAnalytics(analyticsData)
+      setLastUpdated(new Date())
+      console.log('✅ [AnalyticsDashboard] Dados atualizados com sucesso');
+    } catch (error) {
+      console.error('❌ [AnalyticsDashboard] Erro ao atualizar dados:', error);
+      // Fallback para dados mockup em caso de erro
       if (leadLists) {
         const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
         setAnalytics(mockAnalytics)
         setLastUpdated(new Date())
       }
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   if (isLoading || !analytics) {
@@ -152,17 +163,17 @@ export default function AnalyticsDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <MetricCard
           title="Total de Leads"
-          value={analytics.totalLeads.toLocaleString()}
-          change={`${analytics.growthRate >= 0 ? '+' : ''}${analytics.growthRate}%`}
-          trend={analytics.growthRate >= 0 ? "up" : "down"}
+          value={analytics.overview.totalLeads.toLocaleString()}
+          change={`${analytics.overview.growthRate >= 0 ? '+' : ''}${analytics.overview.growthRate}%`}
+          trend={analytics.overview.growthRate >= 0 ? "up" : "down"}
           icon={Users}
           color="blue"
         />
         
         <MetricCard
           title="Listas Criadas"
-          value={analytics.totalLists.toString()}
-          change={`${analytics.totalLists > 0 ? '+' : ''}${analytics.totalLists}`}
+          value={analytics.overview.totalLists.toString()}
+          change={`${analytics.overview.totalLists > 0 ? '+' : ''}${analytics.overview.totalLists}`}
           trend="up"
           icon={FolderPlus}
           color="green"
@@ -170,8 +181,8 @@ export default function AnalyticsDashboard() {
         
         <MetricCard
           title="Campanhas Enviadas"
-          value={analytics.totalCampaigns.toString()}
-          change={`${analytics.totalCampaigns > 0 ? '+' : ''}${analytics.totalCampaigns}`}
+          value={analytics.overview.totalCampaigns.toString()}
+          change={`${analytics.overview.totalCampaigns > 0 ? '+' : ''}${analytics.overview.totalCampaigns}`}
           trend="up"
           icon={BarChart3}
           color="purple"
@@ -179,9 +190,9 @@ export default function AnalyticsDashboard() {
         
         <MetricCard
           title="Taxa de Entrega"
-          value={`${analytics.conversionRate}%`}
-          change={`${analytics.conversionRate > 0 ? '+' : ''}${analytics.conversionRate}%`}
-          trend={analytics.conversionRate > 0 ? "up" : "down"}
+          value={`${analytics.overview.conversionRate}%`}
+          change={`${analytics.overview.conversionRate > 0 ? '+' : ''}${analytics.overview.conversionRate}%`}
+          trend={analytics.overview.conversionRate > 0 ? "up" : "down"}
           icon={TrendingUp}
           color="orange"
         />
@@ -201,7 +212,7 @@ export default function AnalyticsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <SimpleLineChart data={analytics.chartData.leadsOverTime} />
+            <SimpleLineChart data={analytics.leadsOverTime} />
           </CardContent>
         </Card>
 
@@ -218,13 +229,13 @@ export default function AnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {analytics.topCategories.length > 0 ? (
-                analytics.topCategories.map((category, index) => (
+              {analytics.categories.length > 0 ? (
+                analytics.categories.map((category, index) => (
                   <div key={category.name} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div 
                         className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: analytics.chartData.categoryDistribution[index]?.color || '#3B82F6' }}
+                        style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
                       />
                       <span className="text-sm font-medium">{category.name}</span>
                     </div>
@@ -246,7 +257,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Campaigns Performance */}
-      {analytics.totalCampaigns > 0 && (
+      {analytics.overview.totalCampaigns > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -258,7 +269,7 @@ export default function AnalyticsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CampaignsChart data={analytics.chartData.campaignsOverTime} />
+            <CampaignsChart data={analytics.campaigns} />
           </CardContent>
         </Card>
       )}
@@ -472,7 +483,7 @@ function generateMockAnalytics(leadLists: LeadList[], timeRange: string): Analyt
   const conversionRate = Math.floor(Math.random() * 15) + 5 // 5-20% de conversão
   const growthRate = Math.floor(Math.random() * 30) + 10 // 10-40% de crescimento
 
-  const campaignsOverTime = Array.from({ length: days }, (_, i) => {
+  const campaigns = Array.from({ length: days }, (_, i) => {
     const date = new Date()
     date.setDate(date.getDate() - (days - 1 - i))
     const success = Math.floor(Math.random() * 10) + 1
@@ -505,20 +516,21 @@ function generateMockAnalytics(leadLists: LeadList[], timeRange: string): Analyt
   })
 
   return {
-    totalLeads,
-    totalLists,
-    totalCampaigns,
-    messagesSent,
-    conversionRate,
-    growthRate,
-    averageRating: 4.2,
-    topCategories,
-    recentActivity,
-    chartData: {
-      leadsOverTime,
-      categoryDistribution,
-      campaignsOverTime
-    }
+    overview: {
+      totalLeads,
+      totalLists,
+      totalCampaigns,
+      messagesSent,
+      conversionRate,
+      growthRate,
+      averageRating: 4.2,
+      timeRange
+    },
+    leadsOverTime,
+    categories: topCategories,
+    categoryDistribution,
+    campaigns,
+    recentActivity
   }
 }
 

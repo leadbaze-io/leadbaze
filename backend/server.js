@@ -284,6 +284,96 @@ app.post('/api/campaign/update-status', async (req, res) => {
   }
 });
 
+/**
+ * POST /api/campaign/n8n-webhook
+ * Webhook para receber atualizações de status do N8N
+ */
+app.post('/api/campaign/n8n-webhook', async (req, res) => {
+  try {
+    console.log('📡 [N8N Webhook] Recebido:', JSON.stringify(req.body, null, 2));
+    
+    const { 
+      campaignId, 
+      type, // 'progress', 'complete', 'error'
+      data 
+    } = req.body;
+    
+    if (!campaignId || !type) {
+      console.log('❌ [N8N Webhook] Dados inválidos:', { campaignId, type });
+      return res.status(400).json({
+        success: false,
+        error: 'campaignId e type são obrigatórios'
+      });
+    }
+
+    console.log(`📡 [N8N Webhook] Processando ${type} para campanha ${campaignId}`);
+
+    // Processar diretamente baseado no tipo
+    if (type === 'progress') {
+      // Fazer requisição interna para o endpoint de progresso
+      const progressResponse = await fetch(`${req.protocol}://${req.get('host')}/api/campaign/status/progress`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          campaignId,
+          leadIndex: data.leadIndex,
+          totalLeads: data.totalLeads,
+          success: data.success,
+          error: data.error,
+          leadPhone: data.leadPhone,
+          leadName: data.leadName
+        })
+      });
+      
+      if (progressResponse.ok) {
+        const result = await progressResponse.json();
+        console.log('✅ [N8N Webhook] Progresso processado:', result);
+      } else {
+        console.error('❌ [N8N Webhook] Erro ao processar progresso:', progressResponse.status);
+      }
+      
+    } else if (type === 'complete') {
+      // Fazer requisição interna para o endpoint de conclusão
+      const completeResponse = await fetch(`${req.protocol}://${req.get('host')}/api/campaign/status/complete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          campaignId,
+          successCount: data.successCount,
+          failedCount: data.failedCount,
+          totalProcessed: data.totalProcessed
+        })
+      });
+      
+      if (completeResponse.ok) {
+        const result = await completeResponse.json();
+        console.log('✅ [N8N Webhook] Conclusão processada:', result);
+      } else {
+        console.error('❌ [N8N Webhook] Erro ao processar conclusão:', completeResponse.status);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Webhook ${type} processado com sucesso`,
+      campaignId,
+      type
+    });
+
+  } catch (error) {
+    console.error('❌ [N8N Webhook] Erro ao processar webhook:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro interno do servidor',
+      details: error.message
+    });
+  }
+});
+
 
 /**
  * POST /api/campaign/check-timeouts
@@ -884,6 +974,12 @@ console.log('✅ [Server] Rotas do blog registradas com sucesso');
 console.log('🔧 [Server] Registrando rotas de status de campanhas...');
 app.use('/api/campaign/status', campaignStatusRoutes);
 console.log('✅ [Server] Rotas de status de campanhas registradas com sucesso');
+
+// Rotas de analytics
+console.log('🔧 [Server] Registrando rotas de analytics...');
+const analyticsRoutes = require('./routes/analytics');
+app.use('/api/analytics', analyticsRoutes);
+console.log('✅ [Server] Rotas de analytics registradas com sucesso');
 
 // Endpoints admin (requerem autenticação) - com rate limit específico
 app.use('/api/blog/automation/admin/*', dashboardLimit, checkAdminAuth);

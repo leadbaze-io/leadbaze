@@ -145,16 +145,16 @@ export class CampaignStatusServiceV2 {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'progress') {
+          console.log('📈 [CampaignStatusServiceV2] ===== EVENTO PROGRESS RECEBIDO =====');
           console.log('📈 [CampaignStatusServiceV2] Processando progresso via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
           console.log('🔍 [CampaignStatusServiceV2] Callback onProgress é uma função?', typeof onProgress);
-          console.log('🔍 [CampaignStatusServiceV2] Callback onProgress:', onProgress);
           console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onProgress:', data.data);
-          console.log('🔍 [CampaignStatusServiceV2] onProgress.toString():', onProgress.toString());
           try {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onProgress(data.data)...');
             onProgress(data.data);
             console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
+            console.log('📈 [CampaignStatusServiceV2] ===== FIM EVENTO PROGRESS =====');
           } catch (error) {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onProgress:', error);
             console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
@@ -164,7 +164,6 @@ export class CampaignStatusServiceV2 {
           console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onComplete...');
           console.log('🔍 [CampaignStatusServiceV2] Callback onComplete é uma função?', typeof onComplete);
-          console.log('🔍 [CampaignStatusServiceV2] Callback onComplete:', onComplete);
           console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onComplete:', data.data);
           try {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onComplete(data.data)...');
@@ -175,6 +174,10 @@ export class CampaignStatusServiceV2 {
             console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
             console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
+        } else if (data.type === 'connected') {
+          console.log('🔌 [CampaignStatusServiceV2] Conexão SSE estabelecida');
+        } else if (data.type === 'heartbeat') {
+          console.log('💓 [CampaignStatusServiceV2] Heartbeat recebido');
         } else {
           console.log('❓ [CampaignStatusServiceV2] Tipo de evento desconhecido:', data.type);
           console.log('❓ [CampaignStatusServiceV2] Dados completos:', data);
