@@ -27,7 +27,7 @@ export default function MagicGuarantee() {
           className="text-center mb-20"
         >
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            Teste <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">30 Dias</span>
+            Teste <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">30 Dias</span>
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Sem Risco
@@ -61,7 +61,7 @@ export default function MagicGuarantee() {
               
               {/* Header with Icon */}
               <div className="relative mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110">
                   <TrendingUp className="w-8 h-8" />
                 </div>
               </div>

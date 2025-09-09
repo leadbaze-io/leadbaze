@@ -117,9 +117,9 @@ export default function MagicPricingPlans() {
             className="mb-6"
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Escolha o <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Plano</span>
+              Escolha o <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Plano</span>
               <br />
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Perfeito para Você
               </span>
             </h2>
@@ -163,14 +163,14 @@ export default function MagicPricingPlans() {
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
                   🏆 Mais Vendido
                 </div>
               )}
               
               {/* Best Value Badge for Start Plan */}
               {plan.id === 'start' && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-400 to-emerald-400 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
                   💎 Custo-Benefício
                 </div>
               )}
@@ -260,8 +260,8 @@ export default function MagicPricingPlans() {
                 {/* CTA Button */}
                 <button className={`w-full py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300 mt-auto transform hover:scale-105 ${
                   selectedPlan === plan.id
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg'
-                    : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl'
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
                 }`}>
                   {selectedPlan === plan.id ? '✅ Plano Selecionado' : '🚀 Começar Agora'}
                 </button>
@@ -284,7 +284,7 @@ export default function MagicPricingPlans() {
             </p>
             <button 
               onClick={handleStartNow}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
             >
               Começar Agora
             </button>

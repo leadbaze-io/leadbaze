@@ -16,7 +16,7 @@ export default function MobileHero() {
   }, [])
 
   return (
-    <section className="md:hidden relative py-16 bg-gradient-to-br from-gray-50 via-white to-blue-50 overflow-hidden">
+    <section className="md:hidden relative py-16 bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-48 h-48 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-2xl"></div>
@@ -35,16 +35,16 @@ export default function MobileHero() {
               className="mb-6"
             >
               <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Gere mais de 1000
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+                  Gere mais de 1000 Leads B2B
                 </span>
                 <br />
                 <span className="text-gray-900">
-                  Leads B2B em menos de 7 dias
+                  em menos de 7 dias
                 </span>
               </h1>
               <p className="text-base text-gray-600 leading-relaxed">
-                Map→Match→Message™ automatiza sua prospecção: encontra empresas no Google Maps, qualifica pelo seu perfil e agenda reuniões via BDR IA.
+                Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
               </p>
             </motion.div>
           </AnimatedBeam>
@@ -59,54 +59,9 @@ export default function MobileHero() {
             >
               <ShimmerButton 
                 onClick={() => {
-                  console.log('🔍 Botão Ver Planos Mobile clicado!')
-                  
-                  // Tentar múltiplos métodos para encontrar a seção
-                  let pricingSection = document.getElementById('pricing-plans-section')
-                  
-                  // Para mobile, usar a seção mobile (md:hidden)
-                  if (pricingSection && !pricingSection.classList.contains('md:hidden')) {
-                    console.log('📍 Seção desktop encontrada no mobile, procurando versão mobile...')
-                    pricingSection = document.querySelector('section[id*="pricing"].md\\:hidden')
-                  }
-                  
-                  // Se não encontrar, tentar por classe
-                  if (!pricingSection) {
-                    pricingSection = document.querySelector('[id*="pricing"]')
-                    console.log('📍 Tentando por classe pricing:', pricingSection)
-                  }
-                  
-                  // Se ainda não encontrar, tentar por texto
-                  if (!pricingSection) {
-                    const sections = document.querySelectorAll('section')
-                    for (const section of sections) {
-                      if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
-                        pricingSection = section
-                        console.log('📍 Encontrado por texto:', pricingSection)
-                        break
-                      }
-                    }
-                  }
-                  
-                  console.log('📍 Seção encontrada:', pricingSection)
-                  
+                  const pricingSection = document.getElementById('pricing-plans-section');
                   if (pricingSection) {
-                    // Scroll com offset para compensar navbar fixa
-                    const elementPosition = pricingSection.getBoundingClientRect().top
-                    const offsetPosition = elementPosition + window.pageYOffset - 80
-                    
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    })
-                    console.log('✅ Scroll executado com offset!')
-                  } else {
-                    console.log('❌ Seção não encontrada! Tentando método alternativo...')
-                    // Método alternativo: scroll para o final da página
-                    window.scrollTo({
-                      top: document.body.scrollHeight,
-                      behavior: 'smooth'
-                    })
+                    pricingSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
                 className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 w-full"

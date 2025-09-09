@@ -185,6 +185,39 @@ export const AnalyticsDashboard: React.FC = () => {
       console.log('Campaigns data:', data.campaigns);
       console.log('Cache buster - Updated at:', new Date().toISOString());
       setAnalytics(data);
+      
+      // Debug adicional
+      setTimeout(() => {
+        console.log('=== DEBUG GRÁFICOS ===');
+        console.log('Leads data:', data.leadsOverTime?.slice(-7));
+        console.log('Campaigns data:', data.campaigns?.slice(-7));
+        
+        // Verificar se os elementos estão sendo renderizados
+        const leadBars = document.querySelectorAll('[title*="leads em"]');
+        const campaignBars = document.querySelectorAll('[title*="mensagens em"]');
+        console.log('Lead bars found:', leadBars.length);
+        console.log('Campaign bars found:', campaignBars.length);
+        
+        leadBars.forEach((bar, index) => {
+          const element = bar as HTMLElement;
+          console.log(`Lead bar ${index}:`, {
+            height: element.style.height,
+            minHeight: element.style.minHeight,
+            backgroundColor: element.style.backgroundColor,
+            className: element.className
+          });
+        });
+        
+        campaignBars.forEach((bar, index) => {
+          const element = bar as HTMLElement;
+          console.log(`Campaign bar ${index}:`, {
+            height: element.style.height,
+            minHeight: element.style.minHeight,
+            backgroundColor: element.style.backgroundColor,
+            className: element.className
+          });
+        });
+      }, 1000);
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
     } finally {
@@ -648,21 +681,41 @@ export const AnalyticsDashboard: React.FC = () => {
                 <div className="h-48 sm:h-64">
                   {analytics.leadsOverTime && Array.isArray(analytics.leadsOverTime) && analytics.leadsOverTime.length > 0 ? (
                     <div className="h-full flex flex-col">
+                      {/* Debug info */}
+                      <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded mb-2">
+                        Debug: {analytics.leadsOverTime.slice(-7).length} itens, max: {Math.max(...analytics.leadsOverTime.slice(-7).map((d: any) => d.count || 0))}
+                      </div>
+                      
                       {/* Gráfico simples com barras */}
                       <div className="flex-1 flex items-end justify-between space-x-1 p-2 sm:p-4">
                         {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
-                          const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count || 0));
+                          const maxValue = Math.max(...analytics.leadsOverTime.slice(-7).map((d: any) => d.count || 0));
                           const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
                           const finalHeight = (item.count || 0) > 0 ? Math.max(height, 5) : 0;
+                          
                           console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%, finalHeight = ${finalHeight}%`);
+                          console.log(`Bar element:`, {
+                            date: item.date,
+                            count: item.count,
+                            maxValue,
+                            height,
+                            finalHeight,
+                            hasData: (item.count || 0) > 0
+                          });
                           
                           return (
                             <div key={index} className="flex flex-col items-center flex-1">
-                              <div 
-                                className={`w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
-                                style={{ height: `${finalHeight}%`, minHeight: finalHeight > 0 ? '4px' : '0px' }}
-                                title={`${item.count || 0} leads em ${item.date}`}
-                              />
+                              <div className="w-full h-full flex items-end justify-center">
+                                <div 
+                                  className={`w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
+                                  style={{ 
+                                    height: `${finalHeight}%`, 
+                                    minHeight: finalHeight > 0 ? '4px' : '0px',
+                                    backgroundColor: finalHeight > 0 ? 'rgb(59 130 246)' : 'transparent'
+                                  }}
+                                  title={`${item.count || 0} leads em ${item.date}`}
+                                />
+                              </div>
                               <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
                                 {item.date}
                               </div>
@@ -710,22 +763,43 @@ export const AnalyticsDashboard: React.FC = () => {
                   <div className="h-48">
                     {analytics.campaigns && Array.isArray(analytics.campaigns) && analytics.campaigns.length > 0 ? (
                       <div className="h-full flex flex-col">
+                        {/* Debug info */}
+                        <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded mb-2">
+                          Debug: {analytics.campaigns.slice(-7).length} itens, max: {Math.max(...analytics.campaigns.slice(-7).map((c: any) => c.success || c.count || 0))}
+                        </div>
+                        
                         {/* Gráfico de barras para campanhas */}
                         <div className="flex-1 flex items-end justify-between space-x-1 p-2 sm:p-4">
                           {analytics.campaigns.slice(-7).map((campaign: any, index: number) => {
                             const totalMessages = campaign.success || campaign.count || 0;
-                            const maxValue = Math.max(...analytics.campaigns.map((c: any) => c.success || c.count || 0));
+                            const maxValue = Math.max(...analytics.campaigns.slice(-7).map((c: any) => c.success || c.count || 0));
                             const height = maxValue > 0 ? (totalMessages / maxValue) * 100 : 0;
                             const finalHeight = totalMessages > 0 ? Math.max(height, 5) : 0;
                             console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%, finalHeight = ${finalHeight}%`);
+                            console.log(`Campaign bar element:`, {
+                              date: campaign.date,
+                              success: campaign.success,
+                              count: campaign.count,
+                              totalMessages,
+                              maxValue,
+                              height,
+                              finalHeight,
+                              hasData: totalMessages > 0
+                            });
                             
                             return (
                               <div key={index} className="flex flex-col items-center flex-1">
-                                <div 
-                                  className={`w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
-                                  style={{ height: `${finalHeight}%`, minHeight: finalHeight > 0 ? '4px' : '0px' }}
-                                  title={`${totalMessages} mensagens em ${campaign.date}`}
-                                />
+                                <div className="w-full h-full flex items-end justify-center">
+                                  <div 
+                                    className={`w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
+                                    style={{ 
+                                      height: `${finalHeight}%`, 
+                                      minHeight: finalHeight > 0 ? '4px' : '0px',
+                                      backgroundColor: finalHeight > 0 ? 'rgb(147 51 234)' : 'transparent'
+                                    }}
+                                    title={`${totalMessages} mensagens em ${campaign.date}`}
+                                  />
+                                </div>
                                 <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
                                   {campaign.date}
                                 </div>

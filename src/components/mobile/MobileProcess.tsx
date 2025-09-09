@@ -119,7 +119,7 @@ export default function MobileProcess() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isVisible ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-6 text-white text-center"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-6 text-white text-center"
         >
           <div className="text-sm font-semibold mb-1">Resultado:</div>
           <div className="text-lg font-bold">Reuniões agendadas automaticamente</div>

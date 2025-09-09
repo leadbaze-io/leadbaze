@@ -66,9 +66,9 @@ export default function MobileFAQ() {
             className="mb-6"
           >
             <h2 className="text-3xl font-bold text-white mb-4">
-              Dúvidas <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Frequentes</span>
+              Dúvidas <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Frequentes</span>
               <br />
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Resolvidas
               </span>
             </h2>

@@ -39,7 +39,7 @@ export default function MobileCTA() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold text-xs shadow-lg mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-xs shadow-lg mb-6"
           >
             <Sparkles className="w-3 h-3" />
             🔥 Oferta Especial por Tempo Limitado

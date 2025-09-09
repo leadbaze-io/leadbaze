@@ -68,9 +68,9 @@ export default function MobilePricing() {
             className="mb-6"
           >
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Cada <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">LEAD</span> sai por
+              Cada <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LEAD</span> sai por
               <br />
-              <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 MENOS <span className="text-black">de</span> 30 CENTAVOS
               </span>
             </h2>
@@ -174,7 +174,7 @@ export default function MobilePricing() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center"
         >
-          <div className="inline-block bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 shadow-2xl">
+          <div className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl p-6 shadow-2xl">
             <div className="text-white">
               <div className="text-lg font-semibold mb-2">Preço por Lead</div>
               <div className="text-4xl font-bold mb-2">

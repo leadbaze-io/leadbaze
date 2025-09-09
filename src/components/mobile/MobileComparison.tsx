@@ -85,7 +85,7 @@ export default function MobileComparison() {
                 
                 {/* Best choice badge */}
                 {item.option === "Lead Baze" && (
-                  <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                  <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                     ✨ Melhor
                   </div>
                 )}
@@ -115,7 +115,7 @@ export default function MobileComparison() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={isVisible ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-4 text-white text-center"
+          className="mt-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl p-4 text-white text-center"
         >
           <div className="text-xs font-semibold mb-1">Você economiza:</div>
           <div className="text-xl font-bold">Mais de R$ 65.000/ano</div>
