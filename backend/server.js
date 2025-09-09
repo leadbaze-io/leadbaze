@@ -193,6 +193,7 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
       return res.status(400).json({ success: false, error: 'N8N_WEBHOOK_URL inválida', details: N8N_WEBHOOK_URL });
     }
 
+    // O fluxo N8N antigo espera receber o array diretamente, não dentro de um objeto
     console.log('📤 Enviando para N8N...', JSON.stringify(payload).slice(0, 500));
 
     const response = await axios.post(N8N_WEBHOOK_URL, payload, {
