@@ -712,7 +712,7 @@ export const AnalyticsDashboard: React.FC = () => {
                         {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
                           const maxValue = Math.max(...analytics.leadsOverTime.slice(-7).map((d: any) => d.count || 0));
                           const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
-                          const finalHeight = (item.count || 0) > 0 ? Math.max(height, 5) : 0;
+                          const finalHeight = (item.count || 0) > 0 ? Math.max(height, 20) : 0;
                           
                           console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%, finalHeight = ${finalHeight}%`);
                           console.log(`Bar element:`, {
@@ -728,10 +728,10 @@ export const AnalyticsDashboard: React.FC = () => {
                             <div key={index} className="flex flex-col items-center flex-1">
                               <div className="w-full h-full flex items-end justify-center">
                                 <div 
-                                  className={`w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
+                                  className={`w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 ${finalHeight > 0 ? 'min-h-[20px]' : 'h-0'}`}
                                   style={{ 
                                     height: `${finalHeight}%`, 
-                                    minHeight: finalHeight > 0 ? '4px' : '0px',
+                                    minHeight: finalHeight > 0 ? '20px' : '0px',
                                     backgroundColor: finalHeight > 0 ? 'rgb(59 130 246)' : 'transparent'
                                   }}
                                   title={`${item.count || 0} leads em ${item.date}`}
@@ -799,7 +799,7 @@ export const AnalyticsDashboard: React.FC = () => {
                             const totalMessages = campaign.success || campaign.count || 0;
                             const maxValue = Math.max(...analytics.campaigns.slice(-7).map((c: any) => c.success || c.count || 0));
                             const height = maxValue > 0 ? (totalMessages / maxValue) * 100 : 0;
-                            const finalHeight = totalMessages > 0 ? Math.max(height, 5) : 0;
+                            const finalHeight = totalMessages > 0 ? Math.max(height, 20) : 0;
                             console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%, finalHeight = ${finalHeight}%`);
                             console.log(`Campaign bar element:`, {
                               date: campaign.date,
@@ -816,10 +816,10 @@ export const AnalyticsDashboard: React.FC = () => {
                               <div key={index} className="flex flex-col items-center flex-1">
                                 <div className="w-full h-full flex items-end justify-center">
                                   <div 
-                                    className={`w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 ${finalHeight > 0 ? 'min-h-[4px]' : 'h-0'}`}
+                                    className={`w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 ${finalHeight > 0 ? 'min-h-[20px]' : 'h-0'}`}
                                     style={{ 
                                       height: `${finalHeight}%`, 
-                                      minHeight: finalHeight > 0 ? '4px' : '0px',
+                                      minHeight: finalHeight > 0 ? '20px' : '0px',
                                       backgroundColor: finalHeight > 0 ? 'rgb(147 51 234)' : 'transparent'
                                     }}
                                     title={`${totalMessages} mensagens em ${campaign.date}`}

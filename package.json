@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development vite --mode development",
     "build": "tsc -b && vite build",
-    
+    "test": "echo 'No tests configured yet' && exit 0",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "vite preview --port 3000 --host",
