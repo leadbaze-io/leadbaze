@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -550,13 +551,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         >
           <Card className="border-0 shadow-2xl gerador-card-claro gerador-card-escuro backdrop-blur-sm">
             <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
-              <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 mb-3 sm:mb-4">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground">Extrair Leads do Google Maps</CardTitle>
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">Extrair Leads do Google Maps</CardTitle>
               </div>
-              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-muted-foreground">
+              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-muted-foreground text-center px-2">
                 Cole o link de pesquisa do Google Maps e configure a quantidade de leads desejada
               </CardDescription>
             </CardHeader>
@@ -736,21 +737,33 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   </div>
 
                   {/* Aviso flutuante para mobile - leads selecionados */}
-                  {getSelectedLeads().length > 0 && (
-                    <div className="sm:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg border-2 border-white/20 backdrop-blur-sm"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-semibold">
-                            {getSelectedLeads().length} leads selecionados
-                          </span>
-                        </div>
-                      </motion.div>
-                    </div>
+                  {getSelectedLeads().length > 0 && createPortal(
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 30
+                      }}
+                      className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
+                      style={{
+                        position: 'fixed',
+                        bottom: '16px',
+                        right: '16px',
+                        zIndex: 9999,
+                        pointerEvents: 'auto'
+                      }}
+                    >
+                      <div className="flex items-center space-x-1.5">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        <span className="text-xs font-medium">
+                          {getSelectedLeads().length}
+                        </span>
+                      </div>
+                    </motion.div>,
+                    document.body
                   )}
 
                   {/* Grid de Cards */}

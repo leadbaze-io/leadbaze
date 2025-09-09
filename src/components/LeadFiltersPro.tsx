@@ -133,8 +133,8 @@ export function LeadFiltersPro({
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
             <SlidersHorizontal className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+          <div className="text-center sm:text-left">
+            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white">
               Filtros e Ordenação
             </h3>
             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
