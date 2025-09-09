@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
-import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard'
+import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard'
 import Footer from '../components/Footer'
 
 import { motion, AnimatePresence } from 'framer-motion'

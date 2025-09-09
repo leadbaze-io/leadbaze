@@ -3,37 +3,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
   Users, 
-  Target, 
+  Target,
   Activity, 
   Clock, 
   CheckCircle, 
-  XCircle, 
   Send,
   BarChart3,
   PieChart,
-  Calendar,
-  Filter,
   Download,
   RefreshCw,
-  Eye,
   Zap,
   Award,
-  MessageSquare,
-  Phone,
-  Mail,
-  MapPin,
-  Star,
   ArrowUpRight,
   ArrowDownRight,
   Minus
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AnalyticsService, type AnalyticsData } from '@/lib/analyticsService';
-import { useTheme } from '@/hooks/use-theme';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { AnalyticsService, type AnalyticsData } from '../../lib/analyticsService';
+import { useTheme } from '../../hooks/use-theme';
 
 // Componente de KPI Card otimizado
 const KPICard = ({ 
@@ -51,44 +42,42 @@ const KPICard = ({
   color?: 'blue' | 'green' | 'red' | 'purple' | 'orange' | 'indigo';
   loading?: boolean;
 }) => {
-  const { theme } = useTheme();
-  
   const colorClasses = {
     blue: {
-      bg: theme === 'dark' ? 'bg-blue-950/50' : 'bg-blue-50',
+      bg: 'bg-blue-50 dark:bg-blue-950/50',
       text: 'text-blue-600',
       icon: 'text-blue-500',
-      border: theme === 'dark' ? 'border-blue-800/30' : 'border-blue-200'
+      border: 'border-blue-200 dark:border-blue-800/30'
     },
     green: {
-      bg: theme === 'dark' ? 'bg-green-950/50' : 'bg-green-50',
+      bg: 'bg-green-50 dark:bg-green-950/50',
       text: 'text-green-600',
       icon: 'text-green-500',
-      border: theme === 'dark' ? 'border-green-800/30' : 'border-green-200'
+      border: 'border-green-200 dark:border-green-800/30'
     },
     red: {
-      bg: theme === 'dark' ? 'bg-red-950/50' : 'bg-red-50',
+      bg: 'bg-red-50 dark:bg-red-950/50',
       text: 'text-red-600',
       icon: 'text-red-500',
-      border: theme === 'dark' ? 'border-red-800/30' : 'border-red-200'
+      border: 'border-red-200 dark:border-red-800/30'
     },
     purple: {
-      bg: theme === 'dark' ? 'bg-purple-950/50' : 'bg-purple-50',
+      bg: 'bg-purple-50 dark:bg-purple-950/50',
       text: 'text-purple-600',
       icon: 'text-purple-500',
-      border: theme === 'dark' ? 'border-purple-800/30' : 'border-purple-200'
+      border: 'border-purple-200 dark:border-purple-800/30'
     },
     orange: {
-      bg: theme === 'dark' ? 'bg-orange-950/50' : 'bg-orange-50',
+      bg: 'bg-orange-50 dark:bg-orange-950/50',
       text: 'text-orange-600',
       icon: 'text-orange-500',
-      border: theme === 'dark' ? 'border-orange-800/30' : 'border-orange-200'
+      border: 'border-orange-200 dark:border-orange-800/30'
     },
     indigo: {
-      bg: theme === 'dark' ? 'bg-indigo-950/50' : 'bg-indigo-50',
+      bg: 'bg-indigo-50 dark:bg-indigo-950/50',
       text: 'text-indigo-600',
       icon: 'text-indigo-500',
-      border: theme === 'dark' ? 'border-indigo-800/30' : 'border-indigo-200'
+      border: 'border-indigo-200 dark:border-indigo-800/30'
     }
   };
 
@@ -143,7 +132,6 @@ const ActivityItem = ({
   activity: any; 
   index: number; 
 }) => {
-  const { theme } = useTheme();
   
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -328,20 +316,20 @@ export const AnalyticsDashboard: React.FC = () => {
             </SelectContent>
           </Select>
           
-          <Button
+            <Button 
             onClick={handleRefresh}
-            variant="outline"
-            size="sm"
+              variant="outline" 
+              size="sm" 
             disabled={refreshing}
-          >
+            >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
-          </Button>
-          
+            </Button>
+            
           <Button onClick={handleExport} variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
+              <Download className="w-4 h-4 mr-2" />
             Exportar
-          </Button>
+            </Button>
         </div>
       </motion.div>
 
@@ -400,80 +388,80 @@ export const AnalyticsDashboard: React.FC = () => {
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Leads Over Time */}
+        {/* Leads Over Time */}
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <span>Leads ao Longo do Tempo</span>
-                </CardTitle>
-                <CardDescription>
-                  Crescimento de leads nos últimos {timeRange}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <TrendingUp className="w-5 h-5 text-blue-600" />
+              <span>Leads ao Longo do Tempo</span>
+            </CardTitle>
+            <CardDescription>
+              Crescimento de leads nos últimos {timeRange}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
                 <div className="h-64 flex items-center justify-center text-muted-foreground">
                   <div className="text-center">
                     <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>Gráfico de leads em desenvolvimento</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+          </CardContent>
+        </Card>
 
-            {/* Category Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+        {/* Category Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
                   <PieChart className="w-5 h-5 text-green-600" />
                   <span>Distribuição por Categoria</span>
-                </CardTitle>
-                <CardDescription>
+            </CardTitle>
+            <CardDescription>
                   Segmentação dos seus leads
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
                   {analytics.categories.length > 0 ? (
-                    analytics.categories.map((category, index) => (
+                    analytics.categories.map((category: any, index: number) => (
                       <div key={category.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                        <div className="flex items-center space-x-3">
-                          <div 
+                    <div className="flex items-center space-x-3">
+                      <div 
                             className="w-4 h-4 rounded-full"
                             style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
-                          />
+                      />
                           <span className="font-medium">{category.name}</span>
-                        </div>
-                        <div className="text-right">
+                    </div>
+                    <div className="text-right">
                           <div className="font-semibold">{category.count}</div>
                           <div className="text-sm text-muted-foreground">{category.percentage}%</div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
+                    </div>
+                  </div>
+                ))
+              ) : (
                     <div className="text-center py-8 text-muted-foreground">
                       <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma categoria encontrada</p>
-                    </div>
-                  )}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="w-5 h-5 text-purple-600" />
-                <span>Performance das Campanhas</span>
-              </CardTitle>
-              <CardDescription>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Activity className="w-5 h-5 text-purple-600" />
+              <span>Performance das Campanhas</span>
+            </CardTitle>
+            <CardDescription>
                 Estatísticas detalhadas de campanhas e mensagens
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
               <div className="space-y-6">
                 {/* Métricas de Performance */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -525,27 +513,27 @@ export const AnalyticsDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+          </CardContent>
+        </Card>
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-purple-600" />
-                <span>Atividade Recente</span>
-              </CardTitle>
-              <CardDescription>
-                Últimas ações realizadas na plataforma
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Clock className="w-5 h-5 text-purple-600" />
+            <span>Atividade Recente</span>
+          </CardTitle>
+          <CardDescription>
+            Últimas ações realizadas na plataforma
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
               <div className="space-y-3">
                 <AnimatePresence>
-                  {analytics.recentActivity.map((activity, index) => (
+                  {analytics.recentActivity.map((activity: any, index: number) => (
                     <ActivityItem
-                      key={activity.id}
+                key={activity.id}
                       activity={activity}
                       index={index}
                     />
@@ -558,9 +546,9 @@ export const AnalyticsDashboard: React.FC = () => {
                     <p>Nenhuma atividade recente encontrada</p>
                   </div>
                 )}
-              </div>
-            </CardContent>
-          </Card>
+          </div>
+        </CardContent>
+      </Card>
         </TabsContent>
       </Tabs>
     </div>

@@ -9,6 +9,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 
 export interface CampaignStatus {
   id: string;
+  campaignId?: string;
   status: 'draft' | 'sending' | 'completed' | 'failed';
   success_count?: number;
   failed_count?: number;
