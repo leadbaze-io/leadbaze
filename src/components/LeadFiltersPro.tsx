@@ -46,6 +46,10 @@ interface LeadFiltersProProps {
   maxReviews: string
   setMaxReviews: (value: string) => void
   onFilterChange?: () => void
+  // Props para o botão Selecionar Todos
+  showSelectAllButton?: boolean
+  onSelectAll?: () => void
+  allSelected?: boolean
   onResetFilters?: () => void
   className?: string
   totalLeads?: number
@@ -241,6 +245,20 @@ export function LeadFiltersPro({
           <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`} />
         </Button>
       </div>
+
+      {/* Botão Selecionar Todos - embaixo dos Filtros Avançados */}
+      {showSelectAllButton && onSelectAll && (
+        <div className="flex justify-center mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onSelectAll}
+            className="inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+          >
+            {allSelected ? 'Desmarcar Todos' : 'Selecionar Todos'}
+          </Button>
+        </div>
+      )}
 
       {/* Filtros Avançados */}
       <AnimatePresence>

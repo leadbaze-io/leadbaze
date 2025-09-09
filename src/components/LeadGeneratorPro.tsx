@@ -278,9 +278,25 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   const toggleSelectAll = () => {
-    const allSelected = generatedLeads.every(lead => lead.selected)
+    // Verificar se todos os leads filtrados estão selecionados
+    const allFilteredSelected = filteredLeads.every(lead => lead.selected)
+    
     setGeneratedLeads(prev => 
-      prev.map(lead => ({ ...lead, selected: !allSelected }))
+      prev.map(lead => {
+        // Verificar se este lead está na lista filtrada
+        const isInFiltered = filteredLeads.some(filteredLead => 
+          filteredLead.name === lead.name && 
+          filteredLead.phone === lead.phone
+        )
+        
+        // Se está na lista filtrada, alterar o estado de seleção
+        if (isInFiltered) {
+          return { ...lead, selected: !allFilteredSelected }
+        }
+        
+        // Se não está na lista filtrada, manter o estado atual
+        return lead
+      })
     )
     
     // Verificar duplicatas após mudança na seleção
@@ -645,17 +661,6 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     Selecione os leads que deseja salvar em sua lista
                   </CardDescription>
                   
-                  {/* Botão Selecionar Todos */}
-                  <div className="flex justify-center mt-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={toggleSelectAll}
-                      className="gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-                    >
-                      {generatedLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
-                    </Button>
-                  </div>
                 </CardHeader>
                 
                 <CardContent className="px-8">
@@ -694,6 +699,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       }}
                       totalLeads={generatedLeads.length}
                       filteredCount={sortedLeads.length}
+                      showSelectAllButton={true}
+                      onSelectAll={toggleSelectAll}
+                      allSelected={filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected)}
                     />
                   </div>
 
@@ -768,6 +776,18 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   <CardDescription className="text-lg gerador-descricao-claro dark:text-muted-foreground">
                     {getSelectedLeads().length} leads selecionados para salvar
                   </CardDescription>
+                  
+                  {/* Botão Selecionar Todos na seção de salvar */}
+                  <div className="flex justify-center mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={toggleSelectAll}
+                      className="inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                    >
+                      {filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
+                    </Button>
+                  </div>
                 </CardHeader>
                 
                 <CardContent className="px-8 pb-8">

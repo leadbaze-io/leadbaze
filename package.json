@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development vite --mode development",
+    "dev": "cross-env NODE_ENV=development vite --mode development",
     "build": "tsc -b && vite build",
     "test": "echo 'No tests configured yet' && exit 0",
     "lint": "eslint .",
@@ -54,6 +54,7 @@
     "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react": "^4.6.0",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^10.0.0",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
