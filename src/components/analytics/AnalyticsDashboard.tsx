@@ -683,6 +683,7 @@ export const AnalyticsDashboard: React.FC = () => {
                         {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
                           const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count || 0));
                           const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
+                          console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%`);
                           
                           return (
                             <div key={index} className="flex flex-col items-center flex-1">
@@ -741,15 +742,17 @@ export const AnalyticsDashboard: React.FC = () => {
                         {/* Gráfico de barras para campanhas */}
                         <div className="flex-1 flex items-end justify-between space-x-1 p-4">
                           {analytics.campaigns.slice(-7).map((campaign: any, index: number) => {
-                            const maxValue = Math.max(...analytics.campaigns.map((c: any) => c.totalMessages || 0));
-                            const height = maxValue > 0 ? ((campaign.totalMessages || 0) / maxValue) * 100 : 0;
+                            const totalMessages = campaign.success || campaign.count || 0;
+                            const maxValue = Math.max(...analytics.campaigns.map((c: any) => c.success || c.count || 0));
+                            const height = maxValue > 0 ? (totalMessages / maxValue) * 100 : 0;
+                            console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%`);
                             
                             return (
                               <div key={index} className="flex flex-col items-center flex-1">
                                 <div 
                                   className="w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500"
                                   style={{ height: `${Math.max(height, 5)}%` }}
-                                  title={`${campaign.totalMessages || 0} mensagens em ${campaign.date}`}
+                                  title={`${totalMessages} mensagens em ${campaign.date}`}
                                 />
                                 <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
                                   {campaign.date}
@@ -765,7 +768,7 @@ export const AnalyticsDashboard: React.FC = () => {
                             Últimos 7 dias
                           </div>
                           <div className="text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
-                            Total: {analytics.campaigns.reduce((sum: number, campaign: any) => sum + (campaign.totalMessages || 0), 0)} mensagens
+                            Total: {analytics.campaigns.reduce((sum: number, campaign: any) => sum + (campaign.success || campaign.count || 0), 0)} mensagens
                           </div>
                         </div>
                       </div>
