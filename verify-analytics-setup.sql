@@ -166,3 +166,4 @@ SELECT
   'Execute este script para verificar se o setup de Analytics está funcionando corretamente.' as descricao;
 
 
+

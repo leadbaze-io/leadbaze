@@ -43,3 +43,4 @@ SELECT
   'A função update_updated_at_column() foi preservada pois é usada por outras tabelas.' as observacao;
 
 
+

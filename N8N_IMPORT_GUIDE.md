@@ -206,3 +206,4 @@ Após a configuração completa:
 **🎉 Com esta configuração, o sistema de Analytics estará 100% funcional com tracking em tempo real do WhatsApp!**
 
 
+

@@ -270,3 +270,4 @@ CREATE TABLE message_templates (
 - "Template 'Oferta Especial' tem 34% mais respostas"
 
 
+

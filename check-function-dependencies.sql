@@ -63,3 +63,4 @@ SELECT
   'NÃO remova esta função pois quebrará outras funcionalidades.' as aviso;
 
 
+
