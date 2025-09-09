@@ -23,7 +23,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { AnalyticsService, type AnalyticsData } from '../../lib/analyticsService';
+import { AnalyticsService } from '../../lib/analyticsService';
 import { useTheme } from '../../hooks/use-theme';
 
 // Componente de KPI Card otimizado
@@ -206,18 +206,17 @@ const ActivityItem = ({
 
 // Componente principal do Analytics Dashboard
 export const AnalyticsDashboard: React.FC = () => {
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('30d');
   const [refreshing, setRefreshing] = useState(false);
-  const { theme } = useTheme();
 
   const loadAnalytics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
     
     try {
-      const data = await AnalyticsService.getAnalytics(timeRange);
+      const data = await AnalyticsService.getAllAnalytics(timeRange);
       setAnalytics(data);
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
