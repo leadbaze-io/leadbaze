@@ -761,6 +761,11 @@ export default function DisparadorMassa() {
         console.log('📊 [DisparadorMassa] progress.failedCount:', progress.failedCount);
         console.log('📊 [DisparadorMassa] progress.progress:', progress.progress);
         console.log('📊 [DisparadorMassa] progress.campaignId:', progress.campaignId);
+        console.log('📊 [DisparadorMassa] progress.leadIndex:', progress.leadIndex);
+        console.log('📊 [DisparadorMassa] progress.totalLeads:', progress.totalLeads);
+        console.log('📊 [DisparadorMassa] progress.currentLead:', progress.currentLead);
+        console.log('📊 [DisparadorMassa] progress.error:', progress.error);
+        console.log('📊 [DisparadorMassa] Timestamp do progresso:', new Date().toISOString());
         
         // Atualizar estados do modal de progresso
         console.log('🔄 [DisparadorMassa] Chamando setCurrentSuccessCount...');
@@ -776,6 +781,10 @@ export default function DisparadorMassa() {
         console.log('✅ [DisparadorMassa] completion.status:', completion.status);
         console.log('✅ [DisparadorMassa] completion.successCount:', completion.successCount);
         console.log('✅ [DisparadorMassa] completion.failedCount:', completion.failedCount);
+        console.log('✅ [DisparadorMassa] completion.totalProcessed:', completion.totalProcessed);
+        console.log('✅ [DisparadorMassa] completion.campaignId:', completion.campaignId);
+        console.log('✅ [DisparadorMassa] completion.completedAt:', completion.completedAt);
+        console.log('✅ [DisparadorMassa] Timestamp da conclusão:', new Date().toISOString());
         
         // Atualizar estados do modal de progresso
         console.log('🔄 [DisparadorMassa] Chamando setCurrentCampaignStatus...');
@@ -805,6 +814,12 @@ export default function DisparadorMassa() {
       },
       (status) => {
         console.log('📊 [DisparadorMassa] Status da campanha atualizado (tempo real):', status)
+        console.log('📊 [DisparadorMassa] status.campaignId:', status.campaignId);
+        console.log('📊 [DisparadorMassa] status.status:', status.status);
+        console.log('📊 [DisparadorMassa] status.success_count:', status.success_count);
+        console.log('📊 [DisparadorMassa] status.failed_count:', status.failed_count);
+        console.log('📊 [DisparadorMassa] status.updated_at:', status.updated_at);
+        console.log('📊 [DisparadorMassa] Timestamp do status update:', new Date().toISOString());
         
         // Atualizar campanha na lista
         setCampaigns(prev => prev.map(c => 

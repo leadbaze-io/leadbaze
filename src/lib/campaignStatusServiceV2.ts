@@ -176,11 +176,15 @@ export class CampaignStatusServiceV2 {
           }
         } else if (data.type === 'connected') {
           console.log('🔌 [CampaignStatusServiceV2] Conexão SSE estabelecida');
+          console.log('🔌 [CampaignStatusServiceV2] Campaign ID:', data.campaignId);
+          console.log('🔌 [CampaignStatusServiceV2] Timestamp:', data.timestamp);
         } else if (data.type === 'heartbeat') {
           console.log('💓 [CampaignStatusServiceV2] Heartbeat recebido');
+          console.log('💓 [CampaignStatusServiceV2] Timestamp:', data.timestamp);
         } else {
           console.log('❓ [CampaignStatusServiceV2] Tipo de evento desconhecido:', data.type);
           console.log('❓ [CampaignStatusServiceV2] Dados completos:', data);
+          console.log('❓ [CampaignStatusServiceV2] Timestamp do evento desconhecido:', new Date().toISOString());
         }
       } catch (error) {
         console.error('❌ [CampaignStatusServiceV2] Erro ao processar mensagem genérica:', error);
@@ -211,11 +215,17 @@ export class CampaignStatusServiceV2 {
     eventSource.addEventListener('error', (event) => {
       console.error('❌ [CampaignStatusServiceV2] Erro na conexão SSE:', event);
       console.error('❌ [CampaignStatusServiceV2] EventSource readyState:', eventSource.readyState);
+      console.error('❌ [CampaignStatusServiceV2] Timestamp do erro:', new Date().toISOString());
+      console.error('❌ [CampaignStatusServiceV2] Campaign ID:', campaignId);
+      console.error('❌ [CampaignStatusServiceV2] URL:', eventSource.url);
     });
 
     // Listener para abertura da conexão
     eventSource.addEventListener('open', () => {
       console.log('✅ [CampaignStatusServiceV2] Conexão SSE estabelecida para campanha:', campaignId);
+      console.log('✅ [CampaignStatusServiceV2] Timestamp da abertura:', new Date().toISOString());
+      console.log('✅ [CampaignStatusServiceV2] URL da conexão:', eventSource.url);
+      console.log('✅ [CampaignStatusServiceV2] ReadyState:', eventSource.readyState);
     });
 
     // Retornar função para parar as atualizações
