@@ -269,3 +269,4 @@ CREATE TABLE message_templates (
 - "Melhor horário para envio: 14h-16h"
 - "Template 'Oferta Especial' tem 34% mais respostas"
 
+

@@ -107,3 +107,4 @@ SELECT
   'Agora execute o script supabase-advanced-analytics-setup.sql para recriar o sistema de analytics.' as proximo_passo,
   'Outras funcionalidades do sistema foram preservadas.' as observacao;
 
+

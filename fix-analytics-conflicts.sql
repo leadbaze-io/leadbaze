@@ -42,3 +42,4 @@ SELECT
   'Agora execute o script supabase-advanced-analytics-setup.sql para recriar o sistema de analytics.' as proximo_passo,
   'A função update_updated_at_column() foi preservada pois é usada por outras tabelas.' as observacao;
 
+

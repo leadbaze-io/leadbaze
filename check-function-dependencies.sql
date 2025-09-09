@@ -62,3 +62,4 @@ SELECT
   'A função update_updated_at_column() é usada por múltiplas tabelas do sistema.' as observacao,
   'NÃO remova esta função pois quebrará outras funcionalidades.' as aviso;
 
+

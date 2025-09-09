@@ -21,3 +21,4 @@ GROUP BY ll.user_id, lead_data->>'business_type';
 -- Comentário da view
 COMMENT ON VIEW category_performance IS 'Performance por categoria de negócio dos leads';
 
+
