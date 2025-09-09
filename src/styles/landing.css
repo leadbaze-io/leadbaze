@@ -333,8 +333,8 @@ html.dark .landing-bg-gradient-yellow-400 {
 
 /* ===== SOBRESCREVER CLASSES TAILWIND PADRÃO APENAS NA LANDING PAGE ===== */
 
-/* Aplicar apenas quando estiver na Landing Page */
-.landing-page html:not(.dark) .from-blue-600 {
+/* Aplicar apenas quando estiver na Landing Page - MÁXIMA ESPECIFICIDADE */
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-600 {
   background: linear-gradient(to right, #2563eb, #7c3aed) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
@@ -342,7 +342,7 @@ html.dark .landing-bg-gradient-yellow-400 {
   color: transparent !important;
 }
 
-.landing-page html:not(.dark) .to-purple-600 {
+.landing-page html:not(.dark) .bg-gradient-to-r.to-purple-600 {
   background: linear-gradient(to right, #2563eb, #7c3aed) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
@@ -350,7 +350,99 @@ html.dark .landing-bg-gradient-yellow-400 {
   color: transparent !important;
 }
 
-.landing-page html:not(.dark) .to-blue-800 {
+.landing-page html:not(.dark) .bg-gradient-to-r.to-blue-800 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Seletores mais específicos para gradientes de texto */
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.to-purple-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.to-blue-800 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Seletores ainda mais específicos para elementos com via-purple-600 */
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-600.via-purple-600 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-600.via-purple-600.to-blue-800 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Seletores ultra-específicos para garantir aplicação */
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-600.via-purple-600.to-blue-800.bg-clip-text.text-transparent {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-600.via-purple-600.to-blue-800.bg-clip-text.text-transparent {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Para gradientes com via-purple-400 e to-pink-400 (CTA) */
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-400.via-purple-400.to-pink-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-400.via-purple-400.to-pink-400 {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) .bg-gradient-to-r.from-blue-400.via-purple-400.to-pink-400.bg-clip-text.text-transparent {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page html:not(.dark) span.bg-gradient-to-r.from-blue-400.via-purple-400.to-pink-400.bg-clip-text.text-transparent {
   background: linear-gradient(to right, #2563eb, #7c3aed) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
@@ -592,4 +684,121 @@ html.dark .landing-bg-gradient-yellow-400 {
 
 .landing-page html:not(.dark) .to-purple-400 {
   background-color: #8b5cf6 !important;
+}
+
+/* ===== FORÇA MÁXIMA - SOBRESCREVER QUALQUER OUTRA REGRA ===== */
+
+/* Forçar cores azul-roxo em TODOS os gradientes de texto na Landing Page */
+.landing-page *[class*="from-blue-600"][class*="via-purple-600"][class*="to-blue-800"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-blue-400"][class*="via-purple-400"][class*="to-pink-400"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Forçar cores azul-roxo em TODOS os gradientes de fundo na Landing Page */
+.landing-page *[class*="from-blue-500"][class*="to-purple-500"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-blue-600"][class*="to-purple-600"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-orange-500"][class*="to-red-500"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-green-500"][class*="to-emerald-500"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-yellow-400"][class*="to-orange-400"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-green-400"][class*="to-emerald-400"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-purple-400"][class*="to-pink-400"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+.landing-page *[class*="from-blue-400"][class*="to-purple-400"] {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+}
+
+/* Forçar cores azul-roxo em TODOS os gradientes de texto com classes específicas */
+.landing-page *[class*="from-blue-600"][class*="to-cyan-600"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-orange-600"][class*="to-red-600"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-green-600"][class*="to-emerald-600"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-purple-600"][class*="to-pink-600"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-yellow-400"][class*="to-orange-400"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-green-400"][class*="to-emerald-400"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-purple-400"][class*="to-pink-400"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+.landing-page *[class*="from-blue-400"][class*="to-purple-400"] {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
