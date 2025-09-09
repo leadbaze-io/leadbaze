@@ -462,7 +462,7 @@ export const AnalyticsDashboard: React.FC = () => {
               
               <div className="space-y-8">
                 {/* Métricas de Performance */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                   <motion.div
                     whileHover={{ y: -2, scale: 1.02 }}
                     className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
@@ -470,26 +470,7 @@ export const AnalyticsDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Mensagens Enviadas
-                        </p>
-                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.performance?.successMessages || 0}
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Send className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Mensagens Falharam
+                          Erros
                         </p>
                         <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
                           {analytics.overview.performance?.failedMessages || 0}
@@ -510,11 +491,14 @@ export const AnalyticsDashboard: React.FC = () => {
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
                           Tempo Médio
                         </p>
-                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.total > 0 ? 
-                            Math.round((analytics.overview.performance?.totalMessages || 0) / analytics.overview.campaignStats.total) : 0
-                          }min
-                        </p>
+                        <div className="flex items-baseline space-x-1">
+                          <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                            10
+                          </p>
+                          <p className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">
+                            seg por mensagem
+                          </p>
+                        </div>
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                         <Clock className="w-6 h-6 text-white" />
@@ -529,33 +513,9 @@ export const AnalyticsDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Taxa de Entrega
-                        </p>
-                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.performance?.totalMessages > 0 ? 
-                            Math.round((analytics.overview.performance.successMessages || 0) / analytics.overview.performance.totalMessages * 100) : 0
-                          }%
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <TrendingUp className="w-6 h-6 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Métricas de Produtividade */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-                  <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
                           Leads por Dia
                         </p>
-                        <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                        <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
                           {analytics.overview.totalLeads > 0 ? 
                             Math.round(analytics.overview.totalLeads / 30) : 0
                           }
@@ -566,7 +526,10 @@ export const AnalyticsDashboard: React.FC = () => {
                       </div>
                     </div>
                   </motion.div>
+                </div>
 
+                {/* Métricas de Produtividade */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
                   <motion.div
                     whileHover={{ y: -2, scale: 1.02 }}
                     className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
@@ -574,16 +537,16 @@ export const AnalyticsDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div className="space-y-2">
                         <p className="text-sm font-semibold dashboard-card-muted-claro dark:text-muted-foreground uppercase tracking-wide">
-                          Mensagens por Hora
+                          Leads por Campanha
                         </p>
                         <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.performance?.totalMessages > 0 ? 
-                            Math.round(analytics.overview.performance.totalMessages / 24) : 0
+                          {analytics.overview.campaignStats?.total > 0 ? 
+                            Math.round(analytics.overview.totalLeads / analytics.overview.campaignStats.total) : 0
                           }
                         </p>
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Send className="w-6 h-6 text-white" />
+                        <Target className="w-6 h-6 text-white" />
                       </div>
                     </div>
                   </motion.div>
@@ -683,13 +646,14 @@ export const AnalyticsDashboard: React.FC = () => {
                         {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
                           const maxValue = Math.max(...analytics.leadsOverTime.map((d: any) => d.count || 0));
                           const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
-                          console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%`);
+                          const finalHeight = Math.max(height, 10);
+                          console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%, finalHeight = ${finalHeight}%`);
                           
                           return (
                             <div key={index} className="flex flex-col items-center flex-1">
                               <div 
-                                className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500"
-                                style={{ height: `${Math.max(height, 5)}%` }}
+                                className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 min-h-[4px]"
+                                style={{ height: `${finalHeight}%`, minHeight: '8px' }}
                                 title={`${item.count || 0} leads em ${item.date}`}
                               />
                               <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
@@ -745,13 +709,14 @@ export const AnalyticsDashboard: React.FC = () => {
                             const totalMessages = campaign.success || campaign.count || 0;
                             const maxValue = Math.max(...analytics.campaigns.map((c: any) => c.success || c.count || 0));
                             const height = maxValue > 0 ? (totalMessages / maxValue) * 100 : 0;
-                            console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%`);
+                            const finalHeight = Math.max(height, 10);
+                            console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%, finalHeight = ${finalHeight}%`);
                             
                             return (
                               <div key={index} className="flex flex-col items-center flex-1">
                                 <div 
-                                  className="w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500"
-                                  style={{ height: `${Math.max(height, 5)}%` }}
+                                  className="w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 min-h-[4px]"
+                                  style={{ height: `${finalHeight}%`, minHeight: '8px' }}
                                   title={`${totalMessages} mensagens em ${campaign.date}`}
                                 />
                                 <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-2 text-center">
