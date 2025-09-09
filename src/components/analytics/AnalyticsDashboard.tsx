@@ -1,639 +1,568 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TrendingUp, 
-  Target,
+  Users, 
+  Target, 
+  Activity, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  Send,
+  BarChart3,
+  PieChart,
+  Calendar,
+  Filter,
   Download,
   RefreshCw,
-  Users,
-  FolderPlus,
-  MessageSquare,
-  Clock,
+  Eye,
   Zap,
-  BarChart3,
-  Activity
-} from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
+  Award,
+  MessageSquare,
+  Phone,
+  Mail,
+  MapPin,
+  Star,
+  ArrowUpRight,
+  ArrowDownRight,
+  Minus
+} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AnalyticsService, type AnalyticsData } from '@/lib/analyticsService';
+import { useTheme } from '@/hooks/use-theme';
 
-import { useLeadLists } from '../../hooks/useLeadLists'
-import { AnalyticsSkeleton } from '../LoadingScreen'
-import { AnalyticsService } from '../../lib/analyticsService'
-import type { LeadList } from '../../types'
-import type { 
-  AnalyticsOverview, 
-  LeadsOverTime, 
-  CategoryData, 
-  CategoryDistribution, 
-  CampaignData, 
-  RecentActivity 
-} from '../../lib/analyticsService'
-
-// Interface para dados reais de analytics
-interface AnalyticsData {
-  overview: AnalyticsOverview
-  leadsOverTime: LeadsOverTime[]
-  categories: CategoryData[]
-  categoryDistribution: CategoryDistribution[]
-  campaigns: CampaignData[]
-  recentActivity: RecentActivity[]
-}
-
-export default function AnalyticsDashboard() {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
+// Componente de KPI Card otimizado
+const KPICard = ({ 
+  title, 
+  value, 
+  change, 
+  icon: Icon, 
+  color = 'blue',
+  loading = false 
+}: {
+  title: string;
+  value: string | number;
+  change?: number;
+  icon: React.ComponentType<any>;
+  color?: 'blue' | 'green' | 'red' | 'purple' | 'orange' | 'indigo';
+  loading?: boolean;
+}) => {
+  const { theme } = useTheme();
   
-  const { data: leadLists, isLoading: listsLoading } = useLeadLists()
-
-  // Carregar dados reais de analytics
-  useEffect(() => {
-    const loadAnalytics = async () => {
-      setIsLoading(true)
-      
-      try {
-        console.log(`📊 [AnalyticsDashboard] Carregando dados para período: ${timeRange}`);
-        const analyticsData = await AnalyticsService.getAllAnalytics(timeRange)
-        setAnalytics(analyticsData)
-        setLastUpdated(new Date())
-        console.log('✅ [AnalyticsDashboard] Dados carregados com sucesso');
-      } catch (error) {
-        console.error('❌ [AnalyticsDashboard] Erro ao carregar dados:', error);
-        // Fallback para dados mockup em caso de erro
-        if (leadLists) {
-          const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
-          setAnalytics(mockAnalytics)
-          setLastUpdated(new Date())
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    if (!listsLoading) {
-      loadAnalytics()
-    }
-  }, [leadLists, timeRange, listsLoading])
-
-  const refreshData = async () => {
-    setIsLoading(true)
-    
-    try {
-      console.log(`🔄 [AnalyticsDashboard] Atualizando dados para período: ${timeRange}`);
-      const analyticsData = await AnalyticsService.getAllAnalytics(timeRange)
-      setAnalytics(analyticsData)
-      setLastUpdated(new Date())
-      console.log('✅ [AnalyticsDashboard] Dados atualizados com sucesso');
-    } catch (error) {
-      console.error('❌ [AnalyticsDashboard] Erro ao atualizar dados:', error);
-      // Fallback para dados mockup em caso de erro
-      if (leadLists) {
-        const mockAnalytics = generateMockAnalytics(leadLists, timeRange)
-        setAnalytics(mockAnalytics)
-        setLastUpdated(new Date())
-      }
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  if (isLoading || !analytics) {
-    return <AnalyticsSkeleton />
-  }
-
-  return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="space-y-4">
-        <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Analytics Dashboard
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Última atualização: {lastUpdated.toLocaleTimeString()}
-          </p>
-        </div>
-        
-        {/* Mobile-first responsive controls */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          {/* Time Range Selector */}
-          <div className="flex items-center space-x-1 bg-muted rounded-lg p-1 w-full sm:w-auto">
-            {(['7d', '30d', '90d'] as const).map((range) => (
-              <Button
-                key={range}
-                variant={timeRange === range ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setTimeRange(range)}
-                className="text-xs flex-1 sm:flex-none"
-              >
-                {range === '7d' ? '7 dias' : range === '30d' ? '30 dias' : '90 dias'}
-              </Button>
-            ))}
-          </div>
-          
-          {/* Action Buttons */}
-          <div className="flex gap-2 sm:gap-3">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={refreshData}
-              disabled={isLoading}
-              className="flex-1 sm:flex-none"
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              <span className="hidden xs:inline">Atualizar</span>
-              <span className="xs:hidden">Atualizar</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="flex-1 sm:flex-none"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              <span className="hidden xs:inline">Exportar</span>
-              <span className="xs:hidden">Exportar</span>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <MetricCard
-          title="Total de Leads"
-          value={analytics.overview.totalLeads.toLocaleString()}
-          change={`${analytics.overview.growthRate >= 0 ? '+' : ''}${analytics.overview.growthRate}%`}
-          trend={analytics.overview.growthRate >= 0 ? "up" : "down"}
-          icon={Users}
-          color="blue"
-        />
-        
-        <MetricCard
-          title="Listas Criadas"
-          value={analytics.overview.totalLists.toString()}
-          change={`${analytics.overview.totalLists > 0 ? '+' : ''}${analytics.overview.totalLists}`}
-          trend="up"
-          icon={FolderPlus}
-          color="green"
-        />
-        
-        <MetricCard
-          title="Campanhas Enviadas"
-          value={analytics.overview.totalCampaigns.toString()}
-          change={`${analytics.overview.totalCampaigns > 0 ? '+' : ''}${analytics.overview.totalCampaigns}`}
-          trend="up"
-          icon={BarChart3}
-          color="purple"
-        />
-        
-        <MetricCard
-          title="Taxa de Entrega"
-          value={`${analytics.overview.conversionRate}%`}
-          change={`${analytics.overview.conversionRate > 0 ? '+' : ''}${analytics.overview.conversionRate}%`}
-          trend={analytics.overview.conversionRate > 0 ? "up" : "down"}
-          icon={TrendingUp}
-          color="orange"
-        />
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* Leads Over Time */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
-              <span>Leads ao Longo do Tempo</span>
-            </CardTitle>
-            <CardDescription>
-              Crescimento de leads nos últimos {timeRange}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SimpleLineChart data={analytics.leadsOverTime} />
-          </CardContent>
-        </Card>
-
-        {/* Category Distribution */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Target className="w-5 h-5 text-green-600" />
-              <span>Categorias</span>
-            </CardTitle>
-            <CardDescription>
-              Distribuição por tipo de negócio
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {analytics.categories.length > 0 ? (
-                analytics.categories.map((category, index) => (
-                  <div key={category.name} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div 
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
-                      />
-                      <span className="text-sm font-medium">{category.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-semibold">{category.count}</div>
-                      <div className="text-xs text-gray-500">{category.percentage}%</div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-4 text-muted-foreground">
-                  <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Nenhuma categoria encontrada</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Campaigns Performance */}
-      {/* MELHORIA: Performance das Campanhas reformulada */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Activity className="w-5 h-5 text-purple-600" />
-            <span>Performance das Campanhas</span>
-          </CardTitle>
-          <CardDescription>
-            Estatísticas detalhadas de campanhas e mensagens
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {/* Métricas de Performance */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">
-                  {analytics.overview.performance?.successMessages || 0}
-                </div>
-                <div className="text-sm text-green-600">Mensagens Enviadas</div>
-              </div>
-              <div className="text-center p-4 bg-red-50 rounded-lg">
-                <div className="text-2xl font-bold text-red-600">
-                  {analytics.overview.performance?.failedMessages || 0}
-                </div>
-                <div className="text-sm text-red-600">Mensagens Falharam</div>
-              </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">
-                  {analytics.overview.performance?.successRate || 0}%
-                </div>
-                <div className="text-sm text-blue-600">Taxa de Sucesso</div>
-              </div>
-              <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">
-                  {analytics.overview.campaignStats?.total || 0}
-                </div>
-                <div className="text-sm text-purple-600">Total Campanhas</div>
-              </div>
-            </div>
-
-            {/* Status das Campanhas */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="text-lg font-semibold text-gray-600">
-                  {analytics.overview.campaignStats?.completed || 0}
-                </div>
-                <div className="text-xs text-gray-500">Finalizadas</div>
-              </div>
-              <div className="text-center p-3 bg-yellow-50 rounded-lg">
-                <div className="text-lg font-semibold text-yellow-600">
-                  {analytics.overview.campaignStats?.sending || 0}
-                </div>
-                <div className="text-xs text-yellow-600">Em Andamento</div>
-              </div>
-              <div className="text-center p-3 bg-blue-50 rounded-lg">
-                <div className="text-lg font-semibold text-blue-600">
-                  {analytics.overview.campaignStats?.draft || 0}
-                </div>
-                <div className="text-xs text-blue-600">Rascunhos</div>
-              </div>
-            </div>
-
-            {/* Gráfico de Campanhas */}
-            {analytics.campaigns.length > 0 && (
-              <div>
-                <h4 className="text-sm font-medium mb-3">Campanhas por Dia</h4>
-                <CampaignsChart data={analytics.campaigns} />
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-purple-600" />
-            <span>Atividade Recente</span>
-          </CardTitle>
-          <CardDescription>
-            Últimas ações realizadas na plataforma
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {analytics.recentActivity.map((activity, index) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:shadow-md transition-all duration-200"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-lg">
-                      {getActivityIcon(activity.type)}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{activity.description}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(activity.timestamp).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                {/* MELHORIA: Dados mais robustos na atividade recente */}
-                <div className="flex items-center space-x-2">
-                  {activity.count && (
-                    <div 
-                      className="inline-flex items-center rounded-full text-xs font-bold px-3 py-1 shadow-lg border-0"
-                      style={{
-                        backgroundColor: 'rgb(59, 130, 246)',
-                        minWidth: '32px',
-                        height: '24px',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <span 
-                        className="text-xs font-bold"
-                        style={{
-                          color: 'rgb(255, 255, 255)',
-                          textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
-                          lineHeight: '1'
-                        }}
-                      >
-                        {activity.count}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* MELHORIA: Mostrar taxa de sucesso para campanhas */}
-                  {activity.successRate && activity.successRate > 0 && (
-                    <div className="text-xs text-green-600 font-medium">
-                      {activity.successRate}% sucesso
-                    </div>
-                  )}
-                  
-                  {/* MELHORIA: Mostrar progresso para campanhas em andamento */}
-                  {activity.progress && activity.progress > 0 && (
-                    <div className="text-xs text-blue-600 font-medium">
-                      {activity.progress}% concluído
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-    </div>
-  )
-}
-
-interface MetricCardProps {
-  title: string
-  value: string
-  change: string
-  trend: 'up' | 'down'
-  icon: React.ElementType
-  color: 'blue' | 'green' | 'purple' | 'orange'
-}
-
-function MetricCard({ title, value, change, trend, icon: Icon, color }: MetricCardProps) {
   const colorClasses = {
-    blue: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white',
-    green: 'bg-gradient-to-r from-green-500 to-green-600 text-white',
-    purple: 'bg-gradient-to-r from-purple-500 to-purple-600 text-white',
-    orange: 'bg-gradient-to-r from-orange-500 to-orange-600 text-white',
-  }
+    blue: {
+      bg: theme === 'dark' ? 'bg-blue-950/50' : 'bg-blue-50',
+      text: 'text-blue-600',
+      icon: 'text-blue-500',
+      border: theme === 'dark' ? 'border-blue-800/30' : 'border-blue-200'
+    },
+    green: {
+      bg: theme === 'dark' ? 'bg-green-950/50' : 'bg-green-50',
+      text: 'text-green-600',
+      icon: 'text-green-500',
+      border: theme === 'dark' ? 'border-green-800/30' : 'border-green-200'
+    },
+    red: {
+      bg: theme === 'dark' ? 'bg-red-950/50' : 'bg-red-50',
+      text: 'text-red-600',
+      icon: 'text-red-500',
+      border: theme === 'dark' ? 'border-red-800/30' : 'border-red-200'
+    },
+    purple: {
+      bg: theme === 'dark' ? 'bg-purple-950/50' : 'bg-purple-50',
+      text: 'text-purple-600',
+      icon: 'text-purple-500',
+      border: theme === 'dark' ? 'border-purple-800/30' : 'border-purple-200'
+    },
+    orange: {
+      bg: theme === 'dark' ? 'bg-orange-950/50' : 'bg-orange-50',
+      text: 'text-orange-600',
+      icon: 'text-orange-500',
+      border: theme === 'dark' ? 'border-orange-800/30' : 'border-orange-200'
+    },
+    indigo: {
+      bg: theme === 'dark' ? 'bg-indigo-950/50' : 'bg-indigo-50',
+      text: 'text-indigo-600',
+      icon: 'text-indigo-500',
+      border: theme === 'dark' ? 'border-indigo-800/30' : 'border-indigo-200'
+    }
+  };
+
+  const colors = colorClasses[color];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.3 }}
     >
-      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border border-border shadow-sm">
-        <CardContent className="p-4 sm:p-6">
+      <Card className={`h-full ${colors.bg} ${colors.border} border transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}>
+        <CardContent className="p-6">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide truncate">
-                {title}
-              </p>
-              <p className="text-xl sm:text-2xl lg:text-3xl font-black text-foreground mt-1">
-                {value}
-              </p>
-              <div className="flex items-center mt-2">
-                <TrendingUp className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${
-                  trend === 'up' ? 'text-green-500' : 'text-red-500'
-                }`} />
-                <span className={`text-xs sm:text-sm font-bold ${
-                  trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                }`}>
-                  {change}
-                </span>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-muted-foreground mb-1">{title}</p>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-2xl font-bold text-foreground">
+                  {loading ? (
+                    <div className="h-8 w-16 bg-muted animate-pulse rounded" />
+                  ) : (
+                    value
+                  )}
+                </h3>
+                {change !== undefined && !loading && (
+                  <div className={`flex items-center space-x-1 text-sm ${
+                    change > 0 ? 'text-green-600' : change < 0 ? 'text-red-600' : 'text-muted-foreground'
+                  }`}>
+                    {change > 0 ? <ArrowUpRight className="w-4 h-4" /> : 
+                     change < 0 ? <ArrowDownRight className="w-4 h-4" /> : 
+                     <Minus className="w-4 h-4" />}
+                    <span className="font-medium">{Math.abs(change)}%</span>
+                  </div>
+                )}
               </div>
             </div>
-            <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shadow-lg ${colorClasses[color]} ml-3 flex-shrink-0`}>
-              <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+            <div className={`p-3 rounded-xl ${colors.bg} ${colors.icon}`}>
+              <Icon className="w-6 h-6" />
             </div>
           </div>
         </CardContent>
       </Card>
     </motion.div>
-  )
-}
+  );
+};
 
-function SimpleLineChart({ data }: { data: Array<{ date: string; count: number }> }) {
-  const maxValue = Math.max(...data.map(d => d.count))
+// Componente de Activity Item otimizado
+const ActivityItem = ({ 
+  activity, 
+  index 
+}: { 
+  activity: any; 
+  index: number; 
+}) => {
+  const { theme } = useTheme();
   
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'campaign_completed': return <CheckCircle className="w-5 h-5" />;
+      case 'campaign_sent': return <Send className="w-5 h-5" />;
+      case 'campaign_created': return <Zap className="w-5 h-5" />;
+      case 'list_created': return <Users className="w-5 h-5" />;
+      default: return <Activity className="w-5 h-5" />;
+    }
+  };
+
+  const getActivityColor = (type: string) => {
+    switch (type) {
+      case 'campaign_completed': return 'text-green-600 bg-green-100 dark:bg-green-900/30';
+      case 'campaign_sent': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30';
+      case 'campaign_created': return 'text-purple-600 bg-purple-100 dark:bg-purple-900/30';
+      case 'list_created': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/30';
+      default: return 'text-gray-600 bg-gray-100 dark:bg-gray-900/30';
+    }
+  };
+
   return (
-    <div className="h-64 flex items-end space-x-2">
-      {data.map((point, index) => (
-        <motion.div
-          key={point.date}
-          initial={{ height: 0 }}
-          animate={{ height: `${(point.count / maxValue) * 100}%` }}
-          transition={{ delay: index * 0.1, duration: 0.5 }}
-          className="flex-1 bg-blue-500 rounded-t-sm min-h-[4px] hover:bg-blue-600 transition-colors"
-          title={`${point.date}: ${point.count} leads`}
-        />
-      ))}
-    </div>
-  )
-}
-
-function getActivityIcon(type: string) {
-  switch (type) {
-    case 'lead_generated':
-      return <Users className="w-4 h-4 text-white" />
-    case 'list_created':
-      return <FolderPlus className="w-4 h-4 text-white" />
-    case 'campaign_sent':
-      return <MessageSquare className="w-4 h-4 text-white" />
-    case 'campaign_completed':
-      return <BarChart3 className="w-4 h-4 text-white" />
-    default:
-      return <Zap className="w-4 h-4 text-white" />
-  }
-}
-
-function generateMockAnalytics(leadLists: LeadList[], timeRange: string): AnalyticsData {
-  const totalLeads = leadLists.reduce((sum, list) => sum + (list.total_leads || 0), 0)
-  const totalLists = leadLists.length
-
-  // Generate chart data based on time range
-  const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90
-  const leadsOverTime = Array.from({ length: days }, (_, i) => {
-    const date = new Date()
-    date.setDate(date.getDate() - (days - 1 - i))
-    return {
-      date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      count: Math.floor(Math.random() * 20) + 5
-    }
-  })
-
-  // Generate category distribution from actual leads
-  const allLeads = leadLists.flatMap(list => list.leads || [])
-  const categoryCounts: Record<string, number> = {}
-  allLeads.forEach(lead => {
-    if (lead.business_type) {
-      categoryCounts[lead.business_type] = (categoryCounts[lead.business_type] || 0) + 1
-    }
-  })
-
-  // Se não há categorias reais, usar categorias mockup
-  if (Object.keys(categoryCounts).length === 0) {
-    categoryCounts['Estabelecimento'] = Math.floor(totalLeads * 0.4)
-    categoryCounts['Serviços'] = Math.floor(totalLeads * 0.3)
-    categoryCounts['E-commerce'] = Math.floor(totalLeads * 0.2)
-    categoryCounts['Consultoria'] = Math.floor(totalLeads * 0.1)
-  }
-
-  const topCategories = Object.entries(categoryCounts)
-    .map(([name, count]) => ({
-      name,
-      count,
-      percentage: totalLeads > 0 ? Math.round((count / totalLeads) * 100) : 0
-    }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5)
-
-  const colors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444']
-  const categoryDistribution = topCategories.map((category, index) => ({
-    category: category.name,
-    count: category.count,
-    color: colors[index % colors.length]
-  }))
-
-  // Generate campaigns data with mockup values
-  const totalCampaigns = Math.floor(totalLists * 0.8) // 80% das listas têm campanhas
-  const messagesSent = Math.floor(totalLeads * 0.6) // 60% dos leads receberam mensagens
-  const conversionRate = Math.floor(Math.random() * 15) + 5 // 5-20% de conversão
-  const growthRate = Math.floor(Math.random() * 30) + 10 // 10-40% de crescimento
-
-  const campaigns = Array.from({ length: days }, (_, i) => {
-    const date = new Date()
-    date.setDate(date.getDate() - (days - 1 - i))
-    const success = Math.floor(Math.random() * 10) + 1
-    const failed = Math.floor(Math.random() * 3)
-    return {
-      date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
-      count: success + failed,
-      success,
-      failed
-    }
-  })
-
-  // Generate recent activity from actual lists
-  const recentActivity = leadLists.slice(0, 5).map((list, index) => {
-    const activities = [
-      { type: 'list_created' as const, description: `Lista "${list.name}" criada` },
-      { type: 'lead_generated' as const, description: `${list.total_leads} leads adicionados` },
-      { type: 'campaign_sent' as const, description: `Campanha enviada para "${list.name}"` },
-      { type: 'campaign_completed' as const, description: `Campanha finalizada` }
-    ]
-    
-    const activity = activities[index % activities.length]
-    return {
-      id: `activity-${list.id}-${index}`,
-      type: activity.type,
-      description: activity.description,
-      timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
-      count: list.total_leads
-    }
-  })
-
-  return {
-    overview: {
-      totalLeads,
-      totalLists,
-      totalCampaigns,
-      messagesSent,
-      conversionRate,
-      growthRate,
-      averageRating: 4.2,
-      timeRange
-    },
-    leadsOverTime,
-    categories: topCategories,
-    categoryDistribution,
-    campaigns,
-    recentActivity
-  }
-}
-
-function CampaignsChart({ data }: { data: Array<{ date: string; count: number; success: number; failed: number }> }) {
-  const maxValue = Math.max(...data.map(d => Math.max(d.success, d.failed)))
-  
-  return (
-    <div className="h-64 flex items-end space-x-2">
-      {data.map((point, index) => (
-        <div key={point.date} className="flex-1 flex flex-col items-center space-y-1">
-          <div className="flex flex-col space-y-1 w-full">
-            <motion.div
-              initial={{ height: 0 }}
-              animate={{ height: `${maxValue > 0 ? (point.success / maxValue) * 100 : 0}%` }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="bg-green-500 rounded-t-sm min-h-[2px] hover:bg-green-600 transition-colors"
-              title={`${point.date}: ${point.success} sucessos`}
-            />
-            <motion.div
-              initial={{ height: 0 }}
-              animate={{ height: `${maxValue > 0 ? (point.failed / maxValue) * 100 : 0}%` }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="bg-red-500 rounded-t-sm min-h-[2px] hover:bg-red-600 transition-colors"
-              title={`${point.date}: ${point.failed} falhas`}
-            />
-          </div>
-          <span className="text-xs text-muted-foreground mt-2">{point.date}</span>
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.3 }}
+      className="group"
+    >
+      <div className="flex items-center space-x-4 p-4 rounded-xl border border-border/50 hover:border-border hover:shadow-md transition-all duration-300 bg-card/50 hover:bg-card">
+        <div className={`p-3 rounded-xl ${getActivityColor(activity.type)} transition-all duration-300 group-hover:scale-110`}>
+          {getActivityIcon(activity.type)}
         </div>
-      ))}
+        
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">
+            {activity.description}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {new Date(activity.timestamp).toLocaleString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          {activity.count && (
+            <Badge variant="secondary" className="font-semibold">
+              {activity.count}
+            </Badge>
+          )}
+          
+          {activity.successRate && activity.successRate > 0 && (
+            <Badge variant="outline" className="text-green-600 border-green-200 dark:border-green-800">
+              {activity.successRate}% sucesso
+            </Badge>
+          )}
+          
+          {activity.progress && activity.progress > 0 && (
+            <Badge variant="outline" className="text-blue-600 border-blue-200 dark:border-blue-800">
+              {activity.progress}% concluído
+            </Badge>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Componente principal do Analytics Dashboard
+export const AnalyticsDashboard: React.FC = () => {
+  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState('30d');
+  const [refreshing, setRefreshing] = useState(false);
+  const { theme } = useTheme();
+
+  const loadAnalytics = async (showRefresh = false) => {
+    if (showRefresh) setRefreshing(true);
+    else setLoading(true);
+    
+    try {
+      const data = await AnalyticsService.getAnalytics(timeRange);
+      setAnalytics(data);
+    } catch (error) {
+      console.error('Erro ao carregar analytics:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [timeRange]);
+
+  const handleRefresh = () => {
+    loadAnalytics(true);
+  };
+
+  const handleExport = () => {
+    // Implementar exportação de dados
+    console.log('Exportando dados...');
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-8 w-48 bg-muted animate-pulse rounded mb-2" />
+            <div className="h-4 w-64 bg-muted animate-pulse rounded" />
+          </div>
+          <div className="h-10 w-32 bg-muted animate-pulse rounded" />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-32 bg-muted animate-pulse rounded-xl" />
+          ))}
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="h-96 bg-muted animate-pulse rounded-xl" />
+          <div className="h-96 bg-muted animate-pulse rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!analytics) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold text-foreground mb-2">
+            Nenhum dado disponível
+          </h3>
+          <p className="text-muted-foreground mb-4">
+            Não há dados de analytics para exibir no momento.
+          </p>
+          <Button onClick={handleRefresh} variant="outline">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Tentar novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 p-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+      >
+        <div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Analytics Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Acompanhe o desempenho das suas campanhas e leads
+          </p>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7d">7 dias</SelectItem>
+              <SelectItem value="30d">30 dias</SelectItem>
+              <SelectItem value="90d">90 dias</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button
+            onClick={handleRefresh}
+            variant="outline"
+            size="sm"
+            disabled={refreshing}
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            Atualizar
+          </Button>
+          
+          <Button onClick={handleExport} variant="outline" size="sm">
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <KPICard
+          title="Total de Leads"
+          value={analytics.overview.totalLeads.toLocaleString()}
+          change={analytics.overview.growthRate}
+          icon={Users}
+          color="blue"
+          loading={loading}
+        />
+        
+        <KPICard
+          title="Mensagens Enviadas"
+          value={analytics.overview.messagesSent.toLocaleString()}
+          icon={Send}
+          color="green"
+          loading={loading}
+        />
+        
+        <KPICard
+          title="Taxa de Sucesso"
+          value={`${analytics.overview.performance?.successRate || 0}%`}
+          icon={Award}
+          color="purple"
+          loading={loading}
+        />
+        
+        <KPICard
+          title="Campanhas Ativas"
+          value={analytics.overview.campaignStats?.total || 0}
+          icon={Target}
+          color="orange"
+          loading={loading}
+        />
+      </div>
+
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 lg:w-auto lg:grid-cols-3">
+          <TabsTrigger value="overview" className="flex items-center space-x-2">
+            <BarChart3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Visão Geral</span>
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="flex items-center space-x-2">
+            <Activity className="w-4 h-4" />
+            <span className="hidden sm:inline">Performance</span>
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="flex items-center space-x-2">
+            <Clock className="w-4 h-4" />
+            <span className="hidden sm:inline">Atividade</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Leads Over Time */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <TrendingUp className="w-5 h-5 text-blue-600" />
+                  <span>Leads ao Longo do Tempo</span>
+                </CardTitle>
+                <CardDescription>
+                  Crescimento de leads nos últimos {timeRange}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 flex items-center justify-center text-muted-foreground">
+                  <div className="text-center">
+                    <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p>Gráfico de leads em desenvolvimento</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Category Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <PieChart className="w-5 h-5 text-green-600" />
+                  <span>Distribuição por Categoria</span>
+                </CardTitle>
+                <CardDescription>
+                  Segmentação dos seus leads
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {analytics.categories.length > 0 ? (
+                    analytics.categories.map((category, index) => (
+                      <div key={category.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div className="flex items-center space-x-3">
+                          <div 
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: analytics.categoryDistribution[index]?.color || '#3B82F6' }}
+                          />
+                          <span className="font-medium">{category.name}</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold">{category.count}</div>
+                          <div className="text-sm text-muted-foreground">{category.percentage}%</div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <PieChart className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Nenhuma categoria encontrada</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="performance" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Activity className="w-5 h-5 text-purple-600" />
+                <span>Performance das Campanhas</span>
+              </CardTitle>
+              <CardDescription>
+                Estatísticas detalhadas de campanhas e mensagens
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* Métricas de Performance */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="text-center p-4 rounded-xl bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800/30">
+                    <div className="text-2xl font-bold text-green-600">
+                      {analytics.overview.performance?.successMessages || 0}
+                    </div>
+                    <div className="text-sm text-green-600 font-medium">Mensagens Enviadas</div>
+                  </div>
+                  <div className="text-center p-4 rounded-xl bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/30">
+                    <div className="text-2xl font-bold text-red-600">
+                      {analytics.overview.performance?.failedMessages || 0}
+                    </div>
+                    <div className="text-sm text-red-600 font-medium">Mensagens Falharam</div>
+                  </div>
+                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/30">
+                    <div className="text-2xl font-bold text-blue-600">
+                      {analytics.overview.performance?.successRate || 0}%
+                    </div>
+                    <div className="text-sm text-blue-600 font-medium">Taxa de Sucesso</div>
+                  </div>
+                  <div className="text-center p-4 rounded-xl bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800/30">
+                    <div className="text-2xl font-bold text-purple-600">
+                      {analytics.overview.campaignStats?.total || 0}
+                    </div>
+                    <div className="text-sm text-purple-600 font-medium">Total Campanhas</div>
+                  </div>
+                </div>
+
+                {/* Status das Campanhas */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-950/50 border border-gray-200 dark:border-gray-800/30">
+                    <div className="text-xl font-bold text-gray-600 dark:text-gray-400">
+                      {analytics.overview.campaignStats?.completed || 0}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-500">Finalizadas</div>
+                  </div>
+                  <div className="text-center p-4 rounded-xl bg-yellow-50 dark:bg-yellow-950/50 border border-yellow-200 dark:border-yellow-800/30">
+                    <div className="text-xl font-bold text-yellow-600">
+                      {analytics.overview.campaignStats?.sending || 0}
+                    </div>
+                    <div className="text-sm text-yellow-600">Em Andamento</div>
+                  </div>
+                  <div className="text-center p-4 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/30">
+                    <div className="text-xl font-bold text-blue-600">
+                      {analytics.overview.campaignStats?.draft || 0}
+                    </div>
+                    <div className="text-sm text-blue-600">Rascunhos</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="activity" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-purple-600" />
+                <span>Atividade Recente</span>
+              </CardTitle>
+              <CardDescription>
+                Últimas ações realizadas na plataforma
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <AnimatePresence>
+                  {analytics.recentActivity.map((activity, index) => (
+                    <ActivityItem
+                      key={activity.id}
+                      activity={activity}
+                      index={index}
+                    />
+                  ))}
+                </AnimatePresence>
+                
+                {analytics.recentActivity.length === 0 && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>Nenhuma atividade recente encontrada</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
-  )
-}
+  );
+};
