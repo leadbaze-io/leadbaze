@@ -10,7 +10,7 @@ import MobileFooter from '../components/mobile/MobileFooter'
 
 export default function MobileLandingPage() {
   return (
-    <div className="landing-page md:hidden min-h-screen">
+    <div className="md:hidden min-h-screen">
       {/* Mobile Hero Section */}
       <MobileHero />
       

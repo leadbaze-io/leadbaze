@@ -11,7 +11,7 @@ import MobileLandingPage from './MobileLandingPage'
 
 export default function LandingPage() {
   return (
-    <div className="landing-page min-h-screen">
+    <div className="min-h-screen">
       {/* Mobile Version - Only visible on mobile devices */}
       <MobileLandingPage />
       
