@@ -150,7 +150,7 @@ const ActivityItem = ({
 
           <div className="flex items-center space-x-2">
             {activity.count && (
-              <span className="dashboard-badge-claro dashboard-badge-escuro px-3 py-1 rounded-full text-xs font-bold">
+              <span className="dashboard-badge-claro dashboard-badge-escuro px-3 py-1 rounded-full text-xs font-bold min-w-[24px] text-center">
                 {activity.count}
               </span>
             )}
@@ -458,55 +458,144 @@ export const AnalyticsDashboard: React.FC = () => {
                 </h3>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {/* Métricas de Performance */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="text-center p-4 rounded-2xl bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/30">
-                    <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      {analytics.overview.performance?.successMessages || 0}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Send className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.successMessages || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Mensagens Enviadas
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-green-600 dark:text-green-400 font-medium">Mensagens Enviadas</div>
-                  </div>
-                  <div className="text-center p-4 rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/30">
-                    <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                      {analytics.overview.performance?.failedMessages || 0}
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Target className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.failedMessages || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Mensagens Falharam
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-red-600 dark:text-red-400 font-medium">Mensagens Falharam</div>
-                  </div>
-                  <div className="text-center p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
-                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                      {analytics.overview.performance?.successRate || 0}%
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Award className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.performance?.successRate || 0}%
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Taxa de Sucesso
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">Taxa de Sucesso</div>
-                  </div>
-                  <div className="text-center p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30">
-                    <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                      {analytics.overview.campaignStats?.total || 0}
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <BarChart3 className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.campaignStats?.total || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Total Campanhas
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-purple-600 dark:text-purple-400 font-medium">Total Campanhas</div>
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Status das Campanhas */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 rounded-2xl bg-gray-50 dark:bg-gray-950/30 border border-gray-200 dark:border-gray-800/30">
-                    <div className="text-xl font-bold text-gray-600 dark:text-gray-400">
-                      {analytics.overview.campaignStats?.completed || 0}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <CheckCircle className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.campaignStats?.completed || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Finalizadas
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-500">Finalizadas</div>
-                  </div>
-                  <div className="text-center p-4 rounded-2xl bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800/30">
-                    <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
-                      {analytics.overview.campaignStats?.sending || 0}
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Clock className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.campaignStats?.sending || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Em Andamento
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-yellow-600 dark:text-yellow-400">Em Andamento</div>
-                  </div>
-                  <div className="text-center p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/30">
-                    <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                      {analytics.overview.campaignStats?.draft || 0}
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Activity className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
+                          {analytics.overview.campaignStats?.draft || 0}
+                        </div>
+                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground font-medium">
+                          Rascunhos
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm text-blue-600 dark:text-blue-400">Rascunhos</div>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </div>

@@ -84,8 +84,8 @@ export class AnalyticsService {
     if (!user) {
       throw new Error('Usuário não autenticado');
     }
-    
-    return {
+      
+      return {
       'Content-Type': 'application/json',
       'x-user-id': user.id
     };
@@ -141,7 +141,7 @@ export class AnalyticsService {
       } else {
         throw new Error(response.data.error || 'Erro ao obter categorias');
       }
-    } catch (error) {
+  } catch (error) {
       console.error('❌ [AnalyticsService] Erro ao obter categorias:', error);
       throw error;
     }
@@ -177,8 +177,8 @@ export class AnalyticsService {
         return response.data.data;
       } else {
         throw new Error(response.data.error || 'Erro ao obter atividade recente');
-      }
-    } catch (error) {
+    }
+  } catch (error) {
       console.error('❌ [AnalyticsService] Erro ao obter atividade recente:', error);
       throw error;
     }
@@ -194,7 +194,7 @@ export class AnalyticsService {
         this.getRecentActivity()
       ]);
 
-      return {
+    return {
         overview,
         leadsOverTime,
         categories: categories.topCategories,
