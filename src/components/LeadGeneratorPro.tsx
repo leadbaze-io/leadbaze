@@ -191,6 +191,41 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   // Resetar página quando filtros mudam
   const resetPagination = () => setCurrentPage(1)
 
+  // Função para scroll suave para o botão "Selecionar Todos"
+  const scrollToLeadsTop = () => {
+    // Primeiro, tentar encontrar o botão "Selecionar Todos" nos filtros
+    const selectAllButton = document.querySelector('[data-select-all-button]')
+    if (selectAllButton) {
+      const buttonRect = selectAllButton.getBoundingClientRect()
+      const navbarHeight = 80 // Altura aproximada da navbar
+      const scrollPosition = window.pageYOffset + buttonRect.top - navbarHeight - 20 // 20px de margem extra
+      
+      window.scrollTo({ 
+        top: scrollPosition, 
+        behavior: 'smooth' 
+      })
+    } else {
+      // Fallback: encontrar o container dos leads
+      const leadsContainer = document.querySelector('[data-leads-container]')
+      if (leadsContainer) {
+        const containerRect = leadsContainer.getBoundingClientRect()
+        const navbarHeight = 80 // Altura aproximada da navbar
+        const scrollPosition = window.pageYOffset + containerRect.top - navbarHeight - 20 // 20px de margem extra
+        
+        window.scrollTo({ 
+          top: scrollPosition, 
+          behavior: 'smooth' 
+        })
+      } else {
+        // Fallback final: scroll para o topo da página
+        window.scrollTo({ 
+          top: 0, 
+          behavior: 'smooth' 
+        })
+      }
+    }
+  }
+
   const handleLeadGeneration = async (searchUrl: string, limit: number) => {
     setIsGenerating(true)
     setExtractionStatus('generating')
@@ -736,6 +771,44 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     />
                   </div>
 
+                  {/* Paginação Superior - Logo após os filtros */}
+                  {totalPages > 1 && paginatedLeads.length > 0 && (
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-4 border-b border-border/50 mb-6">
+                      <div className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
+                        Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setCurrentPage(prev => Math.max(prev - 1, 1))
+                            setTimeout(scrollToLeadsTop, 100)
+                          }}
+                          disabled={currentPage === 1}
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4 transition-all duration-200 hover:scale-105"
+                        >
+                          Anterior
+                        </Button>
+                        <span className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium gerador-texto-claro dark:text-foreground bg-muted/50 rounded-lg">
+                          Página {currentPage} de {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                            setTimeout(scrollToLeadsTop, 100)
+                          }}
+                          disabled={currentPage === totalPages}
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4 transition-all duration-200 hover:scale-105"
+                        >
+                          Próxima
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Aviso flutuante para mobile - leads selecionados */}
                   {getSelectedLeads().length > 0 && createPortal(
                     <motion.div
@@ -767,7 +840,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   )}
 
                   {/* Grid de Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div 
+                    data-leads-container
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  >
                     {paginatedLeads.map((lead, index) => (
                       <LeadCard
                         key={index}
@@ -779,37 +855,44 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     ))}
                   </div>
 
-                  {/* Paginação */}
-                  {totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t gerador-paginacao-claro gerador-paginacao-escuro">
-                      <div className="text-xs sm:text-sm gerador-descricao-claro dark:text-muted-foreground text-center sm:text-left">
+                  {/* Paginação Superior */}
+                  {totalPages > 1 && paginatedLeads.length > 0 && (
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-4 border-b border-border/50">
+                      <div className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
                         Mostrando {startIndex + 1}-{Math.min(endIndex, filteredLeads.length)} de {filteredLeads.length} leads
                       </div>
                       <div className="flex items-center justify-center space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          onClick={() => {
+                            setCurrentPage(prev => Math.max(prev - 1, 1))
+                            setTimeout(scrollToLeadsTop, 100)
+                          }}
                           disabled={currentPage === 1}
-                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4"
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4 transition-all duration-200 hover:scale-105"
                         >
                           Anterior
                         </Button>
                         <span className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium gerador-texto-claro dark:text-foreground bg-muted/50 rounded-lg">
-                          {currentPage} de {totalPages}
+                          Página {currentPage} de {totalPages}
                         </span>
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                          onClick={() => {
+                            setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                            setTimeout(scrollToLeadsTop, 100)
+                          }}
                           disabled={currentPage === totalPages}
-                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4"
+                          className="border-2 gerador-input-claro gerador-input-escuro text-xs sm:text-sm px-3 sm:px-4 transition-all duration-200 hover:scale-105"
                         >
                           Próxima
                         </Button>
                       </div>
                     </div>
                   )}
+
                 </CardContent>
               </Card>
             </motion.div>

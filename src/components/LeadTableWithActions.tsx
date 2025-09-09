@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Trash2, Star, Phone, Globe, Users, Check, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Lead } from '../types'
@@ -120,6 +121,38 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
 
   // Resetar página quando filtros mudam
   const resetPagination = () => setCurrentPage(1)
+
+  // Função para scroll suave para o botão "Selecionar Todos"
+  const scrollToLeadsTop = () => {
+    // Primeiro, tentar encontrar o botão "Selecionar Todos"
+    const selectAllButton = document.querySelector('[data-select-all-button]')
+    if (selectAllButton) {
+      const buttonRect = selectAllButton.getBoundingClientRect()
+      const navbarHeight = 80 // Altura aproximada da navbar
+      const scrollPosition = window.pageYOffset + buttonRect.top - navbarHeight - 20 // 20px de margem extra
+      
+      window.scrollTo({ 
+        top: scrollPosition, 
+        behavior: 'smooth' 
+      })
+    } else {
+      // Fallback: encontrar o container dos leads
+      const leadsContainer = document.querySelector('[data-leads-container]')
+      if (leadsContainer) {
+        leadsContainer.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        })
+      } else {
+        // Fallback final: scroll para o topo da página
+        window.scrollTo({ 
+          top: 0, 
+          behavior: 'smooth' 
+        })
+      }
+    }
+  }
 
   const toggleLeadSelection = (leadId: string) => {
     const newSelected = new Set(selectedLeads)
@@ -290,10 +323,49 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
             variant="outline"
             size="sm"
             onClick={toggleSelectAll}
+            data-select-all-button
             className="gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5"
           >
             {sortedLeads.length > 0 && sortedLeads.every(lead => selectedLeads.has(lead.id || '')) ? 'Desmarcar Todos' : 'Selecionar Todos'}
           </Button>
+        </div>
+      )}
+
+      {/* Paginação Superior */}
+      {totalPages > 1 && paginatedLeads.length > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 py-4 border-b border-border/50">
+          <div className="text-xs sm:text-sm text-muted-foreground text-center sm:text-left">
+            Mostrando {startIndex + 1}-{Math.min(endIndex, sortedLeads.length)} de {sortedLeads.length} leads
+          </div>
+          <div className="flex items-center justify-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(prev => Math.max(prev - 1, 1))
+                setTimeout(scrollToLeadsTop, 100)
+              }}
+              disabled={currentPage === 1}
+              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 hover:scale-105"
+            >
+              Anterior
+            </Button>
+            <span className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-foreground bg-muted/50 rounded-lg">
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                setTimeout(scrollToLeadsTop, 100)
+              }}
+              disabled={currentPage === totalPages}
+              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 hover:scale-105"
+            >
+              Próxima
+            </Button>
+          </div>
         </div>
       )}
 
@@ -338,7 +410,10 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       )}
 
       {/* Grid de Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      <div 
+        data-leads-container
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+      >
         {paginatedLeads.map((lead, index) => (
           <LeadCard
             key={lead.id || index}
@@ -353,6 +428,36 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         ))}
       </div>
 
+      {/* Aviso flutuante para mobile - leads selecionados */}
+      {selectedLeads.size > 0 && createPortal(
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.8, y: 20 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 300, 
+            damping: 30
+          }}
+          className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
+          style={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+            zIndex: 9999,
+            pointerEvents: 'auto'
+          }}
+        >
+          <div className="flex items-center space-x-1.5">
+            <Check className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">
+              {selectedLeads.size}
+            </span>
+          </div>
+        </motion.div>,
+        document.body
+      )}
+
       {/* Paginação */}
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-border/50">
@@ -363,9 +468,12 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              onClick={() => {
+                setCurrentPage(prev => Math.max(prev - 1, 1))
+                setTimeout(scrollToLeadsTop, 100)
+              }}
               disabled={currentPage === 1}
-              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5"
+              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 hover:scale-105"
             >
               Anterior
             </Button>
@@ -375,9 +483,12 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              onClick={() => {
+                setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                setTimeout(scrollToLeadsTop, 100)
+              }}
               disabled={currentPage === totalPages}
-              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5"
+              className="border-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 hover:scale-105"
             >
               Próxima
             </Button>
