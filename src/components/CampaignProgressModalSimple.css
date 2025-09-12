@@ -251,3 +251,91 @@
 .animate-dot-3 {
   animation: dot-3 1.4s ease-in-out infinite 0.4s;
 }
+
+/* =====================================================
+   BOTÕES DO MODAL - CLASSES ESPECÍFICAS
+   ===================================================== */
+
+/* Botão "Ver Detalhes" - Modo Claro */
+.campaign-modal-light .modal-details-button {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+  border-color: #d1d5db !important; /* gray-300 - borda mais escura */
+  background-color: transparent !important;
+}
+
+.campaign-modal-light .modal-details-button:hover {
+  background-color: #f3f4f6 !important; /* gray-100 - fundo hover mais escuro */
+  color: #111827 !important; /* gray-900 - texto mais escuro no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover mais escura */
+}
+
+.campaign-modal-light .modal-details-button svg {
+  color: #1f2937 !important; /* gray-800 - ícone escuro */
+}
+
+.campaign-modal-light .modal-details-button:hover svg {
+  color: #111827 !important; /* gray-900 - ícone mais escuro no hover */
+}
+
+/* Botão "Ver Detalhes" - Modo Escuro */
+.dark .campaign-modal-light .modal-details-button {
+  color: #f3f4f6 !important; /* gray-100 - texto claro */
+  border-color: #6b7280 !important; /* gray-500 - borda clara */
+  background-color: transparent !important;
+}
+
+.dark .campaign-modal-light .modal-details-button:hover {
+  background-color: #374151 !important; /* gray-700 - fundo hover escuro */
+  color: #ffffff !important; /* white - texto branco no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover clara */
+}
+
+.dark .campaign-modal-light .modal-details-button svg {
+  color: #f3f4f6 !important; /* gray-100 - ícone claro */
+}
+
+.dark .campaign-modal-light .modal-details-button:hover svg {
+  color: #ffffff !important; /* white - ícone branco no hover */
+}
+
+/* Botão "Fechar" - Modo Claro */
+.campaign-modal-light .modal-close-button {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+  border-color: #d1d5db !important; /* gray-300 - borda mais escura */
+  background-color: transparent !important;
+}
+
+.campaign-modal-light .modal-close-button:hover {
+  background-color: #f3f4f6 !important; /* gray-100 - fundo hover mais escuro */
+  color: #111827 !important; /* gray-900 - texto mais escuro no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover mais escura */
+}
+
+.campaign-modal-light .modal-close-button svg {
+  color: #1f2937 !important; /* gray-800 - ícone escuro */
+}
+
+.campaign-modal-light .modal-close-button:hover svg {
+  color: #111827 !important; /* gray-900 - ícone mais escuro no hover */
+}
+
+/* Botão "Fechar" - Modo Escuro */
+.dark .campaign-modal-light .modal-close-button {
+  color: #f3f4f6 !important; /* gray-100 - texto claro */
+  border-color: #6b7280 !important; /* gray-500 - borda clara */
+  background-color: transparent !important;
+}
+
+.dark .campaign-modal-light .modal-close-button:hover {
+  background-color: #374151 !important; /* gray-700 - fundo hover escuro */
+  color: #ffffff !important; /* white - texto branco no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover clara */
+}
+
+.dark .campaign-modal-light .modal-close-button svg {
+  color: #f3f4f6 !important; /* gray-100 - ícone claro */
+}
+
+.dark .campaign-modal-light .modal-close-button:hover svg {
+  color: #ffffff !important; /* white - ícone branco no hover */
+}

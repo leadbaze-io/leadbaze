@@ -245,7 +245,7 @@ export default function CampaignProgressModalSimple({
                   <Button
                     onClick={() => setShowDetails(!showDetails)}
                     variant="outline"
-                    className="w-full h-10 text-sm"
+                    className="w-full h-10 text-sm modal-details-button"
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     {showDetails ? 'Ocultar Detalhes' : 'Ver Detalhes Completos'}
@@ -373,7 +373,7 @@ export default function CampaignProgressModalSimple({
                   <Button
                     onClick={onClose}
                     variant="outline"
-                    className="h-10 text-sm px-6"
+                    className="h-10 text-sm px-6 modal-close-button"
                   >
                     Fechar
                   </Button>
