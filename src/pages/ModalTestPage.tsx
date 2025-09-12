@@ -1,13 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import CampaignProgressModalSimple from '../components/CampaignProgressModalSimple'
 import { useTheme } from '../contexts/ThemeContext'
+import { getCurrentUser } from '../lib/supabaseClient'
 import { Sun, Moon } from 'lucide-react'
 
 export default function ModalTestPage() {
   const [showProgressModal, setShowProgressModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { theme, setTheme } = useTheme()
+  const navigate = useNavigate()
+
+  // Verificar autorização do usuário
+  useEffect(() => {
+    const checkAuthorization = async () => {
+      try {
+        const currentUser = await getCurrentUser()
+        
+        if (!currentUser) {
+          // Usuário não logado - redirecionar para login
+          navigate('/login')
+          return
+        }
+        
+        // Verificar se é o e-mail autorizado
+        if (currentUser.email === 'creaty12345@gmail.com') {
+          setIsAuthorized(true)
+        } else {
+          // Usuário não autorizado - redirecionar para dashboard
+          navigate('/dashboard')
+          return
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autorização:', error)
+        navigate('/login')
+        return
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    checkAuthorization()
+  }, [navigate])
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
@@ -30,6 +67,23 @@ export default function ModalTestPage() {
     failedCount: 0,
     startTime: new Date(Date.now() - 44000), // 44 segundos atrás
     status: 'completed' as const
+  }
+
+  // Mostrar loading enquanto verifica autorização
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Verificando autorização...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Se não autorizado, não renderizar nada (já foi redirecionado)
+  if (!isAuthorized) {
+    return null
   }
 
   return (
