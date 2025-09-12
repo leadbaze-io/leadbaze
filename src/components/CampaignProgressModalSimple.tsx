@@ -549,7 +549,7 @@ export default function CampaignProgressModalSimple({
                     onClick={onCancel}
                     variant="outline"
                     size="sm"
-                    className="text-xs min-w-fit w-auto px-3 py-1"
+                    className="text-xs min-w-fit w-auto px-3 py-1 modal-cancel-button"
                   >
                     Cancelar
                   </Button>
