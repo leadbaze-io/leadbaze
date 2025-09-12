@@ -29,6 +29,10 @@ export class WhatsAppInstanceService {
         throw error
       }
 
+      // Se a instância está marcada como "connected", manter como connected
+      // A conexão permanece ativa até o usuário desconectar manualmente
+      // Não há timeout automático
+
       return data
     } catch (error) {
       console.error('Erro ao buscar instância do usuário:', error)
@@ -74,9 +78,18 @@ export class WhatsAppInstanceService {
         updated_at: new Date().toISOString()
       }
 
-      if (status === 'connected' && whatsappNumber) {
-        updateData.whatsapp_number = whatsappNumber
+      if (status === 'connected') {
+        // Para marcar como connected, sempre definir last_connection_at
         updateData.last_connection_at = new Date().toISOString()
+        
+        // Se whatsappNumber foi fornecido, salvar também
+        if (whatsappNumber) {
+          updateData.whatsapp_number = whatsappNumber
+        }
+      } else if (status === 'disconnected') {
+        // Quando desconectar, limpar dados de conexão
+        updateData.whatsapp_number = null
+        updateData.last_connection_at = null
       }
 
       const { error } = await supabase
@@ -85,6 +98,8 @@ export class WhatsAppInstanceService {
         .eq('instance_name', instanceName)
 
       if (error) throw error
+      
+      console.log(`✅ Status da instância ${instanceName} atualizado para: ${status}`)
     } catch (error) {
       console.error('Erro ao atualizar status da instância:', error)
       throw error

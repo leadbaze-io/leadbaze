@@ -7,6 +7,7 @@ import MobileGuarantee from '../components/mobile/MobileGuarantee'
 import MobilePricingPlans from '../components/mobile/MobilePricingPlans'
 import MobileFAQ from '../components/mobile/MobileFAQ'
 import MobileFooter from '../components/mobile/MobileFooter'
+import ScrollToTopButton from '../components/ScrollToTopButton'
 
 export default function MobileLandingPage() {
   return (
@@ -37,6 +38,9 @@ export default function MobileLandingPage() {
       
       {/* Mobile Footer */}
       <MobileFooter />
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   )
 }

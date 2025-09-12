@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Força NODE_ENV=production
-process.env.NODE_ENV = 'production'
+// Força NODE_ENV=development
+process.env.NODE_ENV = 'development'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     // Proxy para redirecionar requisições da API para o backend
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3001',
         changeOrigin: true,
         secure: false
       }
@@ -51,8 +51,8 @@ export default defineConfig({
     port: 4173,
     host: true
   },
-  // Configurações para produção
+  // Configurações para desenvolvimento
   define: {
-    __DEV__: false
+    __DEV__: true
   }
 })

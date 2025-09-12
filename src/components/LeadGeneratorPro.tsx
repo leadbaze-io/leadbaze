@@ -590,9 +590,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">Extrair Leads do Google Maps</CardTitle>
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-white text-center">Extrair Leads do Google Maps</CardTitle>
               </div>
-              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-muted-foreground text-center px-2">
+              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-white text-center px-2">
                 Cole o link de pesquisa do Google Maps e configure a quantidade de leads desejada
               </CardDescription>
             </CardHeader>
@@ -663,17 +663,23 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       boxShadow: isFormValid ? "0 20px 40px rgba(59, 130, 246, 0.3)" : "0 4px 12px rgba(0, 0, 0, 0.1)"
                     }}
                     transition={{ duration: 0.3 }}
-                    className="pt-4"
+                    className="inline-block"
+                    style={{ 
+                      width: '100%',
+                      height: 'auto',
+                      display: 'inline-block'
+                    }}
                   >
                     <Button
                       type="submit"
-                      className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl ${
+                      className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl m-0 p-0 ${
                         isFormValid 
                           ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
-                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
                       }`}
                       disabled={isGenerating || !isFormValid}
                       size="lg"
+                      style={{ margin: 0, padding: 0 }}
                     >
                       {isGenerating ? (
                         <motion.div
@@ -718,11 +724,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">
+                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro gerador-titulo-escuro text-center">
                       Leads Encontrados ({filteredLeads.length})
                     </CardTitle>
                   </div>
-                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro dark:text-muted-foreground text-center">
+                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro gerador-descricao-escuro text-center">
                     Selecione os leads que deseja salvar em sua lista
                   </CardDescription>
                   
@@ -915,9 +921,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                       <Save className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro dark:text-foreground text-center">Salvar Leads Selecionados</CardTitle>
+                    <CardTitle className="text-xl sm:text-2xl font-bold gerador-titulo-claro gerador-titulo-escuro text-center">Salvar Leads Selecionados</CardTitle>
                   </div>
-                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro dark:text-muted-foreground text-center">
+                  <CardDescription className="text-base sm:text-lg gerador-descricao-claro gerador-descricao-escuro text-center">
                     {getSelectedLeads().length} leads selecionados para salvar
                   </CardDescription>
                   

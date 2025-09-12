@@ -62,6 +62,20 @@ export default function CampaignProgressModalV2({
   const [elapsedTime, setElapsedTime] = useState('0s')
   const [finalTime, setFinalTime] = useState<string | null>(null)
 
+  // Log para debug
+  console.log('📊 [MODAL] Props recebidos:', {
+    isVisible,
+    campaignName,
+    totalLeads,
+    status,
+    successCount,
+    failedCount,
+    isMinimized
+  })
+  
+  console.log('🎯 [MODAL] Modal deve ser visível?', isVisible)
+  console.log('🎯 [MODAL] Modal deve ser minimizado?', isMinimized)
+
   // Capturar tempo final quando campanha for concluída
   useEffect(() => {
     if ((status === 'completed' || status === 'failed') && startTime && !finalTime) {
@@ -109,11 +123,20 @@ export default function CampaignProgressModalV2({
 
   // Informações de status
   const getStatusInfo = (): CampaignStatusInfo => {
+    const progress = totalLeads > 0 ? Math.round((successCount + failedCount) / totalLeads * 100) : 0
+    
+    console.log('📊 [MODAL] Calculando progresso:', {
+      successCount,
+      failedCount,
+      totalLeads,
+      progress
+    })
+    
     switch (status) {
       case 'sending':
         return {
           status: 'sending',
-          progress: Math.round((successCount + failedCount) / totalLeads * 100),
+          progress,
           message: 'Enviando mensagens...',
           icon: <Send className="w-5 h-5" />,
           color: 'green',

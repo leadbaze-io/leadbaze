@@ -1,532 +1,341 @@
-import { useState, useEffect } from 'react'
+/**
+ * =====================================================
+ * MODAL DE PROGRESSO DA CAMPANHA - MAGIC UI
+ * =====================================================
+ */
+
+import { useState, useEffect, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, CheckCircle, AlertTriangle, Clock, Users, MessageSquare, Minimize2 } from 'lucide-react'
+import { X, CheckCircle, AlertCircle, Clock, Users, MessageSquare, Zap } from 'lucide-react'
 import { Button } from './ui/button'
-
-// Sistema de status mais robusto
-export type CampaignStatus = 'sending' | 'completed' | 'failed' | 'pending'
-
-export interface CampaignStatusInfo {
-  status: CampaignStatus
-  progress: number
-  message: string
-  icon: React.ReactNode
-  color: string
-  showProgress: boolean
-  showTimeEstimate: boolean
-}
+import { AnimatedCircularProgressBar } from './ui/animated-circular-progress-bar'
 
 interface CampaignProgressModalProps {
-  isVisible: boolean
-  campaignName: string
-  totalLeads: number
-  status: CampaignStatus
-  successCount?: number
-  failedCount?: number
-  startTime?: Date
+  isOpen: boolean
   onClose: () => void
-  onMinimize?: () => void
-  onExpand?: () => void
-  isMinimized?: boolean
+  campaignId: string
+  campaignName: string
+  status: 'sending' | 'completed' | 'failed'
+  startTime: Date | null
+  successCount: number
+  failedCount: number
+  progress: number
+  currentLead: { name: string; phone: string } | null
+  totalLeads: number
 }
 
-export default function CampaignProgressModal({
-  isVisible,
-  campaignName,
-  totalLeads,
-  status,
-  successCount = 0,
-  failedCount = 0,
-  startTime,
+export const CampaignProgressModal = memo(function CampaignProgressModal({
+  isOpen,
   onClose,
-  onMinimize,
-  onExpand,
-  isMinimized = false
+  campaignId: _campaignId,
+  campaignName,
+  status,
+  startTime,
+  successCount,
+  failedCount,
+  progress,
+  currentLead,
+  totalLeads
 }: CampaignProgressModalProps) {
   const [elapsedTime, setElapsedTime] = useState(0)
-  const [estimatedProgress, setEstimatedProgress] = useState(0)
-  const [hasNotified, setHasNotified] = useState(false)
-  const [hasAutoMinimized, setHasAutoMinimized] = useState(false)
-
-  // Função robusta para obter informações do status
-  const getStatusInfo = (): CampaignStatusInfo => {
-    const baseInfo = {
-      status,
-      progress: estimatedProgress,
-      message: '',
-      icon: null as React.ReactNode,
-      color: '',
-      showProgress: false,
-      showTimeEstimate: false
-    }
-
-    switch (status) {
-      case 'sending':
-        return {
-          ...baseInfo,
-          progress: estimatedProgress,
-          message: estimatedProgress >= 100 
-            ? 'Envio concluído! Aguardando confirmação...'
-            : 'Enviando mensagens...',
-          icon: <Send className="w-5 h-5 text-blue-700 dark:text-blue-400 animate-pulse" />,
-          color: 'bg-white dark:bg-gray-800/90 border-blue-300 dark:border-blue-700 shadow-lg',
-          showProgress: true,
-          showTimeEstimate: true
-        }
-      
-      case 'completed':
-        return {
-          ...baseInfo,
-          progress: 100,
-          message: 'Campanha enviada com sucesso!',
-          icon: <CheckCircle className="w-5 h-5 text-green-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-green-300 dark:border-green-700 shadow-lg',
-          showProgress: false,
-          showTimeEstimate: false
-        }
-      
-      case 'failed':
-        return {
-          ...baseInfo,
-          progress: 0,
-          message: 'Falha no envio da campanha',
-          icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-red-300 dark:border-red-700 shadow-lg',
-          showProgress: false,
-          showTimeEstimate: false
-        }
-      
-      case 'pending':
-        return {
-          ...baseInfo,
-          progress: 0,
-          message: 'Preparando envio...',
-          icon: <Clock className="w-5 h-5 text-gray-600" />,
-          color: 'bg-white dark:bg-gray-800/90 border-gray-300 dark:border-gray-700 shadow-lg',
-          showProgress: false,
-          showTimeEstimate: false
-        }
-      
-      default:
-        return baseInfo
-    }
-  }
-
-  const statusInfo = getStatusInfo()
 
   // Calcular tempo decorrido
   useEffect(() => {
     if (!startTime || status === 'completed' || status === 'failed') return
 
     const interval = setInterval(() => {
-      const now = new Date()
-      const elapsed = Math.floor((now.getTime() - startTime.getTime()) / 1000)
-      setElapsedTime(elapsed)
+      setElapsedTime(Math.floor((Date.now() - startTime.getTime()) / 1000))
     }, 1000)
 
     return () => clearInterval(interval)
   }, [startTime, status])
 
-  // Calcular progresso estimado baseado no tempo
-  useEffect(() => {
-    if (status === 'sending' && startTime) {
-      // Estimativa: 1 mensagem por minuto (60 segundos)
-      const messagesPerMinute = 1
-      const messagesPerSecond = messagesPerMinute / 60 // 0.0167 mensagens por segundo
-      const estimatedSent = Math.min(elapsedTime * messagesPerSecond, totalLeads)
-      const progress = Math.min((estimatedSent / totalLeads) * 100, 100) // Progresso completo
-      setEstimatedProgress(progress)
-    } else if (status === 'completed') {
-      setEstimatedProgress(100)
-    } else if (status === 'failed') {
-      setEstimatedProgress(0)
-    }
-  }, [elapsedTime, totalLeads, status, startTime])
-
-  // Mostrar notificação quando a campanha termina (se estiver minimizada)
-  useEffect(() => {
-    if (isMinimized && (status === 'completed' || status === 'failed') && !hasNotified) {
-      setHasNotified(true)
-      
-      // Solicitar permissão para notificações
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission()
-      }
-      
-      // Mostrar notificação do navegador
-      if ('Notification' in window && Notification.permission === 'granted') {
-        const notification = new Notification(
-          status === 'completed' ? '🎉 Campanha Concluída!' : '❌ Campanha Falhou',
-          {
-            body: status === 'completed' 
-              ? `${campaignName} foi enviada com sucesso! ${successCount} mensagens enviadas.`
-              : `${campaignName} falhou. Tente novamente.`,
-            icon: '/favicon.ico',
-            tag: `campaign-${campaignName}`,
-            requireInteraction: true
-          }
-        )
-        
-        notification.onclick = () => {
-          window.focus()
-          onExpand?.()
-          notification.close()
-        }
-      }
-    }
-  }, [isMinimized, status, hasNotified, campaignName, successCount, onExpand])
-
-  // Auto-minimizar após 4 segundos se o usuário não minimizar
-  useEffect(() => {
-    if (isVisible && !isMinimized && status === 'sending' && !hasAutoMinimized && onMinimize) {
-      const timer = setTimeout(() => {
-        setHasAutoMinimized(true)
-        onMinimize()
-      }, 4000) // 4 segundos
-
-      return () => clearTimeout(timer)
-    }
-  }, [isVisible, isMinimized, status, hasAutoMinimized, onMinimize])
-
+  // Formatar tempo
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
 
-
-  const getProgressColor = () => {
+  // Status colors
+  const getStatusColor = () => {
     switch (status) {
-      case 'sending':
-        return 'bg-gradient-to-r from-blue-500 to-purple-600'
-      case 'completed':
-        return 'bg-gradient-to-r from-green-500 to-emerald-600'
-      case 'failed':
-        return 'bg-gradient-to-r from-red-500 to-pink-600'
-      default:
-        return 'bg-gradient-to-r from-gray-400 to-gray-600'
+      case 'sending': return 'text-blue-500'
+      case 'completed': return 'text-green-500'
+      case 'failed': return 'text-red-500'
+      default: return 'text-gray-500'
     }
   }
 
-  // Bolinha de loading flutuante (quando minimizado)
-  if (isVisible && isMinimized) {
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50"
-        >
-          <motion.div
-            onClick={onExpand}
-            className={`relative w-16 h-16 rounded-full shadow-2xl cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-              status === 'sending' ? 'bg-blue-600 dark:bg-blue-500' :
-              status === 'completed' ? 'bg-green-600 dark:bg-green-500' :
-              status === 'failed' ? 'bg-red-600 dark:bg-red-500' :
-              'bg-gray-600 dark:bg-gray-500'
-            }`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            animate={status === 'completed' || status === 'failed' ? { 
-              boxShadow: [
-                '0 0 0 0 rgba(34, 197, 94, 0.7)',
-                '0 0 0 10px rgba(34, 197, 94, 0)',
-                '0 0 0 0 rgba(34, 197, 94, 0)'
-              ]
-            } : {}}
-            transition={status === 'completed' || status === 'failed' ? { 
-              duration: 2, 
-              repeat: Infinity,
-              ease: "easeInOut"
-            } : {}}
-            title={`${campaignName} - ${statusInfo.message}`}
-          >
-            {/* Ícone animado */}
-            <motion.div
-              animate={status === 'sending' ? { rotate: 360 } : {}}
-              transition={status === 'sending' ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-            >
-              {statusInfo.icon}
-            </motion.div>
-            
-            {/* Badge de notificação quando completado */}
-            {status === 'completed' && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </motion.div>
-              </motion.div>
-            )}
-            
-            {/* Badge de notificação quando falhou */}
-            {status === 'failed' && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <AlertTriangle className="w-5 h-5 text-white" />
-                </motion.div>
-              </motion.div>
-            )}
-            
-            {/* Progresso circular */}
-            {status === 'sending' && (
-              <svg className="absolute inset-0 w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="rgba(255,255,255,0.3)"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <motion.circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="white"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray={`${2 * Math.PI * 28}`}
-                  strokeDashoffset={`${2 * Math.PI * 28 * (1 - estimatedProgress / 100)}`}
-                  initial={{ strokeDashoffset: 2 * Math.PI * 28 }}
-                  animate={{ strokeDashoffset: 2 * Math.PI * 28 * (1 - estimatedProgress / 100) }}
-                  transition={{ duration: 0.5 }}
-                />
-              </svg>
-            )}
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    )
+  const getStatusIcon = () => {
+    switch (status) {
+      case 'sending': 
+        return (
+          <AnimatedCircularProgressBar
+            value={progress}
+            max={100}
+            min={0}
+            gaugePrimaryColor="#3b82f6"
+            gaugeSecondaryColor="#e5e7eb"
+            className="w-12 h-12"
+          />
+        )
+      case 'completed': return <CheckCircle className="w-5 h-5" />
+      case 'failed': return <AlertCircle className="w-5 h-5" />
+      default: return <Clock className="w-5 h-5" />
+    }
   }
 
+  const getStatusText = () => {
+    switch (status) {
+      case 'sending': return 'Enviando mensagens...'
+      case 'completed': return 'Campanha concluída!'
+      case 'failed': return 'Campanha falhou'
+      default: return 'Preparando...'
+    }
+  }
+
+  if (!isOpen) return null
+
   return (
-    <AnimatePresence>
-      {isVisible && !isMinimized && (
+    <AnimatePresence mode="wait">
         <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-72 sm:w-80 max-w-sm"
+          key={`campaign-modal-${_campaignId}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+          onClick={onClose}
+          style={{ zIndex: 9999 }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className={`relative ${statusInfo.color} rounded-2xl border-2 shadow-2xl overflow-hidden backdrop-blur-sm`}
-          >
-            {/* Header */}
-            <div className="p-4 sm:p-6 pb-4">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  {statusInfo.icon}
-                  <div>
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
-                      {campaignName}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                      {statusInfo.message}
-                    </p>
-                  </div>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header com BorderBeam */}
+          <div className="relative p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="absolute inset-0 rounded-lg overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-pink-500/10" />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-white/10"
+                animate={{ 
+                  x: ['-100%', '100%'],
+                  opacity: [0, 1, 0]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-between relative z-10">
+              <div className="flex items-center gap-3">
+                <div className={`${status === 'sending' ? 'p-1' : 'p-2'} rounded-full ${status === 'sending' ? '' : 'bg-gradient-to-r from-blue-500 to-purple-600'} ${getStatusColor()}`}>
+                  {getStatusIcon()}
                 </div>
-                
-                {/* Botões de controle */}
-                <div className="flex items-center space-x-1">
-                  {/* Botão de minimizar (apenas quando não está minimizado) */}
-                  {!isMinimized && onMinimize && (
-                    <Button
-                      onClick={onMinimize}
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-800 dark:text-gray-400"
-                      title="Minimizar para bolinha de loading"
-                    >
-                      <Minimize2 className="w-3.5 h-3.5" />
-                    </Button>
-                  )}
-                  
-                  {/* Botão de fechar sempre visível */}
-                  <Button
-                    onClick={onClose}
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-800 dark:text-gray-400"
-                    title="Fechar"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
+                <div>
+                  <h2 className="text-xl font-bold campaign-modal-header-text-claro campaign-modal-header-text-escuro">
+                    {campaignName}
+                  </h2>
+                  <p className="text-sm font-medium campaign-modal-subtitle-claro campaign-modal-subtitle-escuro">
+                    {getStatusText()}
+                  </p>
                 </div>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="campaign-modal-close-button-claro campaign-modal-close-button-escuro"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
 
-              {/* Estatísticas */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full mx-auto mb-2">
-                    <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Total</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">{totalLeads}</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full mx-auto mb-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Enviadas</p>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                    {status === 'sending' ? Math.floor((estimatedProgress / 100) * totalLeads) : successCount}
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center w-8 h-8 bg-red-100 dark:bg-red-900 rounded-full mx-auto mb-2">
-                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400" />
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Falhas</p>
-                  <p className="text-lg font-bold text-red-600 dark:text-red-400">{failedCount}</p>
-                </div>
+          {/* Conteúdo Principal */}
+          <div className="p-6 space-y-6">
+            {/* Progress Bar */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                  Progresso
+                </span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  {progress}%
+                </span>
               </div>
-
-              {/* Barra de Progresso */}
-              {statusInfo.showProgress && (
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Progresso
-                    </span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">
-                      {Math.floor(statusInfo.progress)}%
-                    </span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-                    <motion.div
-                      className={`h-full ${getProgressColor()} rounded-full`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${statusInfo.progress}%` }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Tempo e Estimativa */}
-              <div className="space-y-2">
-                {status === 'sending' && (
-                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Tempo decorrido: {formatTime(elapsedTime)}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <MessageSquare className="w-4 h-4" />
-                      <span>
-                        Restam: {Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Estimativa de tempo restante */}
-                {statusInfo.showTimeEstimate && (
-                  <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                    {status === 'sending' && estimatedProgress >= 100 ? (
-                      <>
-                        ✅ Envio concluído! Aguardando confirmação...
-                        <br />
-                        📊 {successCount} mensagens processadas
-                      </>
-                    ) : (
-                      <>
-                        ⏱️ Tempo estimado restante: {(() => {
-                          const remainingMessages = Math.max(0, totalLeads - Math.floor((estimatedProgress / 100) * totalLeads))
-                          const estimatedMinutesRemaining = Math.ceil(remainingMessages / 1) // 1 mensagem por minuto
-                          return estimatedMinutesRemaining > 0 ? 
-                            `${estimatedMinutesRemaining} min${estimatedMinutesRemaining > 1 ? 's' : ''}` : 
-                            'Concluindo...'
-                        })()}
-                        <br />
-                        <span className="text-xs text-gray-400">Velocidade: 1 mensagem/minuto</span>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {/* Mensagem de status final */}
-                {status === 'completed' && (
-                  <div className="text-center text-xs text-green-600 dark:text-green-400">
-                    🎉 Campanha enviada com sucesso!
-                    <br />
-                    📊 {successCount} mensagens enviadas
-                  </div>
-                )}
-
-                {status === 'failed' && (
-                  <div className="text-center text-xs text-red-600 dark:text-red-400">
-                    ❌ Falha no envio da campanha
-                    <br />
-                    📊 {failedCount} mensagens falharam
-                  </div>
-                )}
+              <div className="relative h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
-
-              {/* Mensagem de Conclusão */}
-              {status === 'completed' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-4"
-                >
-                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                  </div>
-                  <p className="text-green-800 dark:text-green-200 font-semibold">
-                    🎉 Campanha Enviada! ✅
-                  </p>
-                  <p className="text-sm text-green-600 dark:text-green-300 mt-1">
-                    {successCount} mensagens enviadas
-                  </p>
-                </motion.div>
-              )}
-
-              {/* Mensagem de Erro */}
-              {status === 'failed' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-4"
-                >
-                  <div className="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
-                  </div>
-                  <p className="text-red-800 dark:text-red-200 font-semibold">
-                    ❌ Campanha Falhou
-                  </p>
-                  <p className="text-sm text-red-600 dark:text-red-300 mt-1">
-                    Tente novamente em alguns minutos
-                  </p>
-                </motion.div>
-              )}
             </div>
 
-          </motion.div>
+            {/* Estatísticas */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Enviados
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {successCount}
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Falhas
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {failedCount}
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Total
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {totalLeads}
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                    Tempo
+                  </span>
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {formatTime(elapsedTime)}
+                </div>
+              </div>
+            </div>
+
+            {/* Lead Atual */}
+            {currentLead && status === 'sending' && (
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <motion.div 
+                    className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, -5, 0]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <MessageSquare className="w-4 h-4 text-white" />
+                  </motion.div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                      Enviando para:
+                    </p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white">
+                      {currentLead.name}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      {currentLead.phone}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [1, 0.7, 1]
+                      }}
+                      transition={{ 
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <Zap className="w-4 h-4 text-amber-500" />
+                    </motion.div>
+                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                      Enviando...
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Status Final */}
+            {status === 'completed' && (
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 text-center shadow-lg">
+                <div>
+                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  Campanha Concluída!
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Todas as mensagens foram enviadas com sucesso.
+                </p>
+              </div>
+            )}
+
+            {status === 'failed' && (
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 text-center shadow-lg">
+                <div>
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                  Campanha Falhou
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Ocorreu um erro durante o envio das mensagens.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 campaign-modal-footer-claro campaign-modal-footer-escuro">
+            <div className="flex justify-between items-center">
+              <div className="text-xs campaign-progress-footer-text-claro campaign-progress-footer-text-escuro">
+                {status === 'sending' && 'Campanha em andamento...'}
+                {status === 'completed' && 'Campanha finalizada com sucesso'}
+                {status === 'failed' && 'Campanha falhou'}
+              </div>
+              <div className="flex gap-3">
+                {status === 'completed' || status === 'failed' ? (
+                  <Button onClick={onClose} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+                    Fechar
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    onClick={onClose}
+                    className="campaign-modal-minimize-button-claro campaign-modal-minimize-button-escuro"
+                  >
+                    Minimizar
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
         </motion.div>
-      )}
+      </motion.div>
     </AnimatePresence>
   )
-}
+})

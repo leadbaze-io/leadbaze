@@ -4,7 +4,7 @@
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://leadbaze.io' 
-  : 'http://localhost:3001';
+  : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
 
 export interface CampaignStatus {
   id: string;

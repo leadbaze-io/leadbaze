@@ -82,7 +82,7 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
       
       console.log('🚀 Adicionando post à fila:', postData);
 
-      const response = await fetch('https://leadbaze.io/api/blog/queue/add', {
+      const response = await fetch('/api/blog/queue/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -211,6 +211,9 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
     </div>
   );
 }
+
+
+
 
 
 

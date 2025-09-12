@@ -23,3 +23,11 @@ COMMENT ON VIEW category_performance IS 'Performance por categoria de negócio d
 
 
 
+
+
+
+
+
+
+
+

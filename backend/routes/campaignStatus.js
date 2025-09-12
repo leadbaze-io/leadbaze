@@ -29,7 +29,7 @@ router.post('/start', async (req, res) => {
 
     // Atualizar status da campanha para 'sending'
     const { data, error } = await supabase
-      .from('bulk_campaigns')
+      .from('campaigns')
       .update({
         status: 'sending',
         sent_at: new Date().toISOString(),
@@ -39,8 +39,7 @@ router.post('/start', async (req, res) => {
         updated_at: new Date().toISOString()
       })
       .eq('id', campaignId)
-      .select()
-      .single();
+      .select();
 
     if (error) {
       console.error('❌ Erro ao atualizar campanha:', error);
@@ -96,10 +95,9 @@ router.post('/progress', async (req, res) => {
 
     // Buscar campanha atual
     const { data: campaign, error: fetchError } = await supabase
-      .from('bulk_campaigns')
+      .from('campaigns')
       .select('*')
-      .eq('id', campaignId)
-      .single();
+      .eq('id', campaignId);
 
     if (fetchError) {
       console.error('❌ Erro ao buscar campanha:', fetchError);
@@ -109,24 +107,33 @@ router.post('/progress', async (req, res) => {
       });
     }
 
+    if (!campaign || campaign.length === 0) {
+      console.error('❌ Campanha não encontrada:', campaignId);
+      return res.status(404).json({
+        success: false,
+        error: 'Campanha não encontrada'
+      });
+    }
+
+    const campaignData = campaign[0];
+
     // Atualizar contadores
-    const newSuccessCount = success ? (campaign.success_count || 0) + 1 : campaign.success_count || 0;
-    const newFailedCount = !success ? (campaign.failed_count || 0) + 1 : campaign.failed_count || 0;
+    const newSuccessCount = success ? (campaignData.success_count || 0) + 1 : campaignData.success_count || 0;
+    const newFailedCount = !success ? (campaignData.failed_count || 0) + 1 : campaignData.failed_count || 0;
     
     // Calcular progresso
     const progress = Math.round(((leadIndex || 0) / (totalLeads || 1)) * 100);
     
     // Atualizar campanha
     const { data: updatedCampaign, error: updateError } = await supabase
-      .from('bulk_campaigns')
+      .from('campaigns')
       .update({
         success_count: newSuccessCount,
         failed_count: newFailedCount,
         updated_at: new Date().toISOString()
       })
       .eq('id', campaignId)
-      .select()
-      .single();
+      .select();
 
     if (updateError) {
       console.error('❌ Erro ao atualizar progresso:', updateError);
@@ -188,21 +195,57 @@ router.post('/complete', async (req, res) => {
   try {
     const { campaignId, successCount, failedCount, totalProcessed } = req.body;
     
+    console.log('🔍 [COMPLETE] Dados recebidos:', { campaignId, successCount, failedCount, totalProcessed });
+    
     if (!campaignId) {
+      console.error('❌ [COMPLETE] campaignId não fornecido');
       return res.status(400).json({
         success: false,
         error: 'campaignId é obrigatório'
       });
     }
 
-    console.log(`🏁 Finalizando campanha: ${campaignId} - ${successCount} sucessos, ${failedCount} falhas`);
+    console.log(`🏁 [COMPLETE] Finalizando campanha: ${campaignId} - ${successCount} sucessos, ${failedCount} falhas`);
 
     // Determinar status final
     const finalStatus = failedCount > 0 && successCount === 0 ? 'failed' : 'completed';
     
+    // Verificar se a campanha existe primeiro
+    const { data: existingCampaigns, error: fetchError } = await supabase
+      .from('campaigns')
+      .select('id, status')
+      .eq('id', campaignId);
+
+    if (fetchError) {
+      console.error('❌ [COMPLETE] Erro ao buscar campanha:', fetchError);
+      return res.status(500).json({
+        success: false,
+        error: 'Erro ao buscar campanha',
+        details: fetchError.message
+      });
+    }
+
+    if (!existingCampaigns || existingCampaigns.length === 0) {
+      console.error('❌ [COMPLETE] Campanha não encontrada:', campaignId);
+      return res.status(404).json({
+        success: false,
+        error: 'Campanha não encontrada',
+        details: `Campanha ${campaignId} não existe`
+      });
+    }
+
+    const existingCampaign = existingCampaigns[0];
+    console.log('✅ [COMPLETE] Campanha encontrada:', existingCampaign);
+
     // Atualizar campanha
+    console.log('🔄 [COMPLETE] Atualizando campanha com dados:', {
+      status: finalStatus,
+      success_count: successCount || 0,
+      failed_count: failedCount || 0
+    });
+
     const { data, error } = await supabase
-      .from('bulk_campaigns')
+      .from('campaigns')
       .update({
         status: finalStatus,
         success_count: successCount || 0,
@@ -210,18 +253,18 @@ router.post('/complete', async (req, res) => {
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
-      .eq('id', campaignId)
-      .select()
-      .single();
+      .eq('id', campaignId);
 
     if (error) {
-      console.error('❌ Erro ao finalizar campanha:', error);
+      console.error('❌ [COMPLETE] Erro ao atualizar campanha:', error);
       return res.status(500).json({
         success: false,
         error: 'Erro ao finalizar campanha',
         details: error.message
       });
     }
+
+    console.log('✅ [COMPLETE] Campanha atualizada com sucesso');
 
     // Notificar clientes conectados via SSE
     const completionData = {
@@ -238,10 +281,20 @@ router.post('/complete', async (req, res) => {
 
     console.log(`✅ Campanha ${campaignId} finalizada com status: ${finalStatus}`);
     
+    const updatedCampaign = existingCampaign;
+    
+    console.log('🎉 [COMPLETE] Retornando resposta de sucesso:', {
+      success: true,
+      campaignId,
+      finalStatus,
+      successCount,
+      failedCount
+    });
+
     res.json({
       success: true,
       message: 'Campanha finalizada',
-      campaign: data,
+      campaign: updatedCampaign,
       finalStatus
     });
 
@@ -266,10 +319,9 @@ router.get('/:campaignId', async (req, res) => {
     console.log(`🔍 Verificando status da campanha: ${campaignId}`);
 
     const { data, error } = await supabase
-      .from('bulk_campaigns')
+      .from('campaigns')
       .select('id, status, success_count, failed_count, total_leads, sent_at, completed_at, updated_at')
-      .eq('id', campaignId)
-      .single();
+      .eq('id', campaignId);
 
     if (error) {
       console.error('❌ Erro ao buscar campanha:', error);
@@ -280,17 +332,27 @@ router.get('/:campaignId', async (req, res) => {
       });
     }
 
+    if (!data || data.length === 0) {
+      console.error('❌ Campanha não encontrada:', campaignId);
+      return res.status(404).json({
+        success: false,
+        error: 'Campanha não encontrada'
+      });
+    }
+
+    const campaignData = data[0];
+
     // Calcular progresso
-    const progress = data.total_leads > 0 
-      ? Math.round(((data.success_count + data.failed_count) / data.total_leads) * 100)
+    const progress = campaignData.total_leads > 0 
+      ? Math.round(((campaignData.success_count + campaignData.failed_count) / campaignData.total_leads) * 100)
       : 0;
 
-    console.log(`✅ Status da campanha ${campaignId}: ${data.status} (${progress}%)`);
+    console.log(`✅ Status da campanha ${campaignId}: ${campaignData.status} (${progress}%)`);
     
     res.json({
       success: true,
       campaign: {
-        ...data,
+        ...campaignData,
         progress
       }
     });

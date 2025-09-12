@@ -109,7 +109,7 @@ app.use(express.json({ limit: '10mb' }));
 // Configuração CORS dinâmica
 const corsOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
-  : ['https://leadflow-indol.vercel.app', 'http://localhost:5173'];
+  : ['https://leadflow-indol.vercel.app', 'http://localhost:5173', 'http://localhost:5175'];
 
 console.log('🔧 CORS Origins configuradas:', corsOrigins);
 
@@ -128,8 +128,21 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-email'],
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
 }));
+
+// Middleware adicional para lidar com preflight requests
+app.options('*', (req, res) => {
+  console.log('🔄 Preflight request recebida para:', req.path);
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-email');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // Evolution API Configuration
 const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL;
@@ -542,6 +555,16 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
     if (error.response?.status === 401) {
       errorMessage = 'Erro de autenticação com Evolution API';
       errorDetails = 'Verifique a chave da API (EVOLUTION_API_KEY)';
+    } else if (error.response?.status === 403) {
+      // Instância já existe - não é um erro crítico
+      console.log('⚠️ Instância já existe na Evolution API, retornando sucesso para reutilização');
+      return res.json({
+        success: true,
+        instanceName: instanceName,
+        qrCodeBase64: null,
+        pairingCode: null,
+        message: 'Instância já existe, reutilizando...'
+      });
     } else if (error.response?.status === 404) {
       errorMessage = 'Evolution API não encontrada';
       errorDetails = 'Verifique a URL da Evolution API (EVOLUTION_API_URL)';

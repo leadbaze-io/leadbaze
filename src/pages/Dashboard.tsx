@@ -18,6 +18,7 @@ import {
 import { getCurrentUser } from '../lib/supabaseClient'
 import { ListManager } from '../components/ListManager'
 import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard'
+import ScrollToTopButton from '../components/ScrollToTopButton'
 import Footer from '../components/Footer'
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -155,6 +156,7 @@ export default function Dashboard() {
                   transition={{ delay: 0.4 }}
                   className="flex flex-col sm:flex-row lg:flex-col gap-4"
                 >
+                  
                   {/* Status Card */}
                   <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/30">
                     <div className="flex items-center justify-between mb-4">
@@ -335,7 +337,7 @@ export default function Dashboard() {
               whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
               onClick={() => {
-                navigate('/disparador')
+                navigate('/disparador-novo')
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' })
                 }, 100)
@@ -464,6 +466,9 @@ export default function Dashboard() {
       
       {/* Footer */}
       <Footer />
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   )
 }

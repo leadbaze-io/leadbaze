@@ -101,8 +101,8 @@ export default function MobileBenefits() {
       <div className="max-w-md mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Líderes de Vendas confiam na <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LeadBaze</span>!
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Líderes de Vendas confiam na <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LeadBaze</span>!
           </h2>
         </div>
         
@@ -218,6 +218,11 @@ export default function MobileBenefits() {
     </section>
   )
 }
+
+
+
+
+
 
 
 

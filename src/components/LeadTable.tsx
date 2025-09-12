@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Star, Phone, Globe, MapPin, Filter, Search, Download, Clock, DollarSign } from 'lucide-react'
 import type { Lead } from '../types'
-import { Badge } from './ui/badge'
 
 interface LeadTableProps {
   leads: Lead[]
@@ -236,8 +235,8 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                       
                       {/* Cidade abaixo do nome */}
                       <div className="flex items-start space-x-2 mb-2">
-                        <MapPin className="w-4 h-4 text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{lead.address || 'Cidade não disponível'}</span>
+                        <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-base font-semibold text-blue-700 dark:text-blue-300 leading-relaxed">{lead.address || 'Cidade não disponível'}</span>
                       </div>
 
                       {lead.business_type && (
@@ -265,15 +264,14 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="space-y-2">
-                    {/* Avaliação com Badge e Star */}
+                    {/* Avaliação com Star */}
                     <div className="text-center">
-                      <Badge
-                        variant="outline"
-                        className="flex items-center justify-center gap-1.5 whitespace-nowrap bg-white dark:bg-gray-800 border-amber-200 dark:border-amber-600"
-                      >
-                        <Star className="h-3 w-3 text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400" />
-                        {lead.totalScore ? `${lead.totalScore} / 5` : 'N/A'}
-                      </Badge>
+                      <div className="flex items-center justify-center gap-1.5">
+                        <Star className="h-4 w-4 text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400" />
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          {lead.totalScore ? `${lead.totalScore} / 5` : 'N/A'}
+                        </span>
+                      </div>
                       {/* Número de Avaliações com Destaque Especial */}
                       {lead.reviews_count && (
                         <div className="mt-2">

@@ -5,10 +5,21 @@ module.exports = {
     env: {
       NODE_ENV: 'production',
       PORT: 3001,
-      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
+      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5175,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       API_SECRET: 'your-secret-key-here',
+      
+      // Evolution API Configuration
+      EVOLUTION_API_URL: 'https://sua-evolution-api.com:8080',
+      EVOLUTION_API_KEY: 'sua-api-key-aqui',
+      
+      // N8N Webhook Configuration
+      N8N_WEBHOOK_URL: 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae',
+      
+      // Supabase Configuration
       SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',
+      
+      // Blog Automation Settings
       BLOG_AUTOMATION_ENABLED: 'true',
       BLOG_AUTOMATION_CRON: '0 9 * * *',
       BLOG_AUTOMATION_TIMEZONE: 'America/Sao_Paulo',

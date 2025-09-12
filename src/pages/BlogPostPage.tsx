@@ -21,6 +21,7 @@ import * as BlogTypes from '../types/blog';
 
 type BlogPost = BlogTypes.BlogPost;
 import { BlogService } from '../lib/blogService';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 
 import { toast } from '../hooks/use-toast';
 
@@ -484,6 +485,9 @@ export default function BlogPostPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   );
 }

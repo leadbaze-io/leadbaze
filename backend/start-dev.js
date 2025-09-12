@@ -8,3 +8,11 @@ console.log('PORT:', process.env.PORT || 3001);
 
 // Iniciar o servidor
 require('./server.js');
+
+
+
+
+
+
+
+

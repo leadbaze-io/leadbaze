@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { createPortal } from 'react-dom'
-import { Trash2, Star, Phone, Globe, Users, Check, Loader2 } from 'lucide-react'
+import { Trash2, Users, Check, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Lead } from '../types'
 import { Button } from './ui/button'
@@ -25,7 +24,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   const [ratingFilter, setRatingFilter] = useState("all")
   const [reviewsFilter, setReviewsFilter] = useState("all")
   const [websiteFilter, setWebsiteFilter] = useState("all")
-  const [leadsPerPage, setLeadsPerPage] = useState("12")
+  const [leadsPerPage, setLeadsPerPage] = useState("20")
   const [currentPage, setCurrentPage] = useState(1)
   
   // Novos filtros avançados
@@ -236,48 +235,9 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
 
   return (
     <div className="space-y-6">
-      {/* Header com Estatísticas */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-2 sm:p-3 border">
-          <div className="flex items-center space-x-1 sm:space-x-2">
-            <Users className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-            <span className="text-xs sm:text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Total</span>
-          </div>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
-            {sortedLeads.length}
-          </p>
-        </div>
-        <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-2 sm:p-3 border">
-          <div className="flex items-center space-x-1 sm:space-x-2">
-            <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-            <span className="text-xs sm:text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Com Telefone</span>
-          </div>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
-            {sortedLeads.filter(lead => lead.phone).length}
-          </p>
-        </div>
-        <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-2 sm:p-3 border">
-          <div className="flex items-center space-x-1 sm:space-x-2">
-            <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
-            <span className="text-xs sm:text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">Com Website</span>
-          </div>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
-            {sortedLeads.filter(lead => lead.website).length}
-          </p>
-        </div>
-        <div className="lista-detalhes-card-claro lista-detalhes-card-escuro rounded-lg p-2 sm:p-3 border">
-          <div className="flex items-center space-x-1 sm:space-x-2">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
-            <span className="text-xs sm:text-sm font-medium lista-detalhes-texto-claro dark:text-muted-foreground">4+ Estrelas</span>
-          </div>
-          <p className="text-lg sm:text-xl lg:text-2xl font-bold lista-detalhes-texto-claro dark:text-foreground">
-            {sortedLeads.filter(lead => lead.rating && lead.rating >= 4).length}
-          </p>
-        </div>
-      </div>
 
       {/* Filtros */}
-      <Card className="border-0 shadow-lg">
+      <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
         <CardContent className="p-4 sm:p-6">
           <LeadFiltersPro
             searchTerm={searchTerm}
@@ -320,7 +280,6 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       {paginatedLeads.length > 0 && (
         <div className="flex justify-center">
           <Button
-            variant="outline"
             size="sm"
             onClick={toggleSelectAll}
             data-select-all-button
@@ -428,35 +387,6 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         ))}
       </div>
 
-      {/* Aviso flutuante para mobile - leads selecionados */}
-      {selectedLeads.size > 0 && createPortal(
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 300, 
-            damping: 30
-          }}
-          className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
-          style={{
-            position: 'fixed',
-            bottom: '16px',
-            right: '16px',
-            zIndex: 9999,
-            pointerEvents: 'auto'
-          }}
-        >
-          <div className="flex items-center space-x-1.5">
-            <Check className="w-3.5 h-3.5" />
-            <span className="text-xs font-medium">
-              {selectedLeads.size}
-            </span>
-          </div>
-        </motion.div>,
-        document.body
-      )}
 
       {/* Paginação */}
       {totalPages > 1 && (
@@ -496,6 +426,19 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         </div>
       )}
 
+      {/* Botão Selecionar Todos - Parte Inferior */}
+      {paginatedLeads.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <Button
+            size="sm"
+            onClick={toggleSelectAll}
+            className="gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5"
+          >
+            {sortedLeads.length > 0 && sortedLeads.every(lead => selectedLeads.has(lead.id || '')) ? 'Desmarcar Todos' : 'Selecionar Todos'}
+          </Button>
+        </div>
+      )}
+
       {/* Mensagem quando não há leads */}
       {sortedLeads.length === 0 && (
         <div className="text-center py-8 sm:py-12">
@@ -510,6 +453,39 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
           </p>
         </div>
       )}
+
+      {/* Botão Selecionar Leads - Fixo */}
+      {selectedLeads.size > 0 && (
+        <Button
+          onClick={() => {
+            // Função para salvar leads selecionados
+            console.log('Salvando leads selecionados:', Array.from(selectedLeads))
+          }}
+          className="fixed bottom-16 right-4 z-[9999] px-3 py-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-xl border border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-95"
+          size="sm"
+        >
+          <div className="flex items-center space-x-1.5">
+            <Users className="w-3.5 h-3.5" />
+            <span className="text-xs font-medium">{selectedLeads.size}</span>
+          </div>
+        </Button>
+      )}
+
+      {/* Botão Voltar ao Topo */}
+      <Button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 z-[9999] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-xl border border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
+        size="sm"
+      >
+        <svg 
+          className="w-4 h-4 sm:w-5 sm:h-5" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      </Button>
     </div>
   )
 }

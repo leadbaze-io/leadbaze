@@ -8,6 +8,8 @@ import Navbar from './components/Navbar'
 import FaviconImage from './components/FaviconImage'
 import LoadingScreen from './components/LoadingScreen'
 import { Toaster } from './components/ui/toaster'
+import { ActiveCampaignManager } from './components/ActiveCampaignManager'
+import { ActiveCampaignProvider } from './contexts/ActiveCampaignContext'
 
 // Lazy loading das páginas para code splitting
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -15,11 +17,12 @@ const LoginPage = lazy(() => import('./pages/LoginPage'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const GeradorLeads = lazy(() => import('./pages/GeradorLeads'))
 const ListaDetalhes = lazy(() => import('./pages/ListaDetalhes'))
-const DisparadorMassa = lazy(() => import('./pages/DisparadorMassa'))
+const NewDisparadorMassa = lazy(() => import('./pages/NewDisparadorMassa'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const BlogAutomationDashboard = lazy(() => import('./components/blog/BlogAutomationDashboard'))
+const ModalTestPage = lazy(() => import('./pages/ModalTestPage'))
 
 // Componente principal que gerencia as classes de tema
 function AppContent() {
@@ -60,12 +63,14 @@ function AppContent() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/gerador" element={<GeradorLeads />} />
-            <Route path="/disparador" element={<DisparadorMassa />} />
+            <Route path="/disparador" element={<NewDisparadorMassa />} />
+            <Route path="/disparador-novo" element={<NewDisparadorMassa />} />
             <Route path="/lista/:id" element={<ListaDetalhes />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/blog/sobre" element={<AboutPage />} />
             <Route path="/admin/blog-automation" element={<BlogAutomationDashboard />} />
+            <Route path="/test-modals" element={<ModalTestPage />} />
           </Routes>
         </Suspense>
       </main>
@@ -77,15 +82,20 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <Router>
-          <AppContent />
-        </Router>
-        
-        {/* DevTools apenas em desenvolvimento */}
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-        
-        {/* Toaster para notificações */}
-        <Toaster />
+        <ActiveCampaignProvider>
+          <Router>
+            <AppContent />
+          </Router>
+          
+          {/* DevTools apenas em desenvolvimento */}
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+          
+          {/* Toaster para notificações */}
+          <Toaster />
+          
+          {/* Gerenciador global de campanhas ativas */}
+          <ActiveCampaignManager />
+        </ActiveCampaignProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

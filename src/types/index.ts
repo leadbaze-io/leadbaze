@@ -94,9 +94,12 @@ export interface BulkCampaign {
   user_id: string
   name: string
   message: string
-  selected_lists: string[] // IDs das listas selecionadas
+  selected_lists_count: number // Contador de listas selecionadas
+  ignored_lists_count: number // Contador de listas ignoradas
   total_leads: number
-  status: 'draft' | 'scheduled' | 'sending' | 'completed' | 'failed'
+  unique_leads: number
+  duplicates_count: number
+  status: 'draft' | 'active' | 'scheduled' | 'sending' | 'completed' | 'failed' | 'paused'
   scheduled_at?: string
   sent_at?: string
   completed_at?: string

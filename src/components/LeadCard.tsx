@@ -106,12 +106,6 @@ export function LeadCard({
         <h3 className="font-semibold gerador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
           {lead.name}
         </h3>
-        
-        {/* Endereço */}
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <MapPin className="w-4 h-4" />
-          <span className="text-sm gerador-descricao-claro dark:text-muted-foreground">{lead.address}</span>
-        </div>
       </div>
 
       {/* Conteúdo do Card */}
@@ -138,63 +132,12 @@ export function LeadCard({
           )}
         </div>
 
-        {/* Badges Premium - Máximo 3 por card */}
-        <div className="flex flex-wrap gap-2 pt-3">
-          {/* Badge de Qualidade (Baseado na avaliação) */}
-          {lead.rating && lead.rating >= 4.5 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg border border-emerald-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-              ⭐ Alta Qualidade
-            </div>
-          )}
-          {lead.rating && lead.rating >= 4 && lead.rating < 4.5 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg border border-blue-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              ⭐ Boa Qualidade
-            </div>
-          )}
-          
-          {/* Badge de Reputação (Baseado no número de avaliações) */}
-          {lead.reviews_count && lead.reviews_count >= 500 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg border border-purple-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              🏆 Estabelecido
-            </div>
-          )}
-          {lead.reviews_count && lead.reviews_count >= 100 && lead.reviews_count < 500 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg border border-amber-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              🔥 Consolidado
-            </div>
-          )}
-          {lead.reviews_count && lead.reviews_count >= 25 && lead.reviews_count < 100 && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-lg border border-indigo-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              📈 Em Crescimento
-            </div>
-          )}
-          
-          {/* Badge de Contato (Baseado na disponibilidade de informações) */}
-          {lead.phone && lead.website && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-lg border border-cyan-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              🌐 Contato Completo
-            </div>
-          )}
-          
-          {!lead.phone && lead.website && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-sky-500 to-sky-600 text-white shadow-lg border border-sky-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              🌐 Online
-            </div>
-          )}
-          {!lead.phone && !lead.website && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-slate-500 to-slate-600 text-white shadow-lg border border-slate-400/20">
-              <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              📋 Informações Básicas
-            </div>
-          )}
+        {/* Endereço - Movido para baixo */}
+        <div className="flex items-center space-x-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <span className="text-base font-semibold text-blue-700 dark:text-blue-300">{lead.address}</span>
         </div>
+
       </div>
     </motion.div>
   )

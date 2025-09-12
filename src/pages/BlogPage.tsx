@@ -10,6 +10,7 @@ type BlogPagination = BlogTypes.BlogPagination;
 type BlogFilters = BlogTypes.BlogFilters;
 import { BlogService } from '../lib/blogService';
 import BlogPostCard from '../components/blog/BlogPostCard';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 
 export default function BlogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -670,6 +671,9 @@ export default function BlogPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   );
 }

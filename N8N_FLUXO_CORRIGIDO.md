@@ -179,3 +179,11 @@ Após a correção, o fluxo deve funcionar exatamente como o V2, mas com as melh
 - As campanhas sejam finalizadas corretamente
 
 Este fluxo corrigido deve resolver o problema do progresso mantendo a funcionalidade que funcionava no V2.
+
+
+
+
+
+
+
+

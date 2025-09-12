@@ -1,28 +1,37 @@
--- Script para verificar as tabelas existentes no Supabase
--- Execute este script primeiro para ver a estrutura atual
+-- Script para verificar as tabelas existentes no banco
+-- Execute este script no SQL Editor do Supabase
 
--- Verificar todas as tabelas existentes
-SELECT table_name, table_schema 
+-- 1. Listar todas as tabelas do banco
+SELECT 
+  table_name,
+  table_type
 FROM information_schema.tables 
-WHERE table_schema = 'public' 
+WHERE table_schema = 'public'
 ORDER BY table_name;
 
--- Verificar estrutura da tabela lead_lists se existir
-SELECT column_name, data_type, is_nullable
+-- 2. Verificar especificamente tabelas relacionadas a leads
+SELECT 
+  table_name,
+  table_type
+FROM information_schema.tables 
+WHERE table_schema = 'public'
+  AND table_name LIKE '%lead%'
+ORDER BY table_name;
+
+-- 3. Verificar colunas da tabela lead_lists
+SELECT 
+  column_name, 
+  data_type, 
+  is_nullable
 FROM information_schema.columns 
-WHERE table_name = 'lead_lists' 
-AND table_schema = 'public'
+WHERE table_name = 'lead_lists'
 ORDER BY ordinal_position;
 
--- Verificar estrutura da tabela leads se existir
-SELECT column_name, data_type, is_nullable
-FROM information_schema.columns 
-WHERE table_name = 'leads' 
-AND table_schema = 'public'
-ORDER BY ordinal_position;
-
-
-
-
-
-
+-- 4. Verificar se existe alguma tabela com dados de contato/telefone
+SELECT 
+  table_name,
+  table_type
+FROM information_schema.tables 
+WHERE table_schema = 'public'
+  AND (table_name LIKE '%contact%' OR table_name LIKE '%phone%' OR table_name LIKE '%person%')
+ORDER BY table_name;

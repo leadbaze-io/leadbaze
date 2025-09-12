@@ -183,7 +183,7 @@ async function getLeadListsData(userId: string, startDate: Date) {
 
 async function getCampaignsData(userId: string, startDate: Date) {
   const { data, error } = await supabase
-    .from('bulk_campaigns')
+    .from('campaigns')
     .select('*')
     .eq('user_id', userId)
     .gte('created_at', startDate.toISOString())

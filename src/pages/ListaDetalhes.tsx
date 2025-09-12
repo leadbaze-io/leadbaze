@@ -22,6 +22,7 @@ import { supabase, getCurrentUser } from '../lib/supabaseClient'
 import type { LeadList, Lead } from '../types'
 import LeadTableWithActions from '../components/LeadTableWithActions'
 import Footer from '../components/Footer'
+import ScrollToTopButton from '../components/ScrollToTopButton'
 import { motion } from 'framer-motion'
 
 export default function ListaDetalhes() {
@@ -510,6 +511,9 @@ export default function ListaDetalhes() {
       
       {/* Footer */}
       <Footer />
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   )
 }

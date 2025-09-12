@@ -190,3 +190,11 @@ curl -X POST https://leadbaze.io/api/campaign/status/progress \
 5. **Identificar onde está o problema**
 
 Com esses logs detalhados, conseguiremos identificar exatamente onde está o problema do progresso!
+
+
+
+
+
+
+
+

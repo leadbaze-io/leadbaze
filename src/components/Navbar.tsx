@@ -17,7 +17,7 @@ export default function Navbar() {
 
   // Páginas onde o ThemeToggle deve aparecer (APENAS páginas da aplicação)
   // Blog não tem ThemeToggle - sempre modo claro
-  const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador'].some(path => 
+  const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador', '/disparador-novo'].some(path => 
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
 
@@ -79,7 +79,7 @@ const isActiveLink = (path: string) => {
       return location.pathname === '/gerador'
     }
     if (path === '/disparador') {
-      return location.pathname === '/disparador'
+      return location.pathname === '/disparador' || location.pathname === '/disparador-novo'
     }
     if (path === '/admin/blog-automation') {
       return location.pathname === '/admin/blog-automation'

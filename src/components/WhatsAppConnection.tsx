@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { QrCode, Smartphone, CheckCircle, AlertTriangle, Loader2, RefreshCw, X, LogOut } from 'lucide-react'
 import { Button } from './ui/button'
+import { StatusBadge } from './ui/StatusBadge'
 import { toast } from '../hooks/use-toast'
 import EvolutionApiService from '../lib/evolutionApiService'
 import { WhatsAppInstanceService } from '../lib/whatsappInstanceService'
 import type { ConnectionState } from '../lib/evolutionApiService'
+import './WhatsAppConnection.css'
 
 interface WhatsAppConnectionProps {
   userId?: string
@@ -25,6 +27,7 @@ export default function WhatsAppConnection({
   const [isConnecting, setIsConnecting] = useState(false)
   const [isDisconnecting, setIsDisconnecting] = useState(false)
   const [qrCode, setQrCode] = useState<string>('')
+  const [pairingCode, setPairingCode] = useState<string>('')
   const [instanceName, setInstanceName] = useState<string>('')
   const [connectionState, setConnectionState] = useState<ConnectionState | null>(null)
   const [isPolling, setIsPolling] = useState(false)
@@ -35,43 +38,95 @@ export default function WhatsAppConnection({
     const checkExistingInstance = async () => {
       if (userId) {
         try {
-          console.log('🔍 Verificando instância existente no banco...')
           const instance = await WhatsAppInstanceService.getUserInstance(userId)
-          if (instance && instance.status === 'connected') {
-            console.log('✅ Instância conectada encontrada no banco:', instance.instance_name)
+          
+          if (instance) {
             
-            // Verificar se a instância ainda existe na Evolution API
-            try {
-              const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
-              console.log('🔍 Estado na Evolution API:', evolutionState)
+            // Se tem instância com QR Code há mais de 1 hora, limpar
+            if (instance.status === 'qrcode') {
+              const createdTime = new Date(instance.created_at)
+              const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
               
-              if (evolutionState.state === 'open') {
-                // Instância ainda está ativa na Evolution
-                setInstanceName(instance.instance_name)
-                setConnectionState({
-                  instanceName: instance.instance_name,
-                  state: 'open',
-                  message: 'WhatsApp já conectado!'
-                })
-              } else {
-                // Instância não está mais ativa na Evolution
-                console.log('⚠️ Instância não está mais ativa na Evolution, atualizando banco...')
+              if (createdTime < oneHourAgo) {
+                await WhatsAppInstanceService.deleteInstance(instance.instance_name)
+                return
+              }
+            }
+            
+            // Se tem instância conectada, verificar se ainda está ativa na Evolution
+            if (instance.status === 'connected') {
+              console.log('✅ [WHATSAPP] Instância conectada encontrada no banco:', instance.instance_name)
+              
+              try {
+                const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
+                console.log('🔍 [WHATSAPP] Estado na Evolution API:', evolutionState)
+                
+                if (evolutionState.state === 'open') {
+                  // Instância ainda está ativa na Evolution
+                  console.log('✅ [WHATSAPP] Conexão ativa confirmada - mantendo estado')
+                  setInstanceName(instance.instance_name)
+                  setConnectionState({
+                    instanceName: instance.instance_name,
+                    state: 'open',
+                    message: 'WhatsApp já conectado!'
+                  })
+                } else {
+                  // Instância não está mais ativa na Evolution
+                  console.log('⚠️ [WHATSAPP] Instância não está mais ativa na Evolution, atualizando banco...')
+                  await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
+                  setConnectionState(null)
+                  setInstanceName('')
+                }
+              } catch (evolutionError) {
+                console.log('⚠️ [WHATSAPP] Erro ao verificar Evolution API, instância pode ter sido deletada:', evolutionError)
+                // Se não conseguir verificar na Evolution, marcar como desconectada
                 await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
                 setConnectionState(null)
                 setInstanceName('')
               }
-            } catch (evolutionError) {
-              console.log('⚠️ Erro ao verificar Evolution API, instância pode ter sido deletada:', evolutionError)
-              // Se não conseguir verificar na Evolution, marcar como desconectada
-              await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
-              setConnectionState(null)
-              setInstanceName('')
+            } else if (instance.status === 'disconnected') {
+              // Instância marcada como disconnected no banco, mas verificar se ainda está ativa na Evolution
+              console.log('🔍 [WHATSAPP] Instância marcada como disconnected no banco, verificando Evolution API...')
+              
+              try {
+                const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
+                console.log('🔍 [WHATSAPP] Estado na Evolution API:', evolutionState)
+                
+                if (evolutionState.state === 'open') {
+                  // Instância ainda está ativa na Evolution - corrigir banco
+                  console.log('🔄 [WHATSAPP] Instância ainda ativa na Evolution - corrigindo banco de dados')
+                  await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'connected')
+                  setInstanceName(instance.instance_name)
+                  setConnectionState({
+                    instanceName: instance.instance_name,
+                    state: 'open',
+                    message: 'WhatsApp já conectado!'
+                  })
+                } else {
+                  // Instância realmente está desconectada
+                  console.log('✅ [WHATSAPP] Instância realmente desconectada na Evolution API')
+                }
+              } catch (evolutionError) {
+                console.log('⚠️ [WHATSAPP] Erro ao verificar Evolution API:', evolutionError)
+              }
+            } else if (instance.status === 'qrcode') {
+              // Reutilizar instância QR Code existente
+              console.log('🔄 [WHATSAPP] Reutilizando instância QR Code existente:', instance.instance_name)
+              setInstanceName(instance.instance_name)
+              setConnectionState({
+                instanceName: instance.instance_name,
+                state: 'qrcode',
+                message: 'Aguardando QR Code...'
+              })
+              
+              // Buscar QR Code da instância existente
+              startQRCodePolling(instance.instance_name)
             }
           } else {
-            console.log('ℹ️ Nenhuma instância conectada encontrada')
+            console.log('ℹ️ [WHATSAPP] Nenhuma instância encontrada para o usuário')
           }
         } catch (error) {
-          console.error('❌ Erro ao verificar instância existente:', error)
+          console.error('❌ [WHATSAPP] Erro ao verificar instância existente:', error)
         }
       }
     }
@@ -81,12 +136,14 @@ export default function WhatsAppConnection({
 
   // Verificar periodicamente se a instância ainda está ativa
   useEffect(() => {
-    if (connectionState && connectionState.state === 'open' && instanceName) {
+    if (connectionState && connectionState.state === 'open' && instanceName && !isPolling) {
+      console.log('🔄 [WHATSAPP] Iniciando verificação periódica da instância...')
       const interval = setInterval(async () => {
         try {
+          console.log('🔍 [WHATSAPP] Verificando persistência da conexão...')
           const evolutionState = await EvolutionApiService.getConnectionState(instanceName)
           if (evolutionState.state !== 'open') {
-            console.log('⚠️ Instância não está mais ativa na Evolution, atualizando...')
+            console.log('⚠️ [WHATSAPP] Conexão perdida - instância não está mais ativa na Evolution')
             // Atualizar banco e estado local
             if (userId) {
               await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
@@ -100,9 +157,11 @@ export default function WhatsAppConnection({
               description: 'Sua instância foi desconectada da Evolution API.',
               variant: 'warning',
             })
+          } else {
+            console.log('✅ [WHATSAPP] Conexão ainda ativa - mantendo estado')
           }
         } catch (error) {
-          console.log('⚠️ Erro ao verificar status da instância:', error)
+          console.log('⚠️ [WHATSAPP] Erro ao verificar status da instância:', error)
           // Se não conseguir verificar, marcar como desconectada
           if (userId) {
             await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
@@ -113,15 +172,20 @@ export default function WhatsAppConnection({
         }
       }, 30000) // Verificar a cada 30 segundos
 
-      return () => clearInterval(interval)
+      return () => {
+        console.log('🧹 Limpando verificação periódica...')
+        clearInterval(interval)
+      }
     }
-  }, [connectionState, instanceName, userId])
+  }, [connectionState, instanceName, userId, isPolling])
 
   // Limpar polling quando componente for desmontado
   useEffect(() => {
     return () => {
+      console.log('🧹 Limpando polling ao desmontar componente...')
       if (stopPollingRef.current) {
         stopPollingRef.current()
+        stopPollingRef.current = null
       }
     }
   }, [])
@@ -197,21 +261,87 @@ export default function WhatsAppConnection({
     try {
       setIsConnecting(true)
       setQrCode('')
+      setPairingCode('')
       setConnectionState(null)
+      setInstanceName('')
 
-      // Gerar nome único para a instância usando o nome do usuário
-      const newInstanceName = EvolutionApiService.generateInstanceName(userId, userName)
-      setInstanceName(newInstanceName)
+      // Parar qualquer polling anterior
+      if (stopPollingRef.current) {
+        console.log('🛑 [WHATSAPP] Parando polling anterior antes de iniciar nova conexão')
+        stopPollingRef.current()
+        stopPollingRef.current = null
+      }
+      
+      // Aguardar um pouco para garantir que o polling anterior foi parado
+      await new Promise(resolve => setTimeout(resolve, 100))
 
-      console.log('🔄 Iniciando conexão WhatsApp...')
+      console.log('🔄 [WHATSAPP] Iniciando conexão WhatsApp...')
 
-      // 1. Criar instância no banco de dados
+      // 1. Verificar se já existe uma instância desconectada para reutilizar
+      let instanceNameToUse = ''
+      
       if (userId) {
-        await WhatsAppInstanceService.createInstance(userId, newInstanceName)
+        try {
+          const existingInstance = await WhatsAppInstanceService.getUserInstance(userId)
+          
+          if (existingInstance) {
+            // Sempre deletar instância existente e criar nova para evitar problemas
+            console.log('🗑️ [WHATSAPP] Deletando instância existente:', existingInstance.instance_name)
+            try {
+              await WhatsAppInstanceService.deleteInstance(existingInstance.instance_name)
+              console.log('✅ [WHATSAPP] Instância antiga deletada do banco')
+            } catch (deleteError) {
+              console.log('⚠️ [WHATSAPP] Erro ao deletar instância do banco:', deleteError)
+            }
+          }
+          
+          // Sempre criar nova instância
+          instanceNameToUse = EvolutionApiService.generateInstanceName(userId, userName)
+          console.log('🆕 [WHATSAPP] Criando nova instância:', instanceNameToUse)
+          await WhatsAppInstanceService.createInstance(userId, instanceNameToUse)
+        } catch (error) {
+          console.log('⚠️ [WHATSAPP] Erro ao verificar instância existente, criando nova:', error)
+          instanceNameToUse = EvolutionApiService.generateInstanceName(userId, userName)
+          await WhatsAppInstanceService.createInstance(userId, instanceNameToUse)
+        }
+      } else {
+        instanceNameToUse = EvolutionApiService.generateInstanceName(userId, userName)
       }
 
-      // 2. Criar instância na Evolution API
-      const instance = await EvolutionApiService.createInstanceAndQRCode(newInstanceName, userName)
+      setInstanceName(instanceNameToUse)
+
+      // 2. Verificar se a instância já existe na Evolution API
+      let instance
+      try {
+        // Tentar criar instância na Evolution API
+        instance = await EvolutionApiService.createInstanceAndQRCode(instanceNameToUse, userName)
+        console.log('🆕 [WHATSAPP] Nova instância criada na Evolution API')
+      } catch (error) {
+        // Se der erro 403 (instância já existe), tentar deletar e recriar
+        if (error instanceof Error && (error.message.includes('already in use') || error.message.includes('already exists'))) {
+          console.log('🔄 [WHATSAPP] Instância já existe na Evolution API - tentando deletar e recriar')
+          try {
+            // Tentar deletar a instância existente
+            await EvolutionApiService.deleteInstance(instanceNameToUse)
+            console.log('🗑️ [WHATSAPP] Instância antiga deletada')
+            
+            // Criar nova instância
+            instance = await EvolutionApiService.createInstanceAndQRCode(instanceNameToUse, userName)
+            console.log('🆕 [WHATSAPP] Nova instância criada após deletar a antiga')
+          } catch (deleteError) {
+            console.log('⚠️ [WHATSAPP] Erro ao deletar instância, tentando reutilizar:', deleteError)
+            // Se não conseguir deletar, tentar reutilizar
+            instance = {
+              instanceName: instanceNameToUse,
+              qrCodeBase64: '',
+              pairingCode: '',
+              message: 'Reutilizando instância existente'
+            }
+          }
+        } else {
+          throw error // Re-throw se for outro tipo de erro
+        }
+      }
       
       setConnectionState({
         instanceName: instance.instanceName,
@@ -219,7 +349,11 @@ export default function WhatsAppConnection({
         message: 'Aguardando QR Code...'
       })
 
-      // 2. Buscar QR Code com polling
+      // 3. Aguardar um pouco antes de buscar QR Code
+      console.log('⏰ [WHATSAPP] Aguardando 2 segundos antes de buscar QR Code...')
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // 4. Buscar QR Code com polling
       startQRCodePolling(instance.instanceName)
 
       toast({
@@ -229,7 +363,7 @@ export default function WhatsAppConnection({
       })
 
     } catch (error) {
-      console.error('❌ Erro ao conectar WhatsApp:', error)
+      console.error('❌ [WHATSAPP] Erro ao conectar WhatsApp:', error)
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
       
       toast({
@@ -249,66 +383,116 @@ export default function WhatsAppConnection({
    */
   const startQRCodePolling = (instanceName: string) => {
     let attempts = 0
-    const maxAttempts = 20
-    const interval = 2000 // 2 segundos
+    const maxAttempts = 30 // Aumentar tentativas
+    const interval = 8000 // 8 segundos (mais tempo para Evolution API gerar QR Code)
+    let isPolling = true
 
     const pollQRCode = async () => {
-      if (attempts >= maxAttempts) {
-        console.log('❌ Máximo de tentativas atingido para QR Code')
-        setConnectionState({
-          instanceName,
-          state: 'disconnected',
-          message: 'QR Code não disponível. Tente novamente.'
-        })
+      if (!isPolling || attempts >= maxAttempts) {
+        if (attempts >= maxAttempts) {
+          console.log('❌ [WHATSAPP] Máximo de tentativas atingido para QR Code')
+          setConnectionState({
+            instanceName,
+            state: 'disconnected',
+            message: 'QR Code não disponível. Tente novamente.'
+          })
+        }
         return
       }
 
       try {
-        console.log(`🔍 Tentativa ${attempts + 1} de buscar QR Code...`)
+        console.log(`🔍 [WHATSAPP] Tentativa ${attempts + 1} de buscar QR Code...`)
         const qrData = await EvolutionApiService.getQRCode(instanceName)
         
         if (qrData.hasQRCode && qrData.qrCodeBase64) {
-          console.log('✅ QR Code encontrado!')
+          console.log('✅ [WHATSAPP] QR Code encontrado!')
+          console.log('📱 [WHATSAPP] QR Code data:', qrData.qrCodeBase64.substring(0, 50) + '...')
           setQrCode(qrData.qrCodeBase64)
-          setConnectionState({
-            instanceName,
-            state: 'qrcode',
-            message: 'Escaneie o QR Code com seu WhatsApp'
-          })
+          
+          // Verificar se também tem código de pareamento
+          if (qrData.hasPairingCode && qrData.pairingCode) {
+            console.log('🔑 [WHATSAPP] Código de pareamento disponível:', qrData.pairingCode)
+            setPairingCode(qrData.pairingCode)
+            setConnectionState({
+              instanceName,
+              state: 'qrcode',
+              message: 'Escaneie o QR Code ou use o código de pareamento'
+            })
+          } else {
+            setPairingCode('')
+            setConnectionState({
+              instanceName,
+              state: 'qrcode',
+              message: 'Escaneie o QR Code com seu WhatsApp'
+            })
+          }
 
           // Iniciar polling para verificar status da conexão
+          console.log('🔄 [WHATSAPP] Iniciando polling de conexão para:', instanceName)
           startConnectionPolling(instanceName)
 
           toast({
             title: '📱 QR Code Gerado!',
-            description: 'Escaneie o código com seu WhatsApp para conectar.',
+            description: qrData.hasPairingCode 
+              ? `Escaneie o QR Code ou use o código: ${qrData.pairingCode}`
+              : 'Escaneie o código com seu WhatsApp para conectar.',
             variant: 'success',
           })
           return
         }
 
         // Se não encontrou QR Code, tentar novamente
+        console.log(`⏳ [WHATSAPP] QR Code ainda não disponível. Tentativa ${attempts + 1}/${maxAttempts}`)
+        console.log(`📊 [WHATSAPP] Dados recebidos:`, {
+          hasQRCode: qrData.hasQRCode,
+          hasPairingCode: qrData.hasPairingCode,
+          message: qrData.message
+        })
         attempts++
-        setTimeout(pollQRCode, interval)
+        if (isPolling) {
+          setTimeout(pollQRCode, interval)
+        }
 
       } catch (error) {
         console.error('❌ Erro ao buscar QR Code:', error)
         attempts++
-        setTimeout(pollQRCode, interval)
+        if (isPolling) {
+          setTimeout(pollQRCode, interval)
+        }
       }
     }
 
+    // Função para parar o polling
+    const stopPolling = () => {
+      console.log('🛑 [WHATSAPP] Parando polling de QR Code...')
+      isPolling = false
+    }
+
+    // Armazenar referência para limpar depois
+    stopPollingRef.current = stopPolling
+
     // Iniciar polling
     pollQRCode()
+
+    return stopPolling
   }
 
   /**
    * Inicia o polling para verificar o estado da conexão
    */
   const startConnectionPolling = (instanceName: string) => {
-    setIsPolling(true)
+    console.log('🔄 [WHATSAPP] Iniciando polling de conexão para instância:', instanceName)
+    
+    // Parar qualquer polling anterior
+    if (stopPollingRef.current) {
+      console.log('🛑 [WHATSAPP] Parando polling anterior...')
+      stopPollingRef.current()
+    }
 
-    stopPollingRef.current = EvolutionApiService.startConnectionPolling(
+    setIsPolling(true)
+    console.log('✅ [WHATSAPP] Polling iniciado, aguardando conexão...')
+
+    const stopPolling = EvolutionApiService.startConnectionPolling(
       instanceName,
       async (state: ConnectionState) => {
         setConnectionState(state)
@@ -320,11 +504,12 @@ export default function WhatsAppConnection({
           // Persistir o status de conectado
           if (userId) {
             try {
-              console.log('💾 Salvando status conectado no banco...')
+              console.log('💾 [WHATSAPP] Salvando status conectado no banco...')
+              // Marcar como connected com timestamp (whatsapp_number será preenchido depois)
               await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'connected')
-              console.log('✅ Status salvo com sucesso!')
+              console.log('✅ [WHATSAPP] Status salvo com sucesso - CONEXÃO PERSISTENTE!')
             } catch (error) {
-              console.error('❌ Erro ao persistir status:', error)
+              console.error('❌ [WHATSAPP] Erro ao persistir status:', error)
             }
           }
           
@@ -358,14 +543,18 @@ export default function WhatsAppConnection({
           })
         }
       },
-      5000 // Verificar a cada 5 segundos
+      2000 // Verificar a cada 2 segundos (mais responsivo)
     )
+
+    // Armazenar referência para limpar depois
+    stopPollingRef.current = stopPolling
   }
 
   /**
    * Para o processo de conexão
    */
   const handleStopConnection = () => {
+    console.log('🛑 Parando processo de conexão...')
     if (stopPollingRef.current) {
       stopPollingRef.current()
       stopPollingRef.current = null
@@ -373,6 +562,7 @@ export default function WhatsAppConnection({
     
     setIsPolling(false)
     setQrCode('')
+    setPairingCode('')
     setConnectionState(null)
     setInstanceName('')
     
@@ -535,7 +725,28 @@ export default function WhatsAppConnection({
                 </span>
               </div>
               
-              <div className="flex items-center justify-center space-x-3">
+              {/* Código de Pareamento */}
+              {pairingCode && (
+                <div className="pairing-code-container">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <div className="pairing-code-icon"></div>
+                    <h3 className="pairing-code-title">Código de Pareamento</h3>
+                  </div>
+                  <div className="pairing-code-box">
+                    <p className="pairing-code-text">
+                      {pairingCode}
+                    </p>
+                  </div>
+                  <p className="pairing-code-instruction">
+                    {pairingCode.length === 8 
+                      ? 'Digite este código no WhatsApp em vez de escanear o QR Code'
+                      : 'Código de pareamento disponível - use o QR Code se este código não funcionar'
+                    }
+                  </p>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                 <Button
                   onClick={handleRefreshQR}
                   variant="outline"
@@ -544,6 +755,67 @@ export default function WhatsAppConnection({
                 >
                   <RefreshCw className="w-4 h-4 mr-1" />
                   Atualizar QR
+                </Button>
+                
+                <Button
+                  onClick={async () => {
+                    if (instanceName) {
+                      console.log('🔍 [DEBUG] Verificando status manualmente...');
+                      try {
+                        const state = await EvolutionApiService.getConnectionState(instanceName);
+                        console.log('📊 [DEBUG] Status atual:', state);
+                        setConnectionState(state);
+                      } catch (error) {
+                        console.error('❌ [DEBUG] Erro ao verificar status:', error);
+                      }
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-600 dark:border-blue-200 dark:hover:bg-blue-950 dark:hover:text-blue-400"
+                >
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  Verificar Status
+                </Button>
+                
+                <Button
+                  onClick={async () => {
+                    console.log('🔄 [DEBUG] Recriando instância...');
+                    try {
+                      // Parar polling atual
+                      if (stopPollingRef.current) {
+                        stopPollingRef.current();
+                      }
+                      
+                      // Limpar estados
+                      setQrCode('');
+                      setPairingCode('');
+                      setConnectionState(null);
+                      setIsPolling(false);
+                      
+                      // Recriar instância
+                      await handleConnectWhatsApp();
+                      
+                      toast({
+                        title: '🔄 Instância Recriada!',
+                        description: 'Nova instância criada. Tente conectar novamente.',
+                        variant: 'info',
+                      });
+                    } catch (error) {
+                      console.error('❌ [DEBUG] Erro ao recriar instância:', error);
+                      toast({
+                        title: '❌ Erro',
+                        description: 'Não foi possível recriar a instância.',
+                        variant: 'destructive',
+                      });
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50 hover:text-orange-700 dark:text-orange-600 dark:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+                >
+                  <RefreshCw className="w-4 h-4 mr-1" />
+                  Recriar Instância
                 </Button>
                 
                 <Button
@@ -563,7 +835,19 @@ export default function WhatsAppConnection({
                   <li>1. Abra o WhatsApp no seu celular</li>
                   <li>2. Vá em Configurações → Aparelhos conectados</li>
                   <li>3. Toque em "Conectar um aparelho"</li>
-                  <li>4. Escaneie o QR Code acima</li>
+                  {pairingCode ? (
+                    <>
+                      <li>4. Escaneie o QR Code acima OU</li>
+                      <li>5. Digite o código de pareamento mostrado acima</li>
+                      {pairingCode.length !== 8 && (
+                        <li className="text-orange-600 dark:text-orange-400">
+                          ⚠️ Se o código não funcionar, use o QR Code
+                        </li>
+                      )}
+                    </>
+                  ) : (
+                    <li>4. Escaneie o QR Code acima</li>
+                  )}
                 </ol>
               </div>
             </div>
@@ -573,25 +857,18 @@ export default function WhatsAppConnection({
 
       {/* Status da Conexão */}
       <AnimatePresence>
-        {connectionState && connectionState.state === 'open' && (
+        {(connectionState || instanceName) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg"
+            className="mt-6 flex items-center justify-between"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-green-200">
-                    WhatsApp Conectado com Sucesso!
-                  </h3>
-                  <p className="text-sm text-gray-800 dark:text-green-300">
-                    Sua conta está pronta para enviar mensagens.
-                  </p>
-                </div>
-              </div>
-              
+            <StatusBadge 
+              status={connectionState?.state === 'close' ? 'disconnected' : (connectionState?.state === 'open' ? 'connected' : (connectionState?.state || 'disconnected'))} 
+              instanceName={connectionState?.instanceName || instanceName}
+            />
+            
+            {(connectionState?.state === 'open' || instanceName) && (
               <Button
                 onClick={handleDisconnectWhatsApp}
                 variant="outline"
@@ -606,7 +883,7 @@ export default function WhatsAppConnection({
                 )}
                 {isDisconnecting ? 'Desconectando...' : 'Desconectar'}
               </Button>
-            </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

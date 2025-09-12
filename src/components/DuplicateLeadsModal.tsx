@@ -4,7 +4,7 @@ import { X, Phone, MapPin, Calendar, AlertTriangle, CheckCircle } from 'lucide-r
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
-import { CampaignLeadsService } from '../lib/campaignLeadsService'
+import { CampaignService } from '../lib/campaignService'
 import type { Lead } from '../types'
 
 interface DuplicateLeadsModalProps {
@@ -59,7 +59,7 @@ export default function DuplicateLeadsModal({
             }
           }
 
-          const result = await CampaignLeadsService.checkPhoneExists(lead.phone)
+          const result = await CampaignService.checkPhoneExists(lead.phone)
           return {
             lead,
             ...result
@@ -266,9 +266,9 @@ export default function DuplicateLeadsModal({
                         <CardContent className="pt-0">
                           {/* Lead Info */}
                           {detail.lead.address && (
-                            <div className="flex items-start space-x-2 text-sm mb-3">
-                              <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-                              <span className="text-gray-700 truncate">
+                            <div className="flex items-start space-x-2 mb-3">
+                              <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                              <span className="text-base font-semibold text-blue-700 dark:text-blue-300 truncate">
                                 {detail.lead.address}
                               </span>
                             </div>

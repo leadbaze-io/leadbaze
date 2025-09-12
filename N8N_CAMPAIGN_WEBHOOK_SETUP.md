@@ -204,3 +204,11 @@ No frontend, você verá:
 - **Webhook N8N**: `https://leadbaze.io/api/campaign/n8n-webhook`
 - **SSE Stream**: `https://leadbaze.io/api/campaign/status/stream/{campaignId}`
 - **Status da Campanha**: `https://leadbaze.io/api/campaign/status/{campaignId}`
+
+
+
+
+
+
+
+

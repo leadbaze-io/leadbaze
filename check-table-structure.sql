@@ -1,39 +1,36 @@
--- Verificar estrutura atual da tabela campaign_leads
--- Execute este SQL no Supabase para diagnosticar o problema
+-- Verificar estrutura das tabelas para entender os campos disponíveis
 
--- 1. Verificar estrutura da tabela
-SELECT 
-  column_name,
-  data_type,
-  is_nullable,
-  column_default,
-  character_maximum_length
+-- 1. Estrutura da tabela lead_lists
+SELECT 'Estrutura da tabela lead_lists:' as info;
+SELECT column_name, data_type, is_nullable
 FROM information_schema.columns 
-WHERE table_name = 'campaign_leads'
+WHERE table_name = 'lead_lists' 
 ORDER BY ordinal_position;
 
--- 2. Verificar constraints da tabela
-SELECT 
-  tc.constraint_name,
-  tc.constraint_type,
-  kcu.column_name,
-  tc.is_deferrable,
-  tc.initially_deferred
-FROM information_schema.table_constraints tc
-JOIN information_schema.key_column_usage kcu 
-  ON tc.constraint_name = kcu.constraint_name
-WHERE tc.table_name = 'campaign_leads'
-ORDER BY tc.constraint_type, kcu.ordinal_position;
+-- 2. Estrutura da tabela leads
+SELECT 'Estrutura da tabela leads:' as info;
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns 
+WHERE table_name = 'leads' 
+ORDER BY ordinal_position;
 
--- 3. Verificar índices da tabela
-SELECT 
-  indexname,
-  indexdef
-FROM pg_indexes 
-WHERE tablename = 'campaign_leads';
+-- 3. Estrutura da tabela campaigns
+SELECT 'Estrutura da tabela campaigns:' as info;
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns 
+WHERE table_name = 'campaigns' 
+ORDER BY ordinal_position;
 
--- 4. Verificar se há dados na tabela
-SELECT COUNT(*) as total_records FROM campaign_leads;
+-- 4. Estrutura da tabela campaign_lists
+SELECT 'Estrutura da tabela campaign_lists:' as info;
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns 
+WHERE table_name = 'campaign_lists' 
+ORDER BY ordinal_position;
 
--- 5. Verificar uma amostra dos dados (se houver)
-SELECT * FROM campaign_leads LIMIT 3;
+-- 5. Estrutura da tabela campaign_unique_leads
+SELECT 'Estrutura da tabela campaign_unique_leads:' as info;
+SELECT column_name, data_type, is_nullable
+FROM information_schema.columns 
+WHERE table_name = 'campaign_unique_leads' 
+ORDER BY ordinal_position;

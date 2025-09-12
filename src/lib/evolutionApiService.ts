@@ -4,9 +4,7 @@
  */
 
 // Configuração do backend
-const BACKEND_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadbaze.io' // Backend deployado no Servla
-  : 'http://localhost:3001';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? 'https://leadbaze.io' : 'http://localhost:3001');
 
 export interface EvolutionInstance {
   instanceName: string;
@@ -17,7 +15,7 @@ export interface EvolutionInstance {
 
 export interface ConnectionState {
   instanceName: string;
-  state: 'open' | 'connecting' | 'close' | 'disconnected' | 'qrcode';
+  state: 'open' | 'connecting' | 'close' | 'disconnected' | 'qrcode' | 'error';
   message: string;
 }
 
@@ -27,22 +25,30 @@ export class EvolutionApiService {
    */
   static async dispatchCampaignToWebhook(payload: unknown[]): Promise<{ success: boolean; data?: unknown; error?: string }>{
     try {
+      console.log('🌐 [EVOLUTION-API] Enviando campanha para backend...')
+      console.log('📦 [EVOLUTION-API] Payload:', JSON.stringify(payload, null, 2))
+      console.log('🔗 [EVOLUTION-API] URL:', `${BACKEND_URL}/api/dispatch-campaign`)
+      
       const response = await fetch(`${BACKEND_URL}/api/dispatch-campaign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
 
+      console.log('📡 [EVOLUTION-API] Status da resposta:', response.status)
+      console.log('📡 [EVOLUTION-API] Headers da resposta:', Object.fromEntries(response.headers.entries()))
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
+        console.error('❌ [EVOLUTION-API] Erro na resposta:', errorData)
         throw new Error(errorData.error || `Erro HTTP ${response.status}`)
       }
 
       const data = await response.json()
-      console.log('✅ Resposta do backend:', data)
+      console.log('✅ [EVOLUTION-API] Resposta do backend:', data)
       return data
     } catch (error: unknown) {
-      console.error('❌ Erro ao enviar campanha ao backend:', error)
+      console.error('❌ [EVOLUTION-API] Erro ao enviar campanha ao backend:', error)
       const errorMessage = error instanceof Error ? error.message : String(error)
       return { success: false, error: errorMessage || 'Erro desconhecido' }
     }
@@ -56,8 +62,11 @@ export class EvolutionApiService {
   static async createInstanceAndQRCode(instanceName: string, userName?: string): Promise<EvolutionInstance> {
     try {
       console.log('🔄 Criando instância:', instanceName);
+      console.log('🌐 BACKEND_URL:', BACKEND_URL);
       
-      const response = await fetch(`${BACKEND_URL}/api/create-instance-and-qrcode`, {
+      const url = BACKEND_URL ? `${BACKEND_URL}/api/create-instance-and-qrcode` : '/api/create-instance-and-qrcode';
+      console.log('🔗 URL completa:', url);
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,22 +95,106 @@ export class EvolutionApiService {
   }
 
   /**
-   * Busca o QR Code de uma instância específica
-   * @param instanceName Nome da instância
-   * @returns Dados do QR Code
+   * Deleta uma instância da Evolution API
+   * @param instanceName Nome da instância a ser deletada
+   * @returns Resultado da operação
    */
-  static async getQRCode(instanceName: string): Promise<{
+  static async deleteInstance(instanceName: string): Promise<{ success: boolean; message: string }> {
+    try {
+      console.log('🗑️ [EVOLUTION-API] Deletando instância:', instanceName);
+      
+      const response = await fetch(`${BACKEND_URL}/api/delete-instance/${instanceName}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao deletar instância');
+      }
+
+      const data = await response.json();
+      console.log('✅ [EVOLUTION-API] Instância deletada com sucesso:', data);
+      
+      return {
+        success: true,
+        message: data.message || 'Instância deletada com sucesso'
+      };
+    } catch (error) {
+      console.error('❌ [EVOLUTION-API] Erro ao deletar instância:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtém informações sobre a Evolution API
+   * Baseado na documentação: https://doc.evolution-api.com/v1/api-reference/get-information
+   * @returns Informações da API
+   */
+  static async getApiInfo(): Promise<{
+    status: number;
+    message: string;
+    version: string;
+    swagger: string;
+    manager: string;
+    documentation: string;
+  }> {
+    try {
+      console.log('🔍 [EVOLUTION-API] Obtendo informações da API...');
+      
+      const response = await fetch(`${BACKEND_URL}/api/evolution/info`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao obter informações da Evolution API');
+      }
+
+      const data = await response.json();
+      console.log('📊 [EVOLUTION-API] Informações obtidas:', data);
+      
+      return data;
+    } catch (error) {
+      console.error('❌ Erro ao obter informações da Evolution API:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Busca o QR Code de uma instância específica
+   * Baseado na documentação: https://doc.evolution-api.com/v1/api-reference/instance-controller/instance-connect
+   * @param instanceName Nome da instância
+   * @param phoneNumber Número de telefone opcional (com código do país)
+   * @returns Dados do QR Code e código de pareamento
+   */
+  static async getQRCode(instanceName: string, phoneNumber?: string): Promise<{
     success: boolean;
     instanceName: string;
     qrCodeBase64: string | null;
     pairingCode: string | null;
     hasQRCode: boolean;
+    hasPairingCode: boolean;
+    count: number;
+    phoneNumber: string | null;
     message: string;
   }> {
     try {
       console.log('🔍 Buscando QR Code para instância:', instanceName);
       
-      const response = await fetch(`${BACKEND_URL}/api/qrcode/${instanceName}`, {
+      // Construir URL baseada no endpoint do backend
+      // Endpoint correto do backend: /api/qrcode/{instanceName}
+      let url = `${BACKEND_URL}/api/qrcode/${instanceName}`;
+      if (phoneNumber) {
+        url += `?number=${encodeURIComponent(phoneNumber)}`;
+        console.log('📞 Conectando com número específico:', phoneNumber);
+      }
+      
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -116,10 +209,158 @@ export class EvolutionApiService {
       const data = await response.json();
       console.log('📱 Resposta do QR Code:', data);
       
-      return data;
+      // Estruturar resposta baseada na documentação oficial da Evolution API
+      // Documentação: https://doc.evolution-api.com/v1/api-reference/instance-controller/instance-connect
+      console.log('📋 [EVOLUTION-API] Resposta completa da API:', data);
+      
+      // Processar código de pareamento - baseado na documentação oficial
+      let simplePairingCode = null;
+      if (data.pairingCode) {
+        console.log('🔑 [EVOLUTION-API] Código de pareamento recebido:', data.pairingCode);
+        
+        // Se o pairingCode é um código longo, tentar extrair um código simples
+        if (data.pairingCode.length > 8) {
+          // Método 1: Tentar extrair código de 8 caracteres alfanuméricos consecutivos
+          const match = data.pairingCode.match(/[A-Z0-9]{8}/);
+          if (match) {
+            simplePairingCode = match[0];
+            console.log('🔑 [EVOLUTION-API] Código extraído (método 1):', simplePairingCode);
+          } else {
+            // Método 2: Extrair os primeiros 8 caracteres alfanuméricos válidos
+            const validChars = data.pairingCode.replace(/[^A-Z0-9]/g, '').substring(0, 8);
+            if (validChars.length >= 8) {
+              simplePairingCode = validChars;
+              console.log('🔑 [EVOLUTION-API] Código extraído (método 2):', simplePairingCode);
+            } else {
+              // Método 3: Tentar extrair código de 6-8 caracteres se disponível
+              const shortMatch = data.pairingCode.match(/[A-Z0-9]{6,8}/);
+              if (shortMatch) {
+                simplePairingCode = shortMatch[0];
+                console.log('🔑 [EVOLUTION-API] Código extraído (método 3):', simplePairingCode);
+              } else {
+                console.log('⚠️ [EVOLUTION-API] Não foi possível extrair código válido do pairingCode');
+                simplePairingCode = null;
+              }
+            }
+          }
+        } else {
+          // Se já é um código curto, usar diretamente
+          simplePairingCode = data.pairingCode;
+          console.log('🔑 [EVOLUTION-API] Código já é válido:', simplePairingCode);
+        }
+      }
+      
+      // Log final para debug
+      if (data.pairingCode && data.pairingCode !== simplePairingCode) {
+        console.log('🔑 [EVOLUTION-API] Código original:', data.pairingCode);
+        console.log('🔑 [EVOLUTION-API] Código processado:', simplePairingCode);
+      }
+      
+      return {
+        success: true,
+        instanceName,
+        qrCodeBase64: data.code || data.qrCodeBase64 || null,
+        pairingCode: simplePairingCode,
+        hasQRCode: !!(data.code || data.qrCodeBase64),
+        hasPairingCode: !!simplePairingCode,
+        count: data.count || 1,
+        phoneNumber: phoneNumber || null,
+        message: data.message || 'QR Code gerado com sucesso'
+      };
     } catch (error) {
       console.error('❌ Erro ao buscar QR Code:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Configura webhooks para uma instância
+   * Baseado na documentação: https://doc.evolution-api.com/v1/api-reference/webhook-controller/set-webhook
+   * @param instanceName Nome da instância
+   * @param webhookUrl URL do webhook
+   * @returns Resultado da configuração
+   */
+  static async setWebhook(instanceName: string, webhookUrl: string): Promise<{ success: boolean; message: string }> {
+    try {
+      console.log('🔗 [EVOLUTION-API] Configurando webhook para instância:', instanceName);
+      
+      const payload = {
+        url: webhookUrl,
+        webhook_by_events: false,
+        webhook_base64: false,
+        events: [
+          "QRCODE_UPDATED",
+          "CONNECTION_UPDATE",
+          "MESSAGES_UPSERT",
+          "MESSAGES_UPDATE"
+        ]
+      };
+      
+      const response = await fetch(`${BACKEND_URL}/api/webhook/instance/${instanceName}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao configurar webhook');
+      }
+
+      const data = await response.json();
+      console.log('✅ [EVOLUTION-API] Webhook configurado com sucesso:', data);
+      
+      return {
+        success: true,
+        message: data.message || 'Webhook configurado com sucesso'
+      };
+    } catch (error) {
+      console.error('❌ [EVOLUTION-API] Erro ao configurar webhook:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Verifica se a Evolution API está funcionando
+   * Baseado na documentação: https://doc.evolution-api.com/v1/api-reference/get-information
+   * @returns Status da API
+   */
+  static async checkApiHealth(): Promise<{
+    isHealthy: boolean;
+    version?: string;
+    message?: string;
+    error?: string;
+  }> {
+    try {
+      console.log('🏥 [EVOLUTION-API] Verificando saúde da API...');
+      
+      const response = await fetch(`${BACKEND_URL}/api/evolution/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`API não está respondendo: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ [EVOLUTION-API] API está funcionando:', data);
+      
+      return {
+        isHealthy: true,
+        version: data.version,
+        message: data.message
+      };
+    } catch (error) {
+      console.error('❌ [EVOLUTION-API] API não está funcionando:', error);
+      return {
+        isHealthy: false,
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
+      };
     }
   }
 
@@ -158,32 +399,6 @@ export class EvolutionApiService {
     }
   }
 
-  /**
-   * Deleta uma instância (opcional - para limpeza)
-   * @param instanceName Nome da instância
-   */
-  static async deleteInstance(instanceName: string): Promise<void> {
-    try {
-      console.log('🔄 Deletando instância:', instanceName);
-      
-      const response = await fetch(`${BACKEND_URL}/api/delete-instance/${instanceName}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao deletar instância');
-      }
-
-      console.log('✅ Instância deletada com sucesso');
-    } catch (error) {
-      console.error('❌ Erro ao deletar instância:', error);
-      throw error;
-    }
-  }
 
   /**
    * Verifica se o backend está funcionando
@@ -250,34 +465,68 @@ export class EvolutionApiService {
   ): () => void {
     let isPolling = true;
     let currentState: string | null = null;
+    let stateChangeCount = 0;
+    let lastStateChangeTime = Date.now();
+    const maxStateChanges = 10; // Máximo de mudanças de estado
+    const maxTimeInLoop = 60000; // 1 minuto máximo em loop
 
     const poll = async () => {
-      if (!isPolling) return;
+      if (!isPolling) {
+        console.log('🛑 [POLLING] Polling parado, não continuando...');
+        return;
+      }
 
       try {
+        console.log('🔄 [POLLING] Verificando estado da instância:', instanceName);
         const state = await this.getConnectionState(instanceName);
+        console.log('📊 [POLLING] Estado atual:', state);
         
         // Só chama o callback se o estado mudou
         if (state.state !== currentState) {
+          console.log('🔄 [POLLING] Estado mudou de', currentState, 'para', state.state);
           currentState = state.state;
+          stateChangeCount++;
+          lastStateChangeTime = Date.now();
+          
+          // Detectar loop infinito
+          if (stateChangeCount >= maxStateChanges) {
+            console.log('⚠️ [POLLING] Muitas mudanças de estado detectadas, possível loop infinito');
+            const timeInLoop = Date.now() - lastStateChangeTime;
+            if (timeInLoop > maxTimeInLoop) {
+              console.log('❌ [POLLING] Loop infinito detectado, parando polling');
+              isPolling = false;
+              onStateChange({
+                instanceName,
+                state: 'error',
+                message: 'Loop infinito detectado. Tente recriar a instância.'
+              });
+              return;
+            }
+          }
+          
           onStateChange(state);
+        } else {
+          console.log('⏸️ [POLLING] Estado não mudou, continuando...');
         }
 
         // Para o polling se a conexão foi estabelecida
         if (state.state === 'open') {
+          console.log('✅ [POLLING] Conexão estabelecida, parando polling...');
           isPolling = false;
           return;
         }
 
         // Continua o polling
         if (isPolling) {
+          console.log('⏰ [POLLING] Agendando próxima verificação em', interval, 'ms...');
           setTimeout(poll, interval);
         }
       } catch (error) {
-        console.error('❌ Erro no polling:', error);
+        console.error('❌ [POLLING] Erro no polling:', error);
         
         // Continua o polling mesmo com erro
         if (isPolling) {
+          console.log('🔄 [POLLING] Continuando polling mesmo com erro...');
           setTimeout(poll, interval);
         }
       }

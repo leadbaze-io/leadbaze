@@ -1,0 +1,119 @@
+/* WhatsAppConnection.css - Estilos customizados para o código de pareamento */
+
+/* Container do código de pareamento - Modo Claro */
+.pairing-code-container {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
+  border: 2px solid #22c55e;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 400px;
+  margin: 0 auto 24px auto; /* Adiciona margem inferior de 24px */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Container do código de pareamento - Modo Escuro */
+.dark .pairing-code-container {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  border: 2px solid #10b981;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  margin: 0 auto 24px auto; /* Adiciona margem inferior de 24px */
+}
+
+/* Título do código de pareamento - Modo Claro */
+.pairing-code-title {
+  color: #166534;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Título do código de pareamento - Modo Escuro */
+.dark .pairing-code-title {
+  color: #6ee7b7;
+}
+
+/* Container do código - Modo Claro */
+.pairing-code-box {
+  background: #ffffff;
+  border: 2px solid #22c55e;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+/* Container do código - Modo Escuro */
+.dark .pairing-code-box {
+  background: #1f2937;
+  border: 2px solid #10b981;
+}
+
+/* Texto do código - Modo Claro */
+.pairing-code-text {
+  color: #15803d;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+/* Texto do código - Modo Escuro */
+.dark .pairing-code-text {
+  color: #6ee7b7;
+}
+
+/* Instrução - Modo Claro */
+.pairing-code-instruction {
+  color: #16a34a;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* Instrução - Modo Escuro */
+.dark .pairing-code-instruction {
+  color: #34d399;
+}
+
+/* Ícone pulsante - Modo Claro */
+.pairing-code-icon {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  animation: pulse-green 2s infinite;
+}
+
+/* Ícone pulsante - Modo Escuro */
+.dark .pairing-code-icon {
+  background-color: #10b981;
+}
+
+/* Animação de pulso personalizada */
+@keyframes pulse-green {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .pairing-code-container {
+    padding: 12px;
+    margin: 0 8px 32px 8px; /* Adiciona margem inferior maior no mobile */
+  }
+  
+  .pairing-code-text {
+    font-size: 12px;
+  }
+  
+  .pairing-code-title {
+    font-size: 14px;
+  }
+}

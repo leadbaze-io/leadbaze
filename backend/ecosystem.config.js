@@ -14,7 +14,7 @@ module.exports = {
       EVOLUTION_API_URL: 'https://n8n-evolution.kof6cn.easypanel.host',
       EVOLUTION_API_KEY: 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O',
       // CORS Configuration
-      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
+      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5175,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       // Security
       API_SECRET: 'your-secret-key-here',
       // N8N Webhook Configuration
@@ -40,7 +40,7 @@ module.exports = {
       EVOLUTION_API_URL: 'https://n8n-evolution.kof6cn.easypanel.host',
       EVOLUTION_API_KEY: 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O',
       // CORS Configuration
-      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
+      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5175,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
       // Security
       API_SECRET: 'your-secret-key-here',
       // N8N Webhook Configuration

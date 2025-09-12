@@ -8,6 +8,7 @@ import MagicPricingPlans from '../components/MagicPricingPlans'
 import MagicFAQ from '../components/MagicFAQ'
 import Footer from '../components/Footer'
 import MobileLandingPage from './MobileLandingPage'
+import ScrollToTopButton from '../components/ScrollToTopButton'
 
 export default function LandingPage() {
   return (
@@ -44,6 +45,9 @@ export default function LandingPage() {
         {/* Footer */}
         <Footer />
       </div>
+      
+      {/* Botão Voltar ao Topo */}
+      <ScrollToTopButton />
     </div>
   )
 }

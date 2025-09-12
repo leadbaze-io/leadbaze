@@ -173,3 +173,11 @@ checkSupabaseTables()
     console.error('❌ Erro na verificação:', error);
     process.exit(1);
   });
+
+
+
+
+
+
+
+

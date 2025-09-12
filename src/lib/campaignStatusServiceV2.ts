@@ -5,7 +5,7 @@
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://leadbaze.io' 
-  : 'http://localhost:3001';
+  : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
 
 export interface CampaignStatus {
   id: string;
@@ -139,6 +139,18 @@ export class CampaignStatusServiceV2 {
       }
     });
 
+    // Listener para conexão estabelecida
+    eventSource.addEventListener('open', (event) => {
+      console.log('✅ [CampaignStatusServiceV2] Conexão SSE estabelecida:', event);
+    });
+
+    // Listener para erros
+    eventSource.addEventListener('error', (event) => {
+      console.error('❌ [CampaignStatusServiceV2] Erro na conexão SSE:', event);
+      console.log('🔌 [CampaignStatusServiceV2] Fechando conexão SSE devido a erro');
+      eventSource.close();
+    });
+
     // Listener para mensagens genéricas (fallback)
     eventSource.addEventListener('message', (event) => {
       console.log('📨 [CampaignStatusServiceV2] Mensagem genérica recebida:', event);
@@ -151,6 +163,20 @@ export class CampaignStatusServiceV2 {
           console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
           console.log('🔍 [CampaignStatusServiceV2] Callback onProgress é uma função?', typeof onProgress);
           console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onProgress:', data.data);
+          
+          // Verificar se os dados estão no formato correto
+          const progressData = data.data;
+          if (progressData && typeof progressData === 'object') {
+            console.log('📊 [CampaignStatusServiceV2] Dados de progresso válidos:', {
+              campaignId: progressData.campaignId,
+              progress: progressData.progress,
+              leadIndex: progressData.leadIndex,
+              totalLeads: progressData.totalLeads,
+              successCount: progressData.successCount,
+              failedCount: progressData.failedCount
+            });
+          }
+          
           try {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onProgress(data.data)...');
             onProgress(data.data);
@@ -321,9 +347,6 @@ export class CampaignStatusServiceV2 {
     console.log('🔍 [CampaignStatusServiceV2] onProgress é uma função?', typeof onProgress);
     console.log('🔍 [CampaignStatusServiceV2] onComplete é uma função?', typeof onComplete);
     console.log('🔍 [CampaignStatusServiceV2] onStatusUpdate é uma função?', typeof onStatusUpdate);
-    console.log('🔍 [CampaignStatusServiceV2] onProgress:', onProgress);
-    console.log('🔍 [CampaignStatusServiceV2] onComplete:', onComplete);
-    console.log('🔍 [CampaignStatusServiceV2] onStatusUpdate:', onStatusUpdate);
     
     // Tentar SSE primeiro
     try {

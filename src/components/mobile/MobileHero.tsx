@@ -34,12 +34,12 @@ export default function MobileHero() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mb-6"
             >
-              <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
                   Gere mais de 1000 Leads B2B
                 </span>
                 <br />
-                <span className="text-gray-900">
+                <span className="text-gray-900 font-bold">
                   em menos de 7 dias
                 </span>
               </h1>

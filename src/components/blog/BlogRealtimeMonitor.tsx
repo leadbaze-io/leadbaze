@@ -57,7 +57,7 @@ export default function BlogRealtimeMonitor() {
     const interval = setInterval(async () => {
       try {
         // Verificar status do sistema
-        const response = await fetch('https://leadbaze.io/api/blog/auto/status');
+        const response = await fetch('/api/blog/auto/status');
         const data = await response.json();
         
         if (data.success) {
@@ -77,7 +77,7 @@ export default function BlogRealtimeMonitor() {
 
   // Simular recebimento de notificações
   useEffect(() => {
-    const eventSource = new EventSource('https://leadbaze.io/api/blog/auto/events');
+    const eventSource = new EventSource('/api/blog/auto/events');
     
     eventSource.onmessage = (event) => {
       try {
@@ -135,7 +135,7 @@ export default function BlogRealtimeMonitor() {
   const handleForceCheck = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('https://leadbaze.io/api/blog/auto/webhook', {
+      const response = await fetch('/api/blog/auto/webhook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

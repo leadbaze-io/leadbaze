@@ -160,3 +160,11 @@ Após a correção, o fluxo V3 deve:
 5. Verificar logs do backend
 
 Qual solução você quer implementar primeiro?
+
+
+
+
+
+
+
+

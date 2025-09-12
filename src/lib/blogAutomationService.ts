@@ -75,7 +75,7 @@ class BlogAutomationServiceClient {
   private currentUser: { id: string; email: string } | null = null;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io';
+    this.baseUrl = import.meta.env.VITE_BACKEND_URL || (process.env.NODE_ENV === 'production' ? 'https://leadbaze.io' : '');
     
     // Escutar mudanças de autenticação
     supabase.auth.onAuthStateChange((_event, session) => {

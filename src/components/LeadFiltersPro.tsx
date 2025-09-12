@@ -255,7 +255,6 @@ export function LeadFiltersPro({
       {showSelectAllButton && onSelectAll && (
         <div className="flex flex-col items-center space-y-3 mt-4">
           <Button
-            variant="outline"
             size="sm"
             onClick={onSelectAll}
             className="inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
@@ -383,35 +382,31 @@ export function LeadFiltersPro({
                   </Select>
                 </div>
 
-              </div>
-              
-              {/* Leads por Página - Linha Separada */}
-              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t gerador-divisor-claro gerador-divisor-escuro">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 dark:text-indigo-400" />
-                    <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      Leads por Página:
-                    </span>
-                  </div>
+                {/* Leads por Página */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
+                    <Users className="w-4 h-4 mr-2 text-indigo-600 dark:text-indigo-400" />
+                    Leads por Página
+                  </Label>
                   <Select 
                     value={leadsPerPage} 
                     onValueChange={(value) => handleFilterChange(setLeadsPerPage, value)}
                   >
-                    <SelectTrigger className="w-28 sm:w-32 h-10 sm:h-11 text-xs sm:text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200">
-                      <SelectValue />
+                    <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200">
+                      <SelectValue placeholder="Selecionar" />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-                      <SelectItem value="9">9 leads</SelectItem>
-                      <SelectItem value="18">18 leads</SelectItem>
-                      <SelectItem value="27">27 leads</SelectItem>
-                      <SelectItem value="36">36 leads</SelectItem>
-                      <SelectItem value="45">45 leads</SelectItem>
-                      <SelectItem value="54">54 leads</SelectItem>
+                      <SelectItem value="10">10 leads</SelectItem>
+                      <SelectItem value="20">20 leads</SelectItem>
+                      <SelectItem value="30">30 leads</SelectItem>
+                      <SelectItem value="40">40 leads</SelectItem>
+                      <SelectItem value="50">50 leads</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+
               </div>
+              
             </div>
           </motion.div>
         )}

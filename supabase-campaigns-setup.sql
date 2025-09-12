@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS bulk_campaigns (
   name TEXT NOT NULL,
   message TEXT DEFAULT '',
   selected_lists TEXT[] DEFAULT '{}',
+  ignored_lists TEXT[] DEFAULT '{}',
   total_leads INTEGER DEFAULT 0,
   status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'scheduled', 'sending', 'completed', 'failed')),
   scheduled_at TIMESTAMP WITH TIME ZONE,
@@ -66,6 +67,7 @@ COMMENT ON COLUMN bulk_campaigns.user_id IS 'ID do usuário que criou a campanha
 COMMENT ON COLUMN bulk_campaigns.name IS 'Nome da campanha';
 COMMENT ON COLUMN bulk_campaigns.message IS 'Mensagem a ser enviada';
 COMMENT ON COLUMN bulk_campaigns.selected_lists IS 'Array com IDs das listas de leads selecionadas';
+COMMENT ON COLUMN bulk_campaigns.ignored_lists IS 'Array com IDs das listas de leads ignoradas (duplicadas)';
 COMMENT ON COLUMN bulk_campaigns.total_leads IS 'Total de leads na campanha';
 COMMENT ON COLUMN bulk_campaigns.status IS 'Status da campanha: draft, scheduled, sending, completed, failed';
 COMMENT ON COLUMN bulk_campaigns.scheduled_at IS 'Data/hora agendada para envio';

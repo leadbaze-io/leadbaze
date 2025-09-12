@@ -70,10 +70,10 @@ export default function MagicPricing() {
             className="mb-6"
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Cada <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LEAD</span> sai por
+              Cada <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LEAD</span> sai por
               <br />
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                MENOS <span className="text-black">de</span> 30 CENTAVOS
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+                MENOS <span className="text-gray-900 font-bold">de</span> 30 CENTAVOS
               </span>
             </h2>
           </motion.div>
