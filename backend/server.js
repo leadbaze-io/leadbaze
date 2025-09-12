@@ -130,17 +130,14 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-email'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-email', 'x-user-id'],
   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
 }));
 
 // Middleware adicional para lidar com preflight requests
 app.options('*', (req, res) => {
   console.log('🔄 Preflight request recebida para:', req.path);
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-email');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  // Remover headers manuais - o CORS middleware já cuida disso
   res.sendStatus(200);
 });
 
