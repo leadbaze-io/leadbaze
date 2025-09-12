@@ -4,7 +4,7 @@
  */
 
 // Configuração do backend
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? 'https://leadbaze.io' : 'http://localhost:3001');
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io';
 
 export interface EvolutionInstance {
   instanceName: string;

@@ -331,7 +331,7 @@ export default function NewDisparadorMassa() {
       console.log('🌐 [CAMPAIGN-SEND] Enviando via backend (sistema antigo)...')
       
       // Usar o mesmo fluxo do sistema antigo: Frontend → Backend → N8N
-      const backendResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? 'https://leadbaze.io' : 'http://localhost:3001')}/api/dispatch-campaign`, {
+      const backendResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/dispatch-campaign`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -431,7 +431,7 @@ export default function NewDisparadorMassa() {
 
     console.log('📡 [CAMPAIGN-SSE] Conectando ao stream de progresso para campanha:', selectedCampaign.id)
     
-    const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? 'https://leadbaze.io' : 'http://localhost:3001')}/api/campaign/status/stream/${selectedCampaign.id}`)
+    const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/campaign/status/stream/${selectedCampaign.id}`)
     
     eventSource.onopen = () => {
       console.log('✅ [CAMPAIGN-SSE] Conexão estabelecida')
