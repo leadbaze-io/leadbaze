@@ -209,7 +209,6 @@ export default function Footer() {
             <div className="space-y-2">
               <button 
                 onClick={() => {
-                  console.log('🔍 === DEBUG FAQ BUTTON ===');
                   console.log('📍 1. Botão FAQ clicado');
                   
                   // Verificar se o elemento existe
@@ -283,7 +282,6 @@ export default function Footer() {
                     });
                   }
                   
-                  console.log('🔍 === FIM DEBUG FAQ ===');
                 }}
                 className="block text-gray-300 hover:text-white transition-colors text-left w-full"
               >

@@ -25,9 +25,7 @@ export class EvolutionApiService {
    */
   static async dispatchCampaignToWebhook(payload: unknown[]): Promise<{ success: boolean; data?: unknown; error?: string }>{
     try {
-      console.log('🌐 [EVOLUTION-API] Enviando campanha para backend...')
-      console.log('📦 [EVOLUTION-API] Payload:', JSON.stringify(payload, null, 2))
-      console.log('🔗 [EVOLUTION-API] URL:', `${BACKEND_URL}/api/dispatch-campaign`)
+      // Enviando campanha para backend
       
       const response = await fetch(`${BACKEND_URL}/api/dispatch-campaign`, {
         method: 'POST',
@@ -35,8 +33,7 @@ export class EvolutionApiService {
         body: JSON.stringify(payload)
       })
 
-      console.log('📡 [EVOLUTION-API] Status da resposta:', response.status)
-      console.log('📡 [EVOLUTION-API] Headers da resposta:', Object.fromEntries(response.headers.entries()))
+      // Resposta recebida
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -45,7 +42,7 @@ export class EvolutionApiService {
       }
 
       const data = await response.json()
-      console.log('✅ [EVOLUTION-API] Resposta do backend:', data)
+      // Resposta do backend recebida
       return data
     } catch (error: unknown) {
       console.error('❌ [EVOLUTION-API] Erro ao enviar campanha ao backend:', error)

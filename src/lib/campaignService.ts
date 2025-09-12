@@ -88,7 +88,8 @@ export class CampaignService {
         throw error
       }
 
-      console.log('🔍 DEBUG - Campanha atualizada no banco:', {
+      // Campanha atualizada no banco
+      console.log('Campanha atualizada:', {
         id: data?.id,
         totalLeads: data?.total_leads,
         selectedLists: [], // Será carregado da tabela campaign_lists

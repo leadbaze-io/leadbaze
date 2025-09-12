@@ -82,10 +82,6 @@ export class AnalyticsService {
     if (!user) {
       throw new Error('Usuário não autenticado');
     }
-    
-    // LOG TEMPORÁRIO - REMOVER DEPOIS
-    console.log('🔍 [DEBUG] ID do usuário sendo usado:', user.id);
-    console.log('📧 [DEBUG] Email do usuário:', user.email);
       
       return {
       'Content-Type': 'application/json',

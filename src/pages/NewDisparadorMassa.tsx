@@ -239,14 +239,7 @@ export default function NewDisparadorMassa() {
   }
 
   const handleSendCampaign = async (message: string, campaignLeads: any[]) => {
-    console.log('🚀 [CAMPAIGN-SEND] ===== INICIANDO ENVIO DA CAMPANHA =====')
-    console.log('📋 [CAMPAIGN-SEND] Dados recebidos:', {
-      campaignId: selectedCampaign?.id,
-      campaignName: selectedCampaign?.name,
-      messageLength: message?.length,
-      leadsCount: campaignLeads?.length,
-      instanceName: connectedInstance
-    })
+    // Iniciando envio da campanha
 
     if (!selectedCampaign) {
       console.error('❌ [CAMPAIGN-SEND] VALIDAÇÃO FALHOU: Nenhuma campanha selecionada')

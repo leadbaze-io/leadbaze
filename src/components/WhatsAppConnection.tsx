@@ -760,10 +760,8 @@ export default function WhatsAppConnection({
                 <Button
                   onClick={async () => {
                     if (instanceName) {
-                      console.log('🔍 [DEBUG] Verificando status manualmente...');
                       try {
                         const state = await EvolutionApiService.getConnectionState(instanceName);
-                        console.log('📊 [DEBUG] Status atual:', state);
                         setConnectionState(state);
                       } catch (error) {
                         console.error('❌ [DEBUG] Erro ao verificar status:', error);
@@ -780,7 +778,6 @@ export default function WhatsAppConnection({
                 
                 <Button
                   onClick={async () => {
-                    console.log('🔄 [DEBUG] Recriando instância...');
                     try {
                       // Parar polling atual
                       if (stopPollingRef.current) {
