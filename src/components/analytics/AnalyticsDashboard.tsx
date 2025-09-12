@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  TrendingUp, 
   Users, 
   Target,
   Activity, 
@@ -9,7 +8,6 @@ import {
   CheckCircle, 
   Send,
   BarChart3,
-  Download,
   RefreshCw,
   Zap,
   Award,
@@ -172,7 +170,7 @@ export const AnalyticsDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'performance' | 'activity' | 'overview'>('performance');
+  const [activeTab, setActiveTab] = useState<'performance' | 'activity'>('performance');
 
   const loadAnalytics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -180,65 +178,7 @@ export const AnalyticsDashboard: React.FC = () => {
     
     try {
       const data = await AnalyticsService.getAllAnalytics(timeRange);
-      console.log('Analytics data loaded:', data);
-      console.log('Leads over time:', data.leadsOverTime);
-      console.log('Campaigns data:', data.campaigns);
-      console.log('Cache buster - Updated at:', new Date().toISOString());
       setAnalytics(data);
-      
-      // Debug adicional
-      setTimeout(() => {
-        console.log('=== DEBUG GRÁFICOS ===');
-        console.log('Leads data:', data.leadsOverTime?.slice(-7));
-        console.log('Campaigns data:', data.campaigns?.slice(-7));
-        
-        // Verificar se os elementos estão sendo renderizados
-        const leadBars = document.querySelectorAll('[data-debug="lead-bar"]');
-        const campaignBars = document.querySelectorAll('[data-debug="campaign-bar"]');
-        console.log('Lead bars found:', leadBars.length);
-        console.log('Campaign bars found:', campaignBars.length);
-        
-        // Tentar seletores alternativos
-        const allBars = document.querySelectorAll('div[style*="height:"]');
-        console.log('All bars with height style:', allBars.length);
-        
-        // Verificar se estamos na aba correta
-        const overviewTab = document.querySelector('[data-tab="overview"]') as HTMLElement;
-        const performanceTab = document.querySelector('[data-tab="performance"]') as HTMLElement;
-        console.log('Overview tab visible:', overviewTab?.classList.contains('block') || overviewTab?.style.display !== 'none');
-        console.log('Performance tab visible:', performanceTab?.classList.contains('block') || performanceTab?.style.display !== 'none');
-        
-        // Debug adicional dos elementos encontrados
-        if (leadBars.length > 0) {
-          console.log('Lead bars details:');
-          leadBars.forEach((bar, index) => {
-            const element = bar as HTMLElement;
-            console.log(`Lead bar ${index}:`, {
-              date: element.dataset.date,
-              count: element.dataset.count,
-              height: element.dataset.height,
-              styleHeight: element.style.height,
-              styleMinHeight: element.style.minHeight,
-              className: element.className
-            });
-          });
-        }
-        
-        if (campaignBars.length > 0) {
-          console.log('Campaign bars details:');
-          campaignBars.forEach((bar, index) => {
-            const element = bar as HTMLElement;
-            console.log(`Campaign bar ${index}:`, {
-              date: element.dataset.date,
-              messages: element.dataset.messages,
-              height: element.dataset.height,
-              styleHeight: element.style.height,
-              styleMinHeight: element.style.minHeight,
-              className: element.className
-            });
-          });
-        }
-      }, 2000);
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
     } finally {
@@ -255,9 +195,6 @@ export const AnalyticsDashboard: React.FC = () => {
     loadAnalytics(true);
   };
 
-  const handleExport = () => {
-    console.log('Exportando dados...');
-  };
 
   if (loading) {
     return (
@@ -377,12 +314,6 @@ export const AnalyticsDashboard: React.FC = () => {
                 <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${refreshing ? 'animate-spin' : ''}`} />
               </button>
               
-              <button 
-                onClick={handleExport}
-                className="px-2 sm:px-4 py-1 sm:py-2 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl text-white border border-white/20 hover:bg-white/30 transition-all duration-300"
-              >
-                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-              </button>
             </motion.div>
           </div>
         </div>
@@ -474,26 +405,6 @@ export const AnalyticsDashboard: React.FC = () => {
             )}
           </button>
           
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 ${
-              activeTab === 'overview'
-                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
-                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
-            }`}
-          >
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">Visão Geral</span>
-              <span className="sm:hidden">Geral</span>
-            </div>
-            {activeTab === 'overview' && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
-              />
-            )}
-          </button>
         </nav>
       </motion.div>
 
@@ -679,218 +590,6 @@ export const AnalyticsDashboard: React.FC = () => {
           </motion.div>
         )}
 
-        {activeTab === 'overview' && (
-              <motion.div
-            key="overview"
-            initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-6"
-          >
-            <div className="grid grid-cols-1 gap-4 sm:gap-6">
-              {/* Leads Over Time */}
-              <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl sm:rounded-3xl shadow-lg border p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-bold dashboard-card-title-claro dark:text-foreground">
-                    Leads ao Longo do Tempo
-                  </h3>
-                </div>
-                <div className="h-48 sm:h-64">
-                  {analytics.leadsOverTime && Array.isArray(analytics.leadsOverTime) && analytics.leadsOverTime.length > 0 ? (
-                    <div className="h-full flex flex-col">
-                      {/* Debug info */}
-                      <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded mb-2">
-                        Debug: {analytics.leadsOverTime.slice(-7).length} itens, max: {Math.max(...analytics.leadsOverTime.slice(-7).map((d: any) => d.count || 0))}
-                      </div>
-                      
-                      {/* Gráfico simples com barras */}
-                      <div className="flex-1 flex items-end justify-between space-x-1 p-2 sm:p-4">
-                        {analytics.leadsOverTime.slice(-7).map((item: any, index: number) => {
-                          const maxValue = Math.max(...analytics.leadsOverTime.slice(-7).map((d: any) => d.count || 0));
-                          const height = maxValue > 0 ? ((item.count || 0) / maxValue) * 100 : 0;
-                          const finalHeight = (item.count || 0) > 0 ? Math.max(height, 20) : 0;
-                          
-                          console.log(`Lead ${index}: ${item.date} = ${item.count}, height = ${height}%, finalHeight = ${finalHeight}%`);
-                          console.log(`Bar element:`, {
-                            date: item.date,
-                            count: item.count,
-                            maxValue,
-                            height,
-                            finalHeight,
-                            hasData: (item.count || 0) > 0
-                          });
-                          
-                          return (
-                            <div key={index} className="flex flex-col items-center flex-1">
-                              <div className="w-full h-full flex items-end justify-center">
-                                <div 
-                                  className={`w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-500 ${finalHeight > 0 ? 'min-h-[20px]' : 'h-0'}`}
-                                  style={{ 
-                                    height: `${finalHeight}%`, 
-                                    minHeight: finalHeight > 0 ? '20px' : '0px',
-                                    backgroundColor: finalHeight > 0 ? 'rgb(59 130 246)' : 'transparent'
-                                  }}
-                                  title={`${item.count || 0} leads em ${item.date}`}
-                                  data-debug="lead-bar"
-                                  data-date={item.date}
-                                  data-count={item.count}
-                                  data-height={finalHeight}
-                                />
-                              </div>
-                              <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
-                                {item.date}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      
-                      {/* Legenda */}
-                      <div className="flex justify-between items-center p-4 border-t border-border/50">
-                        <div className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
-                          Últimos 7 dias
-                        </div>
-                        <div className="text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
-                          Total: {analytics.leadsOverTime.reduce((sum: number, item: any) => sum + (item.count || 0), 0)} leads
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-full flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground">
-                      <div className="text-center">
-                        <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Nenhum dado de leads encontrado</p>
-                        <p className="text-xs opacity-75">Crie listas de leads para ver o gráfico</p>
-                        <p className="text-xs opacity-50 mt-2">Debug: {JSON.stringify(analytics.leadsOverTime)}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Performance das Campanhas ao Longo do Tempo */}
-              <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-2xl sm:rounded-3xl shadow-lg border p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
-                    Performance das Campanhas
-                  </h3>
-                </div>
-                <div className="space-y-6">
-
-                  {/* Gráfico de Performance */}
-                  <div className="h-48">
-                    {analytics.campaigns && Array.isArray(analytics.campaigns) && analytics.campaigns.length > 0 ? (
-                      <div className="h-full flex flex-col">
-                        {/* Debug info */}
-                        <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded mb-2">
-                          Debug: {analytics.campaigns.slice(-7).length} itens, max: {Math.max(...analytics.campaigns.slice(-7).map((c: any) => c.success || c.count || 0))}
-                        </div>
-                        
-                        {/* Gráfico de barras para campanhas */}
-                        <div className="flex-1 flex items-end justify-between space-x-1 p-2 sm:p-4">
-                          {analytics.campaigns.slice(-7).map((campaign: any, index: number) => {
-                            const totalMessages = campaign.success || campaign.count || 0;
-                            const maxValue = Math.max(...analytics.campaigns.slice(-7).map((c: any) => c.success || c.count || 0));
-                            const height = maxValue > 0 ? (totalMessages / maxValue) * 100 : 0;
-                            const finalHeight = totalMessages > 0 ? Math.max(height, 20) : 0;
-                            console.log(`Campaign ${index}: ${campaign.date} = ${totalMessages} (success: ${campaign.success}, count: ${campaign.count}), height = ${height}%, finalHeight = ${finalHeight}%`);
-                            console.log(`Campaign bar element:`, {
-                              date: campaign.date,
-                              success: campaign.success,
-                              count: campaign.count,
-                              totalMessages,
-                              maxValue,
-                              height,
-                              finalHeight,
-                              hasData: totalMessages > 0
-                            });
-                            
-                            return (
-                              <div key={index} className="flex flex-col items-center flex-1">
-                                <div className="w-full h-full flex items-end justify-center">
-                                  <div 
-                                    className={`w-full bg-gradient-to-t from-purple-500 to-purple-400 rounded-t-lg transition-all duration-300 hover:from-purple-600 hover:to-purple-500 ${finalHeight > 0 ? 'min-h-[20px]' : 'h-0'}`}
-                                    style={{ 
-                                      height: `${finalHeight}%`, 
-                                      minHeight: finalHeight > 0 ? '20px' : '0px',
-                                      backgroundColor: finalHeight > 0 ? 'rgb(147 51 234)' : 'transparent'
-                                    }}
-                                    title={`${totalMessages} mensagens em ${campaign.date}`}
-                                    data-debug="campaign-bar"
-                                    data-date={campaign.date}
-                                    data-messages={totalMessages}
-                                    data-height={finalHeight}
-                                  />
-                                </div>
-                                <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground mt-1 sm:mt-2 text-center">
-                                  {campaign.date}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        
-                        {/* Legenda */}
-                        <div className="flex justify-between items-center p-2 sm:p-4 border-t border-border/50">
-                          <div className="text-xs sm:text-sm dashboard-card-muted-claro dark:text-muted-foreground">
-                            Últimos 7 dias
-                          </div>
-                          <div className="text-xs sm:text-sm font-semibold dashboard-card-title-claro dark:text-foreground">
-                            Total: {analytics.campaigns.reduce((sum: number, campaign: any) => sum + (campaign.success || campaign.count || 0), 0)} mensagens
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-full flex items-center justify-center dashboard-card-muted-claro dark:text-muted-foreground rounded-2xl bg-muted/30 border-2 border-dashed">
-                        <div className="text-center">
-                          <BarChart3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Nenhuma campanha encontrada</p>
-                          <p className="text-xs opacity-75">Crie campanhas para ver o gráfico</p>
-                          <p className="text-xs opacity-50 mt-2">Debug: {JSON.stringify(analytics.campaigns)}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Estatísticas de Eficiência */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    <div className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-muted/50">
-                      <div className="text-sm sm:text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.performance?.totalMessages > 0 ? 
-                          Math.round((analytics.overview.performance.successMessages || 0) / analytics.overview.performance.totalMessages * 100) : 0
-                        }%
-                      </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Eficiência</div>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-muted/50">
-                      <div className="text-sm sm:text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.campaignStats?.total > 0 ? 
-                          Math.round((analytics.overview.campaignStats.completed || 0) / analytics.overview.campaignStats.total * 100) : 0
-                        }%
-                      </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Taxa Conclusão</div>
-                    </div>
-                    <div className="text-center p-2 sm:p-3 rounded-lg sm:rounded-xl bg-muted/50">
-                      <div className="text-sm sm:text-lg font-bold dashboard-card-title-claro dark:text-foreground">
-                        {analytics.overview.totalLeads > 0 ? 
-                          Math.round((analytics.overview.performance?.totalMessages || 0) / analytics.overview.totalLeads * 100) : 0
-                        }%
-                      </div>
-                      <div className="text-xs dashboard-card-muted-claro dark:text-muted-foreground">Cobertura</div>
-                    </div>
-          </div>
-    </div>
-              </div>
-            </div>
-    </motion.div>
-        )}
       </AnimatePresence>
     </div>
   );

@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { getCurrentUser } from './supabaseClient';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadbaze.io' 
-  : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io';
 
 export interface AnalyticsOverview {
   totalLeads: number;
