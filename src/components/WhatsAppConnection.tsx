@@ -104,10 +104,10 @@ export default function WhatsAppConnection({
                   })
                 } else {
                   // Instância realmente está desconectada
-
+                  console.log('Instância desconectada:', instance.instance_name);
                 }
               } catch (evolutionError) {
-
+                console.error('Erro ao verificar estado da instância:', evolutionError);
               }
             } else if (instance.status === 'qrcode') {
               // Reutilizar instância QR Code existente
@@ -122,11 +122,9 @@ export default function WhatsAppConnection({
               // Buscar QR Code da instância existente
               startQRCodePolling(instance.instance_name)
             }
-          } else {
-
           }
         } catch (error) {
-
+          console.error('Erro ao verificar instâncias:', error);
         }
       }
     }

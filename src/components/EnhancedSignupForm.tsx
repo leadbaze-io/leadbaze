@@ -123,7 +123,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setLoading] = useState(false)
   const [, setVerificationStatus] = useState<Record<string, boolean>>({})
-  const [, setCepData] = useState<any>(null)
+  const [, setCepData] = useState<Record<string, unknown> | null>(null)
 
   const { toast } = useToast()
 
@@ -281,8 +281,8 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         setLoading(false)
         return
       }
-    } catch (validationError: any) {
-
+    } catch (validationError: unknown) {
+      console.error('Erro de validação:', validationError);
       toast({
         title: "⚠️ Erro de Validação",
         description: "Dados inválidos. Verifique os campos obrigatórios.",
@@ -366,7 +366,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
 
         await new Promise(resolve => setTimeout(resolve, 3000)) // Aguardar 3 segundos
         // Criar perfil usando função RPC (bypassa RLS)
-        const { data: profileResult, error: profileError } = await supabase.rpc('create_user_profile', {
+        const { error: profileError } = await supabase.rpc('create_user_profile', {
           p_user_id: authData.user.id,
           p_tax_type: profileData.tax_type,
           p_full_name: profileData.full_name,
@@ -400,7 +400,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             await new Promise(resolve => setTimeout(resolve, 2000))
 
             // Tentar criar o perfil novamente
-            const { data: retryResult, error: retryError } = await supabase.rpc('create_user_profile', {
+            const { error: retryError } = await supabase.rpc('create_user_profile', {
               p_user_id: authData.user.id,
               p_tax_type: profileData.tax_type,
               p_full_name: profileData.full_name,
@@ -465,10 +465,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         })
 
         if (bonusError) {
-
+          console.error('Erro ao criar bonus leads:', bonusError);
           // Não falhar o cadastro por causa disso, apenas logar o erro
         } else {
-
+          console.log('Bonus leads criados com sucesso');
         }
 
         // Verificar se o email foi confirmado para mostrar mensagem apropriada

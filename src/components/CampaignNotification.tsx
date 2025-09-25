@@ -29,7 +29,7 @@ export function CampaignNotification({
   failedCount,
   totalLeads,
   onOpenModal,
-  onClose: _onClose
+  onClose
 }: CampaignNotificationProps) {
   const [isVisible, setIsVisible] = useState(true)
 

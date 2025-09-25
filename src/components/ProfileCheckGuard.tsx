@@ -46,7 +46,7 @@ export const ProfileCheckGuard: React.FC<ProfileCheckGuardProps> = ({
     )
   }
 
-  // Se está criando perfil
+  // Se está criando perfil (desabilitado temporariamente)
   if (false) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

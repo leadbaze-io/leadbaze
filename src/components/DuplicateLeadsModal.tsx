@@ -47,7 +47,7 @@ export default function DuplicateLeadsModal({
     if (isOpen && duplicateLeads.length > 0) {
       loadDuplicateDetails()
     }
-  }, [isOpen, duplicateLeads])
+  }, [isOpen, duplicateLeads, loadDuplicateDetails])
 
   const loadDuplicateDetails = async () => {
     setLoading(true)
@@ -72,7 +72,7 @@ export default function DuplicateLeadsModal({
       )
       setDuplicateDetails(details)
     } catch (error) {
-
+      console.error('Erro ao carregar detalhes dos duplicados:', error);
     } finally {
       setLoading(false)
     }

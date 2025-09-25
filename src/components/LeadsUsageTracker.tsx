@@ -44,7 +44,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
 
       setUsageHistory(data || []);
     } catch (error) {
-
+      console.error('Erro ao carregar histórico de uso:', error);
     } finally {
       setIsLoading(false);
     }

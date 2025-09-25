@@ -59,7 +59,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
       onSuccess?.();
 
     } else {
-
+      console.error('Falha no cancelamento:', result);
     }
 
   };
