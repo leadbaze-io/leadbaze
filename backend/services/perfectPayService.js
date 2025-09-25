@@ -92,8 +92,8 @@ class PerfectPayService {
       };
 
 
-      // 5. Criar link real via API Perfect Pay
-      const checkoutUrl = await this.createRealCheckoutLink(checkoutData, externalReference);
+      // 5. Usar link fixo do Perfect Pay (já configurado com valores de teste)
+      const checkoutUrl = this.getPerfectPayLink(planId);
 
 
       return {
@@ -829,6 +829,22 @@ class PerfectPayService {
     }
   }
 
+  /**
+   * Obter link fixo do Perfect Pay baseado no plano
+   */
+  getPerfectPayLink(planId) {
+    // Mapear UUID do plano para link fixo
+    const planLinkMap = {
+      '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'https://go.perfectpay.com.br/PPU38CQ17OO', // Start
+      'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'https://go.perfectpay.com.br/PPU38CQ18H5', // Scale
+      'a961e361-75d0-40cf-9461-62a7802a1948': 'https://go.perfectpay.com.br/PPU38CQ18H6'  // Enterprise
+    };
+    
+    const link = planLinkMap[planId] || 'https://go.perfectpay.com.br/PPU38CQ17OO'; // Default: Start
+    console.log(`🔗 [PerfectPay] Usando link fixo: ${link}`);
+    return link;
+  }
+
   // ==========================================
   // MÉTODOS DE CHECKOUT REAL
   // ==========================================
@@ -840,14 +856,15 @@ class PerfectPayService {
     try {
       console.log('🔗 [PerfectPay] Criando checkout real via API...');
 
-      // Mapear UUID do plano para código Perfect Pay correto
+      // Mapear UUID do plano para código Perfect Pay correto (VALORES DE TESTE)
       const planUuidMap = {
-        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCL', // Start
-        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGGM', // Scale
-        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGGN'  // Enterprise
+        '460a8b88-f828-4b18-9d42-4b8ad5333d61': { code: 'PPLQQNGCL', price: 5.00 }, // Start
+        'e9004fad-85ab-41b8-9416-477e41e8bcc9': { code: 'PPLQQNGGM', price: 5.00 }, // Scale
+        'a961e361-75d0-40cf-9461-62a7802a1948': { code: 'PPLQQNGGN', price: 5.00 }  // Enterprise
       };
       
-      const perfectPayPlanCode = planUuidMap[checkoutData.plan_id] || 'PPLQQNGCL';
+      const planData = planUuidMap[checkoutData.plan_id] || { code: 'PPLQQNGCL', price: 5.00 };
+      const perfectPayPlanCode = planData.code;
       
       // Preparar dados para API Perfect Pay (conforme documentação oficial)
       const apiData = {
@@ -866,8 +883,9 @@ class PerfectPayService {
 
       console.log('📤 [PerfectPay] Enviando dados para API:', {
         external_reference: externalReference,
-        amount: checkoutData.amount,
-        plan: checkoutData.plan_name
+        amount: planData.price, // Usar valor de teste
+        plan: checkoutData.plan_name,
+        perfect_pay_code: perfectPayPlanCode
       });
 
       // Chamar API real do Perfect Pay (conforme documentação)

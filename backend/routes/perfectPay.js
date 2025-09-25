@@ -472,19 +472,9 @@ router.post('/upgrade', async (req, res) => {
       });
     }
 
-    // Criar checkout real para upgrade (como primeira assinatura)
-    const checkoutData = {
-      plan_id: newPlanId,
-      plan_name: newPlan.display_name,
-      amount: newPrice / 100,
-      customer_email: "user@example.com", // Será preenchido pelo frontend
-      customer_name: "User" // Será preenchido pelo frontend
-    };
-
+    // Usar link fixo do Perfect Pay (já configurado com valores de teste)
+    const checkoutUrl = perfectPayService.getPerfectPayLink(newPlanId);
     const externalReference = `upgrade_${userId}_${newPlanId}_${Date.now()}`;
-    
-    // Criar link de checkout real
-    const checkoutUrl = await perfectPayService.createRealCheckoutLink(checkoutData, externalReference);
     
     res.json({
       success: true,
