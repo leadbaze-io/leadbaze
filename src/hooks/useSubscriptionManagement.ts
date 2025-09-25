@@ -29,19 +29,17 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
   // Processar cancelamento de assinatura
   const processRefund = useCallback(async (subscriptionData: any) => {
     try {
-      const { subscription_id, price_monthly, leads_used, leads_limit, mercado_pago_payment_id } = subscriptionData;
-      
-      if (!mercado_pago_payment_id) {
-        console.warn('Payment ID não encontrado, pulando reembolso');
-        return;
-      }
-
       // Refund automático desabilitado - usando Perfect Pay
       console.log('ℹ️ [Cancelamento] Refund automático desabilitado - usando Perfect Pay');
       console.log('ℹ️ [Cancelamento] Para reembolsos, entre em contato com o suporte');
       
       // Simular resposta de sucesso para não quebrar o fluxo
-      const refundData = { success: true, message: 'Cancelamento processado via Perfect Pay' };
+      const refundData = { 
+        success: true, 
+        message: 'Cancelamento processado via Perfect Pay',
+        amount: 0,
+        refundPercentage: 0
+      };
       
       if (refundData.success) {
         console.log('✅ Reembolso processado:', refundData);
