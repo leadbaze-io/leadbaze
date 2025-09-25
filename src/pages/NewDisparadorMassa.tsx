@@ -216,7 +216,7 @@ export default function NewDisparadorMassa() {
     setCurrentState('campaigns')
   }
 
-  const handleConnectionError = (error: string) => {
+  const handleConnectionError = (_error: string) => {
 
     setConnectedInstance(null)
     setWhatsappConfig(null)
@@ -290,13 +290,10 @@ export default function NewDisparadorMassa() {
       ]
 
       // Log detalhado dos números normalizados
-
       campaignLeads.forEach((lead, index) => {
         const originalPhone = lead.phone
         const normalizedPhone = normalizePhoneNumber(lead.phone)
-
-      })
-        } : null
+        console.log(`Lead ${index + 1}: ${originalPhone} → ${normalizedPhone}`)
       })
 
       console.log('🌐 [CAMPAIGN-SEND] Enviando via backend (sistema antigo)...')
@@ -315,7 +312,7 @@ export default function NewDisparadorMassa() {
         throw new Error(`Backend retornou erro: ${backendResponse.status} - ${errorText}`)
       }
 
-      const backendData = await backendResponse.json()
+      await backendResponse.json()
       // Armazenar leads da campanha no estado
       setCampaignLeads(campaignLeads)
 
@@ -452,7 +449,7 @@ export default function NewDisparadorMassa() {
       }
     }
 
-    eventSource.onerror = (error) => {
+    eventSource.onerror = (_error) => {
 
     }
 

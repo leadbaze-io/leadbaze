@@ -25,7 +25,7 @@ export class AuthWebhookService {
   /**
    * Log de eventos de autenticação para auditoria
    */
-  static async logAuthEvent(event: AuthEvent): Promise<void> {
+  static async logAuthEvent(_event: AuthEvent): Promise<void> {
     try {
 
       // Aqui você pode adicionar logs para banco de dados, analytics, etc.

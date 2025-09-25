@@ -46,7 +46,7 @@ export const useRealtimeSubscription = () => {
 
         },
 
-        (payload) => {
+        (_payload) => {
 
           // Atualizar após um pequeno delay para garantir que o banco foi atualizado
 
@@ -96,7 +96,7 @@ export const useRealtimeSubscription = () => {
 
         },
 
-        (payload) => {
+        (_payload) => {
 
           // Atualizar após um pequeno delay
 

@@ -427,7 +427,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     try {
 
       // Atualizar apenas o nome da campanha
-      const result = await campaignHook.updateCampaign({
+      await campaignHook.updateCampaign({
         name: campaignName,
         message: campaignMessage
       })
@@ -585,7 +585,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             campaignLeads={campaignLeads}
             onSendCampaign={handleSendCampaign}
             onRemoveLead={handleRemoveLead}
-            onStatsUpdate={(newStats) => {
+            onStatsUpdate={(_newStats) => {
               // Atualizar estatísticas se necessário
 
             }}

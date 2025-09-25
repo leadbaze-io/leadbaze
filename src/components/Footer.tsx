@@ -242,7 +242,7 @@ export default function Footer() {
                     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
                     // Verificar se o elemento está visível
-                    const rect = faqSection.getBoundingClientRect();
+                    faqSection.getBoundingClientRect();
                     // Tentar scroll
 
                     try {
@@ -276,14 +276,14 @@ export default function Footer() {
                     // Procurar por elementos similares
                     const allSections = document.querySelectorAll('section');
 
-                    allSections.forEach((section, index) => {
+                    allSections.forEach((_section, _index) => {
 
                     });
 
                     // Procurar por elementos com "faq" no ID ou classe
                     const faqElements = document.querySelectorAll('[id*="faq"], [class*="faq"]');
 
-                    faqElements.forEach((el, index) => {
+                    faqElements.forEach((_el, _index) => {
 
                     });
                   }

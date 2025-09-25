@@ -23,19 +23,19 @@ export class WhatsAppInstanceService {
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single()
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        throw error
+      if (error) {
+        console.error('Erro ao buscar instância do usuário:', error)
+        return null
       }
 
       // Se a instância está marcada como "connected", manter como connected
       // A conexão permanece ativa até o usuário desconectar manualmente
       // Não há timeout automático
 
-      return data
+      return data && data.length > 0 ? data[0] : null
     } catch (error) {
-
+      console.error('Erro inesperado ao buscar instância:', error)
       return null
     }
   }

@@ -132,12 +132,12 @@ export class CampaignStatusServiceV2 {
     });
 
     // Listener para conexão estabelecida
-    eventSource.addEventListener('open', (event) => {
+    eventSource.addEventListener('open', (_event) => {
 
     });
 
     // Listener para erros
-    eventSource.addEventListener('error', (event) => {
+    eventSource.addEventListener('error', (_event) => {
 
       eventSource.close();
     });
@@ -189,7 +189,7 @@ export class CampaignStatusServiceV2 {
     });
 
     // Listener para erros
-    eventSource.addEventListener('error', (event) => {
+    eventSource.addEventListener('error', (_event) => {
       console.error('❌ [CampaignStatusServiceV2] Timestamp do erro:', new Date().toISOString());
     });
 

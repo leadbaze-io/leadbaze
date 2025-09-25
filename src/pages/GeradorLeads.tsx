@@ -42,7 +42,7 @@ export default function GeradorLeads() {
     initializePage()
   }, [navigate])
 
-  const handleLeadsGenerated = (leads: Lead[]) => {
+  const handleLeadsGenerated = (_leads: Lead[]) => {
 
     // Callback quando leads são gerados - pode ser usado para analytics, etc.
   }

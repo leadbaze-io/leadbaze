@@ -138,7 +138,7 @@ export const useSmartSubscription = () => {
           table: 'leads_usage_history',
           filter: `subscription_id=eq.${subscription.id}`
         },
-        async (payload) => {
+        async (_payload) => {
 
           await updateWithAnimation();
         }
@@ -166,7 +166,7 @@ export const useSmartSubscription = () => {
 
   // Escutar evento customizado de atualização de leads
   useEffect(() => {
-    const handleLeadsUpdated = (event: CustomEvent) => {
+    const handleLeadsUpdated = (_event: CustomEvent) => {
 
       updateWithAnimation();
     };

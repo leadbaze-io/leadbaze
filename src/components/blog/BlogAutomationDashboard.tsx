@@ -120,13 +120,13 @@ const BlogAutomationDashboard: React.FC = () => {
   useEffect(() => {
     if (!isAuthorized) return;
 
-    const queueSubscription = blogAutomationService.subscribeToQueueChanges((payload) => {
+    const queueSubscription = blogAutomationService.subscribeToQueueChanges((_payload) => {
 
       loadQueue(); // Recarregar fila
       loadStats(); // Recarregar estatísticas
     });
 
-    const postsSubscription = blogAutomationService.subscribeToNewPosts((payload) => {
+    const postsSubscription = blogAutomationService.subscribeToNewPosts((_payload) => {
 
       loadStats(); // Recarregar estatísticas
     });

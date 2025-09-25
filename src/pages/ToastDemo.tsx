@@ -36,7 +36,7 @@ export default function ToastDemo() {
 
     // Verificar se o CSS está carregado
     const styleSheets = Array.from(document.styleSheets);
-    const toastCSS = styleSheets.find(sheet => {
+    styleSheets.find(sheet => {
       try {
         return sheet.href && sheet.href.includes('toast-modern');
       } catch (e) {
@@ -58,8 +58,8 @@ export default function ToastDemo() {
 
       return;
     }
-    const computedStyle = window.getComputedStyle(gridElement);
-    const backgroundStyle = window.getComputedStyle(testElement);
+    window.getComputedStyle(gridElement);
+    window.getComputedStyle(testElement);
     // Remover após 5 segundos
     setTimeout(() => {
       if (document.body.contains(testElement)) {

@@ -226,9 +226,6 @@ export class BulkCampaignService {
 
     // Adicionar novos leads se houver leads válidos
     if (validLeads.length > 0) {
-
-      })
-
       const leadRecords = validLeads.map(lead => {
         // Garantir que phoneHash existe, se não, gerar um
         const phoneHash = lead.phoneHash || LeadDeduplicationService.generatePhoneHash(lead.phone || '')
