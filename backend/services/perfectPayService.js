@@ -54,10 +54,35 @@ class PerfectPayService {
   async createCheckoutLink(userId, planId, operationType = 'new') {
     try {
 
-      // 1. Buscar dados do usuário
-      const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(userId);
-      if (userError || !userData.user) {
-        throw new Error(`Usuário não encontrado: ${userError?.message}`);
+      // 1. Buscar dados do usuário (tentar auth primeiro, depois perfil)
+      let userEmail = 'cliente@exemplo.com';
+      let userName = 'Cliente';
+      
+      try {
+        const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(userId);
+        if (!userError && userData?.user) {
+          userEmail = userData.user.email || userEmail;
+          // Usar name do metadata se full_name não estiver disponível
+          userName = userData.user.user_metadata?.full_name || userData.user.user_metadata?.name || userName;
+        }
+      } catch (authError) {
+        console.log('⚠️ [PerfectPay] Não foi possível buscar usuário via auth, usando dados padrão');
+      }
+      
+      // Tentar buscar dados do perfil como fallback
+      try {
+        const { data: profile, error: profileError } = await this.supabase
+          .from('user_profiles')
+          .select('email, full_name')
+          .eq('user_id', userId)
+          .single();
+        
+        if (!profileError && profile) {
+          userEmail = profile.email || userEmail;
+          userName = profile.full_name || userName;
+        }
+      } catch (profileError) {
+        console.log('⚠️ [PerfectPay] Não foi possível buscar perfil, usando dados padrão');
       }
 
       // 2. Buscar dados do plano
@@ -71,14 +96,13 @@ class PerfectPayService {
         throw new Error(`Plano não encontrado: ${planError?.message}`);
       }
 
-
       // 3. Gerar external_reference com tipo de operação
       const externalReference = `${operationType}_${userId}_${planId}_${Date.now()}`;
 
       // 4. Criar dados do checkout
       const checkoutData = {
-        customer_email: userData.user.email,
-        customer_name: userData.user.user_metadata?.full_name || 'Cliente',
+        customer_email: userEmail,
+        customer_name: userName,
         external_reference: externalReference,
         amount: plan.price_cents / 100,
         description: `${plan.display_name} - ${this.getOperationDescription(operationType)}`,
@@ -92,8 +116,20 @@ class PerfectPayService {
       };
 
 
-      // 5. Usar link fixo do Perfect Pay (já configurado com valores de teste)
-      const checkoutUrl = this.getPerfectPayLink(planId);
+      // 5. Usar link fixo do Perfect Pay com parâmetros
+      const baseLink = this.getPerfectPayLink(planId);
+      
+      // Adicionar parâmetros à URL para enviar dados do usuário
+      const params = new URLSearchParams({
+        email: userEmail,
+        external_reference: externalReference,
+        customer_name: userName,
+        notification_url: `${process.env.BACKEND_URL}/api/perfect-pay/webhook`,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`
+      });
+      
+      const checkoutUrl = `${baseLink}?${params.toString()}`;
 
 
       return {
