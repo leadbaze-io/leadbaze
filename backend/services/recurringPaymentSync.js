@@ -253,8 +253,10 @@ class RecurringPaymentSyncService {
       const updateData = {
         status: 'cancelled',
         cancelled_at: perfectPaySub.canceled_date || new Date().toISOString(),
-        cancel_reason: `Sincronizado com Perfect Pay: ${perfectPaySub.subscription_status_detail}`,
-        updated_at: new Date().toISOString()
+        cancellation_reason: `Sincronizado com Perfect Pay: ${perfectPaySub.subscription_status_detail}`,
+        updated_at: new Date().toISOString(),
+        perfect_pay_cancelled: true,
+        requires_manual_cancellation: false // Já foi cancelado no Perfect Pay
       };
       
       const { error } = await this.supabase

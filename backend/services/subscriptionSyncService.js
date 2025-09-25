@@ -366,20 +366,24 @@ class SubscriptionSyncService {
         updated_at: new Date().toISOString()
       };
       
-      // Se foi cancelada, adicionar data de cancelamento
+      // Se foi cancelada, adicionar data de cancelamento e novas colunas
       if (newStatus === 'cancelled' && perfectPaySub.canceled_date) {
         updateData.cancelled_at = perfectPaySub.canceled_date;
-        updateData.cancel_reason = 'Sincronizado com Perfect Pay';
+        updateData.cancellation_reason = 'Sincronizado com Perfect Pay';
+        updateData.perfect_pay_cancelled = true;
+        updateData.requires_manual_cancellation = false; // Já foi cancelado no Perfect Pay
       }
       
-      // Se foi reativada, remover data de cancelamento
+      // Se foi reativada, remover data de cancelamento e resetar novas colunas
       if (newStatus === 'active' && localSub.cancelled_at) {
         updateData.cancelled_at = null;
-        updateData.cancel_reason = null;
+        updateData.cancellation_reason = null;
+        updateData.perfect_pay_cancelled = false;
+        updateData.requires_manual_cancellation = false;
       }
       
       const { error } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .update(updateData)
         .eq('id', localSub.id);
         
@@ -405,7 +409,7 @@ class SubscriptionSyncService {
       
       // Buscar assinatura local
       const { data: localSub, error: localError } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .select('*')
         .eq('user_id', (await this.supabase.auth.admin.listUsers()).data.users.find(u => u.email === customerEmail)?.id)
         .single();
