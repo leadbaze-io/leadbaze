@@ -226,7 +226,23 @@ class PerfectPayService {
       }
       
       userId = user.id;
-      planId = '1'; // Assumir plano Start por padrão
+      
+      // Tentar determinar o plano pelo código do plano no webhook
+      const planCode = webhookData.plan?.code;
+      if (planCode) {
+        // Mapear código do plano para UUID interno
+        const planUuidMap = {
+          'PPLQQNGCL': '460a8b88-f828-4b18-9d42-4b8ad5333d61', // Start
+          'PPLQQNGGM': 'e9004fad-85ab-41b8-9416-477e41e8bcc9', // Scale
+          'PPLQQNGGN': 'a961e361-75d0-40cf-9461-62a7802a1948'  // Enterprise
+        };
+        planId = planUuidMap[planCode];
+        console.log(`✅ [PerfectPay] Plano determinado pelo código: ${planCode} -> ${planId}`);
+      } else {
+        planId = '460a8b88-f828-4b18-9d42-4b8ad5333d61'; // Assumir plano Start por padrão
+        console.log('⚠️ [PerfectPay] Código do plano não encontrado, usando Start como padrão');
+      }
+      
       operationType = 'new'; // Assumir nova assinatura por padrão
       
       console.log(`✅ [PerfectPay] Usuário encontrado por email: ${userId} (${customerEmail})`);
@@ -300,16 +316,39 @@ class PerfectPayService {
       const nextMonth = new Date(currentDate);
       nextMonth.setMonth(nextMonth.getMonth() + 1);
 
+      // Buscar dados do novo plano se fornecidos
+      let newPlanData = null;
+      if (planId && planId !== existingSubscription.plan_id) {
+        const { data: newPlan, error: planError } = await this.supabase
+          .from('payment_plans')
+          .select('id, name, display_name, price_cents, leads_included')
+          .eq('id', planId)
+          .single();
+        
+        if (!planError && newPlan) {
+          newPlanData = newPlan;
+          console.log(`🔄 [PerfectPay] Detectada mudança de plano: ${existingSubscription.payment_plans?.display_name || 'N/A'} -> ${newPlan.display_name}`);
+        }
+      }
+
+      // Preparar dados de atualização
+      const updateData = {
+        current_period_start: currentDate.toISOString(),
+        current_period_end: nextMonth.toISOString(),
+        leads_balance: newPlanData ? newPlanData.leads_included : existingSubscription.payment_plans.leads_included,
+        perfect_pay_transaction_id: webhookData.transaction_id || webhookData.code,
+        updated_at: currentDate.toISOString()
+      };
+
+      // Se há mudança de plano, atualizar o plan_id também
+      if (newPlanData) {
+        updateData.plan_id = planId;
+      }
+
       // Atualizar assinatura existente
       const { data: updatedSubscription, error: updateError } = await this.supabase
         .from('user_payment_subscriptions')
-        .update({
-          current_period_start: currentDate.toISOString(),
-          current_period_end: nextMonth.toISOString(),
-          leads_balance: existingSubscription.payment_plans.leads_included, // Resetar leads
-          perfect_pay_transaction_id: webhookData.transaction_id || webhookData.id,
-          updated_at: currentDate.toISOString()
-        })
+        .update(updateData)
         .eq('id', existingSubscription.id)
         .select()
         .single();
@@ -319,21 +358,26 @@ class PerfectPayService {
       }
 
       // Log da atividade
+      const finalPlanData = newPlanData || existingSubscription.payment_plans;
       await this.logSubscriptionActivity(userId, 'renewal', {
-        plan_name: existingSubscription.payment_plans.display_name,
+        plan_name: finalPlanData.display_name,
         new_period_start: currentDate.toISOString(),
         new_period_end: nextMonth.toISOString(),
-        leads_reset: existingSubscription.payment_plans.leads_included
+        leads_reset: finalPlanData.leads_included
       });
 
-      console.log(`✅ [PerfectPay] Assinatura renovada! Novo período: ${currentDate.toLocaleDateString('pt-BR')} até ${nextMonth.toLocaleDateString('pt-BR')}`);
+      const renewalMessage = newPlanData 
+        ? `Assinatura renovada e atualizada para ${finalPlanData.display_name}!`
+        : 'Assinatura renovada com sucesso!';
+      
+      console.log(`✅ [PerfectPay] ${renewalMessage} Novo período: ${currentDate.toLocaleDateString('pt-BR')} até ${nextMonth.toLocaleDateString('pt-BR')}`);
       
       return {
         processed: true,
         subscription: updatedSubscription,
-        leads_remaining: existingSubscription.payment_plans.leads_included,
+        leads_remaining: finalPlanData.leads_included,
         access_until: nextMonth.toISOString(),
-        message: 'Assinatura renovada com sucesso'
+        message: renewalMessage
       };
 
     } catch (error) {
@@ -1250,7 +1294,7 @@ class PerfectPayService {
       }
 
       // 2. Verificar se tem valor válido (maior que 0)
-      const amount = webhookData.amount || webhookData.value || webhookData.subscription_amount;
+      const amount = webhookData.amount || webhookData.value || webhookData.subscription_amount || webhookData.sale_amount;
       if (!amount || amount <= 0) {
         console.log('⚠️ [PerfectPay] Valor inválido:', amount);
         return false;
@@ -1263,9 +1307,9 @@ class PerfectPayService {
         return false;
       }
 
-      // 4. Verificar se tem dados de produto válidos
-      if (!webhookData.product || !webhookData.product.external_reference) {
-        console.log('⚠️ [PerfectPay] Dados de produto inválidos');
+      // 4. Verificar se tem dados de produto válidos (produto ou plano)
+      if (!webhookData.product && !webhookData.plan) {
+        console.log('⚠️ [PerfectPay] Dados de produto/plano inválidos');
         return false;
       }
 

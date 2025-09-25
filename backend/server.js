@@ -54,14 +54,10 @@ const captureWebhook = (req, res, next) => {
     }
   }
 
-  console.log('📡 [Webhook Monitor] ===== WEBHOOK CAPTURADO =====');
-  console.log('📡 [Webhook Monitor] Timestamp:', webhookData.timestamp);
-  console.log('📡 [Webhook Monitor] Method:', webhookData.method);
-  console.log('📡 [Webhook Monitor] Path:', webhookData.path);
-  console.log('📡 [Webhook Monitor] IP:', webhookData.ip);
-  console.log('📡 [Webhook Monitor] User-Agent:', webhookData.userAgent);
-  console.log('📡 [Webhook Monitor] Body:', webhookData.body);
-  console.log('📡 [Webhook Monitor] ================================');
+  // Log apenas webhooks importantes (POST/PUT/DELETE)
+  if (['POST', 'PUT', 'DELETE'].includes(webhookData.method)) {
+    console.log('📡 [Webhook Monitor]', webhookData.method, webhookData.path, '- IP:', webhookData.ip);
+  }
 
   next();
 };
@@ -163,11 +159,8 @@ console.log('🔧 CORS Origins configuradas:', corsOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log('🌐 Origin da requisição:', origin);
-    
     // Durante desenvolvimento, permitir todas as origens
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ [DEV] Origin permitida (modo desenvolvimento):', origin);
       return callback(null, true);
     }
     
@@ -238,11 +231,11 @@ const evolutionHeaders = {
   'apikey': EVOLUTION_API_KEY
 };
 
-// Middleware de logging para debug
+// Middleware de logging para debug (apenas para métodos importantes)
 app.use((req, res, next) => {
-  console.log(`🌐 [Request] ${new Date().toISOString()} - ${req.method} ${req.path}`);
-  console.log(`🌐 [Request] Headers:`, req.headers);
-  console.log(`🌐 [Request] Body:`, req.body);
+  if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
+    console.log(`🌐 [Request] ${new Date().toISOString()} - ${req.method} ${req.path}`);
+  }
   next();
 });
 
