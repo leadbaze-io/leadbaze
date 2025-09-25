@@ -28,7 +28,6 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
 
   const {
     cancelSubscription,
-    downgradeSubscription,
     getDowngradePlans,
     isLoading
   } = useSubscriptionManagement();
@@ -69,17 +68,11 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   };
 
 
+  // Função de downgrade removida - não suportada pela API do Perfect Pay
+  // Usuário deve cancelar assinatura atual e assinar novo plano
   const handleDowngrade = async () => {
-    if (!selectedPlan) return;
-    
-    const result = await downgradeSubscription(selectedPlan.id, downgradeReason);
-    if (result?.success) {
-      setShowDowngradeModal(false);
-      setSelectedPlan(null);
-      setDowngradeReason('');
-      refetch();
-      onSuccess?.();
-    }
+    console.log('⚠️ Downgrade não é suportado. Usuário deve cancelar e reassinar.');
+    // TODO: Implementar fluxo de cancelamento + nova assinatura se necessário
   };
 
 
