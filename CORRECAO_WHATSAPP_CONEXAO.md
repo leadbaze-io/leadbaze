@@ -126,3 +126,18 @@ else if (instance.status === 'qrcode') {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

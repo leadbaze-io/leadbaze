@@ -91,3 +91,18 @@ N8N_WEBHOOK_URL=https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2df
 3. 🔄 Fazer push para GitHub
 4. 🚀 Deploy no Servla
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

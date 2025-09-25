@@ -19,6 +19,14 @@ export class BulkCampaignService {
     currentLeads: any[]
   ): Promise<BulkOperationResult> {
     try {
+      // Validar campaignId
+      if (!campaignId || campaignId.trim() === '') {
+        return {
+          success: false,
+          message: 'ID da campanha é obrigatório'
+        }
+      }
+
       // Adicionando todas as listas
 
       if (availableLists.length === 0) {
@@ -74,6 +82,14 @@ export class BulkCampaignService {
     currentIgnoredLists: string[]
   ): Promise<BulkOperationResult> {
     try {
+      // Validar campaignId
+      if (!campaignId || campaignId.trim() === '') {
+        return {
+          success: false,
+          message: 'ID da campanha é obrigatório'
+        }
+      }
+
       // Removendo todas as listas
 
       // Salvar no banco - remover todas as listas de uma vez

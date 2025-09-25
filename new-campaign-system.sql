@@ -238,3 +238,18 @@ CREATE POLICY "Users can delete their own campaign lists" ON campaign_lists
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

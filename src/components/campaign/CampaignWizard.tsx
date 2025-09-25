@@ -29,6 +29,7 @@ interface CampaignWizardProps {
   onBack: () => void
   onSendCampaign: (message: string, leads: CampaignLead[]) => void
   onStepChange?: (step: WizardStep) => void
+  onCampaignCreated?: (campaign: BulkCampaign) => void
 }
 
 type WizardStep = 'lists' | 'message' | 'review'
@@ -39,7 +40,8 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   whatsappConfig,
   connectedInstance,
   onSendCampaign,
-  onStepChange
+  onStepChange,
+  onCampaignCreated
 }) => {
   // Estado do wizard
   const [currentStep, setCurrentStep] = useState<WizardStep>('lists')
@@ -349,6 +351,12 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       return
     }
 
+    // Prevenir múltiplas execuções simultâneas
+    if (loading) {
+      console.log('⚠️ Salvamento já em andamento, ignorando clique duplo')
+      return
+    }
+
     setLoading(true)
     try {
       if (campaign) {
@@ -383,7 +391,12 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         }
       } else {
         // Criar nova campanha
-        await campaignHook.createCampaign(campaignName, campaignMessage)
+        const newCampaign = await campaignHook.createCampaign(campaignName, campaignMessage)
+        
+        // Notificar o componente pai sobre a campanha criada
+        if (onCampaignCreated && newCampaign) {
+          onCampaignCreated(newCampaign)
+        }
         
         // Nota: Leads e listas serão salvos automaticamente via useEffect
         // quando o usuário selecionar listas na próxima etapa
@@ -565,6 +578,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             onBulkOperationComplete={handleBulkOperationComplete}
             campaignId={campaign?.id || ''}
             loading={loading}
+            disabled={!campaign?.id}
           />
         )
       

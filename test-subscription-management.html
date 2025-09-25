@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Gerenciamento de Assinaturas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-button.danger {
+            background: #dc3545;
+        }
+        .test-button.danger:hover {
+            background: #c82333;
+        }
+        .test-button.success {
+            background: #28a745;
+        }
+        .test-button.success:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste - Sistema de Gerenciamento de Assinaturas</h1>
+    
+    <div class="test-section">
+        <h2>📋 Status da Assinatura</h2>
+        <button class="test-button" onclick="testCurrentSubscription()">Ver Assinatura Atual</button>
+        <div id="current-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>❌ Cancelamento</h2>
+        <button class="test-button danger" onclick="testCancelSubscription()">Cancelar Assinatura</button>
+        <div id="cancel-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 Reativação</h2>
+        <button class="test-button success" onclick="testReactivateSubscription()">Reativar Assinatura</button>
+        <div id="reactivate-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📉 Downgrade</h2>
+        <button class="test-button" onclick="testDowngradeSubscription()">Fazer Downgrade</button>
+        <div id="downgrade-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Planos Disponíveis</h2>
+        <button class="test-button" onclick="testAvailablePlans()">Ver Planos</button>
+        <div id="plans-result" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Teste Completo</h2>
+        <button class="test-button" onclick="runCompleteTest()">Executar Todos os Testes</button>
+        <div id="complete-result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api/subscription';
+        const TEST_USER_ID = '5069fa1e-5de4-44f8-9f45-8ef95a57f0b0';
+
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+            element.textContent = message;
+        }
+
+        async function testCurrentSubscription() {
+            try {
+                showResult('current-result', 'Buscando assinatura atual...', 'info');
+                
+                const response = await fetch(`${API_BASE}/current?userId=${TEST_USER_ID}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('current-result', 
+                        `✅ Assinatura encontrada:\n` +
+                        `Plano: ${data.data.plan?.display_name || 'N/A'}\n` +
+                        `Status: ${data.data.status}\n` +
+                        `Leads usados: ${data.data.leads_used}\n` +
+                        `Leads restantes: ${data.data.leads_remaining}\n` +
+                        `Próxima cobrança: ${data.data.current_period_end}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('current-result', `❌ Nenhuma assinatura ativa encontrada`, 'error');
+                }
+            } catch (error) {
+                showResult('current-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCancelSubscription() {
+            try {
+                showResult('cancel-result', 'Cancelando assinatura...', 'info');
+                
+                const response = await fetch(`${API_BASE}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: TEST_USER_ID,
+                        reason: 'Teste de cancelamento via interface'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('cancel-result', 
+                        `✅ Cancelamento realizado:\n` +
+                        `Plano: ${data.plan_name}\n` +
+                        `Dias restantes: ${data.days_remaining}\n` +
+                        `Reembolso: R$ ${data.refund_amount}\n` +
+                        `Leads preservados: ${data.leads_preserved}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('cancel-result', `❌ Erro no cancelamento: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('cancel-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async function testReactivateSubscription() {
+            try {
+                showResult('reactivate-result', 'Reativando assinatura...', 'info');
+                
+                const response = await fetch(`${API_BASE}/reactivate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: TEST_USER_ID
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('reactivate-result', 
+                        `✅ Reativação realizada:\n` +
+                        `Plano: ${data.data.plan_name}\n` +
+                        `Leads restantes: ${data.data.leads_remaining}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('reactivate-result', `❌ Erro na reativação: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('reactivate-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDowngradeSubscription() {
+            try {
+                showResult('downgrade-result', 'Fazendo downgrade...', 'info');
+                
+                // Primeiro buscar planos disponíveis
+                const plansResponse = await fetch(`${API_BASE}/plans?userId=${TEST_USER_ID}`);
+                const plansData = await plansResponse.json();
+                
+                if (!plansData.success || !plansData.data.downgradePlans?.length) {
+                    showResult('downgrade-result', '❌ Nenhum plano para downgrade disponível', 'error');
+                    return;
+                }
+                
+                // Usar o primeiro plano disponível para downgrade
+                const downgradePlan = plansData.data.downgradePlans[0];
+                
+                const response = await fetch(`${API_BASE}/downgrade`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: TEST_USER_ID,
+                        newPlanId: downgradePlan.id,
+                        reason: 'Teste de downgrade via interface'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult('downgrade-result', 
+                        `✅ Downgrade realizado:\n` +
+                        `Plano anterior: ${data.old_plan}\n` +
+                        `Novo plano: ${data.new_plan}\n` +
+                        `Dias restantes: ${data.days_remaining}\n` +
+                        `Crédito: R$ ${data.credit_amount}\n` +
+                        `Novo limite de leads: ${data.new_leads_limit}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('downgrade-result', `❌ Erro no downgrade: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('downgrade-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAvailablePlans() {
+            try {
+                showResult('plans-result', 'Buscando planos...', 'info');
+                
+                const response = await fetch(`${API_BASE}/plans?userId=${TEST_USER_ID}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    let message = '✅ Planos disponíveis:\n\n';
+                    
+                    if (data.data.availablePlans?.length) {
+                        message += '📈 Planos para Upgrade:\n';
+                        data.data.availablePlans.forEach(plan => {
+                            message += `• ${plan.display_name} - R$ ${plan.price_monthly} (${plan.leads_limit} leads)\n`;
+                        });
+                    }
+                    
+                    if (data.data.downgradePlans?.length) {
+                        message += '\n📉 Planos para Downgrade:\n';
+                        data.data.downgradePlans.forEach(plan => {
+                            message += `• ${plan.display_name} - R$ ${plan.price_monthly} (${plan.leads_limit} leads)\n`;
+                        });
+                    }
+                    
+                    showResult('plans-result', message, 'success');
+                } else {
+                    showResult('plans-result', `❌ Erro ao buscar planos: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult('plans-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async function runCompleteTest() {
+            showResult('complete-result', '🚀 Iniciando teste completo...\n\n', 'info');
+            
+            let results = [];
+            
+            // Teste 1: Status atual
+            try {
+                const response = await fetch(`${API_BASE}/current?userId=${TEST_USER_ID}`);
+                const data = await response.json();
+                results.push(`1. Status: ${data.success ? '✅ OK' : '❌ FALHOU'}`);
+            } catch (error) {
+                results.push(`1. Status: ❌ ERRO - ${error.message}`);
+            }
+            
+            // Teste 2: Planos
+            try {
+                const response = await fetch(`${API_BASE}/plans?userId=${TEST_USER_ID}`);
+                const data = await response.json();
+                results.push(`2. Planos: ${data.success ? '✅ OK' : '❌ FALHOU'}`);
+            } catch (error) {
+                results.push(`2. Planos: ❌ ERRO - ${error.message}`);
+            }
+            
+            // Teste 3: Cancelamento
+            try {
+                const response = await fetch(`${API_BASE}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: TEST_USER_ID,
+                        reason: 'Teste completo'
+                    })
+                });
+                const data = await response.json();
+                results.push(`3. Cancelamento: ${data.success ? '✅ OK' : '❌ FALHOU'}`);
+            } catch (error) {
+                results.push(`3. Cancelamento: ❌ ERRO - ${error.message}`);
+            }
+            
+            // Teste 4: Reativação
+            try {
+                const response = await fetch(`${API_BASE}/reactivate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: TEST_USER_ID
+                    })
+                });
+                const data = await response.json();
+                results.push(`4. Reativação: ${data.success ? '✅ OK' : '❌ FALHOU'}`);
+            } catch (error) {
+                results.push(`4. Reativação: ❌ ERRO - ${error.message}`);
+            }
+            
+            const successCount = results.filter(r => r.includes('✅')).length;
+            const totalCount = results.length;
+            
+            showResult('complete-result', 
+                `🎯 Teste Completo Finalizado!\n\n` +
+                results.join('\n') + 
+                `\n\n📊 Resultado: ${successCount}/${totalCount} testes passaram\n` +
+                `Status: ${successCount === totalCount ? '✅ TODOS OS TESTES PASSARAM!' : '⚠️ ALGUNS TESTES FALHARAM'}`, 
+                successCount === totalCount ? 'success' : 'error'
+            );
+        }
+    </script>
+</body>
+</html>
+
+
+

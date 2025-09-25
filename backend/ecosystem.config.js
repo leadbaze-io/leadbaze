@@ -1,66 +1,25 @@
 module.exports = {
-  apps: [{
-    name: 'leadbaze-backend',
-    script: 'server.js',
-    instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '1G',
-    env_file: './config.env',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3001,
-      // Evolution API Configuration
-      EVOLUTION_API_URL: 'https://n8n-evolution.kof6cn.easypanel.host',
-      EVOLUTION_API_KEY: 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O',
-      // CORS Configuration
-      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5175,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
-      // Security
-      API_SECRET: 'your-secret-key-here',
-      // N8N Webhook Configuration
-      N8N_WEBHOOK_URL: 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae',
-      
-      // Supabase Configuration
-      SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
-      SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',
-      // Blog Automation Settings
-      BLOG_AUTOMATION_ENABLED: 'true',
-      BLOG_AUTOMATION_CRON: '0 9 * * *',
-      BLOG_AUTOMATION_TIMEZONE: 'America/Sao_Paulo',
-      BLOG_AUTOMATION_MAX_RETRIES: '3',
-      BLOG_AUTOMATION_RETRY_DELAY: '5000',
-      // Admin Configuration
-      BLOG_ADMIN_EMAIL: 'creaty12345@gmail.com',
-      EMAIL_HASH_SALT: 'leadflow-blog-automation-2024'
-    },
-    env_production: {
-      NODE_ENV: 'production',
-      PORT: 3001,
-      // Evolution API Configuration
-      EVOLUTION_API_URL: 'https://n8n-evolution.kof6cn.easypanel.host',
-      EVOLUTION_API_KEY: 'qwSYwLlijZOh+FaBHrK0tfGzxG6W/J4O',
-      // CORS Configuration
-      CORS_ORIGIN: 'https://leadbaze.io,https://leadflow-indol.vercel.app,http://localhost:5173,http://localhost:5175,http://localhost:5177,http://localhost:5178,http://localhost:5179,http://localhost:3000',
-      // Security
-      API_SECRET: 'your-secret-key-here',
-      // N8N Webhook Configuration
-      N8N_WEBHOOK_URL: 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae',
-      // Supabase Configuration
-      SUPABASE_URL: 'https://lsvwjyhnnzeewuuuykmb.supabase.co',
-      SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk',
-      // Blog Automation Settings
-      BLOG_AUTOMATION_ENABLED: 'true',
-      BLOG_AUTOMATION_CRON: '0 9 * * *',
-      BLOG_AUTOMATION_TIMEZONE: 'America/Sao_Paulo',
-      BLOG_AUTOMATION_MAX_RETRIES: '3',
-      BLOG_AUTOMATION_RETRY_DELAY: '5000',
-      // Admin Configuration
-      BLOG_ADMIN_EMAIL: 'creaty12345@gmail.com',
-      EMAIL_HASH_SALT: 'leadflow-blog-automation-2024'
-    },
-    error_file: './logs/err.log',
-    out_file: './logs/out.log',
-    log_file: './logs/combined.log',
-    time: true
-  }]
+  apps: [
+    {
+      name: 'leadbaze-backend',
+      script: 'server.js',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env_file: '.env',
+      env: {
+        NODE_ENV: 'development',
+        PORT: 3001
+      },
+      env_production: {
+        NODE_ENV: 'production',
+        PORT: 3001
+      },
+      error_file: './logs/err.log',
+      out_file: './logs/out.log',
+      log_file: './logs/combined.log',
+      time: true
+    }
+  ]
 };

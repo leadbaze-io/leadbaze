@@ -94,3 +94,4 @@ echo "📊 Status do PM2: ssh $SERVLA_USER@$SERVLA_HOST 'pm2 status'"
 echo "📊 Logs: ssh $SERVLA_USER@$SERVLA_HOST 'pm2 logs'"
 echo ""
 echo "✅ Push finalizado em $(date)"
+

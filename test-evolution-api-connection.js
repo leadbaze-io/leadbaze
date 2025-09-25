@@ -97,3 +97,18 @@ testEvolutionApiConnection()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

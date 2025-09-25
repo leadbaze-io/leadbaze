@@ -51,6 +51,9 @@ export interface LeadGenerationResponse {
   processing_time?: number
   error?: string
   demo_mode?: boolean // Indica se está usando dados de demonstração
+  leads_consumed?: number // Quantidade de leads consumidos do saldo
+  leads_remaining?: number // Leads restantes no saldo
+  consumption_success?: boolean // Se o consumo foi bem-sucedido
 }
 
 export interface WhatsAppTemplate {
@@ -85,6 +88,128 @@ export interface UserPreferences {
   default_message_template?: string
   auto_follow_up?: boolean
   follow_up_delay_hours?: number
+  created_at: string
+  updated_at: string
+}
+
+// ==============================================
+// TIPOS PARA PERFIL APRIMORADO
+// ==============================================
+
+export interface UserProfile {
+  id: string
+  user_id: string
+  tax_type: 'pessoa_fisica' | 'pessoa_juridica'
+  
+  // Dados pessoais
+  cpf?: string
+  cnpj?: string
+  full_name: string
+  birth_date?: string
+  rg?: string
+  
+  // Dados da empresa
+  company_name?: string
+  trade_name?: string
+  state_registration?: string
+  municipal_registration?: string
+  
+  // Contato
+  email: string
+  phone: string
+  alternative_phone?: string
+  preferred_contact: 'email' | 'phone' | 'whatsapp'
+  
+  // Endereço
+  billing_street: string
+  billing_number: string
+  billing_complement?: string
+  billing_neighborhood: string
+  billing_city: string
+  billing_state: string
+  billing_zip_code: string
+  billing_country: string
+  
+  // Pagamento
+  accepted_payment_methods: string[]
+  billing_cycle: 'monthly' | 'yearly'
+  auto_renewal: boolean
+  
+  // Dados do cartão
+  card_last4?: string
+  card_brand?: string
+  card_expiry_month?: number
+  card_expiry_year?: number
+  card_holder_name?: string
+  
+  // Status
+  profile_completion_percentage: number
+  is_verified: boolean
+  verification_status: Record<string, any>
+  
+  // Leads bônus
+  bonus_leads?: number
+  bonus_leads_used?: number
+  
+  // Compliance
+  lgpd_consent: boolean
+  lgpd_consent_date?: string
+  lgpd_consent_ip?: string
+  lgpd_consent_user_agent?: string
+  
+  // Metadados
+  created_at: string
+  updated_at: string
+}
+
+export interface UserVerification {
+  id: string
+  user_id: string
+  verification_type: 'cpf' | 'cnpj' | 'phone' | 'email' | 'address' | 'document'
+  verification_method: 'api' | 'sms' | 'email' | 'upload' | 'manual'
+  verification_code?: string
+  verification_token?: string
+  external_id?: string
+  status: 'pending' | 'verified' | 'failed' | 'expired'
+  attempts: number
+  max_attempts: number
+  verification_result?: Record<string, any>
+  error_message?: string
+  verified_at?: string
+  expires_at?: string
+  created_at: string
+}
+
+export interface UserDocument {
+  id: string
+  user_id: string
+  document_type: 'cpf' | 'cnpj' | 'rg' | 'cnh' | 'passport' | 'address_proof' | 'income_proof'
+  document_name: string
+  file_url: string
+  file_size?: number
+  mime_type?: string
+  status: 'pending' | 'approved' | 'rejected' | 'expired'
+  rejection_reason?: string
+  uploaded_at: string
+  reviewed_at?: string
+  expires_at?: string
+}
+
+export interface UserPaymentMethod {
+  id: string
+  user_id: string
+  payment_type: 'credit_card' | 'debit_card' | 'pix' | 'boleto' | 'bank_transfer'
+  is_default: boolean
+  card_token?: string
+  card_last4?: string
+  card_brand?: string
+  card_expiry_month?: number
+  card_expiry_year?: number
+  card_holder_name?: string
+  pix_key?: string
+  pix_type?: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random'
+  is_active: boolean
+  is_verified: boolean
   created_at: string
   updated_at: string
 }

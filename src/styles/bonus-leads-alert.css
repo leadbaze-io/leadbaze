@@ -1,0 +1,284 @@
+/* =====================================================
+   ALERTA DE LEADS BÔNUS - ESTILOS ESPECÍFICOS
+   ===================================================== */
+
+/* Variáveis CSS para temas */
+:root {
+  --bonus-bg-light: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+  --bonus-bg-dark: #374151;
+}
+
+.dark {
+  --bonus-bg: var(--bonus-bg-dark);
+}
+
+:root:not(.dark) {
+  --bonus-bg: var(--bonus-bg-light);
+}
+
+/* Container Principal */
+.bonus-leads-alert {
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 2px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Modo Claro */
+.bonus-leads-alert-light {
+  background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+  border-color: #f97316;
+  color: #9a3412;
+}
+
+/* Modo Escuro - Força o fundo cinza */
+.bonus-leads-alert-dark {
+  background: #374151 !important;
+  border-color: #fb923c !important;
+  color: #fbbf24 !important;
+  position: relative;
+}
+
+/* Remover overlay por enquanto para testar */
+
+/* Header do Alerta */
+.bonus-leads-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.bonus-leads-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Ícone Container */
+.bonus-leads-icon {
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-leads-icon-light {
+  background-color: #fed7aa;
+}
+
+.bonus-leads-icon-dark {
+  background-color: rgba(251, 146, 60, 0.25);
+  border: 1px solid rgba(251, 146, 60, 0.4);
+}
+
+/* Ícone SVG */
+.bonus-leads-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.bonus-leads-icon-light svg {
+  color: #c2410c;
+}
+
+.bonus-leads-icon-dark svg {
+  color: #fbbf24;
+}
+
+/* Textos */
+.bonus-leads-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.bonus-leads-title-light {
+  color: #9a3412;
+}
+
+.bonus-leads-title-dark {
+  color: #fbbf24;
+}
+
+.bonus-leads-description {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.bonus-leads-description-light {
+  color: #c2410c;
+}
+
+.bonus-leads-description-dark {
+  color: #fed7aa;
+}
+
+/* Container de Botões */
+.bonus-leads-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+/* Botão Ajustar Quantidade */
+.bonus-leads-btn-adjust {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-leads-btn-adjust-light {
+  background-color: #ea580c;
+  color: white;
+}
+
+.bonus-leads-btn-adjust-light:hover {
+  background-color: #c2410c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3);
+}
+
+.bonus-leads-btn-adjust-dark {
+  background-color: #f59e0b;
+  color: #1f2937;
+  border: 1px solid #fbbf24;
+}
+
+.bonus-leads-btn-adjust-dark:hover {
+  background-color: #fbbf24;
+  color: #111827;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+}
+
+/* Botão Ver Planos */
+.bonus-leads-btn-plans {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-leads-btn-plans-light {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+}
+
+.bonus-leads-btn-plans-light:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+.bonus-leads-btn-plans-dark {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  border: 1px solid #60a5fa;
+}
+
+.bonus-leads-btn-plans-dark:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+/* Ícones dos botões */
+.bonus-leads-btn-adjust svg,
+.bonus-leads-btn-plans svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .bonus-leads-alert {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .bonus-leads-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .bonus-leads-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+  }
+  
+  .bonus-leads-title {
+    font-size: 18px;
+  }
+  
+  .bonus-leads-description {
+    font-size: 14px;
+  }
+  
+  .bonus-leads-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .bonus-leads-btn-adjust,
+  .bonus-leads-btn-plans {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animações */
+@keyframes bonus-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.bonus-leads-icon {
+  animation: bonus-pulse 2s ease-in-out infinite;
+}
+
+/* Efeito de brilho sutil */
+.bonus-leads-alert::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.bonus-leads-alert:hover::before {
+  left: 100%;
+}

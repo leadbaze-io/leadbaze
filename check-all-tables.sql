@@ -61,3 +61,18 @@ SELECT COUNT(*) as total_campaign_leads FROM campaign_leads;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

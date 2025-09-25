@@ -84,3 +84,18 @@ pm2 logs leadbaze-backend --lines 50
 - Mantenha as chaves em local seguro
 - Rotacione as chaves periodicamente
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

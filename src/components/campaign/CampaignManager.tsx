@@ -11,12 +11,12 @@ import { Plus, Edit, Trash2, Calendar, Megaphone, Users } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { EmptyState } from '../ui/EmptyState'
+import { CreateCampaignModal } from './CreateCampaignModal'
 import { CampaignService } from '../../lib/campaignService'
 import type { BulkCampaign } from '../../types'
 
 interface CampaignManagerProps {
   onEditCampaign: (campaign: BulkCampaign) => void
-  onCreateCampaign: () => void
   onConfigClick?: () => void
   connectedInstance: string | null
   lists?: any[]
@@ -24,7 +24,6 @@ interface CampaignManagerProps {
 
 export const CampaignManager: React.FC<CampaignManagerProps> = ({
   onEditCampaign,
-  onCreateCampaign,
   onConfigClick,
   connectedInstance,
   lists = []
@@ -32,6 +31,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
   const [campaigns, setCampaigns] = useState<BulkCampaign[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   // Carregar campanhas
   useEffect(() => {
@@ -90,12 +90,25 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
     }
   }
 
+  const handleCreateCampaign = () => {
+    setShowCreateModal(true)
+  }
+
+  const handleCampaignCreated = (newCampaign: BulkCampaign) => {
+    setCampaigns(prev => [newCampaign, ...prev])
+    onEditCampaign(newCampaign)
+  }
+
+  const handleCloseModal = () => {
+    setShowCreateModal(false)
+  }
+
   if (loading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 campaign-manager-title-claro campaign-manager-title-escuro">Minhas Campanhas</h1>
-          <Button onClick={onCreateCampaign} disabled>
+          <Button onClick={handleCreateCampaign} disabled>
             <Plus className="w-4 h-4 mr-2" />
             Nova Campanha
           </Button>
@@ -231,7 +244,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
             )}
             
             <Button
-              onClick={onCreateCampaign}
+              onClick={handleCreateCampaign}
               className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-9 sm:h-10 px-3 sm:px-4 text-xs sm:text-sm w-full sm:w-auto"
             >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" style={{transform: 'translateX(-100%)'}}></div>
@@ -253,7 +266,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
           title="Nenhuma campanha encontrada"
           description="Crie sua primeira campanha para começar a disparar mensagens em massa"
           buttonText="Criar Primeira Campanha"
-          onButtonClick={onCreateCampaign}
+          onButtonClick={handleCreateCampaign}
           icon={Megaphone}
           showWhatsAppHint={!connectedInstance}
         />
@@ -351,6 +364,13 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
           </AnimatePresence>
         </div>
       )}
+
+      {/* Modal de Criação de Campanha */}
+      <CreateCampaignModal
+        isOpen={showCreateModal}
+        onClose={handleCloseModal}
+        onCampaignCreated={handleCampaignCreated}
+      />
     </div>
   )
 }

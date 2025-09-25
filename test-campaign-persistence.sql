@@ -39,3 +39,18 @@ WHERE id = 'SEU_CAMPAIGN_ID';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

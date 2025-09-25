@@ -7,3 +7,18 @@ COMMENT ON COLUMN campaigns.duplicates_count IS 'Número de leads duplicados que
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

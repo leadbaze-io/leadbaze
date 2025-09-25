@@ -23,6 +23,15 @@ const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const BlogAutomationDashboard = lazy(() => import('./components/blog/BlogAutomationDashboard'))
 const ModalTestPage = lazy(() => import('./pages/ModalTestPage'))
+const AuthCallback = lazy(() => import('./pages/AuthCallback'))
+const SMTPTestPage = lazy(() => import('./pages/SMTPTestPage'))
+const UserProfile = lazy(() => import('./pages/UserProfile'))
+const PlansPage = lazy(() => import('./pages/PlansPage'))
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'))
+const PaymentFailure = lazy(() => import('./pages/PaymentFailure'))
+const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'))
+const SubscriptionCancel = lazy(() => import('./pages/SubscriptionCancel'))
+const ToastDemo = lazy(() => import('./pages/ToastDemo'))
 
 // Componente principal que gerencia as classes de tema
 function AppContent() {
@@ -71,6 +80,16 @@ function AppContent() {
             <Route path="/blog/sobre" element={<AboutPage />} />
             <Route path="/admin/blog-automation" element={<BlogAutomationDashboard />} />
             <Route path="/test-modals" element={<ModalTestPage />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/test-smtp" element={<SMTPTestPage />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/plans" element={<PlansPage />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/failure" element={<PaymentFailure />} />
+            <Route path="/payment/pending" element={<PaymentSuccess />} />
+            <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+            <Route path="/subscription/cancel" element={<SubscriptionCancel />} />
+            <Route path="/toast-demo" element={<ToastDemo />} />
           </Routes>
         </Suspense>
       </main>

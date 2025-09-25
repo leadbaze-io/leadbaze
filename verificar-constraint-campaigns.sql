@@ -27,3 +27,18 @@ WHERE t.typname LIKE '%status%' OR t.typname LIKE '%campaign%';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

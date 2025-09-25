@@ -1,0 +1,109 @@
+/**
+ * =====================================================
+ * ESTILOS PARA BOTÕES DO GERADOR DE LEADS
+ * =====================================================
+ */
+
+/* Botão Selecionar Todos - Modo Claro */
+html:not(.dark) .gerador-botao-selecionar-todos-claro {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border: 2px solid #3b82f6;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+html:not(.dark) .gerador-botao-selecionar-todos-claro:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+  transform: scale(1.05);
+}
+
+html:not(.dark) .gerador-botao-selecionar-todos-claro:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px -1px rgba(59, 130, 246, 0.3);
+}
+
+/* Botão Selecionar Todos - Modo Escuro */
+html.dark .gerador-botao-selecionar-todos-escuro {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border: 2px solid #3b82f6;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+html.dark .gerador-botao-selecionar-todos-escuro:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+  transform: scale(1.05);
+}
+
+html.dark .gerador-botao-selecionar-todos-escuro:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px -1px rgba(59, 130, 246, 0.3);
+}
+
+/* Botão Desmarcar Todos - Modo Claro */
+html:not(.dark) .gerador-botao-desmarcar-todos-claro {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: 2px solid #ef4444;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+}
+
+html:not(.dark) .gerador-botao-desmarcar-todos-claro:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-color: #dc2626;
+  color: white;
+  box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.4);
+  transform: scale(1.05);
+}
+
+html:not(.dark) .gerador-botao-desmarcar-todos-claro:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px -1px rgba(239, 68, 68, 0.3);
+}
+
+/* Botão Desmarcar Todos - Modo Escuro */
+html.dark .gerador-botao-desmarcar-todos-escuro {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: 2px solid #ef4444;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+}
+
+html.dark .gerador-botao-desmarcar-todos-escuro:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-color: #dc2626;
+  color: white;
+  box-shadow: 0 6px 8px -1px rgba(239, 68, 68, 0.4);
+  transform: scale(1.05);
+}
+
+html.dark .gerador-botao-desmarcar-todos-escuro:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px -1px rgba(239, 68, 68, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .gerador-botao-selecionar-todos-claro,
+  .gerador-botao-selecionar-todos-escuro,
+  .gerador-botao-desmarcar-todos-claro,
+  .gerador-botao-desmarcar-todos-escuro {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    height: 2rem;
+  }
+}
+
+
+
+
+
+
+
+

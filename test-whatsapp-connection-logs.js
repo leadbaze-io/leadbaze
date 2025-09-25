@@ -60,3 +60,18 @@ console.log('6. Execute o script SQL para verificar o banco de dados')
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

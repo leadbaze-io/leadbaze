@@ -3,6 +3,8 @@ import { createPortal } from "react-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import "../styles/lead-generator-buttons.css"
+import { useSubscription } from "../hooks/useSubscription"
 import {
   Form,
   FormControl,
@@ -29,6 +31,7 @@ import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { useToast } from "../hooks/use-toast"
 import { LeadService } from "../lib/leadService"
+import '../styles/toast-modern.css'
 import { Loader2, Search, MapPin, Save, Zap, Target, Users, CheckCircle } from "lucide-react"
 import { Label } from "./ui/label"
 import type { Lead, LeadList } from "../types"
@@ -37,12 +40,17 @@ import SuccessModal from './SuccessModal'
 import { LeadCard } from './LeadCard'
 import { LeadFiltersPro } from './LeadFiltersPro'
 import { StatusIndicator } from './StatusIndicator'
+import { LeadsControlGuard } from './LeadsControlGuard'
+import { SimpleBonusLeadsAlert } from './SimpleBonusLeadsAlert'
+import { useProfileCheck } from '../hooks/useProfileCheck'
+import { supabase } from '../lib/supabaseClient'
 
 const urlFormSchema = z.object({
   searchUrl: z
     .string()
     .url({ message: "Por favor, insira um link de pesquisa válido." })
     .min(1, { message: "O campo não pode estar vazio." }),
+  quantity: z.string().min(1, { message: "Selecione uma quantidade." }),
 })
 
 interface LeadGeneratorProProps {
@@ -52,6 +60,7 @@ interface LeadGeneratorProProps {
 }
 
 export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists = [] }: LeadGeneratorProProps) {
+  const { subscription } = useSubscription()
   const [quantity, setQuantity] = useState("10")
   const [generatedLeads, setGeneratedLeads] = useState<Lead[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -61,6 +70,19 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [selectedListId, setSelectedListId] = useState("")
   const [newListName, setNewListName] = useState("")
   const [isSaving, setIsSaving] = useState(false)
+  const [showQuantityAdjustment, setShowQuantityAdjustment] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  
+  // Buscar usuário atual
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    getUser()
+  }, [])
+  
+  const { profile } = useProfileCheck(user); // Obter dados do perfil do usuário
   
   // Estados para verificação de duplicatas
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
@@ -95,11 +117,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     resolver: zodResolver(urlFormSchema),
     defaultValues: {
       searchUrl: "",
+      quantity: "10",
     },
   })
 
   // Verificar se o formulário está preenchido para ativar o botão
-  const isFormValid = urlForm.watch("searchUrl") && quantity
+  const isFormValid = urlForm.watch("searchUrl") && urlForm.watch("quantity")
 
   // Filtrar leads
   const filteredLeads = generatedLeads.filter(lead => {
@@ -242,7 +265,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         toast({
           title: "🔧 Modo Demonstração Ativado",
           description: "N8N indisponível. Usando dados de exemplo para demonstração.",
-          variant: 'info',
+          variant: 'default',
+          className: 'toast-modern toast-warning'
         })
       }
 
@@ -253,6 +277,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           title: "❌ Erro na Extração",
           description: result.error || "Não foi possível extrair os leads.",
           variant: 'destructive',
+          className: 'toast-modern toast-error'
         })
         return
       }
@@ -263,6 +288,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           title: "🔍 Nenhum Lead Encontrado",
           description: "Sua busca não retornou resultados. Tente um termo ou URL diferente.",
           variant: 'warning',
+          className: 'toast-modern toast-warning'
         })
         return
       }
@@ -283,6 +309,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "🎉 Leads Extraídos com Sucesso!",
         description: `${result.leads.length} leads encontrados. Selecione os que deseja salvar.`,
         variant: 'success',
+        className: 'toast-modern toast-success'
       })
 
       if (onLeadsGenerated) {
@@ -296,6 +323,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "❌ Erro na Extração",
         description: "Ocorreu um erro durante a extração dos leads. Tente novamente.",
         variant: 'destructive',
+        className: 'toast-modern toast-error'
       })
     } finally {
       setIsGenerating(false)
@@ -429,6 +457,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "⚠️ Nenhum Lead Selecionado",
         description: "Selecione pelo menos um lead para salvar.",
         variant: 'warning',
+        className: 'toast-modern toast-warning'
       })
       return
     }
@@ -438,6 +467,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "⚠️ Nome da Lista Obrigatório",
         description: "Digite um nome para a nova lista.",
         variant: 'warning',
+        className: 'toast-modern toast-warning'
       })
       return
     }
@@ -447,6 +477,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "⚠️ Lista Não Selecionada",
         description: "Selecione uma lista para adicionar os leads.",
         variant: 'warning',
+        className: 'toast-modern toast-warning'
       })
       return
     }
@@ -507,6 +538,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         title: "❌ Erro ao Salvar",
         description: "Não foi possível salvar os leads. Tente novamente.",
         variant: 'destructive',
+        className: 'toast-modern toast-error'
       })
     } finally {
       setIsSaving(false)
@@ -515,12 +547,16 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
   const onUrlSubmit = (values: z.infer<typeof urlFormSchema>) => {
     setExtractionStatus('ready') // Reset status before starting
-    handleLeadGeneration(values.searchUrl, parseInt(quantity))
+    handleLeadGeneration(values.searchUrl, parseInt(values.quantity))
   }
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false)
     setSuccessData(null)
+    
+    // Atualizar a página para mostrar o saldo de leads atualizado
+    console.log('🔄 Atualizando página para mostrar saldo de leads atualizado...')
+    window.location.reload()
   }
 
 
@@ -532,6 +568,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     // Fechar modal
     setShowSuccessModal(false)
     setSuccessData(null)
+  }
+
+  // Função para ajustar quantidade quando limite é atingido
+  const handleAdjustQuantity = () => {
+    setShowQuantityAdjustment(true);
   }
 
   // Verificar duplicatas quando lista existente é selecionada
@@ -577,6 +618,30 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           </motion.div>
         </div>
 
+        {/* Aviso quando usuário está ajustando quantidade */}
+        {showQuantityAdjustment && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-6"
+          >
+            <div className="bg-orange-500 text-white rounded-lg p-4 border-2 shadow-lg" style={{ zIndex: 9999 }}>
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                <div>
+                  <h4 className="font-semibold text-sm text-white">
+                    Ajuste a quantidade de leads
+                  </h4>
+                  <p className="text-xs mt-1 text-white">
+                    Selecione uma quantidade menor que seus leads restantes e tente novamente.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Formulário de Extração */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -597,11 +662,154 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
-              <Form {...urlForm}>
-                <form
-                  onSubmit={urlForm.handleSubmit(onUrlSubmit)}
-                  className="space-y-6"
+              {/* Alerta simples para leads bônus - só aparece se NÃO tem assinatura ativa */}
+              {(() => {
+                console.log('🔍 [LeadGeneratorPro] showQuantityAdjustment:', showQuantityAdjustment);
+                console.log('🔍 [LeadGeneratorPro] subscription:', subscription);
+                console.log('🔍 [LeadGeneratorPro] bonus_leads:', (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0));
+                
+                const hasActiveSubscription = subscription && subscription.status === 'active'
+                const hasBonusLeads = (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0) > 0
+                
+                // Só mostra se: não tem assinatura ativa E tem leads bônus E não está ajustando quantidade
+                return !showQuantityAdjustment && !hasActiveSubscription && hasBonusLeads
+              })() && (
+                <SimpleBonusLeadsAlert 
+                  leadsRemaining={(profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0)}
+                  onAdjustQuantity={handleAdjustQuantity}
+                />
+              )}
+              
+              {showQuantityAdjustment ? (
+                // Mostrar formulário diretamente quando ajustando quantidade
+                <div>
+                  <Form {...urlForm}>
+                    <form
+                      onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                      className="space-y-6"
+                      data-lead-form
+                    >
+                    <FormField
+                      control={urlForm.control}
+                      name="searchUrl"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-blue-500" />
+                            Link de Pesquisa do Google Maps
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://www.google.com/maps/search/..."
+                              {...field}
+                              className="gerador-input-claro gerador-input-escuro text-base py-3 px-4"
+                              disabled={isGenerating}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-red-500 text-sm" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={urlForm.control}
+                        name="quantity"
+                        render={({ field }) => (
+                          <FormItem className="space-y-3">
+                            <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                              <Target className="w-4 h-4 text-green-500" />
+                              Quantidade de Leads
+                            </FormLabel>
+                            <Select onValueChange={(value) => {
+                              field.onChange(value);
+                              setQuantity(value);
+                            }} value={field.value || ''} disabled={isGenerating}>
+                              <FormControl>
+                                <SelectTrigger className="gerador-select-claro gerador-select-escuro text-base py-3">
+                                  <SelectValue placeholder="Selecione a quantidade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {(() => {
+                                  const leadsRemaining = (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0);
+                                  const options = [];
+                                  
+                                  if (leadsRemaining <= 0) {
+                                    return [
+                                      <SelectItem key="0" value="0" disabled>
+                                        Sem leads disponíveis
+                                      </SelectItem>
+                                    ];
+                                  }
+                                  
+                                  // Opções inteligentes baseadas nos leads restantes
+                                  if (leadsRemaining >= 1) options.push(1);
+                                  if (leadsRemaining >= 5) options.push(5);
+                                  if (leadsRemaining >= 10) options.push(10);
+                                  if (leadsRemaining >= 15) options.push(15);
+                                  if (leadsRemaining >= 20) options.push(20);
+                                  if (leadsRemaining >= 25) options.push(25);
+                                  if (leadsRemaining >= 30) options.push(30);
+                                  
+                                  // Sempre incluir o valor máximo disponível
+                                  if (leadsRemaining > 30 && !options.includes(leadsRemaining)) {
+                                    options.push(leadsRemaining);
+                                  }
+                                  
+                                  return options.map((num) => (
+                                    <SelectItem key={num} value={num.toString()}>
+                                      {num} lead{num > 1 ? 's' : ''} {num === leadsRemaining ? '(máximo)' : ''}
+                                    </SelectItem>
+                                  ));
+                                })()}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage className="text-red-500 text-sm" />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className="pt-2"
+                    >
+                      <Button
+                        type="submit"
+                        disabled={isGenerating || !urlForm.formState.isValid}
+                        className="w-full gerador-button-claro gerador-button-escuro text-lg font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:scale-100"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Extraindo leads...
+                          </>
+                        ) : (
+                          <>
+                            <Search className="mr-2 h-5 w-5" />
+                            Extrair Leads
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </form>
+                </Form>
+                </div>
+              ) : (
+                <LeadsControlGuard 
+                  leadsToGenerate={parseInt(urlForm.watch("quantity") || "10")}
+                  onAdjustQuantity={handleAdjustQuantity}
+                  forceShowForm={showQuantityAdjustment}
                 >
+                  <Form {...urlForm}>
+                  <form
+                    onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                    className="space-y-6"
+                    data-lead-form
+                  >
                   <FormField
                     control={urlForm.control}
                     name="searchUrl"
@@ -629,9 +837,24 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       <Label className="text-sm sm:text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
                         <Users className="w-4 h-4" />
                         <span>Quantidade de Leads</span>
+                        {showQuantityAdjustment && (
+                          <span className="gerador-adjustment-badge-claro gerador-adjustment-badge-escuro text-xs px-2 py-1 rounded-full font-medium animate-pulse">
+                            Ajuste necessário
+                          </span>
+                        )}
                       </Label>
-                      <Select onValueChange={setQuantity} defaultValue={quantity} disabled={isGenerating}>
-                        <SelectTrigger className="h-10 sm:h-12 border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base">
+                      <Select onValueChange={(value) => {
+                        console.log('🔄 [Select Standalone] Valor alterado para:', value)
+                        setQuantity(value)
+                        urlForm.setValue('quantity', value) // Sincronizar com o formulário
+                        console.log('📝 [Select Standalone] Formulário sincronizado:', urlForm.getValues())
+                        setShowQuantityAdjustment(false) // Reset highlight when user changes
+                      }} defaultValue={quantity} disabled={isGenerating}>
+                        <SelectTrigger className={`h-10 sm:h-12 border-2 text-sm sm:text-base transition-all duration-300 ${
+                          showQuantityAdjustment 
+                            ? 'gerador-adjustment-select-claro gerador-adjustment-select-escuro' 
+                            : 'gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                        }`}>
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                         <SelectContent className="bg-popover border border-border shadow-lg">
@@ -703,7 +926,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </Button>
                   </motion.div>
                 </form>
-              </Form>
+                  </Form>
+                </LeadsControlGuard>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -933,7 +1158,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       variant="outline"
                       size="sm"
                       onClick={toggleSelectAll}
-                      className="inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+                      className={`focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed text-white focus:ring-blue-500 inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 rounded-md px-3 text-xs border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg ${
+                        filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected) 
+                          ? 'gerador-botao-desmarcar-todos-claro gerador-botao-desmarcar-todos-escuro' 
+                          : 'gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro'
+                      }`}
                     >
                       {filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected) ? 'Desmarcar Todos' : 'Selecionar Todos'}
                     </Button>

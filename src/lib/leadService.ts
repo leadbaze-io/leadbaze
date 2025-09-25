@@ -2,12 +2,14 @@ import axios from 'axios'
 import { supabase, getCurrentUser } from './supabaseClient'
 import type { Lead, LeadList, LeadGenerationResponse } from '../types'
 import { generateDemoLeads } from './demoLeads'
+import { LeadsControlService } from '../services/leadsControlService'
 
 const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e'
 
 export class LeadService {
   /**
    * Gera leads a partir de uma URL do Google Maps
+   * Agora integrado com o sistema de controle de leads
    */
   static async generateLeads(searchUrl: string, limit: number = 10): Promise<LeadGenerationResponse> {
     try {
@@ -20,6 +22,14 @@ export class LeadService {
       if (!this.isValidGoogleMapsUrl(searchUrl)) {
         throw new Error('URL do Google Maps inválida')
       }
+
+      // Verificar se o usuário pode gerar leads
+      const availability = await LeadsControlService.checkLeadsAvailability(limit)
+      if (!availability.can_generate) {
+        throw new Error(availability.message)
+      }
+
+      console.log(`🎯 Verificação de leads: ${availability.leads_remaining} disponíveis de ${availability.leads_limit}`)
 
       const response = await axios.post(
         N8N_WEBHOOK_URL,
@@ -131,6 +141,20 @@ export class LeadService {
 
       console.log(`✅ ${normalizedLeads.length} leads normalizados com sucesso`)
 
+      // Consumir leads do saldo do usuário após sucesso da geração
+      const actualLeadsGenerated = normalizedLeads.length
+      const consumeResult = await LeadsControlService.consumeLeads(
+        actualLeadsGenerated, 
+        `lead_generation_from_maps: ${searchUrl}`
+      )
+
+      if (!consumeResult.success) {
+        console.warn('⚠️ Leads gerados mas não foram consumidos do saldo:', consumeResult.message)
+        // Ainda retorna os leads, mas com aviso
+      } else {
+        console.log(`✅ ${actualLeadsGenerated} leads consumidos do saldo. Restantes: ${consumeResult.leads_remaining}`)
+      }
+
       return {
         success: true,
         leads: normalizedLeads,
@@ -138,7 +162,10 @@ export class LeadService {
         search_url: searchUrl,
         location: data?.location || 'Localização detectada',
         search_term: data?.search_term || 'Busca realizada',
-        processing_time: data?.processing_time || 2.0
+        processing_time: data?.processing_time || 2.0,
+        leads_consumed: actualLeadsGenerated,
+        leads_remaining: consumeResult.leads_remaining || 0,
+        consumption_success: consumeResult.success
       }
 
     } catch (error: unknown) {
@@ -163,11 +190,27 @@ export class LeadService {
         // Retornar dados demo em vez de erro
         const demoResult = generateDemoLeads(searchUrl, limit)
         
+        // Consumir leads mesmo em modo demo
+        const actualLeadsGenerated = demoResult.leads.length
+        const consumeResult = await LeadsControlService.consumeLeads(
+          actualLeadsGenerated, 
+          `lead_generation_from_maps_demo: ${searchUrl}`
+        )
+
+        if (!consumeResult.success) {
+          console.warn('⚠️ Leads demo gerados mas não foram consumidos do saldo:', consumeResult.message)
+        } else {
+          console.log(`✅ ${actualLeadsGenerated} leads demo consumidos do saldo. Restantes: ${consumeResult.leads_remaining}`)
+        }
+        
         // Adicionar uma nota sobre ser dados demo
         return {
           ...demoResult,
           demo_mode: true,
-          error: 'Conectado com dados de demonstração. Configure o N8N para dados reais.'
+          error: 'Conectado com dados de demonstração. Configure o N8N para dados reais.',
+          leads_consumed: actualLeadsGenerated,
+          leads_remaining: consumeResult.leads_remaining || 0,
+          consumption_success: consumeResult.success
         }
       }
       

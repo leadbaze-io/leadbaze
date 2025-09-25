@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown } from 'lucide-react'
+import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
 import ThemeToggle from './ThemeToggle'
+import { useSubscription } from '../hooks/useSubscription'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function Navbar() {
@@ -14,12 +15,20 @@ export default function Navbar() {
   const [isPlansSectionActive, setIsPlansSectionActive] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const { subscription, isLoading: subscriptionLoading } = useSubscription()
 
   // Páginas onde o ThemeToggle deve aparecer (APENAS páginas da aplicação)
   // Blog não tem ThemeToggle - sempre modo claro
-  const showThemeToggle = ['/login', '/dashboard', '/gerador', '/disparador', '/disparador-novo'].some(path => 
+  const showThemeToggle = ['/login', '/dashboard', '/profile', '/gerador', '/disparador', '/disparador-novo', '/plans'].some(path => 
     location.pathname.startsWith(path)
   ) || location.pathname.startsWith('/lista/')
+
+  // Verificar se deve mostrar o botão "Assinar Plano"
+  const shouldShowSubscribeButton = user && !subscriptionLoading && (
+    !subscription || 
+    subscription.status === 'cancelled' || 
+    subscription.status === 'expired'
+  )
 
   // Função para verificar se usuário é admin autorizado
   const checkAdminAuthorization = async (userEmail: string | undefined) => {
@@ -74,6 +83,9 @@ const isActiveLink = (path: string) => {
     }
     if (path === '/dashboard') {
       return location.pathname === '/dashboard'
+    }
+    if (path === '/profile') {
+      return location.pathname === '/profile'
     }
     if (path === '/gerador') {
       return location.pathname === '/gerador'
@@ -526,6 +538,20 @@ const isActiveLink = (path: string) => {
                 >
                   Disparador
                 </NavLink>
+                <NavLink 
+                  to="/profile" 
+                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                    isActiveLink('/profile') ? 'text-blue-600 font-semibold' : ''
+                  }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
+                >
+                  Meu Perfil
+                </NavLink>
                 
                 {/* Blog Automation Dashboard - Apenas para admin autorizado */}
                 {isAdminAuthorized && (
@@ -546,6 +572,21 @@ const isActiveLink = (path: string) => {
                       <div className="w-10 h-10" />
                     )}
                   </div>
+                  
+                  {/* Botão Assinar Plano - apenas para usuários sem assinatura ativa */}
+                  {shouldShowSubscribeButton && (
+                    <motion.button
+                      onClick={() => navigate('/plans')}
+                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold transition-all duration-200"
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>Assinar Plano</span>
+                    </motion.button>
+                  )}
+                  
                   <motion.button
                     onClick={handleLogout}
                     className="flex items-center space-x-2 px-3 py-2 text-red-600 hover:text-red-700 transition-colors rounded-lg hover:bg-red-50"
@@ -577,7 +618,7 @@ const isActiveLink = (path: string) => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-3">
+          <div className="md:hidden flex items-center space-x-2">
             <div className="w-10 h-10 flex items-center justify-center">
               {user && showThemeToggle ? (
                 <ThemeToggle />
@@ -585,6 +626,21 @@ const isActiveLink = (path: string) => {
                 <div className="w-10 h-10" />
               )}
             </div>
+            
+            {/* Botão Assinar Plano - Mobile - apenas para usuários sem assinatura ativa */}
+            {shouldShowSubscribeButton && (
+              <motion.button
+                onClick={() => navigate('/plans')}
+                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-sm"
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15 }}
+              >
+                <CreditCard className="w-3 h-3" />
+                <span>Assinar</span>
+              </motion.button>
+            )}
+            
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
@@ -1158,6 +1214,61 @@ const isActiveLink = (path: string) => {
                             />
                           )}
                         </Link>
+
+                        <Link
+                          to="/profile"
+                          className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                            isActiveLink('/profile') 
+                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg' 
+                              : 'hover:bg-gray-50'
+                          }`}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            setTimeout(() => {
+                              window.scrollTo({ top: 0, behavior: 'smooth' })
+                            }, 100)
+                          }}
+                        >
+                          <motion.div
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                              isActiveLink('/profile') 
+                                ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg' 
+                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                            }`}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Users className="w-4 h-4" />
+                          </motion.div>
+                          <div className="flex-1">
+                            <span className={`text-sm font-medium transition-colors ${
+                              isActiveLink('/profile') 
+                                ? 'text-blue-700' 
+                                : 'text-gray-700 group-hover:text-blue-600'
+                            }`}>
+                              Meu Perfil
+                            </span>
+                            {isActiveLink('/profile') && (
+                              <motion.div
+                                className="text-xs text-blue-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                Página atual
+                              </motion.div>
+                            )}
+                          </div>
+                          {isActiveLink('/profile') && (
+                            <motion.div
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                            />
+                          )}
+                        </Link>
+
                       </motion.div>
                     )}
 

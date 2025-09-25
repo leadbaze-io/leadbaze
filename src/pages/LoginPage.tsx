@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Eye, EyeOff, Loader, Mail, Lock, User } from 'lucide-react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { Eye, EyeOff, Loader, Mail, Lock } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import LogoImage from '../components/LogoImage'
 import { useTheme } from '../contexts/ThemeContext'
+import EnhancedSignupForm from '../components/EnhancedSignupForm'
+import '../styles/toast-modern.css'
+import './LoginPage.css'
+
+// Schemas de validação
+const loginSchema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(1, 'Senha é obrigatória')
+})
+
 
 // Tipos para os formulários
-type LoginForm = {
-  email: string
-  password: string
-}
-
-type RegisterForm = {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
-}
+type LoginForm = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -32,14 +34,10 @@ export default function LoginPage() {
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
     reset: resetLogin
-  } = useForm<LoginForm>()
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema)
+  })
 
-  const {
-    register: registerSignup,
-    handleSubmit: handleSignupSubmit,
-    formState: { errors: signupErrors },
-    reset: resetSignup
-  } = useForm<RegisterForm>()
 
   // Forçar modo claro na página de Login
   useEffect(() => {
@@ -88,7 +86,27 @@ export default function LoginPage() {
       })
 
       if (error) {
-        setMessage({ type: 'error', text: error.message })
+        let errorMessage = "Erro ao fazer login. Tente novamente."
+        
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = "Email ou senha incorretos. Verifique os dados e tente novamente."
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = "Email não confirmado. Verifique sua caixa de entrada e clique no link de confirmação."
+        } else if (error.message.includes('Too many requests')) {
+          errorMessage = "Muitas tentativas de login. Aguarde alguns minutos antes de tentar novamente."
+        } else if (error.message.includes('Invalid email')) {
+          errorMessage = "Email inválido. Verifique o formato do email."
+        } else if (error.message.includes('Password should be at least')) {
+          errorMessage = "Senha muito curta. A senha deve ter pelo menos 6 caracteres."
+        } else if (error.message.includes('network')) {
+          errorMessage = "Erro de conexão. Verifique sua internet e tente novamente."
+        } else if (error.message.includes('timeout')) {
+          errorMessage = "Tempo limite excedido. Tente novamente."
+        } else if (error.message) {
+          errorMessage = error.message
+        }
+        
+        setMessage({ type: 'error', text: errorMessage })
       } else if (authData.user) {
         setMessage({ type: 'success', text: 'Login realizado com sucesso! Redirecionando...' })
         // Aguardar um pouco para o listener processar
@@ -100,53 +118,89 @@ export default function LoginPage() {
           }, 100)
         }, 1000)
       }
-    } catch {
-      setMessage({ type: 'error', text: 'Erro interno. Tente novamente.' })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleRegister = async (data: RegisterForm) => {
-    setIsLoading(true)
-    setMessage(null)
-
-    try {
-      const { data: authData, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            name: data.name
-          }
-        }
-      })
-
-      if (error) {
-        setMessage({ type: 'error', text: error.message })
-      } else if (authData.user) {
-        setMessage({ 
-          type: 'success', 
-          text: 'Conta criada com sucesso! Verifique seu email para confirmar.' 
-        })
-        // O redirecionamento será feito pelo listener de sessão
+    } catch (error: any) {
+      console.error('Erro no login:', error)
+      
+      let errorMessage = "Erro interno. Tente novamente."
+      
+      if (error.message && error.message.includes('network')) {
+        errorMessage = "Erro de conexão. Verifique sua internet e tente novamente."
+      } else if (error.message && error.message.includes('timeout')) {
+        errorMessage = "Tempo limite excedido. Tente novamente."
+      } else if (error.message && error.message.includes('fetch')) {
+        errorMessage = "Erro de conexão com o servidor. Tente novamente."
+      } else if (error.message) {
+        errorMessage = error.message
       }
-    } catch {
-      setMessage({ type: 'error', text: 'Erro interno. Tente novamente.' })
+      
+      setMessage({ type: 'error', text: errorMessage })
     } finally {
       setIsLoading(false)
     }
   }
+
 
   const toggleMode = () => {
     setIsLogin(!isLogin)
     setMessage(null)
     resetLogin()
-    resetSignup()
+  }
+
+  const handleEnhancedSignupSuccess = () => {
+    setMessage({ 
+      type: 'success', 
+      text: 'Conta criada com sucesso! Verifique seu email para confirmar.' 
+    })
+    setIsLogin(true)
+  }
+
+  const handleEnhancedSignupError = (error: string) => {
+    setMessage({ 
+      type: 'error', 
+      text: error 
+    })
+  }
+
+  // Se não estiver em modo de login, mostrar o formulário completo
+  if (!isLogin) {
+    return (
+      <div className="login-page-container py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <Link to="/" className="inline-flex justify-center mb-4">
+              <LogoImage className="h-8 w-auto" />
+            </Link>
+            <h1 className="login-title text-3xl font-bold">
+              Crie sua conta no LeadBaze
+            </h1>
+            <p className="login-subtitle mt-2">
+              Preencha seus dados para começar a gerar leads
+            </p>
+          </div>
+          
+          <EnhancedSignupForm
+            onSuccess={handleEnhancedSignupSuccess}
+            onError={handleEnhancedSignupError}
+          />
+          
+          <div className="text-center mt-8">
+            <p className="login-help-text">
+              Já tem uma conta?
+              <button
+                onClick={toggleMode}
+                className="login-link"
+              >
+                Fazer login
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="login-page-container flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
       
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
@@ -155,10 +209,10 @@ export default function LoginPage() {
             <LogoImage className="h-8 w-auto" />
           </Link>
           
-          <h2 className="text-3xl font-bold text-foreground">
+          <h2 className="login-title text-3xl font-bold">
             {isLogin ? 'Faça seu login' : 'Crie sua conta'}
           </h2>
-          <p className="mt-2 text-muted-foreground">
+          <p className="login-subtitle mt-2">
             {isLogin 
               ? 'Acesse sua conta e continue gerando leads' 
               : 'Comece a gerar leads qualificados hoje mesmo'
@@ -167,171 +221,80 @@ export default function LoginPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-card py-8 px-6 shadow-xl rounded-2xl border border-border">
+        <div className="login-form-card py-8 px-6 shadow-xl rounded-2xl">
           {/* Message */}
           {message && (
-            <div className={`mb-6 p-4 rounded-lg ${
+            <div className={`mb-6 ${
               message.type === 'success' 
-                ? 'bg-green-50 text-green-800 border border-green-200' 
-                : 'bg-red-50 text-red-800 border border-red-200'
+                ? 'login-message-success' 
+                : 'login-message-error'
             }`}>
               {message.text}
             </div>
           )}
 
           {/* Login Form */}
-          {isLogin ? (
-            <form onSubmit={handleLoginSubmit(handleLogin)} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerLogin('email')}
-                    type="email"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-                {loginErrors.email && (
-                  <p className="mt-1 text-sm text-red-600">{loginErrors.email.message}</p>
-                )}
+          <form onSubmit={handleLoginSubmit(handleLogin)} className="space-y-6">
+            <div>
+              <label className="login-label block text-sm font-medium mb-2">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                <input
+                  {...registerLogin('email')}
+                  type="email"
+                  className="login-input-with-icon w-full"
+                  placeholder="seu@email.com"
+                />
               </div>
+              {loginErrors.email && (
+                <p className="mt-1 text-sm text-red-600">{loginErrors.email.message}</p>
+              )}
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Senha
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerLogin('password')}
-                    type={showPassword ? 'text' : 'password'}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Sua senha"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {loginErrors.password && (
-                  <p className="mt-1 text-sm text-red-600">{loginErrors.password.message}</p>
-                )}
+            <div>
+              <label className="login-label block text-sm font-medium mb-2">
+                Senha
+              </label>
+              <div className="relative">
+                <Lock className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                <input
+                  {...registerLogin('password')}
+                  type={showPassword ? 'text' : 'password'}
+                  className="login-input-with-icon-button w-full"
+                  placeholder="Sua senha"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="login-icon-button absolute right-3 top-1/2 transform -translate-y-1/2"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
+              {loginErrors.password && (
+                <p className="mt-1 text-sm text-red-600">{loginErrors.password.message}</p>
+              )}
+            </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
-              >
-                {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Entrar</span>}
-              </button>
-            </form>
-          ) : (
-            /* Register Form */
-            <form onSubmit={handleSignupSubmit(handleRegister)} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nome
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerSignup('name')}
-                    type="text"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Seu nome completo"
-                  />
-                </div>
-                {signupErrors.name && (
-                  <p className="mt-1 text-sm text-red-600">{signupErrors.name.message}</p>
-                )}
-              </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="login-button w-full flex items-center justify-center space-x-2"
+            >
+              {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Entrar</span>}
+            </button>
+          </form>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerSignup('email')}
-                    type="email"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-                {signupErrors.email && (
-                  <p className="mt-1 text-sm text-red-600">{signupErrors.email.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Senha
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerSignup('password')}
-                    type={showPassword ? 'text' : 'password'}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Mínimo 6 caracteres"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {signupErrors.password && (
-                  <p className="mt-1 text-sm text-red-600">{signupErrors.password.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmar Senha
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    {...registerSignup('confirmPassword')}
-                    type={showPassword ? 'text' : 'password'}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Confirme sua senha"
-                  />
-                </div>
-                {signupErrors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">{signupErrors.confirmPassword.message}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
-              >
-                {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Criar Conta</span>}
-              </button>
-            </form>
-          )}
 
           {/* Toggle Mode */}
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="login-help-text">
               {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
               <button
                 onClick={toggleMode}
-                className="ml-1 text-blue-600 hover:text-blue-700 font-semibold"
+                className="login-link ml-1"
               >
                 {isLogin ? 'Criar conta' : 'Fazer login'}
               </button>
@@ -343,7 +306,7 @@ export default function LoginPage() {
         <div className="text-center">
           <Link 
             to="/" 
-            className="text-gray-600 hover:text-gray-800 transition-colors"
+            className="login-back-link transition-colors"
           >
             ← Voltar para o início
           </Link>

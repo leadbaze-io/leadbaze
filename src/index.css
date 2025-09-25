@@ -3,6 +3,9 @@
 /* Import blog styles */
 @import './styles/blog.css';
 
+/* Import profile styles */
+@import './styles/profile-modern.css';
+
 /* FORCE ICON COLORS */
 .list-card-icon-selected {
   color: white !important;

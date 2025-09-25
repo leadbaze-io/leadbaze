@@ -163,6 +163,18 @@ export default function Footer() {
                 <>
                   <button 
                     onClick={() => {
+                      handleNavigation('/profile')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }}
+                    className="block text-gray-300 hover:text-white transition-colors text-left w-full"
+                  >
+                    Meu Perfil
+                  </button>
+                  <button 
+                    onClick={() => {
                       handleNavigation('/dashboard')
                       // Scroll para o topo após navegação
                       setTimeout(() => {

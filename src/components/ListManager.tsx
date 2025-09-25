@@ -8,7 +8,6 @@ import {
   Users, 
   Loader, 
   AlertCircle, 
-  MoreVertical,
   Trash2,
   Download,
   Search,
@@ -417,12 +416,6 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
                         )}
                       </div>
                       
-                      {/* Menu de ações */}
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
-                      </div>
                     </div>
 
                     {/* Estatísticas */}

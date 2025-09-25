@@ -20,6 +20,8 @@ import { ListManager } from '../components/ListManager'
 import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard'
 import ScrollToTopButton from '../components/ScrollToTopButton'
 import Footer from '../components/Footer'
+import ProfileCheckGuard from '../components/ProfileCheckGuard'
+import { useSubscription } from '../hooks/useSubscription'
 
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LeadList } from '../types'
@@ -30,6 +32,89 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics'>('overview')
   const navigate = useNavigate()
+  const { subscription, isLoading: subscriptionLoading } = useSubscription()
+
+  // Funções auxiliares para formatação
+  const formatLeads = (count: number) => {
+    return new Intl.NumberFormat('pt-BR').format(count)
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
+
+  const getPlanDisplayName = (subscription: any) => {
+    // Usar plan_display_name se disponível
+    if (subscription?.plan_display_name) {
+      return subscription.plan_display_name
+    }
+    
+    // Fallback para plan_name
+    const planName = subscription?.plan_name || ''
+    switch (planName) {
+      case 'free_trial':
+        return 'Teste Gratuito'
+      case 'start':
+        return 'Plano Start'
+      case 'scale':
+        return 'Plano Scale'
+      case 'enterprise':
+        return 'Plano Enterprise'
+      default:
+        return 'Plano Desconhecido'
+    }
+  }
+
+  const getPlanIcon = (planName: string) => {
+    switch (planName) {
+      case 'free_trial':
+        return <Sparkles className="w-5 h-5 text-blue-300" />
+      case 'start':
+        return <CheckCircle className="w-5 h-5 text-green-300" />
+      case 'scale':
+        return <Crown className="w-5 h-5 text-purple-300" />
+      case 'enterprise':
+        return <Award className="w-5 h-5 text-yellow-300" />
+      default:
+        return <Award className="w-5 h-5 text-gray-300" />
+    }
+  }
+
+  const getStatusColor = (status: string, isFreeTrial: boolean = false) => {
+    if (isFreeTrial) {
+      return 'bg-blue-400'
+    }
+    
+    switch (status) {
+      case 'active':
+        return 'bg-green-400'
+      case 'cancelled':
+        return 'bg-red-400'
+      case 'expired':
+        return 'bg-orange-400'
+      default:
+        return 'bg-gray-400'
+    }
+  }
+
+  const getUsagePercentage = () => {
+    if (!subscription) return 0
+    
+    // Calcular porcentagem baseada no total de leads disponíveis (usados + restantes)
+    const totalLeadsAvailable = subscription.leads_used + subscription.leads_remaining
+    if (totalLeadsAvailable <= 0) return 0
+    
+    return Math.round((subscription.leads_used / totalLeadsAvailable) * 100)
+  }
+
+  const getUsageBarWidth = () => {
+    const percentage = getUsagePercentage()
+    return `${Math.min(percentage, 100)}%`
+  }
 
   useEffect(() => {
     const checkUser = async () => {
@@ -98,9 +183,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro">
-      <div className="py-6 sm:py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ProfileCheckGuard user={user}>
+      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro">
+        <div className="py-6 sm:py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Boas-vindas Redesenhado */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -159,30 +245,80 @@ export default function Dashboard() {
                   
                   {/* Status Card */}
                   <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/30">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                        <span className="text-sm font-semibold text-white">Plano Start</span>
+                    {subscriptionLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader className="w-5 h-5 text-white animate-spin" />
+                        <span className="text-sm text-white/80 ml-2">Carregando...</span>
                       </div>
-                      <Award className="w-5 h-5 text-yellow-300" />
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-white/80">Leads restantes</span>
-                        <span className="text-sm font-bold text-white">1.000</span>
-                      </div>
-                      <div className="w-full bg-white/20 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full w-3/4"></div>
-                      </div>
-                      <div className="flex items-center justify-between text-xs text-white/80 space-x-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></div>
-                          <span>Status: Ativo</span>
+                    ) : subscription ? (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-3 h-3 ${getStatusColor(subscription.status, subscription.is_free_trial)} rounded-full animate-pulse shadow-sm`}></div>
+                            <span className="text-sm font-semibold text-white">
+                              {getPlanDisplayName(subscription)}
+                            </span>
+                          </div>
+                          {getPlanIcon((subscription as any).plan_name || '')}
                         </div>
-                        <span>Renova em 30 dias</span>
-                      </div>
-                    </div>
+                        
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-white/80">Leads restantes</span>
+                            <span className="text-sm font-bold text-white">
+                              {formatLeads(subscription.leads_remaining)}
+                            </span>
+                          </div>
+                          <div className="w-full bg-white/20 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-300"
+                              style={{ width: getUsageBarWidth() }}
+                            ></div>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-white/80 space-x-4">
+                            <div className="flex items-center space-x-2">
+                              <div className={`w-2 h-2 ${getStatusColor(subscription.status)} rounded-full animate-pulse shadow-sm`}></div>
+                              <span>Status: {subscription.status === 'active' ? 'Ativo' : subscription.status === 'cancelled' ? 'Cancelado' : subscription.status}</span>
+                            </div>
+                            <span>
+                              {subscription.is_free_trial 
+                                ? `Expira em ${formatDate(subscription.current_period_end)}`
+                                : subscription.status === 'cancelled' 
+                                  ? `Acesso até ${formatDate(subscription.current_period_end)}`
+                                  : `Renova em ${formatDate(subscription.current_period_end)}`
+                              }
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 bg-gray-400 rounded-full shadow-sm"></div>
+                            <span className="text-sm font-semibold text-white">Sem Assinatura Ativa</span>
+                          </div>
+                          <Award className="w-5 h-5 text-gray-300" />
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-white/80">Leads disponíveis</span>
+                            <span className="text-sm font-bold text-white">0</span>
+                          </div>
+                          <div className="w-full bg-white/20 rounded-full h-2">
+                            <div className="bg-gray-400 h-2 rounded-full w-0"></div>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-white/80 space-x-4">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-gray-400 rounded-full shadow-sm"></div>
+                              <span>Status: Inativo</span>
+                            </div>
+                            <span>Escolha um plano</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               </div>
@@ -465,10 +601,11 @@ export default function Dashboard() {
       </div>
       
       {/* Footer */}
-      <Footer />
-      
-      {/* Botão Voltar ao Topo */}
-      <ScrollToTopButton />
-    </div>
+        <Footer />
+        
+        {/* Botão Voltar ao Topo */}
+        <ScrollToTopButton />
+      </div>
+    </ProfileCheckGuard>
   )
 }

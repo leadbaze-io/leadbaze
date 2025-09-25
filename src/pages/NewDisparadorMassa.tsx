@@ -164,11 +164,6 @@ export default function NewDisparadorMassa() {
   }
 
   // Handlers
-  const handleCreateCampaign = () => {
-    setSelectedCampaign(null)
-    setCurrentState('create')
-  }
-
   const handleEditCampaign = (campaign: Campaign) => {
     setSelectedCampaign(campaign)
     setCurrentState('edit')
@@ -515,7 +510,6 @@ export default function NewDisparadorMassa() {
         return (
           <CampaignManager
             onEditCampaign={handleEditCampaign}
-            onCreateCampaign={handleCreateCampaign}
             onConfigClick={handleConfigClick}
             connectedInstance={connectedInstance}
             lists={lists}
@@ -545,6 +539,7 @@ export default function NewDisparadorMassa() {
             onBack={handleBackToCampaigns}
             onSendCampaign={handleSendCampaign}
             onStepChange={handleWizardStepChange}
+            onCampaignCreated={handleEditCampaign}
           />
         ) : null
       

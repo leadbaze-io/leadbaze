@@ -27,3 +27,18 @@ WHERE table_name = 'bulk_campaigns'
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

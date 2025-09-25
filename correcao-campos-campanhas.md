@@ -122,3 +122,18 @@ console.log('📊 Contadores:', {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

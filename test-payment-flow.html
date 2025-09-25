@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Fluxo de Pagamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste - Fluxo de Pagamento Mercado Pago</h1>
+        
+        <div class="test-section info">
+            <h3>📋 Configuração Atual</h3>
+            <p><strong>auto_return:</strong> 'approved'</p>
+            <p><strong>success_url:</strong> http://localhost:5173/payment/success</p>
+            <p><strong>failure_url:</strong> http://localhost:5173/payment/failure</p>
+            <p><strong>pending_url:</strong> http://localhost:5173/payment/pending</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Teste 1: Criar Pagamento de Teste</h3>
+            <p>Clique para criar um pagamento de teste e verificar se o auto_return funciona:</p>
+            <button onclick="testPayment()">Criar Pagamento Teste</button>
+            <div id="paymentResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Teste 2: Verificar URLs de Retorno</h3>
+            <p>Teste se as páginas de retorno estão funcionando:</p>
+            <button onclick="testSuccessPage()">Testar Página de Sucesso</button>
+            <button onclick="testFailurePage()">Testar Página de Falha</button>
+            <button onclick="testPendingPage()">Testar Página Pendente</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Teste 3: Verificar Parâmetros de Retorno</h3>
+            <p>Verifique se os parâmetros do Mercado Pago estão sendo recebidos:</p>
+            <button onclick="checkUrlParams()">Verificar Parâmetros da URL</button>
+            <div id="urlParams"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🛠️ Debug: Logs do Console</h3>
+            <p>Abra o console do navegador (F12) para ver os logs detalhados.</p>
+        </div>
+    </div>
+
+    <script>
+        async function testPayment() {
+            const resultDiv = document.getElementById('paymentResult');
+            resultDiv.innerHTML = '<p>🔄 Criando pagamento de teste...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        planId: 'test-plan-enterprise',
+                        userId: 'test-user-123',
+                        userEmail: 'teste@exemplo.com',
+                        planName: 'Plano Enterprise Teste',
+                        amount: 997
+                    }),
+                });
+
+                const data = await response.json();
+                console.log('📥 Resposta do pagamento:', data);
+
+                if (data.success && data.data.init_point) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p>✅ Pagamento criado com sucesso!</p>
+                            <p><strong>ID:</strong> ${data.data.id}</p>
+                            <p><strong>URL:</strong> <a href="${data.data.init_point}" target="_blank">${data.data.init_point}</a></p>
+                            <button onclick="window.open('${data.data.init_point}', '_blank')">Abrir Pagamento</button>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p>❌ Erro ao criar pagamento:</p>
+                            <div class="code">${JSON.stringify(data, null, 2)}</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p>❌ Erro de conexão:</p>
+                        <div class="code">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function testSuccessPage() {
+            window.open('http://localhost:5173/payment/success?payment_id=123456&status=approved&external_reference=test_123', '_blank');
+        }
+
+        function testFailurePage() {
+            window.open('http://localhost:5173/payment/failure?payment_id=123456&status=rejected&external_reference=test_123', '_blank');
+        }
+
+        function testPendingPage() {
+            window.open('http://localhost:5173/payment/pending?payment_id=123456&status=pending&external_reference=test_123', '_blank');
+        }
+
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const paramsDiv = document.getElementById('urlParams');
+            
+            if (params.toString()) {
+                let html = '<div class="info"><p>📋 Parâmetros encontrados na URL atual:</p><ul>';
+                for (const [key, value] of params) {
+                    html += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                html += '</ul></div>';
+                paramsDiv.innerHTML = html;
+            } else {
+                paramsDiv.innerHTML = '<div class="info"><p>ℹ️ Nenhum parâmetro encontrado na URL atual.</p></div>';
+            }
+        }
+
+        // Verificar parâmetros ao carregar a página
+        window.onload = function() {
+            checkUrlParams();
+        };
+    </script>
+</body>
+</html>
+
+
+

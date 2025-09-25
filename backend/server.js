@@ -23,9 +23,51 @@ const blogPostsRoutes = require('./routes/blogPosts');
 const { router: autoProcessRoutes } = require('./routes/autoProcess');
 const campaignStatusRoutes = require('./routes/campaignStatus');
 const whatsappWebhookRoutes = require('./routes/whatsappWebhook');
+const smtpTestRoutes = require('./routes/smtpTest');
+// PERFECT PAY SYSTEM
+const perfectPayRoutes = require('./routes/perfectPay');
+const webhookMonitorRoutes = require('./routes/webhook-monitor');
+
+// Middleware para capturar webhooks (importado do webhook-monitor)
+const captureWebhook = (req, res, next) => {
+  const webhookData = {
+    timestamp: new Date().toISOString(),
+    method: req.method,
+    path: req.path,
+    headers: req.headers,
+    body: req.body,
+    query: req.query,
+    ip: req.ip || req.connection.remoteAddress,
+    userAgent: req.get('User-Agent')
+  };
+
+  // Adicionar ao histórico do webhook-monitor
+  if (global.webhookHistory) {
+    global.webhookHistory.unshift(webhookData);
+    
+    // Manter apenas os últimos 100
+    if (global.webhookHistory.length > 100) {
+      global.webhookHistory = global.webhookHistory.slice(0, 100);
+    }
+  }
+
+  console.log('📡 [Webhook Monitor] ===== WEBHOOK CAPTURADO =====');
+  console.log('📡 [Webhook Monitor] Timestamp:', webhookData.timestamp);
+  console.log('📡 [Webhook Monitor] Method:', webhookData.method);
+  console.log('📡 [Webhook Monitor] Path:', webhookData.path);
+  console.log('📡 [Webhook Monitor] IP:', webhookData.ip);
+  console.log('📡 [Webhook Monitor] User-Agent:', webhookData.userAgent);
+  console.log('📡 [Webhook Monitor] Body:', webhookData.body);
+  console.log('📡 [Webhook Monitor] ================================');
+
+  next();
+};
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Inicializar array global de webhooks para o monitor
+global.webhookHistory = [];
 
 // Security middleware
 
@@ -111,14 +153,34 @@ const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['https://leadflow-indol.vercel.app', 'http://localhost:5173', 'http://localhost:5175'];
 
+// Adicionar suporte para ngrok e outros túneis
+corsOrigins.push('https://*.ngrok.io', 'https://*.ngrok-free.app', 'https://*.loca.lt');
+
 console.log('🔧 CORS Origins configuradas:', corsOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
     console.log('🌐 Origin da requisição:', origin);
     
+    // Durante desenvolvimento, permitir todas as origens
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✅ [DEV] Origin permitida (modo desenvolvimento):', origin);
+      return callback(null, true);
+    }
+    
     // Permitir requisições sem origin (como mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
+    
+    // Verificar se é uma URL do ngrok ou outros túneis
+    if (origin && (
+      origin.includes('.ngrok.io') || 
+      origin.includes('.ngrok-free.app') || 
+      origin.includes('.loca.lt') ||
+      origin.includes('ngrok')
+    )) {
+      console.log('✅ [TUNNEL] Origin permitida (túnel):', origin);
+      return callback(null, true);
+    }
     
     if (corsOrigins.indexOf(origin) !== -1) {
       console.log('✅ Origin permitida:', origin);
@@ -130,9 +192,19 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-email', 'x-user-id'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-email', 'x-user-id', 'x-signature', 'x-request-id', 'x-forwarded-for', 'x-real-ip'],
   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar']
 }));
+
+// REMOVIDO - Middleware específico para webhooks do sistema antigo
+/*
+app.use('/api/recurring-subscription/webhook', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-email, x-user-id, x-signature, x-request-id');
+  next();
+});
+*/
 
 // Middleware adicional para lidar com preflight requests
 app.options('*', (req, res) => {
@@ -785,6 +857,19 @@ app.post('/webhook/:instanceName', (req, res) => {
 });
 
 /**
+ * GET /webhook/mercadopago
+ * Endpoint para verificar se o webhook do MercadoPago está ativo
+ */
+app.get('/webhook/mercadopago', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'MercadoPago webhook endpoint ativo',
+    timestamp: new Date().toISOString(),
+    method: 'GET'
+  });
+});
+
+/**
  * GET /api/health
  * Endpoint de saúde do servidor
  */
@@ -1001,6 +1086,13 @@ app.use('/api/blog/queue', blogQueueRoutes);
 app.use('/api/blog', blogPostsRoutes);
 app.use('/api/blog/auto', autoProcessRoutes);
 app.use('/api/whatsapp/webhook', whatsappWebhookRoutes);
+app.use('/api/test-smtp', smtpTestRoutes);
+// MercadoPago removido - usando Perfect Pay
+// PERFECT PAY SYSTEM
+app.use('/api/perfect-pay', captureWebhook);
+app.use('/api/perfect-pay', perfectPayRoutes);
+console.log('✅ [Server] Perfect Pay system registrado com sucesso');
+app.use('/api/webhook-monitor', webhookMonitorRoutes);
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Rotas de status de campanhas

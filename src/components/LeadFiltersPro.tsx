@@ -386,20 +386,21 @@ export function LeadFiltersPro({
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
                     <Users className="w-4 h-4 mr-2 text-indigo-600 dark:text-indigo-400" />
-                    Leads por Página
+                    Selecionar quantidade de Leads
                   </Label>
                   <Select 
                     value={leadsPerPage} 
                     onValueChange={(value) => handleFilterChange(setLeadsPerPage, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200">
-                      <SelectValue placeholder="Selecionar" />
+                      <SelectValue placeholder="Escolher quantidade..." />
                     </SelectTrigger>
                     <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
-                      <SelectItem value="10">10 leads</SelectItem>
-                      <SelectItem value="20">20 leads</SelectItem>
-                      <SelectItem value="30">30 leads</SelectItem>
-                      <SelectItem value="40">40 leads</SelectItem>
+                      <SelectItem value="9">9 leads</SelectItem>
+                      <SelectItem value="18">18 leads</SelectItem>
+                      <SelectItem value="27">27 leads</SelectItem>
+                      <SelectItem value="36">36 leads</SelectItem>
+                      <SelectItem value="45">45 leads</SelectItem>
                       <SelectItem value="50">50 leads</SelectItem>
                     </SelectContent>
                   </Select>

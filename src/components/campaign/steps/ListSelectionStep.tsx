@@ -30,6 +30,7 @@ interface ListSelectionStepProps {
   onBulkOperationComplete: (result: { selectedLists: string[], leads: any[] }) => Promise<void>
   campaignId: string
   loading: boolean
+  disabled?: boolean
 }
 
 export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
@@ -42,7 +43,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
   onUnignoreList,
   onBulkOperationComplete,
   campaignId,
-  loading
+  loading,
+  disabled = false
 }) => {
   const [selectedLead, setSelectedLead] = useState<CampaignLead | null>(null)
   const [showIgnored, setShowIgnored] = useState(false)
@@ -105,7 +107,7 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
                   ignoredLists={ignoredLists}
                   campaignLeads={campaignLeads}
                   onOperationComplete={onBulkOperationComplete}
-                  disabled={loading}
+                  disabled={disabled || loading}
                   type="add"
                 />
               </div>
@@ -182,7 +184,7 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
                   ignoredLists={ignoredLists}
                   campaignLeads={campaignLeads}
                   onOperationComplete={onBulkOperationComplete}
-                  disabled={loading}
+                  disabled={disabled || loading}
                   type="remove"
                 />
               </div>

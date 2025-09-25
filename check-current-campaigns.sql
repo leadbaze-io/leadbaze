@@ -113,3 +113,18 @@ WHERE event_object_table IN ('campaign_unique_leads', 'campaign_lists')
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

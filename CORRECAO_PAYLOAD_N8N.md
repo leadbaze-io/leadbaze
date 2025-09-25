@@ -172,3 +172,18 @@ console.log(Array.isArray(n8nPayload[0].itens)) // deve retornar true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

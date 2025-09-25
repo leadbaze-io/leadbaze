@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Loader2 } from 'lucide-react'
+// import { Loader2 } from 'lucide-react'
 
 interface LoadingScreenProps {
   message?: string
@@ -11,8 +11,8 @@ export default function LoadingScreen({
   fullScreen = true 
 }: LoadingScreenProps) {
   const containerClass = fullScreen 
-    ? "fixed inset-0 bg-white/80 backdrop-blur-sm z-50" 
-    : "w-full h-64"
+    ? "fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm z-50 transition-colors duration-300" 
+    : "w-full h-64 bg-white dark:bg-gray-800 transition-colors duration-300"
 
   return (
     <div className={`${containerClass} flex items-center justify-center`}>
@@ -22,19 +22,20 @@ export default function LoadingScreen({
         transition={{ duration: 0.3 }}
         className="text-center"
       >
-        {/* Logo animado */}
+        {/* Spinner duplo para melhor visual */}
         <motion.div
           animate={{ 
             rotate: 360,
-            scale: [1, 1.1, 1]
+            scale: [1, 1.05, 1]
           }}
           transition={{ 
             rotate: { duration: 2, repeat: Infinity, ease: "linear" },
-            scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
+            scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
           }}
-          className="mb-4"
+          className="mb-6 relative"
         >
-          <Loader2 className="w-12 h-12 text-blue-600 mx-auto" />
+          <div className="w-12 h-12 border-2 border-gray-200 dark:border-gray-700 rounded-full"></div>
+          <div className="w-12 h-12 border-2 border-transparent border-t-blue-500 rounded-full absolute top-0 left-0 animate-spin"></div>
         </motion.div>
         
         {/* Texto de carregamento */}
@@ -42,7 +43,7 @@ export default function LoadingScreen({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-600 font-medium"
+          className="text-gray-600 dark:text-gray-400 font-medium text-lg"
         >
           {message}
         </motion.p>
@@ -52,7 +53,7 @@ export default function LoadingScreen({
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="mt-4 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+          className="mt-4 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
           style={{ maxWidth: "200px", margin: "16px auto 0" }}
         />
         
@@ -62,16 +63,16 @@ export default function LoadingScreen({
             <motion.div
               key={index}
               animate={{ 
-                scale: [1, 1.5, 1],
-                opacity: [0.5, 1, 0.5]
+                scale: [1, 1.3, 1],
+                opacity: [0.4, 1, 0.4]
               }}
               transition={{ 
-                duration: 1,
+                duration: 1.2,
                 repeat: Infinity,
                 delay: index * 0.2,
                 ease: "easeInOut"
               }}
-              className="w-2 h-2 bg-blue-600 rounded-full"
+              className="w-2 h-2 bg-blue-500 rounded-full"
             />
           ))}
         </div>
@@ -90,19 +91,19 @@ export function ListSkeleton() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: i * 0.1 }}
-          className="bg-white rounded-lg border border-gray-200 p-6"
+          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
         >
           <div className="animate-pulse">
             <div className="flex items-start justify-between mb-4">
               <div className="space-y-2 flex-1">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
               </div>
-              <div className="h-8 bg-gray-200 rounded w-16"></div>
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 bg-gray-200 rounded w-full"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
             </div>
           </div>
         </motion.div>
@@ -121,20 +122,20 @@ export function LeadCardSkeleton() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="bg-white rounded-lg border border-gray-200 p-4"
+          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 transition-colors duration-300"
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-3">
-              <div className="h-4 bg-gray-200 rounded w-16"></div>
-              <div className="h-4 bg-gray-200 rounded w-12"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
             </div>
             <div className="space-y-2 mb-3">
-              <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-200 rounded w-full"></div>
+              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
             </div>
           </div>
         </motion.div>
@@ -153,15 +154,15 @@ export function AnalyticsSkeleton() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: i * 0.1 }}
-          className="bg-white rounded-lg border border-gray-200 p-6"
+          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-4">
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div className="h-8 w-8 bg-gray-200 rounded"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
-            <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
           </div>
         </motion.div>
       ))}

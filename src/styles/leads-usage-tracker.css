@@ -1,0 +1,204 @@
+/* =====================================================
+   LEADS USAGE TRACKER - SEPARAÇÃO CLARO/ESCURO
+   ===================================================== */
+
+/* MODO CLARO */
+html:not(.dark) .leads-usage-tracker {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html:not(.dark) .leads-usage-title {
+  color: #111827;
+}
+
+html:not(.dark) .leads-usage-description {
+  color: #4b5563;
+}
+
+html:not(.dark) .leads-usage-stat-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+html:not(.dark) .leads-usage-stat-value {
+  color: #111827;
+}
+
+html:not(.dark) .leads-usage-stat-label {
+  color: #6b7280;
+}
+
+html:not(.dark) .leads-usage-stat-icon {
+  color: #6b7280;
+}
+
+html:not(.dark) .leads-usage-history-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+html:not(.dark) .leads-usage-history-item:hover {
+  background: #f9fafb;
+}
+
+html:not(.dark) .leads-usage-history-date {
+  color: #6b7280;
+}
+
+html:not(.dark) .leads-usage-history-reason {
+  color: #374151;
+}
+
+html:not(.dark) .leads-usage-history-count {
+  color: #111827;
+}
+
+html:not(.dark) .leads-usage-history-remaining {
+  color: #6b7280;
+}
+
+html:not(.dark) .leads-usage-refresh-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+html:not(.dark) .leads-usage-refresh-btn:hover {
+  background: #e5e7eb;
+}
+
+html:not(.dark) .leads-usage-loading {
+  color: #6b7280;
+}
+
+html:not(.dark) .leads-usage-empty {
+  color: #6b7280;
+}
+
+/* MODO ESCURO */
+html.dark .leads-usage-tracker {
+  background: #1f2937;
+  border: 1px solid #374151;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .leads-usage-title {
+  color: #ffffff;
+}
+
+html.dark .leads-usage-description {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-stat-card {
+  background: #374151;
+  border: 1px solid #4b5563;
+}
+
+html.dark .leads-usage-stat-value {
+  color: #ffffff;
+}
+
+html.dark .leads-usage-stat-label {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-stat-icon {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-history-item {
+  background: #1f2937;
+  border: 1px solid #374151;
+}
+
+html.dark .leads-usage-history-item:hover {
+  background: #374151;
+}
+
+html.dark .leads-usage-history-date {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-history-reason {
+  color: #d1d5db;
+}
+
+html.dark .leads-usage-history-count {
+  color: #ffffff;
+}
+
+html.dark .leads-usage-history-remaining {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-refresh-btn {
+  background: #374151;
+  color: #d1d5db;
+  border: 1px solid #4b5563;
+}
+
+html.dark .leads-usage-refresh-btn:hover {
+  background: #4b5563;
+}
+
+html.dark .leads-usage-loading {
+  color: #9ca3af;
+}
+
+html.dark .leads-usage-empty {
+  color: #9ca3af;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 640px) {
+  .leads-usage-tracker {
+    padding: 1rem;
+  }
+  
+  .leads-usage-title {
+    font-size: 1.125rem;
+  }
+  
+  .leads-usage-description {
+    font-size: 0.875rem;
+  }
+  
+  .leads-usage-stat-card {
+    padding: 0.75rem;
+  }
+  
+  .leads-usage-history-item {
+    padding: 0.75rem;
+  }
+}
+
+/* ANIMAÇÕES */
+.leads-usage-tracker {
+  transition: all 0.3s ease;
+}
+
+.leads-usage-stat-card {
+  transition: all 0.2s ease;
+}
+
+.leads-usage-history-item {
+  transition: all 0.2s ease;
+}
+
+.leads-usage-refresh-btn {
+  transition: all 0.2s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
