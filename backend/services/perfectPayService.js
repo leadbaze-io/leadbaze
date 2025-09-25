@@ -198,10 +198,34 @@ class PerfectPayService {
     const status = statusMap[saleStatusEnum] || 'unknown';
     console.log(`📝 [PerfectPay] Processando sale_status_enum: ${saleStatusEnum} -> ${status}`);
 
-    // Extrair informações do external_reference
-    const { operationType, userId, planId } = this.extractInfoFromReference(externalReference);
+    // Extrair informações do external_reference ou usar email como fallback
+    let { operationType, userId, planId } = this.extractInfoFromReference(externalReference);
+    
+    // Se external_reference for null, tentar usar email como identificador
     if (!userId || !planId) {
-      return { processed: false, error: 'external_reference inválido' };
+      console.log('⚠️ [PerfectPay] external_reference inválido, tentando usar email como identificador...');
+      
+      const customerEmail = webhookData.customer?.email;
+      if (!customerEmail) {
+        return { processed: false, error: 'external_reference inválido e email não encontrado' };
+      }
+      
+      // Buscar usuário por email
+      const { data: users, error: usersError } = await this.supabase.auth.admin.listUsers();
+      if (usersError) {
+        return { processed: false, error: 'Erro ao buscar usuários: ' + usersError.message };
+      }
+      
+      const user = users.users.find(u => u.email === customerEmail);
+      if (!user) {
+        return { processed: false, error: 'Usuário não encontrado com email: ' + customerEmail };
+      }
+      
+      userId = user.id;
+      planId = '1'; // Assumir plano Start por padrão
+      operationType = 'new'; // Assumir nova assinatura por padrão
+      
+      console.log(`✅ [PerfectPay] Usuário encontrado por email: ${userId} (${customerEmail})`);
     }
 
     switch (status) {
