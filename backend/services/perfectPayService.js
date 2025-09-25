@@ -24,21 +24,21 @@ class PerfectPayService {
     this.planMapping = {
       '1': { // Start
         perfectPayPlanCode: 'PPLQQNG92',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ16MT',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OO',
         name: 'start',
-        price: 197.00,
+        price: 5.00,
         leads: 1000
       },
       '2': { // Scale  
         perfectPayPlanCode: 'PPLQQNG90',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ16TQ',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OP',
         name: 'scale',
         price: 497.00,
         leads: 4000
       },
       '3': { // Enterprise
         perfectPayPlanCode: 'PPLQQNG91',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ16TR',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OS',
         name: 'enterprise',
         price: 997.00,
         leads: 10000
@@ -690,9 +690,9 @@ class PerfectPayService {
       
       // Mapear para os links reais que você forneceu
       const realLinks = {
-        'PPLQQNG92': 'https://go.perfectpay.com.br/PPU38CQ16MT', // Start
-        'PPLQQNG90': 'https://go.perfectpay.com.br/PPU38CQ16TQ', // Scale
-        'PPLQQNG91': 'https://go.perfectpay.com.br/PPU38CQ16TR'  // Enterprise
+        'PPLQQNG92': 'https://go.perfectpay.com.br/PPU38CQ17OO', // Start
+        'PPLQQNG90': 'https://go.perfectpay.com.br/PPU38CQ17OP', // Scale
+        'PPLQQNG91': 'https://go.perfectpay.com.br/PPU38CQ17OS'  // Enterprise
       };
       
       // Tentar encontrar o link correto baseado no plano

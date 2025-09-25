@@ -28,7 +28,7 @@ class PerfectPayWebhookTester {
       product: {
         code: "PPPB3A07",
         name: "LeadBaze Subscription",
-        external_reference: "new-subscription-c7f5c454-36fb-4a39-8460-620a09169f50-1", // userId-planId-operationType
+        external_reference: "new_132bc618-23ef-483e-a96f-2027a8f47619_1_1735123456789", // operationType_userId_planId_timestamp
         guarantee: 30
       },
       plan: {
@@ -73,7 +73,7 @@ class PerfectPayWebhookTester {
       product: {
         code: "PPPB3A07",
         name: "LeadBaze Subscription",
-        external_reference: "renewal-c7f5c454-36fb-4a39-8460-620a09169f50-1",
+        external_reference: "renewal_132bc618-23ef-483e-a96f-2027a8f47619_1_1735123456790",
         guarantee: 30
       },
       plan: {
@@ -121,7 +121,7 @@ class PerfectPayWebhookTester {
       product: {
         code: "PPPB3A07",
         name: "LeadBaze Subscription",
-        external_reference: "new-subscription-c7f5c454-36fb-4a39-8460-620a09169f50-1",
+        external_reference: "new_132bc618-23ef-483e-a96f-2027a8f47619_1_1735123456791",
         guarantee: 30
       },
       plan: {
@@ -166,7 +166,7 @@ class PerfectPayWebhookTester {
       product: {
         code: "PPPB3A07",
         name: "LeadBaze Subscription",
-        external_reference: "new-subscription-c7f5c454-36fb-4a39-8460-620a09169f50-1",
+        external_reference: "new_132bc618-23ef-483e-a96f-2027a8f47619_1_1735123456791",
         guarantee: 30
       },
       plan: {
@@ -211,7 +211,7 @@ class PerfectPayWebhookTester {
       product: {
         code: "PPPB3A07",
         name: "LeadBaze Subscription",
-        external_reference: "cancellation-c7f5c454-36fb-4a39-8460-620a09169f50-1",
+        external_reference: "cancellation_132bc618-23ef-483e-a96f-2027a8f47619_1_1735123456792",
         guarantee: 30
       },
       plan: {
