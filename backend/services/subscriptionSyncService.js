@@ -69,6 +69,88 @@ class SubscriptionSyncService {
   }
 
   /**
+   * Buscar todas as assinaturas ativas no nosso banco
+   */
+  async getAllOurSubscriptions() {
+    try {
+      console.log('🔍 [Sync] Buscando assinaturas ativas no nosso banco...');
+      
+      const { data: subscriptions, error } = await this.supabase
+        .from('user_payment_subscriptions')
+        .select(`
+          id,
+          user_id,
+          plan_id,
+          status,
+          leads_balance,
+          current_period_start,
+          current_period_end,
+          perfect_pay_transaction_id,
+          perfect_pay_subscription_id,
+          payment_plans(display_name, leads_included)
+        `)
+        .eq('status', 'active');
+      
+      if (error) {
+        throw new Error(`Erro ao buscar assinaturas: ${error.message}`);
+      }
+      
+      console.log(`📊 [Sync] Encontradas ${subscriptions.length} assinaturas ativas no nosso banco`);
+      return subscriptions || [];
+      
+    } catch (error) {
+      console.error('❌ [Sync] Erro ao buscar assinaturas do nosso banco:', error.message);
+      return [];
+    }
+  }
+
+  /**
+   * Sincronizar uma assinatura nossa com Perfect Pay
+   */
+  async syncOurSubscription(ourSubscription) {
+    try {
+      console.log(`🔄 [Sync] Sincronizando assinatura ${ourSubscription.id} (${ourSubscription.payment_plans?.display_name})`);
+      
+      // Verificar se a assinatura ainda está válida (não expirou)
+      const currentDate = new Date();
+      const periodEnd = new Date(ourSubscription.current_period_end);
+      
+      if (currentDate > periodEnd) {
+        console.log(`⚠️ [Sync] Assinatura ${ourSubscription.id} expirada, marcando como inativa`);
+        
+        // Marcar como inativa
+        await this.supabase
+          .from('user_payment_subscriptions')
+          .update({ 
+            status: 'expired',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', ourSubscription.id);
+        
+        return { processed: true, action: 'expired' };
+      }
+      
+      // Verificar se precisa renovar leads (se está próximo do fim do período)
+      const daysUntilExpiry = Math.ceil((periodEnd - currentDate) / (1000 * 60 * 60 * 24));
+      
+      if (daysUntilExpiry <= 1) {
+        console.log(`🔄 [Sync] Assinatura ${ourSubscription.id} próxima do vencimento (${daysUntilExpiry} dias)`);
+        
+        // Aqui você pode implementar lógica para renovar automaticamente
+        // ou aguardar o próximo pagamento via webhook
+        return { processed: true, action: 'near_expiry' };
+      }
+      
+      console.log(`✅ [Sync] Assinatura ${ourSubscription.id} válida por mais ${daysUntilExpiry} dias`);
+      return { processed: true, action: 'valid' };
+      
+    } catch (error) {
+      console.error(`❌ [Sync] Erro ao sincronizar assinatura ${ourSubscription.id}:`, error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Buscar todas as assinaturas ativas no Perfect Pay
    */
   async getAllPerfectPaySubscriptions() {
@@ -83,7 +165,7 @@ class SubscriptionSyncService {
           'Authorization': `Bearer ${this.perfectPayToken}`
         },
         body: JSON.stringify({
-          subscription_status_enum: [1, 2, 3, 4] // Todos os status: teste, ativa, cancelada, pendente
+          subscription_status_enum: [2] // Apenas assinaturas ativas
         })
       });
 
@@ -174,7 +256,7 @@ class SubscriptionSyncService {
         throw new Error(`Erro ao buscar assinatura: ${subError.message}`);
       }
       
-      // Mapear status do Perfect Pay
+      // Mapear status do Perfect Pay (baseado na documentação)
       const statusMap = {
         1: 'trial',      // Período de teste
         2: 'active',     // Ativa
@@ -182,7 +264,21 @@ class SubscriptionSyncService {
         4: 'pending'      // Aguardando pagamento
       };
       
-      const newStatus = statusMap[perfectPaySub.subscription_status_enum] || 'unknown';
+      // O Perfect Pay retorna string, não número
+      const perfectPayStatus = perfectPaySub.subscription_status_enum;
+      let newStatus = 'unknown';
+      
+      if (perfectPayStatus === 'Ativa') {
+        newStatus = 'active';
+      } else if (perfectPayStatus === 'Cancelada') {
+        newStatus = 'cancelled';
+      } else if (perfectPayStatus === 'Período de teste') {
+        newStatus = 'trial';
+      } else if (perfectPayStatus === 'Aguardando pagamento') {
+        newStatus = 'pending';
+      }
+      
+      console.log(`🔄 [Sync] Mapeando status: "${perfectPayStatus}" → "${newStatus}"`);
       
       if (existingSub) {
         // Atualizar assinatura existente

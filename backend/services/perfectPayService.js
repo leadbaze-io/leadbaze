@@ -105,7 +105,7 @@ class PerfectPayService {
         customer_name: userName,
         external_reference: externalReference,
         amount: plan.price_cents / 100,
-        description: `${plan.display_name} - ${this.getOperationDescription(operationType)}`,
+        description: this.getCheckoutDescription(plan, operationType),
         recurring: operationType === 'new' || operationType === 'renewal',
         period: 'monthly',
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,
@@ -1309,6 +1309,23 @@ class PerfectPayService {
     return descriptions[operationType] || 'Assinatura';
   }
 
+  getCheckoutDescription(plan, operationType) {
+    // Formatar preço em reais
+    const priceFormatted = (plan.price_cents / 100).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+    
+    const operationTexts = {
+      new: `🎉 Nova Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
+      renewal: `🎉 Renovação de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
+      upgrade: `🎉 Upgrade de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
+      downgrade: `🎉 Downgrade de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`
+    };
+    
+    return operationTexts[operationType] || `Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`;
+  }
+
   // Métodos de compatibilidade com versão anterior
   extractUserIdFromReference(externalReference) {
     return this.extractInfoFromReference(externalReference).userId;
@@ -1539,6 +1556,7 @@ class PerfectPayService {
       console.log('⚠️ [PerfectPay] Erro ao atualizar detalhes em background (não crítico):', err.message);
     }
   }
+
 }
 
 module.exports = PerfectPayService;
