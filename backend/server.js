@@ -29,6 +29,7 @@ const perfectPayRoutes = require('./routes/perfectPay');
 const webhookMonitorRoutes = require('./routes/webhook-monitor');
 const subscriptionSyncRoutes = require('./routes/subscriptionSync');
 const recurringPaymentsRoutes = require('./routes/recurringPayments');
+const leadPackagesRoutes = require('./routes/leadPackages');
 const DailySyncJob = require('./jobs/dailySyncJob');
 
 // Middleware para capturar webhooks (importado do webhook-monitor)
@@ -1091,7 +1092,9 @@ console.log('✅ [Server] Perfect Pay system registrado com sucesso');
 app.use('/api/webhook-monitor', webhookMonitorRoutes);
 app.use('/api/subscription-sync', subscriptionSyncRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
+app.use('/api/lead-packages', leadPackagesRoutes);
 console.log('✅ [Server] Subscription Sync system registrado com sucesso');
+console.log('✅ [Server] Lead Packages system registrado com sucesso');
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Rotas de status de campanhas

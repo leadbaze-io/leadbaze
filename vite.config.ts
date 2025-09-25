@@ -10,18 +10,16 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    allowedHosts: true,
     // Força recarregamento em desenvolvimento
-    hmr: false, // Desabilita HMR para evitar muitas requisições via ngrok
+    hmr: {
+      overlay: true
+    },
     // Proxy para redirecionar requisições da API para o backend
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3001',
         changeOrigin: true,
-        secure: false,
-        configure: (_, options) => {
-          console.log('🔧 Proxy configurado para:', options.target);
-        }
+        secure: false
       }
     }
   },

@@ -98,3 +98,4 @@ async function debugPlansInDatabase() {
 // Executar debug
 debugPlansInDatabase().catch(console.error);
 
+

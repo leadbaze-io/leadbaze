@@ -136,3 +136,4 @@ async function testPaymentFlowFixed() {
 // Executar teste
 testPaymentFlowFixed().catch(console.error);
 
+

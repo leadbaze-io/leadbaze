@@ -18,3 +18,4 @@ WHERE table_name = 'user_payment_subscriptions'
 ORDER BY column_name;
 
 
+

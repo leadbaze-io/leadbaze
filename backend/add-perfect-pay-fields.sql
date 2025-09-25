@@ -11,3 +11,4 @@ ALTER TABLE user_payment_subscriptions
 ADD COLUMN IF NOT EXISTS perfect_pay_transaction_id TEXT;
 
 
+

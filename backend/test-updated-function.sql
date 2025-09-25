@@ -20,3 +20,4 @@ FROM information_schema.routines
 WHERE routine_name = 'check_leads_availability_simple' 
   AND routine_schema = 'public';
 
+

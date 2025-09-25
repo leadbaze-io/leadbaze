@@ -19,7 +19,8 @@ import {
   Shield,
   LogOut,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  Package
 } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
@@ -29,6 +30,7 @@ import { LeadsUsageTracker } from '../components/LeadsUsageTracker'
 import { ConnectionStatus } from '../components/ConnectionStatus'
 import { SubscriptionHistory } from '../components/SubscriptionHistory'
 import { OriginalSubscriptionInfo } from '../components/OriginalSubscriptionInfo'
+import LeadPackagesTab from '../components/LeadPackagesTab'
 import { useSmartSubscription } from '../hooks/useSmartSubscription'
 import { usePlans } from '../hooks/usePlans'
 import type { UserProfile } from '../types'
@@ -350,7 +352,7 @@ export default function UserProfile() {
 
           {/* Main Content */}
           <div className="lg:col-span-2">
-              <div className="profile-tabs-list p-1 grid w-full grid-cols-3 gap-1 mb-4 sm:mb-6">
+              <div className="profile-tabs-list p-1 grid w-full grid-cols-4 gap-1 mb-4 sm:mb-6">
                 <button
                   className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
                     activeTab === 'subscription' ? 'profile-tab-active' : ''
@@ -359,6 +361,16 @@ export default function UserProfile() {
                 >
                   <span className="hidden sm:inline">Assinatura</span>
                   <span className="sm:hidden">Plano</span>
+                </button>
+                <button
+                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                    activeTab === 'lead-packages' ? 'profile-tab-active' : ''
+                  }`}
+                  onClick={() => setActiveTab('lead-packages')}
+                >
+                  <Package className="w-4 h-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Pacotes de Leads</span>
+                  <span className="sm:hidden">Pacotes</span>
                 </button>
                 <button
                   className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
@@ -597,6 +609,36 @@ export default function UserProfile() {
                       </div>
                     )}
                   </div>
+                </div>
+              )}
+
+              {activeTab === 'lead-packages' && (
+                <div className="mt-4 sm:mt-6 animate-fade-in">
+                  {user?.id && subscription ? (
+                    <LeadPackagesTab 
+                      userId={user.id}
+                      currentLeads={subscription.leads_remaining || 0}
+                      onLeadsUpdate={(newLeads) => {
+                        // Atualizar o estado local se necessário
+                        console.log('Leads atualizados:', newLeads);
+                      }}
+                    />
+                  ) : (
+                    <div className="profile-card p-6 text-center">
+                      <div className="text-4xl mb-4">📦</div>
+                      <h3 className="profile-title text-lg mb-2">Assinatura Necessária</h3>
+                      <p className="profile-text-muted mb-6">
+                        Você precisa ter uma assinatura ativa para comprar pacotes de leads extras
+                      </p>
+                      <Button
+                        onClick={() => navigate('/plans')}
+                        className="profile-btn-primary"
+                      >
+                        <TrendingUp className="w-4 h-4 mr-2" />
+                        Ver Planos Disponíveis
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
 

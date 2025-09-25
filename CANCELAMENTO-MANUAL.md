@@ -133,3 +133,4 @@ if (data.manual_cancellation_required) {
 **Versão:** 1.0  
 **Status:** Implementado e Funcional
 
+

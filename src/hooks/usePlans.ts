@@ -20,8 +20,7 @@ export const usePlans = (): UsePlansReturn => {
         return;
       }
 
-      // Buscar planos via Perfect Pay
-      const response = await fetch('/api/perfect-pay/plans');
+      const response = await fetch(`http://localhost:3001/api/subscription/plans?userId=${user.id}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -30,7 +29,7 @@ export const usePlans = (): UsePlansReturn => {
         return;
       }
 
-      setPlans(data.data || []);
+      setPlans(data.data.availablePlans || []);
     } catch (err) {
       console.error('Erro inesperado ao buscar planos:', err);
       setError('Erro inesperado ao carregar planos');

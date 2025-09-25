@@ -86,3 +86,4 @@ createTestUser()
     console.error('❌ Erro na criação:', error.message);
     process.exit(1);
   });
+

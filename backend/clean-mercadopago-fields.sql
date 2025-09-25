@@ -31,3 +31,4 @@ FROM information_schema.columns
 WHERE table_name IN ('payment_webhooks', 'user_payment_subscriptions')
 ORDER BY table_name, ordinal_position;
 
+

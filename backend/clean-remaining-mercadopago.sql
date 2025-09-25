@@ -18,3 +18,4 @@ FROM information_schema.columns
 WHERE table_name = 'user_payment_subscriptions'
 ORDER BY ordinal_position;
 
+

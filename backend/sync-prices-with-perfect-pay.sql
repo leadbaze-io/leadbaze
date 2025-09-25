@@ -11,21 +11,26 @@ SELECT
 FROM payment_plans 
 ORDER BY price_cents;
 
--- 2. Atualizar Start: R$ 200 → R$ 197 (19700 centavos)
+-- 2. Atualizar Start: R$ 197 (19700 centavos)
 UPDATE payment_plans 
 SET 
     price_cents = 19700,
     updated_at = NOW()
 WHERE name = 'start';
 
--- 3. Atualizar Enterprise: R$ 600 → R$ 997 (99700 centavos)  
+-- 3. Atualizar Scale: R$ 497 (49700 centavos)
+UPDATE payment_plans 
+SET 
+    price_cents = 49700,
+    updated_at = NOW()
+WHERE name = 'scale';
+
+-- 4. Atualizar Enterprise: R$ 997 (99700 centavos)  
 UPDATE payment_plans 
 SET 
     price_cents = 99700,
     updated_at = NOW()
 WHERE name = 'enterprise';
-
--- 4. Scale já está correto (R$ 497)
 
 -- 5. Verificar alterações aplicadas
 SELECT 
@@ -44,10 +49,11 @@ SELECT
     (price_cents / 100) as preco_reais,
     leads_included,
     CASE 
-        WHEN name = 'start' THEN 'PPLQQNG92'
-        WHEN name = 'scale' THEN 'PPLQQNG90' 
-        WHEN name = 'enterprise' THEN 'PPLQQNG91'
+        WHEN name = 'start' THEN 'PPLQQNGCO'
+        WHEN name = 'scale' THEN 'PPLQQNGCM' 
+        WHEN name = 'enterprise' THEN 'PPLQQNGCN'
     END as codigo_perfect_pay
 FROM payment_plans 
 ORDER BY price_cents;
+
 

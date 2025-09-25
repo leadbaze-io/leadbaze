@@ -92,3 +92,4 @@ function generateDirectLinkWithParams(checkoutData, externalReference) {
 // Executar teste
 testDirectLinksWithParams().catch(console.error);
 
+

@@ -8,7 +8,7 @@ interface OriginalSubscriptionInfoProps {
 }
 
 export const OriginalSubscriptionInfo: React.FC<OriginalSubscriptionInfoProps> = ({ userId }) => {
-  const { subscriptionData, loading, error, formatDate } = useOriginalSubscription(userId);
+  const { originalData, loading, error, formatDate } = useOriginalSubscription(userId);
 
   if (loading) {
     return (
@@ -21,15 +21,15 @@ export const OriginalSubscriptionInfo: React.FC<OriginalSubscriptionInfoProps> =
     );
   }
 
-  // Não mostrar se houver erro, não houver dados, ou for trial gratuito
-  if (error || !subscriptionData || subscriptionData.is_free_trial) {
+  // Não mostrar se houver erro ou não houver dados
+  if (error || !originalData) {
     return null;
   }
 
   // Verificar se a data é válida
-  const isValidDate = subscriptionData.created_at && 
-    subscriptionData.created_at !== 'Invalid Date' && 
-    !isNaN(new Date(subscriptionData.created_at).getTime());
+  const isValidDate = originalData.original_subscription_date && 
+    originalData.original_subscription_date !== 'Invalid Date' && 
+    !isNaN(new Date(originalData.original_subscription_date).getTime());
 
   if (!isValidDate) {
     return null;
@@ -44,7 +44,7 @@ export const OriginalSubscriptionInfo: React.FC<OriginalSubscriptionInfoProps> =
             Data da Primeira Assinatura
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {formatDate(subscriptionData.created_at)}
+            {formatDate(originalData.original_subscription_date)}
           </p>
         </div>
       </div>

@@ -50,3 +50,4 @@ SELECT DISTINCT name, display_name
 FROM payment_plans
 ORDER BY name;
 
+

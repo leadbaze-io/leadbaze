@@ -21,27 +21,27 @@ class PerfectPayService {
     this.baseUrl = 'https://app.perfectpay.com.br/api/v1';
     
     // Mapeamento dos planos internos com códigos Perfect Pay
-    // PLANOS DE TESTE com valores menores
+    // PLANOS REAIS com valores de produção
     this.planMapping = {
       '1': { // Start
-        perfectPayPlanCode: 'PPLQQNGCL',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OO',
+        perfectPayPlanCode: 'PPLQQNGCO',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OT',
         name: 'start',
-        price: 5.00,
+        price: 197.00,
         leads: 1000
       },
       '2': { // Scale  
-        perfectPayPlanCode: 'PPLQQNGGM',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ18H5',
+        perfectPayPlanCode: 'PPLQQNGCM',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OP',
         name: 'scale',
-        price: 5.00,
+        price: 497.00,
         leads: 4000
       },
       '3': { // Enterprise
-        perfectPayPlanCode: 'PPLQQNGGN',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ18H6',
+        perfectPayPlanCode: 'PPLQQNGCN',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OS',
         name: 'enterprise',
-        price: 5.00,
+        price: 997.00,
         leads: 10000
       }
     };
@@ -1027,14 +1027,15 @@ class PerfectPayService {
    * Obter link fixo do Perfect Pay baseado no plano
    */
   getPerfectPayLink(planId) {
-    // Mapear UUID do plano para link fixo
+    // Mapear UUID do plano para link fixo - LINKS DE PRODUÇÃO
     const planLinkMap = {
-      '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'https://go.perfectpay.com.br/PPU38CQ17OO', // Start
-      'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'https://go.perfectpay.com.br/PPU38CQ18H5', // Scale
-      'a961e361-75d0-40cf-9461-62a7802a1948': 'https://go.perfectpay.com.br/PPU38CQ18H6'  // Enterprise
+      '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'https://go.perfectpay.com.br/PPU38CQ17OT', // Start
+      'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'https://go.perfectpay.com.br/PPU38CQ17OP', // Scale
+      'a961e361-75d0-40cf-9461-62a7802a1948': 'https://go.perfectpay.com.br/PPU38CQ17OS',  // Enterprise
+      'leads_package': 'https://go.perfectpay.com.br/PPU38CQ17OT' // Pacotes de leads (usar link Start)
     };
     
-    const link = planLinkMap[planId] || 'https://go.perfectpay.com.br/PPU38CQ17OO'; // Default: Start
+    const link = planLinkMap[planId] || 'https://go.perfectpay.com.br/PPU38CQ17OT'; // Default: Start
     console.log(`🔗 [PerfectPay] Usando link fixo: ${link}`);
     return link;
   }
