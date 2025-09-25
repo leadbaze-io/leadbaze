@@ -14,37 +14,33 @@ export default function MobileLandingPage() {
     <div className="md:hidden min-h-screen">
       {/* Mobile Hero Section */}
       <MobileHero />
-      
+
       {/* Mobile Como Funciona */}
       <MobileSteps />
-      
+
       {/* Mobile Benefícios */}
       <MobileBenefits />
-      
+
       {/* Mobile CTA Final */}
       <MobileCTA />
-      
+
       {/* Mobile Desejo vs Dor */}
       <MobilePricing />
-      
+
       {/* Mobile 6º Dobra - GARANTIA */}
       <MobileGuarantee />
-      
+
       {/* Mobile 7º Dobra - OFERTA */}
       <MobilePricingPlans />
-      
+
       {/* Mobile 8º Dobra - FAQ: Quebra de Objeções */}
       <MobileFAQ />
-      
+
       {/* Mobile Footer */}
       <MobileFooter />
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>
   )
 }
-
-
-
-

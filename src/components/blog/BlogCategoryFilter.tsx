@@ -10,8 +10,10 @@ interface BlogCategoryFilterProps {
   onFiltersChange: (filters: BlogFilters) => void;
 }
 
-export default function BlogCategoryFilter({ 
-  filters, 
+export default function BlogCategoryFilter({
+
+  filters,
+
   onFiltersChange
 }: BlogCategoryFilterProps) {
   const [categories, setCategories] = useState<BlogCategory[]>([]);
@@ -24,7 +26,7 @@ export default function BlogCategoryFilter({
         const data = await BlogService.getCategories();
         setCategories(data);
       } catch (error) {
-        console.error('Erro ao carregar categorias:', error);
+
       } finally {
         setLoading(false);
       }
@@ -47,8 +49,6 @@ export default function BlogCategoryFilter({
       sortBy
     });
   };
-
-
   const clearFilters = () => {
     onFiltersChange({});
   };
@@ -70,7 +70,7 @@ export default function BlogCategoryFilter({
 
         return (
      <div className="space-y-4">
- 
+
        {/* Mobile Filter Toggle */}
        <div className="md:hidden">
          <button
@@ -106,7 +106,7 @@ export default function BlogCategoryFilter({
             >
               Todos
             </button>
-            
+
             {categories.map(category => (
               <button
                 key={category.id}

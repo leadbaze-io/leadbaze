@@ -28,20 +28,20 @@ import { toast } from '../hooks/use-toast'
 // Função para normalizar números de telefone
 const normalizePhoneNumber = (phone: string): string => {
   if (!phone) return phone
-  
+
   // Remove todos os caracteres não numéricos
   const cleanPhone = phone.replace(/\D/g, '')
-  
+
   // Se já tem código do país (55), retorna como está
   if (cleanPhone.startsWith('55') && cleanPhone.length >= 12) {
     return cleanPhone
   }
-  
+
   // Se não tem código do país, adiciona 55 (Brasil)
   if (cleanPhone.length >= 10 && cleanPhone.length <= 11) {
     return `55${cleanPhone}`
   }
-  
+
   // Se não conseguir normalizar, retorna o número original
   return cleanPhone
 }
@@ -56,7 +56,7 @@ type PageState = 'campaigns' | 'create' | 'edit' | 'config'
 export default function NewDisparadorMassa() {
   const navigate = useNavigate()
   const [user, setUser] = useState<any>(null)
-  
+
   // Estado da página
   const [currentState, setCurrentState] = useState<PageState>('campaigns')
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null)
@@ -70,7 +70,7 @@ export default function NewDisparadorMassa() {
         const currentUser = await getCurrentUser()
         setUser(currentUser)
       } catch (error) {
-        console.error('Erro ao obter usuário:', error)
+
       }
     }
     loadUser()
@@ -78,7 +78,7 @@ export default function NewDisparadorMassa() {
   const [whatsappConfig, setWhatsappConfig] = useState<EvolutionAPIConfig | null>(null)
   const [connectedInstance, setConnectedInstance] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  
+
   // Estados para modal de progresso simplificado
   const [showProgressModal, setShowProgressModal] = useState(false)
   const [currentCampaignStatus, setCurrentCampaignStatus] = useState<'sending' | 'completed' | 'failed' | 'cancelled'>('sending')
@@ -92,8 +92,10 @@ export default function NewDisparadorMassa() {
   const [isInitializing, setIsInitializing] = useState(true)
 
   // Hook da campanha
-  const campaignHook = useCampaign({ 
-    campaignId: selectedCampaign?.id 
+  const campaignHook = useCampaign({
+
+    campaignId: selectedCampaign?.id
+
   })
 
   // Carregar dados iniciais
@@ -122,20 +124,18 @@ export default function NewDisparadorMassa() {
     const interval = setInterval(checkConnectionStatus, 10000)
     return () => clearInterval(interval)
   }, [user, connectedInstance])
-
-
   const loadInitialData = async () => {
     try {
       setLoading(true)
-      
+
       // Carregar listas e configurações em paralelo
       const [userLists] = await Promise.all([
         LeadService.getUserLeadLists()
       ])
-      
+
       setLists(userLists)
       setWhatsappConfig(null)
-      
+
       // Carregar instância WhatsApp conectada
       if (user) {
         const instance = await WhatsAppInstanceService.getUserInstance(user.id)
@@ -157,7 +157,7 @@ export default function NewDisparadorMassa() {
         }
       }
     } catch (error) {
-      console.error('Erro ao carregar dados:', error)
+
     } finally {
       setLoading(false)
     }
@@ -182,7 +182,7 @@ export default function NewDisparadorMassa() {
 
   const handleConnectionSuccess = async (instanceName: string) => {
     setConnectedInstance(instanceName)
-    
+
     try {
       // Buscar dados atualizados da instância
       if (user) {
@@ -202,22 +202,22 @@ export default function NewDisparadorMassa() {
         }
       }
     } catch (error) {
-      console.error('Erro ao buscar dados da instância:', error)
+
     }
-    
+
     // Mensagem de sucesso profissional
     toast({
       title: '🎉 WhatsApp Conectado com Sucesso!',
       description: 'Sua conta WhatsApp está ativa e pronta para enviar campanhas.',
       variant: 'success',
     })
-    
+
     // Voltar para a aba de campanhas
     setCurrentState('campaigns')
   }
 
   const handleConnectionError = (error: string) => {
-    console.error('Erro na conexão WhatsApp:', error)
+
     setConnectedInstance(null)
     setWhatsappConfig(null)
   }
@@ -226,8 +226,6 @@ export default function NewDisparadorMassa() {
     setConnectedInstance(null)
     setWhatsappConfig(null)
   }
-
-
   // Função para lidar com mudanças de step do wizard
   const handleWizardStepChange = (step: 'lists' | 'message' | 'review') => {
     setCurrentWizardStep(step)
@@ -237,7 +235,7 @@ export default function NewDisparadorMassa() {
     // Iniciando envio da campanha
 
     if (!selectedCampaign) {
-      console.error('❌ [CAMPAIGN-SEND] VALIDAÇÃO FALHOU: Nenhuma campanha selecionada')
+
       toast({
         title: 'Erro',
         description: 'Nenhuma campanha selecionada',
@@ -247,7 +245,7 @@ export default function NewDisparadorMassa() {
     }
 
     if (!connectedInstance) {
-      console.error('❌ [CAMPAIGN-SEND] VALIDAÇÃO FALHOU: WhatsApp não conectado')
+
       toast({
         title: 'Erro',
         description: 'WhatsApp não está conectado',
@@ -257,7 +255,7 @@ export default function NewDisparadorMassa() {
     }
 
     if (!message || message.trim().length === 0) {
-      console.error('❌ [CAMPAIGN-SEND] VALIDAÇÃO FALHOU: Mensagem vazia')
+
       toast({
         title: 'Erro',
         description: 'Mensagem não pode estar vazia',
@@ -267,7 +265,7 @@ export default function NewDisparadorMassa() {
     }
 
     if (!campaignLeads || campaignLeads.length === 0) {
-      console.error('❌ [CAMPAIGN-SEND] VALIDAÇÃO FALHOU: Nenhum lead selecionado')
+
       toast({
         title: 'Erro',
         description: 'Selecione pelo menos uma lista com leads',
@@ -275,12 +273,8 @@ export default function NewDisparadorMassa() {
       })
       return
     }
-
-    console.log('✅ [CAMPAIGN-SEND] Todas as validações passaram!')
-
     try {
-      console.log('🔄 [CAMPAIGN-SEND] Preparando payload para N8N...')
-      
+
       // Preparar dados para N8N (formato correto: body como array)
       const n8nPayload = [
         {
@@ -294,30 +288,19 @@ export default function NewDisparadorMassa() {
           }))
         }
       ]
-      
+
       // Log detalhado dos números normalizados
-      console.log('📱 [CAMPAIGN-SEND] Números normalizados:')
+
       campaignLeads.forEach((lead, index) => {
         const originalPhone = lead.phone
         const normalizedPhone = normalizePhoneNumber(lead.phone)
-        console.log(`  ${index + 1}. ${lead.name}: ${originalPhone} → ${normalizedPhone}`)
+
       })
-      
-      console.log('📤 [CAMPAIGN-SEND] Payload preparado:', {
-        campaignId: selectedCampaign.id,
-        campaignName: selectedCampaign.name,
-        instanceName: connectedInstance,
-        totalLeads: campaignLeads.length,
-        messageLength: message.length,
-        sampleLead: campaignLeads[0] ? {
-          nome: campaignLeads[0].name,
-          telefone: campaignLeads[0].phone,
-          telefoneNormalizado: normalizePhoneNumber(campaignLeads[0].phone)
         } : null
       })
-      
+
       console.log('🌐 [CAMPAIGN-SEND] Enviando via backend (sistema antigo)...')
-      
+
       // Usar o mesmo fluxo do sistema antigo: Frontend → Backend → N8N
       const backendResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/dispatch-campaign`, {
         method: 'POST',
@@ -326,28 +309,16 @@ export default function NewDisparadorMassa() {
         },
         body: JSON.stringify(n8nPayload)
       })
-      
-      console.log('📡 [CAMPAIGN-SEND] Resposta do backend:', {
-        status: backendResponse.status,
-        statusText: backendResponse.statusText,
-        ok: backendResponse.ok
-      })
-      
       if (!backendResponse.ok) {
         const errorText = await backendResponse.text()
-        console.error('❌ [CAMPAIGN-SEND] Erro do backend:', errorText)
+
         throw new Error(`Backend retornou erro: ${backendResponse.status} - ${errorText}`)
       }
-      
+
       const backendData = await backendResponse.json()
-      console.log('📋 [CAMPAIGN-SEND] Dados do backend:', backendData)
-      console.log('✅ [CAMPAIGN-SEND] Backend processou com sucesso!')
-      
-      console.log('🎯 [CAMPAIGN-SEND] Iniciando modal de progresso...')
-      
       // Armazenar leads da campanha no estado
       setCampaignLeads(campaignLeads)
-      
+
       // Configurar estados do modal simplificado
       setCurrentCampaignName(selectedCampaign.name)
       setCurrentTotalLeads(campaignLeads.length)
@@ -355,29 +326,24 @@ export default function NewDisparadorMassa() {
       setCurrentFailedCount(0)
       setCurrentCampaignStatus('sending')
       setCampaignStartTime(new Date())
-      
+
       // Definir estado de inicialização e mensagem profissional
       setIsInitializing(true)
       setCurrentLead({
         name: 'Iniciando processo de envio...',
         phone: 'Preparando campanha'
       })
-      
+
       setShowProgressModal(true)
-      
-      console.log('🎉 [CAMPAIGN-SEND] ===== CAMPANHA INICIADA COM SUCESSO =====')
-      
       toast({
         title: '🚀 Campanha Iniciada!',
         description: `Campanha "${selectedCampaign.name}" foi enviada para ${campaignLeads.length} leads. Acompanhe o progresso.`,
         variant: 'success'
       })
-      
+
     } catch (error) {
-      console.error('❌ [CAMPAIGN-SEND] ===== ERRO NO ENVIO DA CAMPANHA =====')
-      console.error('❌ [CAMPAIGN-SEND] Erro completo:', error)
       console.error('❌ [CAMPAIGN-SEND] Stack trace:', (error as Error).stack)
-      
+
       toast({
         title: 'Erro ao enviar campanha',
         description: 'Erro inesperado ao enviar a campanha. Tente novamente.',
@@ -388,12 +354,12 @@ export default function NewDisparadorMassa() {
 
   // Função para cancelar campanha
   const handleCancelCampaign = () => {
-    console.log('🛑 [CAMPAIGN-CANCEL] Cancelando campanha...')
+
     setCurrentCampaignStatus('cancelled')
-    
+
     // Aqui você pode adicionar lógica para cancelar no backend/N8N
     // Por enquanto, apenas muda o status local
-    
+
     toast({
       title: 'Campanha Cancelada',
       description: 'A campanha foi cancelada com sucesso.',
@@ -403,7 +369,7 @@ export default function NewDisparadorMassa() {
 
   // Função para fechar modal
   const handleCloseModal = () => {
-    console.log('❌ [CAMPAIGN-MODAL] Fechando modal...')
+
     setShowProgressModal(false)
     setCurrentCampaignStatus('sending')
     setCurrentSuccessCount(0)
@@ -416,32 +382,27 @@ export default function NewDisparadorMassa() {
     if (!showProgressModal || currentCampaignStatus !== 'sending' || !selectedCampaign?.id) {
       return
     }
-
-    console.log('📡 [CAMPAIGN-SSE] Conectando ao stream de progresso para campanha:', selectedCampaign.id)
-    
     const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/campaign/status/stream/${selectedCampaign.id}`)
-    
+
     eventSource.onopen = () => {
-      console.log('✅ [CAMPAIGN-SSE] Conexão estabelecida')
+
     }
-    
+
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        console.log('📨 [CAMPAIGN-SSE] Mensagem recebida:', data)
-        
+
         if (data.type === 'progress') {
-          console.log('📊 [CAMPAIGN-PROGRESS] Atualizando progresso:', data.data)
-          
+
           // Sair do estado de inicialização na primeira atualização
           if (isInitializing) {
             setIsInitializing(false)
           }
-          
+
           // Atualizar estados locais
           setCurrentSuccessCount(data.data.successCount || 0)
           setCurrentFailedCount(data.data.failedCount || 0)
-          
+
           // Priorizar o lead atual enviado pelo SSE
           if (data.data.currentLead) {
             setCurrentLead({
@@ -452,18 +413,18 @@ export default function NewDisparadorMassa() {
             // Fallback: calcular baseado no progresso
             const progressPercent = data.data.progress || 0
             const totalLeads = campaignLeads.length
-            
+
             if (totalLeads > 0) {
               // IMPORTANTE: O primeiro lead já foi enviado quando a campanha iniciou
               // Então quando progresso = 50% (1 de 2), já estamos processando o SEGUNDO lead
-              
+
               // Calcular quantos leads já foram processados
               const processedLeads = Math.floor((progressPercent / 100) * totalLeads)
-              
+
               // O lead que está sendo processado AGORA é o próximo após os já processados
               // Exemplo: 2 leads, progresso 50% = 1 processado, então processando lead[1] (segundo)
               const currentLeadIndex = Math.min(processedLeads, totalLeads - 1)
-              
+
               if (campaignLeads[currentLeadIndex]) {
                 const currentLead = campaignLeads[currentLeadIndex]
                 setCurrentLead({
@@ -474,13 +435,12 @@ export default function NewDisparadorMassa() {
             }
           }
         } else if (data.type === 'complete') {
-          console.log('🎉 [CAMPAIGN-COMPLETE] Campanha finalizada:', data.data)
-          
+
           // Finalizar campanha
           setCurrentCampaignStatus('completed')
           setCurrentSuccessCount(data.data.successCount || 0)
           setCurrentFailedCount(data.data.failedCount || 0)
-          
+
           toast({
             title: '🎉 Campanha Concluída!',
             description: `Campanha finalizada com ${data.data.successCount} sucessos e ${data.data.failedCount} falhas.`,
@@ -488,21 +448,19 @@ export default function NewDisparadorMassa() {
           })
         }
       } catch (error) {
-        console.error('❌ [CAMPAIGN-SSE] Erro ao processar dados:', error)
+
       }
     }
-    
+
     eventSource.onerror = (error) => {
-      console.error('❌ [CAMPAIGN-SSE] Erro na conexão:', error)
+
     }
-    
+
     return () => {
-      console.log('🔌 [CAMPAIGN-SSE] Fechando conexão')
+
       eventSource.close()
     }
   }, [showProgressModal, currentCampaignStatus, selectedCampaign?.id])
-
-
   // Renderizar conteúdo baseado no estado
   const renderContent = () => {
     switch (currentState) {
@@ -515,7 +473,7 @@ export default function NewDisparadorMassa() {
             lists={lists}
           />
         )
-      
+
       case 'create':
         return (
           <CampaignWizard
@@ -528,7 +486,7 @@ export default function NewDisparadorMassa() {
             onStepChange={handleWizardStepChange}
           />
         )
-      
+
       case 'edit':
         return selectedCampaign ? (
           <CampaignWizard
@@ -542,7 +500,7 @@ export default function NewDisparadorMassa() {
             onCampaignCreated={handleEditCampaign}
           />
         ) : null
-      
+
       case 'config':
         return (
           <div className="space-y-6">
@@ -558,8 +516,9 @@ export default function NewDisparadorMassa() {
               </Button>
               <h1 className="text-2xl font-bold text-primary">Configurações</h1>
             </div>
-            
-            <WhatsAppConnection 
+
+            <WhatsAppConnection
+
               userId={user?.id}
               userName={user?.email}
               onConnectionSuccess={handleConnectionSuccess}
@@ -568,7 +527,7 @@ export default function NewDisparadorMassa() {
             />
           </div>
         )
-      
+
       default:
         return null
     }
@@ -577,7 +536,8 @@ export default function NewDisparadorMassa() {
   if (loading) {
     return (
       <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-        <motion.div 
+        <motion.div
+
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
@@ -589,7 +549,8 @@ export default function NewDisparadorMassa() {
           >
             <div className="w-full h-full rounded-full border-4 border-orange-200 border-t-orange-500"></div>
           </motion.div>
-          <motion.p 
+          <motion.p
+
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -597,7 +558,8 @@ export default function NewDisparadorMassa() {
           >
             Carregando Disparador...
           </motion.p>
-          <motion.p 
+          <motion.p
+
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -615,7 +577,8 @@ export default function NewDisparadorMassa() {
       {/* Header */}
       <div className="py-4 sm:py-6 md:py-8">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
+
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -630,7 +593,7 @@ export default function NewDisparadorMassa() {
                   opacity: 0.1
                 }}></div>
               </div>
-              
+
               <div className="relative z-10">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
                   <div className="space-y-3 lg:space-y-4">
@@ -652,7 +615,7 @@ export default function NewDisparadorMassa() {
                         </p>
                       </div>
                     </motion.div>
-                    
+
                     <motion.p
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -662,14 +625,15 @@ export default function NewDisparadorMassa() {
                       Envie mensagens personalizadas para todos os seus leads via WhatsApp de uma só vez!
                     </motion.p>
                   </div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 }}
                     className="flex justify-center sm:justify-end"
                   >
-                  <motion.div 
+                  <motion.div
+
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300"
@@ -702,7 +666,7 @@ export default function NewDisparadorMassa() {
                       {connectedInstance ? 'Pronto para enviar campanhas' : 'Configure sua instância'}
                     </div>
                   </motion.div>
-                  
+
                   </motion.div>
                 </div>
               </div>
@@ -710,7 +674,8 @@ export default function NewDisparadorMassa() {
           </motion.div>
 
           {/* Voltar para Dashboard */}
-          <motion.div 
+          <motion.div
+
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
@@ -732,7 +697,8 @@ export default function NewDisparadorMassa() {
 
           {/* Voltar para Campanhas - Só aparece quando criando/editando campanha */}
           {(currentState === 'create' || currentState === 'edit') && (
-            <motion.div 
+            <motion.div
+
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -769,50 +735,62 @@ export default function NewDisparadorMassa() {
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'lists' 
-                    ? 'bg-gradient-to-r from-indigo-500 to-blue-600' 
+                  currentWizardStep === 'lists'
+
+                    ? 'bg-gradient-to-r from-indigo-500 to-blue-600'
+
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'lists' 
-                    ? 'text-indigo-600 dark:text-indigo-400' 
+                  currentWizardStep === 'lists'
+
+                    ? 'text-indigo-600 dark:text-indigo-400'
+
                     : 'text-gray-600 dark:text-gray-400'
                 }`}>
                   <span className="hidden sm:inline">Criar/Editar Campanha</span>
                   <span className="sm:hidden">Campanha</span>
                 </span>
               </div>
-              
+
               <div className="hidden sm:block w-8 lg:w-12 h-px bg-gray-300 dark:bg-gray-600"></div>
               <div className="sm:hidden w-8 h-px bg-gray-300 dark:bg-gray-600"></div>
-              
+
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'message' 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-600' 
+                  currentWizardStep === 'message'
+
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600'
+
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'message' 
-                    ? 'text-purple-600 dark:text-purple-400' 
+                  currentWizardStep === 'message'
+
+                    ? 'text-purple-600 dark:text-purple-400'
+
                     : 'text-gray-600 dark:text-gray-400'
                 }`}>
                   Mensagem
                 </span>
               </div>
-              
+
               <div className="hidden sm:block w-8 lg:w-12 h-px bg-gray-300 dark:bg-gray-600"></div>
               <div className="sm:hidden w-8 h-px bg-gray-300 dark:bg-gray-600"></div>
-              
+
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'review' 
-                    ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                  currentWizardStep === 'review'
+
+                    ? 'bg-gradient-to-r from-green-500 to-green-600'
+
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'review' 
-                    ? 'text-green-700 dark:text-green-400' 
+                  currentWizardStep === 'review'
+
+                    ? 'text-green-700 dark:text-green-400'
+
                     : 'text-gray-600 dark:text-gray-400'
                 }`}>
                   <span className="hidden sm:inline">Revisão e Envio</span>
@@ -864,7 +842,7 @@ export default function NewDisparadorMassa() {
         onCancel={handleCancelCampaign}
         onClose={handleCloseModal}
       />
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>

@@ -27,19 +27,12 @@ export class AuthWebhookService {
    */
   static async logAuthEvent(event: AuthEvent): Promise<void> {
     try {
-      console.log('🔍 Auth Event:', {
-        type: event.type,
-        userId: event.user?.id,
-        email: event.user?.email,
-        emailConfirmed: !!event.user?.email_confirmed_at,
-        timestamp: event.timestamp
-      })
 
       // Aqui você pode adicionar logs para banco de dados, analytics, etc.
       // Por exemplo: await logToDatabase(event)
-      
+
     } catch (error) {
-      console.error('❌ Erro ao logar evento de auth:', error)
+
     }
   }
 

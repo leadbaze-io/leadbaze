@@ -46,7 +46,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
 
   // Amostra de leads para preview
   const sampleLeads = campaignLeads.slice(0, 5)
-  
+
   // Leads para exibir (todos ou amostra)
   const displayLeads = showAllLeads ? campaignLeads : sampleLeads
 
@@ -101,7 +101,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                   <p className="text-sm review-label-claro review-label-escuro">Nome da Campanha</p>
                   <p className="font-semibold review-value-claro review-value-escuro">{campaignName}</p>
                 </div>
-                
+
                 <div>
                   <p className="text-sm review-label-claro review-label-escuro">Status</p>
                   <div className="flex items-center gap-2">
@@ -109,7 +109,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                     <span className="text-sm review-status-claro review-status-escuro">Pronta para envio</span>
                   </div>
                 </div>
-                
+
                 <div>
                   <p className="text-sm review-label-claro review-label-escuro">Tempo estimado</p>
                   <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                     </motion.div>
                   )}
                 </AnimatePresence>
-                
+
                 {!showMessagePreview && (
                   <div className="flex items-center justify-between">
                     <p className="text-sm review-label-claro review-label-escuro">
@@ -245,7 +245,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                                 </span>
                               )}
                             </div>
-                            
+
                             {/* Botão de remover lead */}
                             {onRemoveLead && (
                               <motion.button
@@ -261,7 +261,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                           </motion.div>
                         ))}
                       </div>
-                      
+
                       {/* Botão para mostrar todos os leads */}
                       {stats.uniqueLeads > 5 && !showAllLeads && (
                         <motion.div
@@ -281,7 +281,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                           </Button>
                         </motion.div>
                       )}
-                      
+
                       {/* Botão para mostrar apenas amostra */}
                       {showAllLeads && stats.uniqueLeads > 5 && (
                         <motion.div
@@ -304,7 +304,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                     </motion.div>
                   )}
                 </AnimatePresence>
-                
+
                 {!showLeadsPreview && (
                   <div className="flex items-center justify-between">
                     <p className="text-sm review-label-claro review-label-escuro">
@@ -410,7 +410,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
                 </h3>
               </div>
               <p className="text-sm review-info-text-claro review-info-text-escuro leading-relaxed">
-                <strong>O envio das mensagens será processado em segundo plano.</strong> 
+                <strong>O envio das mensagens será processado em segundo plano.</strong>
+
                 Você pode acompanhar o progresso em tempo real através do modal de progresso que aparecerá após o envio.
               </p>
             </div>

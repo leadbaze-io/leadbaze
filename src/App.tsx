@@ -37,25 +37,22 @@ const ToastDemo = lazy(() => import('./pages/ToastDemo'))
 function AppContent() {
   const location = useLocation()
   const { theme, isDark } = useTheme()
-  
+
   useEffect(() => {
     const isLandingPage = location.pathname === '/'
     const isBlogPage = location.pathname.startsWith('/blog')
-    
-    console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage, 'isBlogPage:', isBlogPage)
-    
     if (isLandingPage || isBlogPage) {
       // Landing Page e Blog - sempre claros, forçar remoção da classe dark
       document.documentElement.classList.remove('dark')
-      console.log('✅ Landing Page/Blog - classe dark forçadamente removida')
+
     } else {
       // Para outras páginas, restaurar o tema escolhido pelo usuário
       if (isDark) {
         document.documentElement.classList.add('dark')
-        console.log('✅ Restaurando tema escuro escolhido pelo usuário')
+
       } else {
         document.documentElement.classList.remove('dark')
-        console.log('✅ Restaurando tema claro escolhido pelo usuário')
+
       }
     }
   }, [location.pathname, theme, isDark])
@@ -64,7 +61,7 @@ function AppContent() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
       <FaviconImage />
       <Navbar />
-      
+
       <main className="flex-1">
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
@@ -105,13 +102,13 @@ function App() {
           <Router>
             <AppContent />
           </Router>
-          
+
           {/* DevTools apenas em desenvolvimento */}
           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-          
+
           {/* Toaster para notificações */}
           <Toaster />
-          
+
           {/* Gerenciador global de campanhas ativas */}
           <ActiveCampaignManager />
         </ActiveCampaignProvider>

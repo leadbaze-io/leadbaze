@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  AlertTriangle, 
-  Info, 
-  CheckCircle, 
-  TrendingUp, 
+import {
+
+  AlertTriangle,
+
+  Info,
+
+  CheckCircle,
+
+  TrendingUp,
+
   TrendingDown,
   Clock,
   Target,
@@ -52,7 +57,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
       await markInsightAsRead(insightId)
       onInsightRead?.(insightId)
     } catch (error) {
-      console.error('Erro ao marcar insight como lido:', error)
+
     }
   }
 
@@ -62,7 +67,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
       await generateAutomaticInsights('current-user-id')
       onRefresh?.()
     } catch (error) {
-      console.error('Erro ao gerar insights:', error)
+
     } finally {
       setIsGenerating(false)
     }
@@ -115,7 +120,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
     const date = new Date(dateString)
     const now = new Date()
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
-    
+
     if (diffInMinutes < 1) return 'Agora mesmo'
     if (diffInMinutes < 60) return `${diffInMinutes}m atrás`
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h atrás`
@@ -143,7 +148,8 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
             <p className="text-muted-foreground mb-4">
               Execute algumas campanhas para receber insights automáticos sobre sua performance.
             </p>
-            <Button 
+            <Button
+
               onClick={handleGenerateInsights}
               disabled={isGenerating}
               variant="outline"
@@ -169,7 +175,8 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
               </Badge>
             )}
           </div>
-          <Button 
+          <Button
+
             onClick={handleGenerateInsights}
             disabled={isGenerating}
             variant="outline"
@@ -205,7 +212,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
                   <div className="flex-shrink-0 mt-1">
                     {getSeverityIcon(insight.severity)}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 mb-2">
                       <h4 className="text-sm font-semibold text-foreground">
@@ -218,11 +225,11 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
                         </span>
                       </Badge>
                     </div>
-                    
+
                     <p className="text-sm text-muted-foreground mb-3">
                       {insight.description}
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                         <div className="flex items-center space-x-1">
@@ -235,7 +242,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
                           </Badge>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         {insight.actionUrl && (
                           <Button
@@ -248,7 +255,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
                             Ver
                           </Button>
                         )}
-                        
+
                         {!insight.isRead && (
                           <Button
                             size="sm"
@@ -268,7 +275,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
             ))}
           </AnimatePresence>
         </div>
-        
+
         {insights.length > 5 && (
           <div className="mt-4 pt-4 border-t border-border">
             <Button variant="outline" className="w-full">
@@ -304,11 +311,13 @@ export function RealTimeInsights() {
           {isConnected ? 'Conectado' : 'Desconectado'}
         </span>
       </div>
-      
-      <InsightsPanel 
+
+      <InsightsPanel
+
         insights={insights}
         onInsightRead={(id) => {
-          setInsights(prev => prev.map(insight => 
+          setInsights(prev => prev.map(insight =>
+
             insight.id === id ? { ...insight, isRead: true } : insight
           ))
         }}

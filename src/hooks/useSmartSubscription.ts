@@ -19,7 +19,7 @@ export const useSmartSubscription = () => {
   // Função para verificar se houve mudanças significativas
   const hasSignificantChanges = useCallback((newData: any, cached: SubscriptionCache | null) => {
     if (!cached || !newData) return true;
-    
+
     return (
       newData.leads_used !== cached.leads_used ||
       newData.leads_remaining !== cached.leads_remaining
@@ -29,13 +29,12 @@ export const useSmartSubscription = () => {
   // Função para atualizar com animação
   const updateWithAnimation = useCallback(async () => {
     if (isUpdating) return; // Evitar múltiplas atualizações simultâneas
-    
+
     setIsUpdating(true);
-    console.log('🔄 Atualizando assinatura com animação...');
-    
+
     await refetch();
     setLastUpdate(new Date());
-    
+
     // Remover indicador de atualização após 2 segundos
     setTimeout(() => {
       setIsUpdating(false);
@@ -45,12 +44,9 @@ export const useSmartSubscription = () => {
   // Função para polling inteligente (apenas quando necessário)
   const startSmartPolling = useCallback(() => {
     if (pollIntervalRef.current) return; // Já está fazendo polling
-    
-    console.log('🔄 Iniciando polling inteligente...');
-    
     pollIntervalRef.current = setInterval(async () => {
       if (!subscription?.id) return;
-      
+
       try {
         // Buscar apenas os dados essenciais
         const { data, error } = await supabase
@@ -58,15 +54,15 @@ export const useSmartSubscription = () => {
           .select('leads_used, leads_remaining, updated_at')
           .eq('id', subscription.id)
           .single();
-          
+
         if (error) {
-          console.error('Erro no polling:', error);
+
           return;
         }
-        
+
         // Verificar se houve mudanças significativas
         if (hasSignificantChanges(data, cacheRef.current)) {
-          console.log('📊 Mudanças detectadas via polling:', data);
+
           cacheRef.current = {
             leads_used: data.leads_used,
             leads_remaining: data.leads_remaining,
@@ -75,7 +71,7 @@ export const useSmartSubscription = () => {
           await updateWithAnimation();
         }
       } catch (err) {
-        console.error('Erro no polling inteligente:', err);
+
       }
     }, 3000); // Polling a cada 3 segundos
   }, [subscription?.id, hasSignificantChanges, updateWithAnimation]);
@@ -83,7 +79,7 @@ export const useSmartSubscription = () => {
   // Função para parar o polling
   const stopPolling = useCallback(() => {
     if (pollIntervalRef.current) {
-      console.log('⏹️ Parando polling inteligente...');
+
       clearInterval(pollIntervalRef.current);
       pollIntervalRef.current = null;
     }
@@ -92,9 +88,6 @@ export const useSmartSubscription = () => {
   // Configurar Realtime para mudanças críticas
   useEffect(() => {
     if (!subscription?.id) return;
-
-    console.log('🔔 Configurando Realtime para assinatura:', subscription.id);
-
     // Channel para mudanças na assinatura
     const subscriptionChannel = supabase
       .channel(`subscription-${subscription.id}`)
@@ -107,8 +100,7 @@ export const useSmartSubscription = () => {
           filter: `id=eq.${subscription.id}`
         },
         async (payload) => {
-          console.log('📡 Mudança detectada na assinatura via Realtime:', payload);
-          
+
           // Verificar se é uma mudança significativa
           const newData = payload.new;
           if (hasSignificantChanges(newData, cacheRef.current)) {
@@ -124,13 +116,13 @@ export const useSmartSubscription = () => {
       .subscribe((status) => {
         console.log('📡 Status do Realtime (Assinatura):', status);
         setIsConnected(status === 'SUBSCRIBED');
-        
+
         // Se Realtime não funcionar, usar polling como fallback
         if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          console.log('⚠️ Realtime falhou, iniciando polling de fallback...');
+
           startSmartPolling();
         } else if (status === 'SUBSCRIBED') {
-          console.log('✅ Realtime conectado com sucesso!');
+
           stopPolling(); // Parar polling se Realtime funcionar
         }
       });
@@ -147,14 +139,14 @@ export const useSmartSubscription = () => {
           filter: `subscription_id=eq.${subscription.id}`
         },
         async (payload) => {
-          console.log('📡 Nova entrada no histórico via Realtime:', payload);
+
           await updateWithAnimation();
         }
       )
       .subscribe();
 
     return () => {
-      console.log('🔇 Removendo listeners Realtime');
+
       supabase.removeChannel(subscriptionChannel);
       supabase.removeChannel(historyChannel);
       stopPolling();
@@ -175,12 +167,12 @@ export const useSmartSubscription = () => {
   // Escutar evento customizado de atualização de leads
   useEffect(() => {
     const handleLeadsUpdated = (event: CustomEvent) => {
-      console.log('📡 Evento de leads atualizados recebido:', event.detail);
+
       updateWithAnimation();
     };
 
     window.addEventListener('leadsUpdated', handleLeadsUpdated as EventListener);
-    
+
     return () => {
       window.removeEventListener('leadsUpdated', handleLeadsUpdated as EventListener);
     };
@@ -188,7 +180,7 @@ export const useSmartSubscription = () => {
 
   // Função para forçar atualização manual
   const forceUpdate = useCallback(async () => {
-    console.log('🔄 Forçando atualização manual...');
+
     await updateWithAnimation();
   }, [updateWithAnimation]);
 

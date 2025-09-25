@@ -102,21 +102,22 @@ export function CampaignSimulator() {
             {activeCampaign.progress}% concluído
           </div>
         </div>
-        
+
         <div className="space-y-3">
           <div className="flex justify-between text-xs text-white/80">
             <span>{activeCampaign.successCount} enviados</span>
             <span>{activeCampaign.failedCount} falhas</span>
             <span>{activeCampaign.totalLeads} total</span>
           </div>
-          
+
           <div className="w-full bg-white/20 rounded-full h-2">
-            <div 
+            <div
+
               className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${activeCampaign.progress}%` }}
             />
           </div>
-          
+
           <div className="flex gap-2 flex-wrap">
             {!isSimulating ? (
               <Button
@@ -137,7 +138,7 @@ export function CampaignSimulator() {
                 Pausar
               </Button>
             )}
-            
+
             <Button
               onClick={openModal}
               size="sm"
@@ -147,7 +148,7 @@ export function CampaignSimulator() {
               <Eye className="w-3 h-3 mr-1" />
               Ver Global
             </Button>
-            
+
             <Button
               onClick={handleStopSimulation}
               size="sm"
@@ -157,7 +158,7 @@ export function CampaignSimulator() {
               <Square className="w-3 h-3 mr-1" />
               Parar
             </Button>
-            
+
             <Button
               onClick={() => {
                 localStorage.removeItem('activeCampaign')
@@ -183,12 +184,12 @@ export function CampaignSimulator() {
           <span className="text-sm font-semibold text-white">Simulador de Campanha</span>
         </div>
       </div>
-      
+
       <div className="space-y-3">
         <p className="text-xs text-white/80">
           Teste o sistema de campanhas com uma simulação realista
         </p>
-        
+
         <div className="flex gap-2">
           <Button
             onClick={handleStartSimulation}

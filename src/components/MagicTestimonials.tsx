@@ -85,9 +85,10 @@ export default function MagicTestimonials() {
               <Star className="w-4 h-4" />
               <span>Depoimentos Reais</span>
             </div>
-            
+
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              O que nossos 
+              O que nossos
+
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Clientes</span>
               <br />
               estão dizendo
@@ -102,8 +103,6 @@ export default function MagicTestimonials() {
         <AnimatedBeam delay={0.4}>
           <div className="max-w-4xl mx-auto">
             <BorderBeam className="relative bg-gradient-to-br from-blue-50 to-purple-50 p-8 md:p-12 border-0">
-
-
               {/* Navigation Buttons */}
               <div className="absolute top-6 right-6 flex space-x-2">
                 <motion.button
@@ -127,7 +126,8 @@ export default function MagicTestimonials() {
               {/* Content */}
               <div className="pt-8">
                 {/* Rating */}
-                <motion.div 
+                <motion.div
+
                   key={currentTestimonial}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -138,7 +138,8 @@ export default function MagicTestimonials() {
                 </motion.div>
 
                 {/* Testimonial Text */}
-                <motion.blockquote 
+                <motion.blockquote
+
                   key={`quote-${currentTestimonial}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -149,7 +150,8 @@ export default function MagicTestimonials() {
                 </motion.blockquote>
 
                 {/* Highlight */}
-                <motion.div 
+                <motion.div
+
                   key={`highlight-${currentTestimonial}`}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -160,7 +162,8 @@ export default function MagicTestimonials() {
                 </motion.div>
 
                 {/* Author */}
-                <motion.div 
+                <motion.div
+
                   key={`author-${currentTestimonial}`}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -196,8 +199,10 @@ export default function MagicTestimonials() {
               key={index}
               onClick={() => setCurrentTestimonial(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentTestimonial 
-                  ? 'bg-blue-600 w-8' 
+                index === currentTestimonial
+
+                  ? 'bg-blue-600 w-8'
+
                   : 'bg-gray-300 hover:bg-gray-400'
               }`}
             />

@@ -87,11 +87,11 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
       >
         <Icon className="w-4 h-4" />
       </motion.div>
-      
+
       <span className="font-semibold">
         {config.text}
       </span>
-      
+
       {status === 'connected' && (
         <motion.div
           initial={{ scale: 0 }}
@@ -103,4 +103,3 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
     </motion.div>
   )
 }
-

@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, 
+import {
+
+  Users,
+
   Target,
-  Activity, 
-  Clock, 
-  CheckCircle, 
+  Activity,
+
+  Clock,
+
+  CheckCircle,
+
   Send,
   BarChart3,
   RefreshCw,
@@ -18,13 +23,19 @@ import {
 import { AnalyticsService } from '../../lib/analyticsService';
 
 // Componente de KPI Card seguindo o padrão do Dashboard
-const KPICard = ({ 
-  title, 
-  value, 
-  change, 
-  icon: Icon, 
+const KPICard = ({
+
+  title,
+
+  value,
+
+  change,
+
+  icon: Icon,
+
   color = 'blue',
-  loading = false 
+  loading = false
+
 }: {
   title: string;
   value: string | number;
@@ -68,12 +79,16 @@ const KPICard = ({
             </h3>
             {change !== undefined && !loading && (
               <div className={`flex items-center space-x-1 text-sm font-medium ${
-                change > 0 ? 'text-green-600 dark:text-green-400' : 
-                change < 0 ? 'text-red-600 dark:text-red-400' : 
+                change > 0 ? 'text-green-600 dark:text-green-400' :
+
+                change < 0 ? 'text-red-600 dark:text-red-400' :
+
                 'dashboard-card-muted-claro dark:text-muted-foreground'
               }`}>
-                {change > 0 ? <ArrowUpRight className="w-4 h-4" /> : 
-                 change < 0 ? <ArrowDownRight className="w-4 h-4" /> : 
+                {change > 0 ? <ArrowUpRight className="w-4 h-4" /> :
+
+                 change < 0 ? <ArrowDownRight className="w-4 h-4" /> :
+
                  <Minus className="w-4 h-4" />}
                 <span>{Math.abs(change)}%</span>
               </div>
@@ -89,12 +104,18 @@ const KPICard = ({
 };
 
 // Componente de Activity Item seguindo o padrão do Dashboard
-const ActivityItem = ({ 
-  activity, 
-  index 
-}: { 
-  activity: any; 
-  index: number; 
+const ActivityItem = ({
+
+  activity,
+
+  index
+
+}: {
+
+  activity: any;
+
+  index: number;
+
 }) => {
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -129,7 +150,7 @@ const ActivityItem = ({
           <div className={`w-10 h-10 bg-gradient-to-r ${getActivityGradient(activity.type)} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
             {getActivityIcon(activity.type)}
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold dashboard-card-text-claro dark:text-foreground truncate">
               {activity.description}
@@ -151,7 +172,7 @@ const ActivityItem = ({
                 {activity.count}
               </span>
             )}
-            
+
             {activity.successRate && activity.successRate > 0 && (
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
                 {activity.successRate}% sucesso
@@ -175,12 +196,12 @@ export const AnalyticsDashboard: React.FC = () => {
   const loadAnalytics = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
-    
+
     try {
       const data = await AnalyticsService.getAllAnalytics(timeRange);
       setAnalytics(data);
     } catch (error) {
-      console.error('Erro ao carregar analytics:', error);
+
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -194,8 +215,6 @@ export const AnalyticsDashboard: React.FC = () => {
   const handleRefresh = () => {
     loadAnalytics(true);
   };
-
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -211,7 +230,7 @@ export const AnalyticsDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* KPI Cards Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {[...Array(4)].map((_, i) => (
@@ -237,8 +256,10 @@ export const AnalyticsDashboard: React.FC = () => {
           <p className="dashboard-card-muted-claro dark:text-muted-foreground mb-4">
             Não há dados de analytics para exibir no momento.
           </p>
-          <button 
-            onClick={handleRefresh} 
+          <button
+
+            onClick={handleRefresh}
+
             className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
           >
             <RefreshCw className="w-4 h-4 mr-2 inline" />
@@ -266,7 +287,7 @@ export const AnalyticsDashboard: React.FC = () => {
             opacity: 0.1
           }}></div>
         </div>
-        
+
         <div className="relative z-10">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="space-y-4">
@@ -289,15 +310,17 @@ export const AnalyticsDashboard: React.FC = () => {
                 </div>
               </motion.div>
           </div>
-          
+
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
               className="flex items-center space-x-2 sm:space-x-3"
             >
-              <select 
-                value={timeRange} 
+              <select
+
+                value={timeRange}
+
                 onChange={(e) => setTimeRange(e.target.value as '7d' | '30d' | '90d')}
                 className="px-2 sm:px-4 py-1 sm:py-2 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 text-xs sm:text-sm"
               >
@@ -305,7 +328,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 <option value="30d" className="text-gray-900">30 dias</option>
                 <option value="90d" className="text-gray-900">90 dias</option>
               </select>
-              
+
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
@@ -313,7 +336,7 @@ export const AnalyticsDashboard: React.FC = () => {
               >
                 <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${refreshing ? 'animate-spin' : ''}`} />
               </button>
-              
+
             </motion.div>
           </div>
         </div>
@@ -329,7 +352,7 @@ export const AnalyticsDashboard: React.FC = () => {
           color="blue"
           loading={loading}
         />
-        
+
         <KPICard
           title="Mensagens Enviadas"
           value={analytics.overview.messagesSent.toLocaleString()}
@@ -337,7 +360,7 @@ export const AnalyticsDashboard: React.FC = () => {
           color="green"
           loading={loading}
         />
-        
+
         <KPICard
           title="Taxa de Sucesso"
           value={`${analytics.overview.performance?.successRate || 0}%`}
@@ -345,7 +368,7 @@ export const AnalyticsDashboard: React.FC = () => {
           color="purple"
           loading={loading}
         />
-        
+
         <KPICard
           title="Campanhas Ativas"
           value={analytics.overview.campaignStats?.total || 0}
@@ -383,7 +406,7 @@ export const AnalyticsDashboard: React.FC = () => {
               />
             )}
           </button>
-          
+
           <button
             onClick={() => setActiveTab('activity')}
             className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 ${
@@ -404,7 +427,7 @@ export const AnalyticsDashboard: React.FC = () => {
               />
             )}
           </button>
-          
+
         </nav>
       </motion.div>
 
@@ -428,7 +451,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   Métricas de Campanhas
                 </h3>
               </div>
-              
+
               <div className="space-y-8">
                 {/* Métricas de Performance */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
@@ -485,7 +508,8 @@ export const AnalyticsDashboard: React.FC = () => {
                           Eficiência de Listas
                         </p>
                         <p className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.totalLists > 0 ? 
+                          {analytics.overview.totalLists > 0 ?
+
                             Math.round(analytics.overview.totalLeads / analytics.overview.totalLists) : 0
                           }
                         </p>
@@ -509,7 +533,8 @@ export const AnalyticsDashboard: React.FC = () => {
                           Leads por Campanha
                         </p>
                         <p className="text-2xl font-bold dashboard-card-title-claro dark:text-foreground">
-                          {analytics.overview.campaignStats?.total > 0 ? 
+                          {analytics.overview.campaignStats?.total > 0 ?
+
                             Math.round(analytics.overview.totalLeads / analytics.overview.campaignStats.total) : 0
                           }
                         </p>
@@ -578,7 +603,7 @@ export const AnalyticsDashboard: React.FC = () => {
                     />
                   ))}
                 </AnimatePresence>
-                
+
                 {analytics.recentActivity.length === 0 && (
                   <div className="text-center py-12 dashboard-card-muted-claro dark:text-muted-foreground">
                     <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />

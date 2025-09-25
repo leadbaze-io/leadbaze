@@ -67,7 +67,7 @@ export function StatusIndicator({ status, className = '' }: StatusIndicatorProps
         >
           <IconComponent className="w-5 h-5" />
         </motion.div>
-        
+
         <motion.span
           key={status}
           initial={{ opacity: 0, x: -10 }}
@@ -111,20 +111,25 @@ export function StatusIndicator({ status, className = '' }: StatusIndicatorProps
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ 
-            type: "spring", 
-            stiffness: 500, 
+          transition={{
+
+            type: "spring",
+
+            stiffness: 500,
+
             damping: 15,
             delay: 0.2
           }}
           className="ml-auto"
         >
           <motion.div
-            animate={{ 
+            animate={{
+
               scale: [1, 1.1, 1],
               rotate: [0, 5, -5, 0]
             }}
-            transition={{ 
+            transition={{
+
               duration: 0.6,
               repeat: 1,
               delay: 0.3

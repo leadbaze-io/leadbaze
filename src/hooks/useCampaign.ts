@@ -24,7 +24,7 @@ interface UseCampaignReturn {
   stats: { totalLeads: number, uniqueLeads: number, selectedLists: number, ignoredLists: number }
   loading: boolean
   error: string | null
-  
+
   // Ações
   createCampaign: (name: string, message?: string) => Promise<BulkCampaign>
   updateCampaign: (updates: Partial<BulkCampaign>) => Promise<void>
@@ -72,23 +72,20 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
 
       if (campaignData) {
         // Log removido para limpeza
-        
+
         // Verificar consistência: se há leads mas não há listas selecionadas,
         // pode ser um problema de sincronização
         if (leadsData.length > 0 && listsData.selected.length === 0) {
-          console.warn('⚠️ Inconsistência detectada: há leads mas não há listas selecionadas')
-          console.log('🔍 Leads encontrados:', leadsData.length)
-          console.log('🔍 Listas selecionadas:', listsData.selected.length)
-          
+
           // Filtrar leads que não têm lista associada válida
           const validLeads = leadsData.filter(lead => lead.listId)
           console.log('🔍 Leads válidos (com listId):', validLeads.length)
-          
+
           setLeads(validLeads)
         } else {
           setLeads(leadsData)
         }
-        
+
         setCampaign(campaignData)
         setSelectedLists(listsData.selected)
         setIgnoredLists(listsData.ignored)
@@ -126,11 +123,11 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
         failed_count: 0,
         user_id: '' // Será preenchido pelo CampaignService
       })
-      
+
       setCampaign(newCampaign)
       return newCampaign!
     } catch (err) {
-      console.error('Erro ao criar campanha:', err)
+
       const errorMessage = err instanceof Error ? err.message : 'Erro ao criar campanha'
       setError(errorMessage)
       throw new Error(errorMessage)
@@ -148,11 +145,11 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
 
     try {
       const updatedCampaign = await CampaignService.updateCampaign(campaign.id, updates)
-      
+
       // SOLUÇÃO CONSERVADORA: Não atualizar o estado campaign após updateCampaign
       // para evitar que o useEffect no CampaignWizard sobrescreva a mensagem editada
       // setCampaign(updatedCampaign) // Comentado para preservar estado local
-      
+
       // Apenas atualizar campos de sistema que não afetam a UI
       if (updatedCampaign) {
         setCampaign(prev => prev ? {
@@ -202,16 +199,16 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
     try {
       // Deduplicar leads da lista
       const uniqueLeads = LeadDeduplicationService.deduplicateLeads(listLeads, listId)
-      
+
       // Adicionar leads únicos à campanha
       await CampaignService.addLeadsToCampaign(campaign.id, uniqueLeads)
-      
+
       // Atualizar listas selecionadas
       const newSelectedLists = [...selectedLists, listId]
       const newIgnoredLists = ignoredLists.filter(id => id !== listId)
-      
+
       await CampaignService.updateCampaignLists(campaign.id, newSelectedLists, newIgnoredLists)
-      
+
       // Atualizar estado local
       setSelectedLists(newSelectedLists)
       setIgnoredLists(newIgnoredLists)
@@ -236,15 +233,15 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
       // Remover leads da lista
       const leadsToRemove = leads.filter(lead => lead.listId === listId)
       const phoneHashes = leadsToRemove.map(lead => lead.phoneHash)
-      
+
       await CampaignService.removeLeadsFromCampaign(campaign.id, phoneHashes)
-      
+
       // Atualizar listas
       const newSelectedLists = selectedLists.filter(id => id !== listId)
       const newIgnoredLists = ignoredLists.filter(id => id !== listId)
-      
+
       await CampaignService.updateCampaignLists(campaign.id, newSelectedLists, newIgnoredLists)
-      
+
       // Atualizar estado local
       setSelectedLists(newSelectedLists)
       setIgnoredLists(newIgnoredLists)
@@ -269,9 +266,9 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
       // Remover da selecionada e adicionar à ignorada
       const newSelectedLists = selectedLists.filter(id => id !== listId)
       const newIgnoredLists = [...ignoredLists, listId]
-      
+
       await CampaignService.updateCampaignLists(campaign.id, newSelectedLists, newIgnoredLists)
-      
+
       // Atualizar estado local
       setSelectedLists(newSelectedLists)
       setIgnoredLists(newIgnoredLists)
@@ -294,9 +291,9 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
     try {
       // Remover da ignorada
       const newIgnoredLists = ignoredLists.filter(id => id !== listId)
-      
+
       await CampaignService.updateCampaignLists(campaign.id, selectedLists, newIgnoredLists)
-      
+
       // Atualizar estado local
       setIgnoredLists(newIgnoredLists)
     } catch (err) {
@@ -323,7 +320,7 @@ export const useCampaign = ({ campaignId }: UseCampaignProps): UseCampaignReturn
     stats,
     loading,
     error,
-    
+
     // Ações
     createCampaign,
     updateCampaign,

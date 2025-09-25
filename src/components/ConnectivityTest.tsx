@@ -8,8 +8,10 @@ interface ConnectivityTestProps {
   webhookUrl?: string
 }
 
-export function ConnectivityTest({ 
-  webhookUrl = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e' 
+export function ConnectivityTest({
+
+  webhookUrl = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842e7854-35df-4b20-9a6e-994fd934505e'
+
 }: ConnectivityTestProps) {
   const [isTestingConnection, setIsTestingConnection] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error' | 'cors_error'>('idle')
@@ -53,8 +55,7 @@ export function ConnectivityTest({
         })
       }
     } catch (error: unknown) {
-      console.error('Erro no teste de conectividade:', error)
-      
+
       const err = error as Error
       if (err.name === 'TypeError' && err.message.includes('CORS')) {
         setConnectionStatus('cors_error')

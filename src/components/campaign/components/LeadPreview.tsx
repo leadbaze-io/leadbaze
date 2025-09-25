@@ -47,32 +47,32 @@ export const LeadPreview: React.FC<LeadPreviewProps> = ({
               </Button>
             </div>
           </CardHeader>
-          
+
           <CardContent className="space-y-4">
             <div>
               <h3 className="font-medium text-primary mb-2">{leads.name}</h3>
-              
+
               {leads.phone && (
                 <div className="flex items-center gap-2 text-sm text-text-secondary">
                   <Phone className="w-4 h-4" />
                   <span>{leads.phone}</span>
                 </div>
               )}
-              
+
               {leads.email && (
                 <div className="flex items-center gap-2 text-sm text-text-secondary">
                   <Mail className="w-4 h-4" />
                   <span>{leads.email}</span>
                 </div>
               )}
-              
+
               {leads.company && (
                 <div className="flex items-center gap-2 text-sm text-text-secondary">
                   <Building className="w-4 h-4" />
                   <span>{leads.company}</span>
                 </div>
               )}
-              
+
               {leads.position && (
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />

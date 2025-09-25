@@ -29,11 +29,15 @@ interface DuplicateDetails {
   }>
 }
 
-export default function DuplicateLeadsModal({ 
-  isOpen, 
-  onClose, 
+export default function DuplicateLeadsModal({
+
+  isOpen,
+
+  onClose,
+
   duplicateLeads,
-  onLeadsProcessed 
+  onLeadsProcessed
+
 }: DuplicateLeadsModalProps) {
   const [duplicateDetails, setDuplicateDetails] = useState<DuplicateDetails[]>([])
   const [loading, setLoading] = useState(false)
@@ -68,7 +72,7 @@ export default function DuplicateLeadsModal({
       )
       setDuplicateDetails(details)
     } catch (error) {
-      console.error('Erro ao carregar detalhes de duplicatas:', error)
+
     } finally {
       setLoading(false)
     }
@@ -93,13 +97,15 @@ export default function DuplicateLeadsModal({
   }
 
   const handleForceAdd = () => {
-    const selectedLeadsData = duplicateLeads.filter(lead => 
+    const selectedLeadsData = duplicateLeads.filter(lead =>
+
       selectedLeads.has(lead.id || lead.phone || '')
     )
-    const remainingDuplicates = duplicateLeads.filter(lead => 
+    const remainingDuplicates = duplicateLeads.filter(lead =>
+
       !selectedLeads.has(lead.id || lead.phone || '')
     )
-    
+
     onLeadsProcessed?.(selectedLeadsData, remainingDuplicates)
     onClose()
   }
@@ -325,8 +331,10 @@ export default function DuplicateLeadsModal({
               </span>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-              <Button 
-                variant="outline" 
+              <Button
+
+                variant="outline"
+
                 onClick={onClose}
                 className="border-gray-300 hover:bg-gray-100 w-full sm:w-auto"
               >

@@ -57,7 +57,8 @@ export default function MobileHero() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-8"
             >
-              <ShimmerButton 
+              <ShimmerButton
+
                 onClick={() => {
                   const pricingSection = document.getElementById('pricing-plans-section');
                   if (pricingSection) {
@@ -78,14 +79,17 @@ export default function MobileHero() {
               <motion.div
                 initial={{ scale: 0, opacity: 0, y: 50 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 1.2, 
+                transition={{
+
+                  duration: 1.2,
+
                   delay: 1.0,
                   type: "spring",
                   stiffness: 100,
                   damping: 20
                 }}
-                whileHover={{ 
+                whileHover={{
+
                   scale: 1.05,
                   y: -5,
                   transition: { duration: 0.4, ease: "easeOut" }
@@ -93,23 +97,31 @@ export default function MobileHero() {
                 className="relative group cursor-pointer"
               >
                 <motion.div
-                  animate={{ 
+                  animate={{
+
                     boxShadow: [
                       "0 10px 25px -3px rgba(0, 0, 0, 0.1)",
                       "0 20px 40px -3px rgba(0, 0, 0, 0.15)",
                       "0 10px 25px -3px rgba(0, 0, 0, 0.1)"
                     ]
                   }}
-                  transition={{ 
-                    duration: 3, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
+                  transition={{
+
+                    duration: 3,
+
+                    repeat: Infinity,
+
+                    ease: "easeInOut"
+
                   }}
                   className="p-2 rounded-full bg-gradient-to-br from-white via-gray-50 to-white"
                 >
-                  <img 
-                    src={LGPDImage} 
-                    alt="LGPD Compliant" 
+                  <img
+
+                    src={LGPDImage}
+
+                    alt="LGPD Compliant"
+
                     className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-2xl group-hover:drop-shadow-3xl transition-all duration-500"
                   />
                 </motion.div>
@@ -132,7 +144,7 @@ export default function MobileHero() {
                   <div className="text-gray-500 text-sm mt-1">que métodos tradicionais</div>
                 </BorderBeam>
               </div>
-              
+
               <div className="relative group">
                 <BorderBeam delay={0.4} className="text-center p-6 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -145,7 +157,7 @@ export default function MobileHero() {
                   <div className="text-gray-500 text-sm mt-1">nos dados extraídos</div>
                 </BorderBeam>
               </div>
-              
+
               <div className="relative group">
                 <BorderBeam delay={0.6} className="text-center p-6 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -165,7 +177,3 @@ export default function MobileHero() {
     </section>
   )
 }
-
-
-
-

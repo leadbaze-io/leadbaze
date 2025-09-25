@@ -100,26 +100,26 @@ export interface UserProfile {
   id: string
   user_id: string
   tax_type: 'pessoa_fisica' | 'pessoa_juridica'
-  
+
   // Dados pessoais
   cpf?: string
   cnpj?: string
   full_name: string
   birth_date?: string
   rg?: string
-  
+
   // Dados da empresa
   company_name?: string
   trade_name?: string
   state_registration?: string
   municipal_registration?: string
-  
+
   // Contato
   email: string
   phone: string
   alternative_phone?: string
   preferred_contact: 'email' | 'phone' | 'whatsapp'
-  
+
   // Endereço
   billing_street: string
   billing_number: string
@@ -129,34 +129,34 @@ export interface UserProfile {
   billing_state: string
   billing_zip_code: string
   billing_country: string
-  
+
   // Pagamento
   accepted_payment_methods: string[]
   billing_cycle: 'monthly' | 'yearly'
   auto_renewal: boolean
-  
+
   // Dados do cartão
   card_last4?: string
   card_brand?: string
   card_expiry_month?: number
   card_expiry_year?: number
   card_holder_name?: string
-  
+
   // Status
   profile_completion_percentage: number
   is_verified: boolean
   verification_status: Record<string, any>
-  
+
   // Leads bônus
   bonus_leads?: number
   bonus_leads_used?: number
-  
+
   // Compliance
   lgpd_consent: boolean
   lgpd_consent_date?: string
   lgpd_consent_ip?: string
   lgpd_consent_user_agent?: string
-  
+
   // Metadados
   created_at: string
   updated_at: string
@@ -246,7 +246,7 @@ export interface CampaignLead {
   lead_data: Lead // Dados completos do lead
   lead_hash: string // Hash único para evitar duplicatas
   added_at: string
-  
+
   // Campos adicionais para UI
   list_name?: string
   list_total_leads?: number

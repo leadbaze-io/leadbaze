@@ -58,8 +58,6 @@ export default function MagicFAQ() {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-
-
           {/* Main Heading */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -167,4 +165,3 @@ export default function MagicFAQ() {
     </section>
   )
 }
-

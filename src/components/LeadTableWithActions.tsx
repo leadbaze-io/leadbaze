@@ -17,7 +17,7 @@ interface LeadTableWithActionsProps {
 export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTableWithActionsProps) {
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
   const [isDeleting, setIsDeleting] = useState(false)
-  
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [cityFilter, setCityFilter] = useState("")
@@ -26,38 +26,44 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   const [websiteFilter, setWebsiteFilter] = useState("all")
   const [leadsPerPage, setLeadsPerPage] = useState("20")
   const [currentPage, setCurrentPage] = useState(1)
-  
+
   // Novos filtros avançados
   const [sortBy, setSortBy] = useState("relevance")
   const [sortOrder, setSortOrder] = useState("desc")
   const [maxReviews, setMaxReviews] = useState("none")
-  
+
   const { toast } = useToast()
 
   // Filtrar leads
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => {
-      const matchesSearch = searchTerm === "" || 
+      const matchesSearch = searchTerm === "" ||
+
         lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.phone?.toLowerCase().includes(searchTerm.toLowerCase())
-      
-      const matchesCity = cityFilter === "" || 
+
+      const matchesCity = cityFilter === "" ||
+
         lead.address?.toLowerCase().includes(cityFilter.toLowerCase())
-      
-      const matchesRating = ratingFilter === "all" || 
+
+      const matchesRating = ratingFilter === "all" ||
+
         (lead.rating && lead.rating >= parseFloat(ratingFilter))
-      
-      const matchesReviews = reviewsFilter === "all" || 
+
+      const matchesReviews = reviewsFilter === "all" ||
+
         (lead.reviews_count && lead.reviews_count >= parseInt(reviewsFilter))
-      
-      const matchesMaxReviews = maxReviews === "" || maxReviews === "none" || 
+
+      const matchesMaxReviews = maxReviews === "" || maxReviews === "none" ||
+
         (lead.reviews_count && lead.reviews_count <= parseInt(maxReviews))
-      
-      const matchesWebsite = websiteFilter === "all" || 
+
+      const matchesWebsite = websiteFilter === "all" ||
+
         (websiteFilter === "with" && lead.website) ||
         (websiteFilter === "without" && !lead.website)
-      
+
       return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite
     })
   }, [leads, searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
@@ -65,21 +71,21 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   // Desmarcar automaticamente leads que não estão mais visíveis quando filtros mudam
   useEffect(() => {
     const filteredLeadIds = new Set(filteredLeads.map(lead => lead.id || '').filter(id => id))
-    
+
     // Verificar se há leads selecionados que não estão mais visíveis
     const hasInvisibleSelected = Array.from(selectedLeads).some(leadId => !filteredLeadIds.has(leadId))
-    
+
     // Só atualizar se necessário para evitar loops
     if (hasInvisibleSelected) {
       const newSelected = new Set<string>()
-      
+
       // Manter apenas os leads selecionados que ainda estão visíveis
       selectedLeads.forEach(leadId => {
         if (filteredLeadIds.has(leadId)) {
           newSelected.add(leadId)
         }
       })
-      
+
       setSelectedLeads(newSelected)
     }
   }, [searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
@@ -88,7 +94,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   const sortedLeads = useMemo(() => {
     return [...filteredLeads].sort((a, b) => {
       let comparison = 0
-      
+
       switch (sortBy) {
         case "rating":
           comparison = (a.rating || 0) - (b.rating || 0)
@@ -105,7 +111,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
           comparison = (a.reviews_count || 0) - (b.reviews_count || 0)
           break
       }
-      
+
       // Aplicar a ordem selecionada (Maior para Menor / Menor para Maior)
       return sortOrder === "desc" ? -comparison : comparison
     })
@@ -129,25 +135,33 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       const buttonRect = selectAllButton.getBoundingClientRect()
       const navbarHeight = 80 // Altura aproximada da navbar
       const scrollPosition = window.pageYOffset + buttonRect.top - navbarHeight - 20 // 20px de margem extra
-      
-      window.scrollTo({ 
-        top: scrollPosition, 
-        behavior: 'smooth' 
+
+      window.scrollTo({
+
+        top: scrollPosition,
+
+        behavior: 'smooth'
+
       })
     } else {
       // Fallback: encontrar o container dos leads
       const leadsContainer = document.querySelector('[data-leads-container]')
       if (leadsContainer) {
-        leadsContainer.scrollIntoView({ 
-          behavior: 'smooth', 
+        leadsContainer.scrollIntoView({
+
+          behavior: 'smooth',
+
           block: 'start',
           inline: 'nearest'
         })
       } else {
         // Fallback final: scroll para o topo da página
-        window.scrollTo({ 
-          top: 0, 
-          behavior: 'smooth' 
+        window.scrollTo({
+
+          top: 0,
+
+          behavior: 'smooth'
+
         })
       }
     }
@@ -167,7 +181,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
     // Trabalhar com todos os leads filtrados, não apenas os da página atual
     const allFilteredLeadIds = sortedLeads.map(lead => lead.id || '').filter(id => id)
     const allFilteredSelected = allFilteredLeadIds.every(id => selectedLeads.has(id))
-    
+
     if (allFilteredSelected) {
       // Desmarcar todos os leads filtrados
       const newSelected = new Set(selectedLeads)
@@ -180,8 +194,6 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       setSelectedLeads(newSelected)
     }
   }
-
-
   const handleDeleteSelected = async () => {
     if (selectedLeads.size === 0) {
       toast({
@@ -203,9 +215,9 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
     try {
       // Simular deleção - em uma implementação real, você faria uma chamada para a API
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       const deletedLeadIds = Array.from(selectedLeads)
-      
+
       toast({
         title: "✅ Leads Deletados",
         description: `${deletedLeadIds.length} lead(s) foram deletados com sucesso.`,
@@ -219,9 +231,9 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
 
       // Limpar seleção
       setSelectedLeads(new Set())
-      
+
     } catch (error) {
-      console.error('Erro ao deletar leads:', error)
+
       toast({
         title: "❌ Erro ao Deletar",
         description: "Ocorreu um erro ao deletar os leads. Tente novamente.",
@@ -231,8 +243,6 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       setIsDeleting(false)
     }
   }
-
-
   return (
     <div className="space-y-6">
 
@@ -369,7 +379,8 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       )}
 
       {/* Grid de Cards */}
-      <div 
+      <div
+
         data-leads-container
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
       >
@@ -386,8 +397,6 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
           />
         ))}
       </div>
-
-
       {/* Paginação */}
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-border/50">
@@ -477,10 +486,14 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         className="fixed bottom-4 right-4 z-[9999] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-xl border border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
         size="sm"
       >
-        <svg 
-          className="w-4 h-4 sm:w-5 sm:h-5" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+
+          className="w-4 h-4 sm:w-5 sm:h-5"
+
+          fill="none"
+
+          stroke="currentColor"
+
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />

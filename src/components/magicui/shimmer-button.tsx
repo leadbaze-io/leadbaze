@@ -42,7 +42,7 @@ export function ShimmerButton({
       <span className="relative z-10 flex items-center gap-2 font-medium">
         {children}
       </span>
-      
+
       <div
         className="absolute inset-0 -top-[20px] flex h-[calc(100%+40px)] w-full justify-center blur-[12px]"
         style={{
@@ -51,7 +51,7 @@ export function ShimmerButton({
           transform: "translateX(-100%)",
         }}
       />
-      
+
       <style>{`
         @keyframes shimmer {
           0% {

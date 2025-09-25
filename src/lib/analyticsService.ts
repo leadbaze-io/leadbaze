@@ -82,7 +82,7 @@ export class AnalyticsService {
     if (!user) {
       throw new Error('Usuário não autenticado');
     }
-      
+
       return {
       'Content-Type': 'application/json',
       'x-user-id': user.id
@@ -103,7 +103,7 @@ export class AnalyticsService {
         throw new Error(response.data.error || 'Erro ao obter overview');
       }
     } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter overview:', error);
+
       throw error;
     }
   }
@@ -122,7 +122,7 @@ export class AnalyticsService {
         throw new Error(response.data.error || 'Erro ao obter leads over time');
       }
     } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter leads over time:', error);
+
       throw error;
     }
   }
@@ -140,7 +140,7 @@ export class AnalyticsService {
         throw new Error(response.data.error || 'Erro ao obter categorias');
       }
   } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter categorias:', error);
+
       throw error;
     }
   }
@@ -159,7 +159,7 @@ export class AnalyticsService {
         throw new Error(response.data.error || 'Erro ao obter campanhas');
       }
     } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter campanhas:', error);
+
       throw error;
     }
   }
@@ -177,7 +177,7 @@ export class AnalyticsService {
         throw new Error(response.data.error || 'Erro ao obter atividade recente');
     }
   } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter atividade recente:', error);
+
       throw error;
     }
   }
@@ -201,7 +201,7 @@ export class AnalyticsService {
         recentActivity
       };
     } catch (error) {
-      console.error('❌ [AnalyticsService] Erro ao obter todos os dados:', error);
+
       throw error;
     }
   }

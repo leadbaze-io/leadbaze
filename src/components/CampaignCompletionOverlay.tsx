@@ -6,11 +6,16 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  AlertCircle, 
-  X, 
-  Eye, 
-  Sparkles, 
+import {
+
+  AlertCircle,
+
+  X,
+
+  Eye,
+
+  Sparkles,
+
   Trophy,
   Clock,
   Users,
@@ -106,11 +111,13 @@ export function CampaignCompletionOverlay({
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`
                 }}
-                initial={{ 
+                initial={{
+
                   scale: 0,
                   rotate: 0
                 }}
-                animate={{ 
+                animate={{
+
                   scale: [0, 1, 0],
                   rotate: [0, 360],
                   y: [-20, -100],
@@ -132,19 +139,25 @@ export function CampaignCompletionOverlay({
             initial={{ scale: 0.8, opacity: 0, y: 50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.8, opacity: 0, y: 50 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
+            transition={{
+
+              type: "spring",
+
+              stiffness: 300,
+
               damping: 30,
-              duration: 0.8 
+              duration: 0.8
+
             }}
             className="relative w-full max-w-4xl bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header com gradiente animado */}
             <div className={`relative p-8 text-white ${
-              status === 'completed' 
-                ? 'bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500' 
+              status === 'completed'
+
+                ? 'bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500'
+
                 : 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-500'
             }`}>
               {/* Efeito de ondas animadas */}
@@ -181,10 +194,14 @@ export function CampaignCompletionOverlay({
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 200, 
-                      delay: 0.3 
+                    transition={{
+
+                      type: "spring",
+
+                      stiffness: 200,
+
+                      delay: 0.3
+
                     }}
                     className="p-4 bg-white/20 rounded-full backdrop-blur-sm"
                   >
@@ -194,9 +211,10 @@ export function CampaignCompletionOverlay({
                       <AlertCircle className="w-12 h-12" />
                     )}
                   </motion.div>
-                  
+
                   <div>
-                    <motion.h1 
+                    <motion.h1
+
                       className="text-4xl font-bold mb-2"
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -204,7 +222,8 @@ export function CampaignCompletionOverlay({
                     >
                       {status === 'completed' ? 'Campanha Concluída!' : 'Campanha Falhou'}
                     </motion.h1>
-                    <motion.p 
+                    <motion.p
+
                       className="text-xl opacity-90"
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -212,7 +231,8 @@ export function CampaignCompletionOverlay({
                     >
                       {campaignName}
                     </motion.p>
-                    <motion.p 
+                    <motion.p
+
                       className="text-lg opacity-80 mt-2"
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -241,7 +261,8 @@ export function CampaignCompletionOverlay({
             <div className="p-8">
               {/* Estatísticas principais */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                <motion.div 
+                <motion.div
+
                   className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -253,7 +274,8 @@ export function CampaignCompletionOverlay({
                   <div className="text-sm campaign-stats-label-claro campaign-stats-label-escuro font-medium">Enviados</div>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
+
                   className="text-center p-6 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -265,7 +287,8 @@ export function CampaignCompletionOverlay({
                   <div className="text-sm campaign-stats-label-claro campaign-stats-label-escuro font-medium">Falhas</div>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
+
                   className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -277,7 +300,8 @@ export function CampaignCompletionOverlay({
                   <div className="text-sm campaign-stats-label-claro campaign-stats-label-escuro font-medium">Taxa Sucesso</div>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
+
                   className="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-200 dark:border-purple-800"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -291,7 +315,8 @@ export function CampaignCompletionOverlay({
               </div>
 
               {/* Gráfico de performance visual */}
-              <motion.div 
+              <motion.div
+
                 className="mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -323,7 +348,8 @@ export function CampaignCompletionOverlay({
               </motion.div>
 
               {/* Detalhes expandidos */}
-              <motion.div 
+              <motion.div
+
                 className="mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -391,7 +417,8 @@ export function CampaignCompletionOverlay({
               </motion.div>
 
               {/* Botão de ação */}
-              <motion.div 
+              <motion.div
+
                 className="flex gap-4 justify-center"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

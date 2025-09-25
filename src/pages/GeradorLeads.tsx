@@ -34,7 +34,7 @@ export default function GeradorLeads() {
         const lists = await LeadService.getUserLeadLists()
         setExistingLists(lists)
       } catch (error) {
-        console.error('Erro ao carregar listas:', error)
+
         setExistingLists([])
       }
     }
@@ -43,7 +43,7 @@ export default function GeradorLeads() {
   }, [navigate])
 
   const handleLeadsGenerated = (leads: Lead[]) => {
-    console.log('Leads gerados:', leads.length)
+
     // Callback quando leads são gerados - pode ser usado para analytics, etc.
   }
 
@@ -72,7 +72,8 @@ export default function GeradorLeads() {
       <div className="py-4 sm:py-6 lg:py-8">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
         {/* Header */}
-        <motion.div 
+        <motion.div
+
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -87,7 +88,7 @@ export default function GeradorLeads() {
                 opacity: 0.1
               }}></div>
             </div>
-            
+
             <div className="relative z-10">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="space-y-4">
@@ -109,7 +110,7 @@ export default function GeradorLeads() {
                       </p>
                     </div>
                   </motion.div>
-                  
+
                   <motion.p
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -119,7 +120,7 @@ export default function GeradorLeads() {
                     Extraia dados precisos e selecione exatamente quais leads deseja salvar com nossa IA avançada!
                   </motion.p>
                 </div>
-                
+
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -141,7 +142,8 @@ export default function GeradorLeads() {
         </motion.div>
 
         {/* Voltar para Dashboard */}
-        <motion.div 
+        <motion.div
+
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
@@ -157,7 +159,8 @@ export default function GeradorLeads() {
         </motion.div>
 
         {/* Gerador Component */}
-        <motion.div 
+        <motion.div
+
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
@@ -171,10 +174,10 @@ export default function GeradorLeads() {
         </motion.div>
         </div>
       </div>
-      
+
       {/* Footer */}
       <Footer />
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>

@@ -59,7 +59,7 @@ export function LeadFilters({
           className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Cidade</Label>
         <Input
@@ -69,11 +69,13 @@ export function LeadFilters({
           className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20"
         />
       </div>
-      
+
       <div className="space-y-2">
         <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Avaliação Mínima</Label>
-        <Select 
-          value={ratingFilter} 
+        <Select
+
+          value={ratingFilter}
+
           onValueChange={(value) => handleFilterChange(setRatingFilter, value)}
         >
           <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
@@ -87,11 +89,13 @@ export function LeadFilters({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className="space-y-2">
         <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Avaliações</Label>
-        <Select 
-          value={reviewsFilter} 
+        <Select
+
+          value={reviewsFilter}
+
           onValueChange={(value) => handleFilterChange(setReviewsFilter, value)}
         >
           <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
@@ -108,11 +112,13 @@ export function LeadFilters({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className="space-y-2">
         <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Website</Label>
-        <Select 
-          value={websiteFilter} 
+        <Select
+
+          value={websiteFilter}
+
           onValueChange={(value) => handleFilterChange(setWebsiteFilter, value)}
         >
           <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">
@@ -125,11 +131,13 @@ export function LeadFilters({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className="space-y-2">
         <Label className="text-sm font-semibold gerador-texto-claro dark:text-foreground">Leads por Página</Label>
-        <Select 
-          value={leadsPerPage} 
+        <Select
+
+          value={leadsPerPage}
+
           onValueChange={(value) => handleFilterChange(setLeadsPerPage, value)}
         >
           <SelectTrigger className="h-10 text-sm w-full border-border/60 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20">

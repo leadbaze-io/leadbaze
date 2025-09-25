@@ -62,14 +62,14 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   useEffect(() => {
     if (campaign && !campaignHook.loading) {
       // Carregando dados da campanha
-      
+
       setCampaignName(campaign.name)
-      
+
       // SOLUÇÃO: Só atualizar mensagem se não foi editada pelo usuário
       if (!messageEditedByUser) {
         setCampaignMessage(campaign.message || '')
       }
-      
+
       setSelectedLists(campaignHook.selectedLists)
       setIgnoredLists(campaignHook.ignoredLists)
       // Não definir campaignLeads aqui - será calculado pelo próximo useEffect
@@ -99,25 +99,25 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           allLeads.push(...list.leads.map(lead => ({ ...lead, listId })))
         }
       })
-      
+
       // Deduplicar leads usando o serviço
       const phoneMap = new Map<string, any>()
       const uniqueLeads: any[] = []
-      
+
       for (const lead of allLeads) {
         const normalizedPhone = LeadDeduplicationService.normalizePhone(lead.phone)
         if (!normalizedPhone) continue
-        
+
         const phoneHash = LeadDeduplicationService.generatePhoneHash(lead.phone || '')
-        
+
         if (!phoneMap.has(phoneHash)) {
           phoneMap.set(phoneHash, lead)
           uniqueLeads.push(lead)
         }
       }
-      
+
       // Recalculando leads únicos
-      
+
       setCampaignLeads(uniqueLeads)
     } else {
       setCampaignLeads([])
@@ -145,8 +145,6 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     const uniqueLeads = campaignLeads.length
     return Math.max(0, totalLeads - uniqueLeads)
   }, [calculateTotalRawLeads, campaignLeads.length])
-
-
   // Calcular estatísticas
   const stats = {
     totalLeads: calculateTotalRawLeads(), // Total bruto (246)
@@ -182,7 +180,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         setSelectedLists(newSelectedLists)
         setCampaignLeads(newLeads)
       }
-      
+
       // Atualizar contador de duplicados no banco
       if (campaign?.id) {
         const currentDuplicates = calculateDuplicatesInRealTime()
@@ -191,16 +189,16 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             .from('campaigns')
             .update({ duplicates_count: currentDuplicates })
             .eq('id', campaign.id)
-          
+
           if (error) {
-            console.error('Erro ao atualizar contador de duplicados:', error)
+
           }
         } catch (error) {
-          console.error('Erro ao atualizar contador de duplicados:', error)
+
         }
       }
     } catch (error) {
-      console.error('Erro ao alternar lista:', error)
+
     } finally {
       setLoading(false)
     }
@@ -211,10 +209,11 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     setLoading(true)
     try {
       // Filtrar listas disponíveis (não selecionadas e não ignoradas)
-      const availableLists = lists.filter(list => 
+      const availableLists = lists.filter(list =>
+
         !selectedLists.includes(list.id) && !ignoredLists.includes(list.id)
       )
-      
+
       if (availableLists.length === 0) return
 
       // Adicionar cada lista usando o hook
@@ -234,7 +233,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       setSelectedLists(newSelectedLists)
       setCampaignLeads(newLeads)
     } catch (error) {
-      console.error('Erro ao adicionar todas as listas:', error)
+
     } finally {
       setLoading(false)
     }
@@ -254,7 +253,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       setSelectedLists([])
       setCampaignLeads([])
     } catch (error) {
-      console.error('Erro ao remover todas as listas:', error)
+
     } finally {
       setLoading(false)
     }
@@ -269,7 +268,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       setSelectedLists(newSelectedLists)
       setIgnoredLists(newIgnoredLists)
     } catch (error) {
-      console.error('Erro ao ignorar lista:', error)
+
     }
   }
 
@@ -280,7 +279,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       const newIgnoredLists = ignoredLists.filter(id => id !== listId)
       setIgnoredLists(newIgnoredLists)
     } catch (error) {
-      console.error('Erro ao designorar lista:', error)
+
     }
   }
 
@@ -289,7 +288,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     // Atualizando estado após operação em massa
     setSelectedLists(result.selectedLists)
     // Não definir campaignLeads aqui - será calculado pelo useEffect
-    
+
     // Atualizar contador de duplicados no banco se necessário
     if (campaign?.id) {
       const currentDuplicates = calculateDuplicatesInRealTime()
@@ -298,15 +297,15 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           .from('campaigns')
           .update({ duplicates_count: currentDuplicates })
           .eq('id', campaign.id)
-        
+
         if (error) {
-          console.error('Erro ao atualizar contador de duplicados:', error)
+
         }
       } catch (error) {
-        console.error('Erro ao atualizar contador de duplicados:', error)
+
       }
     }
-    
+
     // Forçar recarregamento do useCampaign para sincronizar
     if (campaign?.id) {
       await campaignHook.refreshCampaign()
@@ -353,7 +352,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
 
     // Prevenir múltiplas execuções simultâneas
     if (loading) {
-      console.log('⚠️ Salvamento já em andamento, ignorando clique duplo')
+
       return
     }
 
@@ -368,43 +367,44 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           uniqueLeads: uniqueLeadsAtual,
           duplicates: Math.max(0, totalLeadsBrutos - uniqueLeadsAtual)
         }
-        
+
         await campaignHook.updateCampaign({
           name: campaignName,
           message: campaignMessage
         })
-        
+
         // Atualizar contador de duplicados no banco
         const { error: updateError } = await supabase
           .from('campaigns')
-          .update({ 
+          .update({
+
             duplicates_count: currentStats.duplicates,
             total_leads: currentStats.totalLeads,
             unique_leads: currentStats.uniqueLeads
           })
           .eq('id', campaign.id)
-        
+
         if (updateError) {
-          console.error('Erro ao atualizar estatísticas da campanha:', updateError)
+
         } else {
-          console.log('Estatísticas da campanha atualizadas:', currentStats)
+
         }
       } else {
         // Criar nova campanha
         const newCampaign = await campaignHook.createCampaign(campaignName, campaignMessage)
-        
+
         // Notificar o componente pai sobre a campanha criada
         if (onCampaignCreated && newCampaign) {
           onCampaignCreated(newCampaign)
         }
-        
+
         // Nota: Leads e listas serão salvos automaticamente via useEffect
         // quando o usuário selecionar listas na próxima etapa
       }
-      
+
       alert('Campanha salva com sucesso!')
     } catch (error) {
-      console.error('Erro ao salvar campanha:', error)
+
       alert('Erro ao salvar campanha: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
     } finally {
       setLoading(false)
@@ -412,12 +412,6 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   }
 
   const handleSaveCampaignName = async () => {
-    console.log('🔧 Debug - Iniciando salvamento do nome:', {
-      campaignName,
-      campaignMessage,
-      campaign: campaign?.id,
-      campaignHook: !!campaignHook
-    })
 
     if (!campaignName.trim()) {
       alert('Nome da campanha é obrigatório')
@@ -431,19 +425,12 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
 
     setLoading(true)
     try {
-      console.log('🔧 Debug - Chamando updateCampaign com:', {
-        name: campaignName,
-        message: campaignMessage
-      })
 
       // Atualizar apenas o nome da campanha
       const result = await campaignHook.updateCampaign({
         name: campaignName,
         message: campaignMessage
       })
-      
-      console.log('🔧 Debug - Resultado do updateCampaign:', result)
-      
       // Atualizar estatísticas no banco também
       const totalLeadsBrutos = calculateTotalRawLeads()
       const uniqueLeadsAtual = campaignLeads.length
@@ -452,35 +439,36 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         uniqueLeads: uniqueLeadsAtual,
         duplicates: Math.max(0, totalLeadsBrutos - uniqueLeadsAtual)
       }
-      
+
       const { error: updateError } = await supabase
         .from('campaigns')
-        .update({ 
+        .update({
+
           duplicates_count: currentStats.duplicates,
           total_leads: currentStats.totalLeads,
           unique_leads: currentStats.uniqueLeads
         })
         .eq('id', campaign.id)
-      
+
       if (updateError) {
-        console.error('Erro ao atualizar estatísticas:', updateError)
+
       } else {
-        console.log('Estatísticas atualizadas:', currentStats)
+
       }
-      
+
       // Forçar atualização do estado local da campanha
       if (campaign) {
         campaign.name = campaignName
         campaign.message = campaignMessage
       }
-      
+
       // Fechar o campo de edição
       setIsEditingName(false)
-      
+
       // Mostrar feedback de sucesso
       alert('Nome da campanha atualizado com sucesso!')
     } catch (error) {
-      console.error('🔧 Debug - Erro ao salvar:', error)
+
       alert('Erro ao atualizar nome da campanha: ' + (error instanceof Error ? error.message : 'Erro desconhecido'))
     } finally {
       setLoading(false)
@@ -492,13 +480,13 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       // Remover lead da lista local
       const updatedLeads = campaignLeads.filter(lead => lead.id !== leadId)
       setCampaignLeads(updatedLeads)
-      
+
       // Recalcular estatísticas após remoção
       // IMPORTANTE: Quando removemos um lead, o total bruto permanece o mesmo,
       // mas o número de duplicados pode diminuir se o lead removido era um duplicado
       const totalLeadsBrutos = calculateTotalRawLeads()
       const uniqueLeadsAtual = updatedLeads.length
-      
+
       // O número de duplicados deve ser: total bruto - leads únicos atuais
       // Mas se o lead removido era um duplicado, os duplicados diminuem
       const newStats = {
@@ -509,39 +497,32 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         duplicates: Math.max(0, totalLeadsBrutos - uniqueLeadsAtual),
         duplicatePercentage: 0
       }
-      
+
       // Atualizar contador de duplicados no banco se necessário
       if (campaign?.id) {
         const currentDuplicates = newStats.duplicates
         try {
           const { error } = await supabase
             .from('campaigns')
-            .update({ 
+            .update({
+
               duplicates_count: currentDuplicates,
               unique_leads: uniqueLeadsAtual,
               total_leads: totalLeadsBrutos
             })
             .eq('id', campaign.id)
-          
+
           if (error) {
-            console.error('Erro ao atualizar contador de duplicados:', error)
+
           } else {
-            console.log('Contador de duplicados atualizado:', currentDuplicates)
+
           }
         } catch (error) {
-          console.error('Erro ao atualizar contador de duplicados:', error)
+
         }
       }
-      
-      console.log('Lead removido:', leadId)
-      console.log('Estatísticas detalhadas:', {
-        totalLeadsBrutos,
-        uniqueLeadsAtual,
-        duplicatesCalculados: newStats.duplicates,
-        formula: `${totalLeadsBrutos} - ${uniqueLeadsAtual} = ${newStats.duplicates}`
-      })
     } catch (error) {
-      console.error('Erro ao remover lead:', error)
+
     }
   }
 
@@ -581,7 +562,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             disabled={!campaign?.id}
           />
         )
-      
+
       case 'message':
         return (
           <MessageStep
@@ -594,7 +575,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             connectedInstance={connectedInstance}
           />
         )
-      
+
       case 'review':
         return (
           <ReviewStep
@@ -606,12 +587,12 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
             onRemoveLead={handleRemoveLead}
             onStatsUpdate={(newStats) => {
               // Atualizar estatísticas se necessário
-              console.log('Estatísticas atualizadas no ReviewStep:', newStats)
+
             }}
             loading={loading}
           />
         )
-      
+
       default:
         return null
     }
@@ -643,7 +624,8 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 
+              <h1
+
                 className="text-3xl font-bold mb-2 campaign-title-gradient"
                 style={{
                   background: 'linear-gradient(to right, #2563eb, #9333ea, #1d4ed8)',
@@ -774,7 +756,8 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
       </AnimatePresence>
 
       {/* Navegação */}
-      <motion.div 
+      <motion.div
+
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
@@ -789,8 +772,10 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Button 
-                  variant="outline" 
+                <Button
+
+                  variant="outline"
+
                   onClick={handlePrevStep}
                   className="campaign-nav-prev-claro campaign-nav-prev-escuro px-6 py-3 font-semibold text-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
@@ -856,8 +841,10 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
               transition={{ duration: 0.3 }}
               className="w-full max-w-xs"
             >
-              <Button 
-                variant="outline" 
+              <Button
+
+                variant="outline"
+
                 onClick={handlePrevStep}
                 className="campaign-nav-prev-claro campaign-nav-prev-escuro w-full px-6 py-3 font-semibold text-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
@@ -918,7 +905,3 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     </div>
   )
 }
-
-
-
-

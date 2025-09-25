@@ -60,8 +60,6 @@ export default function MagicPricing() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-
-
           {/* Main Heading */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -86,7 +84,8 @@ export default function MagicPricing() {
             className="mb-12"
           >
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Empresas estão falindo pelo aumento do custo por lead em plataformas como Google e Meta. 
+              Empresas estão falindo pelo aumento do custo por lead em plataformas como Google e Meta.
+
               A cada ano que passa fica mais caro… com o <span className="font-semibold text-gray-800">LeadBaze</span> seu pipeline fica lotado e suas vendas decolam.
             </p>
           </motion.div>
@@ -105,7 +104,8 @@ export default function MagicPricing() {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              whileHover={{ 
+              whileHover={{
+
                 y: -12,
                 scale: 1.02,
                 transition: { duration: 0.4, ease: "easeOut" }
@@ -118,7 +118,7 @@ export default function MagicPricing() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gray-400 to-transparent rounded-full blur-2xl"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-gray-300 to-transparent rounded-full blur-xl"></div>
                 </div>
-                
+
                 {/* Header with Icon */}
                 <div className="relative mb-6">
                   <div className={`w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110`}>
@@ -156,14 +156,12 @@ export default function MagicPricing() {
                       </div>
                     ))}
                   </div>
-
-
                 </div>
 
                 {/* Enhanced Hover Effects */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/5 transition-all duration-500 rounded-3xl"></div>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
+
                 {/* Corner Accent */}
                 <div className={`absolute top-0 right-0 w-0 h-0 border-l-[20px] border-l-transparent border-t-[20px] border-t-${benefit.color.split('-')[1]}-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
               </div>
@@ -188,8 +186,6 @@ export default function MagicPricing() {
             </div>
           </div>
         </motion.div>
-
-
       </div>
     </section>
   )

@@ -45,7 +45,8 @@ export default function MobileGuarantee() {
             initial={{ opacity: 0, y: 30 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            whileHover={{ 
+            whileHover={{
+
               y: -8,
               scale: 1.02,
               transition: { duration: 0.4, ease: "easeOut" }
@@ -58,7 +59,7 @@ export default function MobileGuarantee() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-gray-400 to-transparent rounded-full blur-xl"></div>
                 <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-gray-300 to-transparent rounded-full blur-lg"></div>
               </div>
-              
+
               {/* Header with Icon */}
               <div className="relative mb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110">
@@ -87,7 +88,7 @@ export default function MobileGuarantee() {
               {/* Enhanced Hover Effects */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/5 transition-all duration-500 rounded-2xl"></div>
               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               {/* Corner Accent */}
               <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
@@ -98,7 +99,8 @@ export default function MobileGuarantee() {
             initial={{ opacity: 0, y: 30 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            whileHover={{ 
+            whileHover={{
+
               y: -8,
               scale: 1.02,
               transition: { duration: 0.4, ease: "easeOut" }
@@ -111,7 +113,7 @@ export default function MobileGuarantee() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-gray-400 to-transparent rounded-full blur-xl"></div>
                 <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-gray-300 to-transparent rounded-full blur-lg"></div>
               </div>
-              
+
               {/* Header with Icon */}
               <div className="relative mb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110">
@@ -140,7 +142,7 @@ export default function MobileGuarantee() {
               {/* Enhanced Hover Effects */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/5 transition-all duration-500 rounded-2xl"></div>
               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               {/* Corner Accent */}
               <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
@@ -151,7 +153,8 @@ export default function MobileGuarantee() {
             initial={{ opacity: 0, y: 30 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
-            whileHover={{ 
+            whileHover={{
+
               y: -8,
               scale: 1.02,
               transition: { duration: 0.4, ease: "easeOut" }
@@ -164,7 +167,7 @@ export default function MobileGuarantee() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-gray-400 to-transparent rounded-full blur-xl"></div>
                 <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-gray-300 to-transparent rounded-full blur-lg"></div>
               </div>
-              
+
               {/* Header with Icon */}
               <div className="relative mb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110">
@@ -193,7 +196,7 @@ export default function MobileGuarantee() {
               {/* Enhanced Hover Effects */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/5 transition-all duration-500 rounded-2xl"></div>
               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               {/* Corner Accent */}
               <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
@@ -203,7 +206,3 @@ export default function MobileGuarantee() {
     </section>
   )
 }
-
-
-
-

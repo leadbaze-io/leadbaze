@@ -26,24 +26,21 @@ export const usePayment = (): UsePaymentReturn => {
       });
 
       const data = await response.json();
-      console.log('🔍 [usePayment] Resposta completa:', data);
 
       if (!response.ok) {
-        console.error('❌ [usePayment] Erro na resposta:', data);
+
         throw new Error(data.message || 'Erro ao criar pagamento');
       }
 
       if (!data.success) {
-        console.error('❌ [usePayment] Success false:', data);
+
         throw new Error(data.message || 'Falha ao criar pagamento');
       }
 
       if (!data.data) {
-        console.error('❌ [usePayment] Data ausente:', data);
+
         throw new Error('Dados de pagamento ausentes na resposta');
       }
-
-      console.log('✅ [usePayment] Dados válidos:', data.data);
       return data.data;
 
     } catch (err: any) {
@@ -95,4 +92,3 @@ export const usePayment = (): UsePaymentReturn => {
     error,
   };
 };
-

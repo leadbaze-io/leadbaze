@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Users, 
-  Loader, 
-  AlertCircle, 
-  Download, 
+import {
+
+  ArrowLeft,
+
+  Calendar,
+
+  Users,
+
+  Loader,
+
+  AlertCircle,
+
+  Download,
+
   Share2,
   Phone,
   Star,
@@ -65,13 +72,13 @@ export default function ListaDetalhes() {
           } else {
             setError('Erro ao carregar lista de leads')
           }
-          console.error('Error loading lead list:', error)
+
         } else {
           setLeadList(data)
         }
       } catch (err) {
         setError('Erro interno. Tente novamente.')
-        console.error('Error:', err)
+
       } finally {
         setIsLoading(false)
       }
@@ -92,7 +99,7 @@ export default function ListaDetalhes() {
 
   const exportToCSV = () => {
     if (!leadList) return
-    
+
     const headers = ['Nome', 'Endereço', 'Telefone', 'Avaliação', 'Website', 'Tipo de Negócio', 'Horários']
     const csvData = [
       headers.join(','),
@@ -139,11 +146,12 @@ export default function ListaDetalhes() {
     try {
       // Atualizar a lista local removendo os leads deletados
       const updatedLeads = leadList.leads.filter(lead => !deletedLeadIds.includes(lead.id || ''))
-      
+
       // Atualizar no banco de dados
       const { error } = await supabase
         .from('lead_lists')
-        .update({ 
+        .update({
+
           leads: updatedLeads,
           total_leads: updatedLeads.length,
           updated_at: new Date().toISOString()
@@ -163,7 +171,7 @@ export default function ListaDetalhes() {
       })
 
     } catch (error) {
-      console.error('Erro ao deletar leads:', error)
+
       alert('Erro ao deletar leads. Tente novamente.')
     }
   }
@@ -268,7 +276,7 @@ export default function ListaDetalhes() {
                     </p>
                   </div>
                 </motion.div>
-                
+
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -304,7 +312,7 @@ export default function ListaDetalhes() {
                   <span className="hidden sm:inline">Exportar CSV</span>
                   <span className="sm:hidden">Exportar</span>
                 </button>
-                
+
                 <button
                   onClick={shareList}
                   className="inline-flex items-center justify-center space-x-1 sm:space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 hover:scale-105 bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg text-sm sm:text-base"
@@ -396,8 +404,10 @@ export default function ListaDetalhes() {
           transition={{ delay: 0.4 }}
           id="lead-table"
         >
-          <LeadTableWithActions 
-            leads={leadList.leads} 
+          <LeadTableWithActions
+
+            leads={leadList.leads}
+
             title={leadList.name}
             onLeadsDeleted={handleLeadsDeleted}
           />
@@ -419,7 +429,7 @@ export default function ListaDetalhes() {
                 Dicas para usar estes leads
               </h3>
             </div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -508,10 +518,10 @@ export default function ListaDetalhes() {
         </motion.div>
         </div>
       </div>
-      
+
       {/* Footer */}
       <Footer />
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>

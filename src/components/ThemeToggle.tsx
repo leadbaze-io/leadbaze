@@ -22,7 +22,7 @@ export default function ThemeToggle() {
   const CurrentIcon = currentTheme?.icon || Monitor
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
-    console.log('🎯 ThemeToggle - Mudando para:', newTheme)
+
     setTheme(newTheme)
   }
 
@@ -44,8 +44,10 @@ export default function ThemeToggle() {
               className="absolute inset-0 flex items-center justify-center"
             >
               <CurrentIcon className={`h-5 w-5 ${
-                theme === 'light' ? 'text-yellow-500 drop-shadow-sm' : 
-                theme === 'dark' ? 'text-blue-400 drop-shadow-sm' : 
+                theme === 'light' ? 'text-yellow-500 drop-shadow-sm' :
+
+                theme === 'dark' ? 'text-blue-400 drop-shadow-sm' :
+
                 'text-gray-600 dark:text-gray-300'
               }`} />
             </motion.div>
@@ -53,19 +55,21 @@ export default function ThemeToggle() {
           <span className="sr-only">Alternar tema</span>
         </Button>
       </DropdownMenuTrigger>
-      
+
       <DropdownMenuContent align="end" className="w-36 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-xl">
         {themes.map((themeOption) => {
           const Icon = themeOption.icon
           const isActive = theme === themeOption.value
-          
+
           return (
             <DropdownMenuItem
               key={themeOption.value}
               onClick={() => handleThemeChange(themeOption.value)}
               className={`cursor-pointer transition-colors text-gray-900 dark:text-gray-100 ${
-                isActive 
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 
+                isActive
+
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+
                   : 'hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
@@ -98,7 +102,7 @@ export function ThemeToggleCompact() {
 
   const toggleTheme = () => {
     const newTheme = isDark ? 'light' : 'dark'
-    console.log('🎯 ThemeToggleCompact - Mudando para:', newTheme)
+
     setTheme(newTheme)
   }
 

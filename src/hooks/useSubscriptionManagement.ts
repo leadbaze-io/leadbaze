@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useToast } from './use-toast';
 import { supabase } from '../lib/supabaseClient';
-import type { 
+import type {
+
   CancelSubscriptionResponse,
   ReactivateSubscriptionResponse,
   SubscriptionPlan
@@ -11,7 +12,7 @@ interface UseSubscriptionManagementReturn {
   // Estados
   isLoading: boolean;
   error: string | null;
-  
+
   // Operações
   cancelSubscription: (reason?: string) => Promise<CancelSubscriptionResponse | null>;
   reactivateSubscription: () => Promise<ReactivateSubscriptionResponse | null>;
@@ -28,26 +29,25 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
   const processRefund = useCallback(async (_subscriptionData: any) => {
     try {
       // Refund automático desabilitado - usando Perfect Pay
-      console.log('ℹ️ [Cancelamento] Refund automático desabilitado - usando Perfect Pay');
-      console.log('ℹ️ [Cancelamento] Para reembolsos, entre em contato com o suporte');
-      
       // Simular resposta de sucesso para não quebrar o fluxo
-      const refundData = { 
-        success: true, 
+      const refundData = {
+
+        success: true,
+
         message: 'Cancelamento processado via Perfect Pay',
         amount: 0,
         refundPercentage: 0
       };
-      
+
       if (refundData.success) {
-        console.log('✅ Reembolso processado:', refundData);
+
         return refundData;
       } else {
-        console.error('❌ Erro no reembolso:', refundData);
+
         return null;
       }
     } catch (err: any) {
-      console.error('Erro ao processar reembolso:', err);
+
       return null;
     }
   }, []);
@@ -83,7 +83,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
       if (data.success) {
         // Processar reembolso baseado em leads restantes
         const refundResult = await processRefund(data);
-        
+
         // Verificar se requer cancelamento manual
         if (data.manual_cancellation_required) {
           toast({
@@ -93,7 +93,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
             className: 'toast-modern toast-warning',
             duration: 10000
           });
-          
+
           // Mostrar toast adicional com instruções
           setTimeout(() => {
             toast({
@@ -123,9 +123,9 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
 
       return data;
     } catch (err: any) {
-      console.error('Erro ao cancelar assinatura:', err);
+
       setError(err.message);
-      
+
       toast({
         title: "❌ Erro no Cancelamento",
         description: err.message || 'Não foi possível cancelar a assinatura',
@@ -154,9 +154,9 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
       // NOTA: Reativar não está implementado no novo sistema ainda
       throw new Error('Funcionalidade de reativar assinatura em desenvolvimento');
     } catch (err: any) {
-      console.error('Erro ao reativar assinatura:', err);
+
       setError(err.message);
-      
+
       toast({
         title: "❌ Erro na Reativação",
         description: err.message || 'Não foi possível reativar a assinatura',
@@ -192,7 +192,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
 
       return data.data.availablePlans || [];
     } catch (err: any) {
-      console.error('Erro ao buscar planos:', err);
+
       setError(err.message);
       return [];
     }
@@ -216,7 +216,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
 
       return data.data.downgradePlans || [];
     } catch (err: any) {
-      console.error('Erro ao buscar planos para downgrade:', err);
+
       setError(err.message);
       return [];
     }

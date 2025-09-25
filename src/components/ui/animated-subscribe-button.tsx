@@ -31,7 +31,7 @@ export const AnimatedSubscribeButton: React.FC<AnimatedSubscribeButtonProps> = (
 
   const handleClick = () => {
     if (disabled || loading) return
-    
+
     setIsSubscribed(!isSubscribed)
     if (onClick) {
       onClick()
@@ -57,20 +57,25 @@ export const AnimatedSubscribeButton: React.FC<AnimatedSubscribeButtonProps> = (
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500"
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ 
-          scale: isSubscribed ? 1 : 0, 
-          opacity: isSubscribed ? 1 : 0 
+        animate={{
+
+          scale: isSubscribed ? 1 : 0,
+
+          opacity: isSubscribed ? 1 : 0
+
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       />
-      
+
       {/* Conteúdo do botão */}
       <motion.div
         className="relative z-10 flex items-center gap-3"
         initial={false}
-        animate={{ 
+        animate={{
+
           x: isSubscribed ? -20 : 0,
-          opacity: isSubscribed ? 0 : 1 
+          opacity: isSubscribed ? 0 : 1
+
         }}
         transition={{ duration: 0.3 }}
       >
@@ -86,30 +91,35 @@ export const AnimatedSubscribeButton: React.FC<AnimatedSubscribeButtonProps> = (
           </>
         )}
       </motion.div>
-      
+
       {/* Estado de sucesso */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center gap-3"
         initial={{ x: 20, opacity: 0 }}
-        animate={{ 
+        animate={{
+
           x: isSubscribed ? 0 : 20,
-          opacity: isSubscribed ? 1 : 0 
+          opacity: isSubscribed ? 1 : 0
+
         }}
         transition={{ duration: 0.3 }}
       >
         <CheckCircle className="w-5 h-5" />
         <span>Enviado!</span>
       </motion.div>
-      
+
       {/* Efeito de brilho */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
         initial={{ x: '-100%' }}
         animate={{ x: isSubscribed ? '100%' : '-100%' }}
-        transition={{ 
-          duration: 0.6, 
+        transition={{
+
+          duration: 0.6,
+
           delay: isSubscribed ? 0.2 : 0,
-          ease: "easeInOut" 
+          ease: "easeInOut"
+
         }}
       />
     </motion.button>

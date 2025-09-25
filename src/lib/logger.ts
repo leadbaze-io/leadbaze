@@ -51,24 +51,20 @@ class Logger {
   debug(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('debug', message, context)
     this.addToBuffer(entry)
-    
+
     if (import.meta.env.DEV) {
-      console.debug(`🐛 [DEBUG] ${message}`, context)
+
     }
   }
 
   info(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('info', message, context)
     this.addToBuffer(entry)
-    
-    console.info(`ℹ️ [INFO] ${message}`, context)
   }
 
   warn(message: string, context?: Record<string, unknown>) {
     const entry = this.createLogEntry('warn', message, context)
     this.addToBuffer(entry)
-    
-    console.warn(`⚠️ [WARN] ${message}`, context)
   }
 
   error(message: string, context?: Record<string, unknown>, error?: Error) {
@@ -80,17 +76,16 @@ class Logger {
         stack: error.stack,
       } : undefined,
     })
-    
+
     this.addToBuffer(entry)
-    console.error(`❌ [ERROR] ${message}`, context, error)
-    
+
     // Enviar erros imediatamente
     this.flushLogs()
   }
 
   private addToBuffer(entry: LogEntry) {
     this.logBuffer.push(entry)
-    
+
     if (this.logBuffer.length >= this.maxBufferSize) {
       this.flushLogs()
     }
@@ -108,7 +103,7 @@ class Logger {
     } catch (error) {
       // Se falhar, recolocar os logs no buffer (evitar perda)
       this.logBuffer.unshift(...logsToSend)
-      console.error('Failed to send logs to server:', error)
+
     }
   }
 
@@ -137,7 +132,7 @@ class Logger {
           warn: '⚠️',
           error: '❌',
         }[log.level]
-        
+
         console.log(`${emoji} [${log.level.toUpperCase()}] ${log.message}`, log)
       })
       console.groupEnd()
@@ -150,7 +145,7 @@ class Logger {
       const updatedLogs = [...existingLogs, ...logs].slice(-500) // Manter apenas os últimos 500 logs
       localStorage.setItem('leadbaze_logs', JSON.stringify(updatedLogs))
     } catch (error) {
-      console.error('Failed to store logs locally:', error)
+
     }
   }
 
@@ -242,25 +237,25 @@ export function logExecutionTime(target: unknown, propertyKey: string, descripto
 
   descriptor.value = async function (...args: unknown[]) {
     const start = performance.now()
-    
+
     try {
       const result = await originalMethod.apply(this, args)
       const duration = performance.now() - start
-      
+
       logger.logPerformance(`${(target as object).constructor.name}.${propertyKey}`, duration, {
         args: args.length,
         success: true,
       })
-      
+
       return result
     } catch (error) {
       const duration = performance.now() - start
-      
+
       logger.error(`Error in ${(target as object).constructor.name}.${propertyKey}`, {
         duration,
         args: args.length,
       }, error as Error)
-      
+
       throw error
     }
   }

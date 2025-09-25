@@ -62,7 +62,7 @@ export default function MobileLGPD() {
                 <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center text-white shadow-lg flex-shrink-0`}>
                   <item.icon className="w-6 h-6" />
                 </div>
-                
+
                 {/* Content */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -91,24 +91,3 @@ export default function MobileLGPD() {
     </section>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

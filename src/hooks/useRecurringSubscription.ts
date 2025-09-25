@@ -36,14 +36,12 @@ interface UseRecurringSubscriptionReturn {
     planId: string;
     userEmail: string;
   }) => Promise<{ success: boolean; data?: any; error?: string }>;
-  
+
   getSubscription: (subscriptionId: string) => Promise<{ success: boolean; data?: RecurringSubscriptionData; error?: string }>;
-  
+
   cancelSubscription: (subscriptionId: string, userId: string, reason?: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-  
+
   reactivateSubscription: (subscriptionId: string, userId: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-  
-  
   isLoading: boolean;
   error: string | null;
 }
@@ -172,8 +170,6 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
       setIsLoading(false);
     }
   }, []);
-
-
   return {
     createSubscription,
     getSubscription,
@@ -183,4 +179,3 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
     error
   };
 };
-

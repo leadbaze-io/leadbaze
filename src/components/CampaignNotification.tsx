@@ -45,9 +45,9 @@ export function CampaignNotification({
       totalLeads,
       timestamp: Date.now()
     }
-    
+
     localStorage.setItem('activeCampaign', JSON.stringify(notificationData))
-    
+
     return () => {
       if (status === 'completed' || status === 'failed') {
         localStorage.removeItem('activeCampaign')
@@ -76,7 +76,8 @@ export function CampaignNotification({
   if (!isVisible || status === 'completed' || status === 'failed') return null
 
   return (
-    <div 
+    <div
+
       className="fixed bottom-4 right-4 z-[9999] max-w-sm"
       style={{ zIndex: 9999 }}
     >
@@ -97,7 +98,7 @@ export function CampaignNotification({
             <X className="w-3 h-3" />
           </Button>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
             <span className="campaign-minimized-label-escuro">Progresso</span>
@@ -109,14 +110,14 @@ export function CampaignNotification({
               style={{ width: `${progress}%` }}
             />
           </div>
-          
+
           <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
             <span className="campaign-minimized-text-escuro">{successCount} enviados</span>
             <span className="campaign-minimized-text-escuro">{failedCount} falhas</span>
             <span className="campaign-minimized-text-escuro">{totalLeads} total</span>
           </div>
         </div>
-        
+
         <Button
           onClick={onOpenModal}
           className="w-full mt-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-xs py-2"

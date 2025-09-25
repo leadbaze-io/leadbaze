@@ -15,7 +15,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('leadbaze-theme')
     const initialTheme = (stored as Theme) || 'system'
-    console.log('🎨 ThemeProvider - Tema inicial:', initialTheme, 'Stored:', stored)
+
     return initialTheme
   })
 
@@ -36,31 +36,29 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       // Verificar se deve forçar modo claro
       if (shouldForceLightMode()) {
         shouldBeDark = false
-        console.log('🎨 ThemeContext - Forçando modo claro para página:', window.location.pathname)
+
       } else if (theme === 'dark') {
         shouldBeDark = true
-        console.log('🎨 ThemeContext - Aplicando tema dark do usuário')
+
       } else if (theme === 'light') {
         shouldBeDark = false
-        console.log('🎨 ThemeContext - Aplicando tema light do usuário')
+
       } else {
         // system
         shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        console.log('🎨 ThemeContext - Aplicando tema do sistema:', shouldBeDark ? 'dark' : 'light')
-      }
 
-      console.log('🎨 ThemeContext - Tema:', theme, 'shouldBeDark:', shouldBeDark)
+      }
       setIsDark(shouldBeDark)
-      
+
       // Aplicar classe ao documento diretamente
       if (shouldBeDark) {
         document.documentElement.classList.add('dark')
-        console.log('✅ ThemeContext - Classe dark adicionada')
+
       } else {
         document.documentElement.classList.remove('dark')
-        console.log('✅ ThemeContext - Classe dark removida')
+
       }
-      
+
       // Atualizar meta theme-color para mobile
       const metaThemeColor = document.querySelector('meta[name="theme-color"]')
       if (metaThemeColor) {
@@ -96,45 +94,45 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme])
 
   const handleSetTheme = (newTheme: Theme) => {
-    console.log('🔄 Mudando tema para:', newTheme)
+
     setTheme(newTheme)
     localStorage.setItem('leadbaze-theme', newTheme)
-    
+
     // Aplicar tema imediatamente
     let shouldBeDark = false
-    
+
     // Verificar se deve forçar modo claro
     if (shouldForceLightMode()) {
       shouldBeDark = false
-      console.log('🎨 handleSetTheme - Forçando modo claro para página:', window.location.pathname)
+
     } else if (newTheme === 'dark') {
       shouldBeDark = true
-      console.log('🎨 handleSetTheme - Aplicando tema dark')
+
     } else if (newTheme === 'light') {
       shouldBeDark = false
-      console.log('🎨 handleSetTheme - Aplicando tema light')
+
     } else {
       shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      console.log('🎨 handleSetTheme - Aplicando tema do sistema:', shouldBeDark ? 'dark' : 'light')
+
     }
-    
+
     // Atualizar estado imediatamente para evitar bugs visuais
     setIsDark(shouldBeDark)
-    
+
     if (shouldBeDark) {
       document.documentElement.classList.add('dark')
-      console.log('✅ Tema aplicado imediatamente: dark')
+
     } else {
       document.documentElement.classList.remove('dark')
-      console.log('✅ Tema aplicado imediatamente: light')
+
     }
   }
 
   const forceLightMode = () => {
-    console.log('🎨 ThemeContext - Forçando modo claro manualmente')
+
     setIsDark(false)
     document.documentElement.classList.remove('dark')
-    
+
     // Atualizar meta theme-color para mobile
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
     if (metaThemeColor) {

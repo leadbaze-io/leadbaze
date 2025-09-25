@@ -8,13 +8,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Activity, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
-  Play, 
-  Pause, 
+import {
+
+  Activity,
+
+  Clock,
+
+  CheckCircle,
+
+  XCircle,
+
+  Play,
+
+  Pause,
+
   RefreshCw,
   Eye,
   Settings,
@@ -28,11 +35,15 @@ import {
   Menu
 } from 'lucide-react';
 import blogAutomationService from '../../lib/blogAutomationService';
-import type { 
-  BlogAutomationStats, 
-  BlogQueueItem, 
+import type {
+
+  BlogAutomationStats,
+
+  BlogQueueItem,
+
   BlogAutomationConfig,
-  HealthStatus 
+  HealthStatus
+
 } from '../../lib/blogAutomationService';
 import { supabase } from '../../lib/supabaseClient';
 import BlogRealtimeMonitor from './BlogRealtimeMonitor';
@@ -59,7 +70,7 @@ const BlogAutomationDashboard: React.FC = () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         const user = session?.user;
-        
+
         setCurrentUser(user);
         // Verificação de admin (e-mail direto + hash para segurança)
         if (user?.email) {
@@ -69,7 +80,7 @@ const BlogAutomationDashboard: React.FC = () => {
           setIsAuthorized(false);
         }
       } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
+
         setIsAuthorized(false);
       } finally {
         setLoading(false);
@@ -98,7 +109,7 @@ const BlogAutomationDashboard: React.FC = () => {
   useEffect(() => {
     if (isAuthorized) {
       loadDashboardData();
-      
+
       // Desabilitar polling automático para produção
       // const interval = setInterval(loadDashboardData, 120000);
       // return () => clearInterval(interval);
@@ -110,13 +121,13 @@ const BlogAutomationDashboard: React.FC = () => {
     if (!isAuthorized) return;
 
     const queueSubscription = blogAutomationService.subscribeToQueueChanges((payload) => {
-      console.log('Mudança na fila:', payload);
+
       loadQueue(); // Recarregar fila
       loadStats(); // Recarregar estatísticas
     });
 
     const postsSubscription = blogAutomationService.subscribeToNewPosts((payload) => {
-      console.log('Novo post criado:', payload);
+
       loadStats(); // Recarregar estatísticas
     });
 
@@ -129,24 +140,24 @@ const BlogAutomationDashboard: React.FC = () => {
   // Carregar dados essenciais apenas (otimizado para produção)
   const loadDashboardData = async () => {
     if (!isAuthorized) return;
-    
+
     try {
       // Carregar apenas dados essenciais
       await Promise.all([
         loadStats(),
         loadQueue()
       ]);
-      
+
       // Carregar posts se estiver na aba de posts
       if (activeTab === 'posts') {
         loadPosts();
       }
-      
+
       // Carregar dados secundários apenas se necessário
       // loadHealth() e loadConfig() removidos para reduzir requisições
-      
+
     } catch (error) {
-      console.error('Erro ao carregar dados do dashboard:', error);
+
     }
   };
 
@@ -158,7 +169,7 @@ const BlogAutomationDashboard: React.FC = () => {
         setStats(response.stats);
       }
     } catch (error) {
-      console.error('Erro ao carregar estatísticas:', error);
+
     }
   };
 
@@ -168,7 +179,7 @@ const BlogAutomationDashboard: React.FC = () => {
       const healthData = await blogAutomationService.getHealthStatus();
       setHealth(healthData);
     } catch (error) {
-      console.error('Erro ao carregar health:', error);
+
     }
   };
 
@@ -180,7 +191,7 @@ const BlogAutomationDashboard: React.FC = () => {
         setQueue(response.queue);
       }
     } catch (error) {
-      console.error('Erro ao carregar fila:', error);
+
     }
   };
 
@@ -192,7 +203,7 @@ const BlogAutomationDashboard: React.FC = () => {
         setConfig(response.config);
       }
     } catch (error) {
-      console.error('Erro ao carregar configuração:', error);
+
     }
   };
 
@@ -204,15 +215,14 @@ const BlogAutomationDashboard: React.FC = () => {
         setLogs(response.logs);
       }
     } catch (error) {
-      console.error('Erro ao carregar logs:', error);
+
     }
   };
 
   // Carregar posts criados
   const loadPosts = async () => {
     try {
-      console.log('📄 [LoadPosts] Carregando posts...');
-      
+
       const { data, error } = await supabase
         .from('blog_posts')
         .select(`
@@ -230,56 +240,38 @@ const BlogAutomationDashboard: React.FC = () => {
         `)
         .order('created_at', { ascending: false })
         .limit(50);
-
-      console.log('📄 [LoadPosts] Resposta:', { data, error });
-
       if (error) {
-        console.error('📄 [LoadPosts] Erro ao carregar posts:', error);
+
         alert(`❌ Erro ao carregar posts: ${error.message}`);
         return;
       }
-
-      console.log('📄 [LoadPosts] Posts carregados:', data?.length || 0);
       setPosts(data || []);
     } catch (error) {
-      console.error('📄 [LoadPosts] Erro inesperado ao carregar posts:', error);
+
       alert(`❌ Erro inesperado: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
   // Deletar post
   const handleDeletePost = async (postId: string, postTitle: string) => {
-    console.log('🗑️ [Delete] Iniciando deleção do post:', { postId, postTitle });
-    
+
     if (!confirm(`Tem certeza que deseja deletar o post "${postTitle}"?\n\nEsta ação não pode ser desfeita.`)) {
-      console.log('🗑️ [Delete] Deleção cancelada pelo usuário');
+
       return;
     }
 
     try {
-      console.log('🗑️ [Delete] Verificando permissões...');
-      
+
       // Primeiro, verificar se o usuário está autenticado
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        console.error('🗑️ [Delete] Usuário não autenticado');
+
         alert('❌ Você precisa estar logado para deletar posts');
         return;
       }
-
-      console.log('🗑️ [Delete] Usuário autenticado:', user.email);
-      console.log('🗑️ [Delete] Fazendo requisição para deletar post...');
-      
       // Usar sempre a API backend para deletar (tem SERVICE ROLE KEY)
-      console.log('🗑️ [Delete] Deletando via API backend...');
-      console.log('🗑️ [Delete] URL da requisição:', '/api/blog/delete-post');
-      console.log('🗑️ [Delete] Método:', 'DELETE');
-      console.log('🗑️ [Delete] Headers:', {
-        'Content-Type': 'application/json',
-        'x-user-email': user.email || ''
-      });
       console.log('🗑️ [Delete] Body:', JSON.stringify({ postId }));
-      
+
       const response = await fetch('/api/blog/delete-post', {
         method: 'DELETE',
         headers: {
@@ -288,76 +280,47 @@ const BlogAutomationDashboard: React.FC = () => {
         },
         body: JSON.stringify({ postId })
       });
-      
-      console.log('🗑️ [Delete] Status da resposta:', response.status);
-      console.log('🗑️ [Delete] Status Text:', response.statusText);
       console.log('🗑️ [Delete] Headers da resposta:', Object.fromEntries(response.headers.entries()));
 
       const result = await response.json();
-      console.log('🗑️ [Delete] Resposta da API backend:', result);
 
       if (result.success) {
-        console.log('🗑️ [Delete] Post deletado com sucesso:', result.deletedPost);
+
         alert('✅ Post deletado com sucesso!');
         loadPosts(); // Recarregar lista
       } else {
-        console.error('🗑️ [Delete] Erro ao deletar post:', result.message);
+
         alert(`❌ Erro ao deletar post: ${result.message}`);
       }
     } catch (error) {
-      console.error('🗑️ [Delete] Erro inesperado ao deletar post:', error);
+
       alert(`❌ Erro inesperado: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
 
   // Processar fila manualmente
   const handleProcessQueue = async () => {
-    console.log('🎯 [Dashboard] ===== INICIANDO PROCESSAMENTO DA FILA =====');
+
     console.log('⏰ [Dashboard] Timestamp:', new Date().toISOString());
-    console.log('👤 [Dashboard] Usuário autorizado:', isAuthorized);
-    console.log('🔧 [Dashboard] blogAutomationService:', blogAutomationService);
-    
     setProcessing(true);
-    console.log('🔄 [Dashboard] Estado processing definido como true');
-    
+
     try {
-      console.log('📞 [Dashboard] ===== CHAMANDO BLOG AUTOMATION SERVICE =====');
+
       console.log('📞 [Dashboard] Método: blogAutomationService.processQueue()');
-      console.log('📞 [Dashboard] Tipo do serviço:', typeof blogAutomationService);
-      console.log('📞 [Dashboard] Método existe?', typeof blogAutomationService.processQueue);
-      
       const result = await blogAutomationService.processQueue();
-      
-      console.log('📊 [Dashboard] ===== RESULTADO RECEBIDO =====');
-      console.log('📊 [Dashboard] Tipo do resultado:', typeof result);
       console.log('📊 [Dashboard] Resultado completo:', JSON.stringify(result, null, 2));
-      console.log('📊 [Dashboard] result.success:', result?.success);
-      console.log('📊 [Dashboard] result.processed:', result?.processed);
-      console.log('📊 [Dashboard] result.errors:', result?.errors);
-      console.log('📊 [Dashboard] result.details:', result?.details);
-      
       if (result.success) {
-        console.log('✅ [Dashboard] ===== PROCESSAMENTO BEM-SUCEDIDO =====');
-        console.log('✅ [Dashboard] Processados:', result.processed);
-        console.log('✅ [Dashboard] Erros:', result.errors);
         alert(`✅ Processamento concluído!\n📝 Processados: ${result.processed}\n❌ Erros: ${result.errors}`);
-        console.log('🔄 [Dashboard] Recarregando dados do dashboard...');
+
         loadDashboardData(); // Recarregar dados
       } else {
-        console.log('❌ [Dashboard] ===== PROCESSAMENTO FALHOU =====');
-        console.log('❌ [Dashboard] Mensagem de erro:', result.message);
         alert(`❌ Erro no processamento: ${result.message}`);
       }
     } catch (error) {
-      console.error('💥 [Dashboard] ===== ERRO CAPTURADO =====');
-      console.error('💥 [Dashboard] Tipo do erro:', typeof error);
-      console.error('💥 [Dashboard] Erro completo:', error);
       console.error('💥 [Dashboard] Error message:', error instanceof Error ? error.message : String(error));
-      console.error('💥 [Dashboard] Error stack:', error instanceof Error ? error.stack : 'N/A');
+
       alert(`❌ Erro: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
-      console.log('🏁 [Dashboard] ===== FINALIZANDO PROCESSAMENTO =====');
-      console.log('🔄 [Dashboard] Estado processing definido como false');
       setProcessing(false);
       console.log('⏰ [Dashboard] Timestamp final:', new Date().toISOString());
     }
@@ -374,7 +337,7 @@ const BlogAutomationDashboard: React.FC = () => {
         alert(`❌ Erro: ${result.message}`);
       }
     } catch (error) {
-      console.error('Erro ao processar item:', error);
+
       alert(`❌ Erro: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
@@ -389,7 +352,7 @@ const BlogAutomationDashboard: React.FC = () => {
         loadHealth();
       }
     } catch (error) {
-      console.error('Erro ao controlar scheduler:', error);
+
       alert(`❌ Erro: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
@@ -410,7 +373,8 @@ const BlogAutomationDashboard: React.FC = () => {
   if (!isAuthorized) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <motion.div 
+        <motion.div
+
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-md mx-auto p-8"
@@ -457,7 +421,7 @@ const BlogAutomationDashboard: React.FC = () => {
                 </p>
               </div>
             </div>
-            
+
             {/* Header Actions */}
             <div className="flex items-center space-x-3">
               {/* Desktop Refresh Button */}
@@ -469,7 +433,7 @@ const BlogAutomationDashboard: React.FC = () => {
                 <RefreshCw className="w-4 h-4" />
                 <span>Atualizar</span>
               </button>
-              
+
               {/* Mobile Refresh Button */}
               <button
                 onClick={loadDashboardData}
@@ -478,7 +442,7 @@ const BlogAutomationDashboard: React.FC = () => {
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
-              
+
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -486,7 +450,7 @@ const BlogAutomationDashboard: React.FC = () => {
               >
                 <Menu className="h-5 w-5" />
               </button>
-              
+
               {/* Desktop Admin Badge */}
               <div className="hidden sm:flex items-center space-x-2">
                 <div className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-sm font-medium shadow-sm">
@@ -496,7 +460,7 @@ const BlogAutomationDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Tabs - Desktop */}
           <div className="hidden sm:flex items-center space-x-8">
             {[
@@ -550,7 +514,7 @@ const BlogAutomationDashboard: React.FC = () => {
                     <span>{tab.label}</span>
                   </button>
                 ))}
-                
+
                 {/* Mobile Admin Info */}
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-center px-4">
@@ -569,7 +533,8 @@ const BlogAutomationDashboard: React.FC = () => {
       {/* Conteúdo */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {activeTab === 'overview' && (
-          <OverviewTab 
+          <OverviewTab
+
             stats={stats}
             health={health}
             config={config}
@@ -578,39 +543,43 @@ const BlogAutomationDashboard: React.FC = () => {
             processing={processing}
           />
         )}
-        
+
         {activeTab === 'queue' && (
-          <QueueTab 
+          <QueueTab
+
             queue={queue}
             onProcessItem={handleProcessItem}
             onRefresh={loadQueue}
           />
         )}
-        
+
         {activeTab === 'posts' && (
-          <PostsTab 
+          <PostsTab
+
             posts={posts}
             onDeletePost={handleDeletePost}
             onRefresh={loadPosts}
           />
         )}
-        
+
         {activeTab === 'realtime' && (
           <div className="space-y-6">
             <AddPostToQueue />
             <BlogRealtimeMonitor />
           </div>
         )}
-        
+
         {activeTab === 'config' && (
-          <ConfigTab 
+          <ConfigTab
+
             config={config}
             onConfigUpdate={loadConfig}
           />
         )}
-        
+
         {activeTab === 'logs' && (
-          <LogsTab 
+          <LogsTab
+
             logs={logs}
             onRefresh={loadLogs}
           />
@@ -629,7 +598,7 @@ const OverviewTab: React.FC<{
   onSchedulerControl: (action: 'start' | 'stop') => void;
   processing: boolean;
 }> = ({ stats, config, onProcessQueue, onSchedulerControl, processing }) => {
-  
+
   const progress = stats ? blogAutomationService.calculateProgress(stats) : 0;
   const statusSummary = stats ? blogAutomationService.getStatusSummary(stats) : '';
 
@@ -671,16 +640,17 @@ const OverviewTab: React.FC<{
           </h3>
           <span className="text-xl sm:text-2xl font-bold text-blue-600">{progress}%</span>
         </div>
-        
+
         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
-          <motion.div 
+          <motion.div
+
             className="bg-blue-600 h-2 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 1, ease: "easeOut" }}
           />
         </div>
-        
+
         <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
           {statusSummary}
         </p>
@@ -691,14 +661,16 @@ const OverviewTab: React.FC<{
         <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4">
           Controles do Sistema
         </h3>
-        
+
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <button
             onClick={onProcessQueue}
             disabled={processing}
             className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-300 transform ${
-              processing 
-                ? 'bg-blue-500 cursor-not-allowed scale-95' 
+              processing
+
+                ? 'bg-blue-500 cursor-not-allowed scale-95'
+
                 : 'bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
             } text-white disabled:opacity-70`}
           >
@@ -714,7 +686,7 @@ const OverviewTab: React.FC<{
               </>
             )}
           </button>
-          
+
           {config?.schedulerActive ? (
             <button
               onClick={() => onSchedulerControl('stop')}
@@ -733,7 +705,7 @@ const OverviewTab: React.FC<{
             </button>
           )}
         </div>
-        
+
         {/* Status do scheduler */}
         {config && (
           <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -747,7 +719,7 @@ const OverviewTab: React.FC<{
                 {config.schedulerActive ? 'Ativo' : 'Inativo'}
               </span>
             </div>
-            
+
             <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               <p>Agendamento: {config.cronSchedule}</p>
               <p>Fuso horário: {config.timezone}</p>
@@ -921,19 +893,19 @@ const QueueTab: React.FC<{
                     <span>{status.status}</span>
                   </span>
                 </div>
-                
+
                 <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
                   <p><strong>Categoria:</strong> {item.category}</p>
                   <p><strong>Autor:</strong> {item.autor}</p>
                   <p><strong>Data:</strong> {new Date(item.date).toLocaleDateString('pt-BR')}</p>
                 </div>
-                
+
                 {item.error_message && (
                   <div className="text-xs text-red-600 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded">
                     {item.error_message}
                   </div>
                 )}
-                
+
                 <div className="flex space-x-2 mt-3">
                   {!item.processed && (
                     <button
@@ -1035,8 +1007,10 @@ const PostsTab: React.FC<{
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      post.published 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                      post.published
+
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+
                         : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                     }`}>
                       {post.published ? 'Publicado' : 'Rascunho'}
@@ -1080,25 +1054,27 @@ const PostsTab: React.FC<{
                   {post.title}
                 </h3>
                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 ${
-                  post.published 
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                  post.published
+
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+
                     : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                 }`}>
                   {post.published ? 'Publicado' : 'Rascunho'}
                 </span>
               </div>
-              
+
               {post.excerpt && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 line-clamp-2">
                   {post.excerpt}
                 </div>
               )}
-              
+
               <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
                 <p><strong>Categoria:</strong> {post.blog_categories?.name || 'Sem categoria'}</p>
                 <p><strong>Criado:</strong> {new Date(post.created_at).toLocaleDateString('pt-BR')}</p>
               </div>
-              
+
               <div className="flex space-x-3 mt-3">
                 <a
                   href={`/blog/${post.slug}`}
@@ -1160,15 +1136,17 @@ const ConfigTab: React.FC<{
         <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4">
           Configuração Atual
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Status do Sistema
             </label>
             <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              config.enabled 
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+              config.enabled
+
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+
                 : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
             }`}>
               {config.enabled ? 'Habilitado' : 'Desabilitado'}
@@ -1242,7 +1220,8 @@ const ConfigTab: React.FC<{
             <div>
               <span className="text-gray-600 dark:text-gray-400">Última Execução: </span>
               <span className="text-gray-900 dark:text-white">
-                {config.lastExecution 
+                {config.lastExecution
+
                   ? blogAutomationService.formatDate(config.lastExecution)
                   : 'Nunca'
                 }
@@ -1278,7 +1257,8 @@ const LogsTab: React.FC<{
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
         <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
           {logs.map((log, index) => (
-            <div 
+            <div
+
               key={index}
               className="flex items-start space-x-2 sm:space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
             >

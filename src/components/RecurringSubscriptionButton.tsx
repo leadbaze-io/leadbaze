@@ -38,30 +38,18 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
       setIsLoading(true);
 
       // Verificar se o usuário já tem um plano pago ativo
-      const hasActivePaidPlan = subscription && 
-        subscription.status === 'active' && 
+      const hasActivePaidPlan = subscription &&
+
+        subscription.status === 'active' &&
+
         !subscription.is_free_trial;
-
-      console.log('🔍 [RecurringSubscription] Verificando tipo de operação:', {
-        hasSubscription: !!subscription,
-        status: subscription?.status,
-        isFreeTrial: subscription?.is_free_trial,
-        hasActivePaidPlan
-      });
-
       if (hasActivePaidPlan) {
         // Se já tem plano pago, fazer upgrade
-        console.log('🔄 [RecurringSubscription] Fazendo upgrade para:', {
-          planId,
-          planName,
-          amount,
-          leadsLimit
-        });
 
         const upgradeResult = await upgradeSubscription(planId, 'Upgrade solicitado pelo usuário');
-        
+
         if (upgradeResult) {
-          console.log('✅ [RecurringSubscription] Upgrade realizado:', upgradeResult);
+
           onSuccess?.(upgradeResult);
         } else {
           throw new Error('Falha ao realizar upgrade');
@@ -70,21 +58,12 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
       }
 
       // Nova assinatura com Perfect Pay
-      console.log('🆕 [RecurringSubscription] Criando assinatura Perfect Pay:', {
-        planId,
-        planName,
-        amount,
-        leadsLimit
-      });
 
       // Obter usuário atual
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('Usuário não autenticado');
       }
-
-      console.log('👤 [RecurringSubscription] Usuário autenticado:', user.id);
-
       // Chamar backend Perfect Pay
       const response = await fetch('/api/perfect-pay/create-checkout', {
         method: 'POST',
@@ -103,18 +82,17 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
       }
 
       const result = await response.json();
-      console.log('✅ [RecurringSubscription] Resposta do backend:', result);
 
       if (!result.success || !result.data?.checkoutUrl) {
         throw new Error(result.message || 'Erro ao criar checkout');
       }
 
       // Redirecionar para Perfect Pay
-      console.log('🔄 [RecurringSubscription] Redirecionando para:', result.data.checkoutUrl);
+
       window.location.href = result.data.checkoutUrl;
 
     } catch (error: any) {
-      console.error('❌ [RecurringSubscription] Erro:', error);
+
       onError?.(error.message || 'Erro ao processar assinatura');
     } finally {
       setIsLoading(false);
@@ -131,12 +109,17 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
         onClick={handleSubscribe}
         disabled={isProcessing}
         className={`
-          bg-gradient-to-r from-blue-500 to-purple-600 
-          hover:from-blue-600 hover:to-purple-700 
+          bg-gradient-to-r from-blue-500 to-purple-600
+
+          hover:from-blue-600 hover:to-purple-700
+
           disabled:from-gray-400 disabled:to-gray-500
-          text-white px-6 py-3 rounded-lg font-semibold 
-          transition-all duration-200 
-          disabled:opacity-50 disabled:cursor-not-allowed 
+          text-white px-6 py-3 rounded-lg font-semibold
+
+          transition-all duration-200
+
+          disabled:opacity-50 disabled:cursor-not-allowed
+
           flex items-center gap-2 justify-center
           ${className}
         `}
@@ -153,11 +136,10 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
           </>
         )}
       </button>
-      
+
       {/* Modal de Pagamento - Removido para usar Checkout Pro */}
     </>
   );
 };
 
 export default RecurringSubscriptionButton;
-

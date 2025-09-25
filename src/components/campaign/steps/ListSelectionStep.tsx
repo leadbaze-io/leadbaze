@@ -50,7 +50,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
   const [showIgnored, setShowIgnored] = useState(false)
 
   // Filtrar listas
-  const availableLists = lists.filter(list => 
+  const availableLists = lists.filter(list =>
+
     !selectedLists.includes(list.id) && !ignoredLists.includes(list.id)
   )
   const selectedListsData = lists.filter(list => selectedLists.includes(list.id))
@@ -386,7 +387,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
                     Nenhum lead encontrado
                   </h3>
                   <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                    As listas selecionadas não possuem leads válidos ou com telefone. 
+                    As listas selecionadas não possuem leads válidos ou com telefone.
+
                     Verifique se as listas contêm dados de contato válidos.
                   </p>
                 </div>

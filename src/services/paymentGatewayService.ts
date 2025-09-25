@@ -69,7 +69,7 @@ export class PaymentGatewayService {
           return { success: false, error: 'Gateway não suportado' };
       }
     } catch (error) {
-      console.error('Erro ao criar cliente:', error);
+
       return { success: false, error: 'Erro inesperado ao criar cliente' };
     }
   }
@@ -98,7 +98,7 @@ export class PaymentGatewayService {
           return { success: false, error: 'Gateway não suportado' };
       }
     } catch (error) {
-      console.error('Erro ao criar assinatura:', error);
+
       return { success: false, error: 'Erro inesperado ao criar assinatura' };
     }
   }
@@ -121,7 +121,7 @@ export class PaymentGatewayService {
           return { success: false, error: 'Gateway não suportado' };
       }
     } catch (error) {
-      console.error('Erro ao cancelar assinatura:', error);
+
       return { success: false, error: 'Erro inesperado ao cancelar assinatura' };
     }
   }
@@ -144,7 +144,7 @@ export class PaymentGatewayService {
           return { success: false, error: 'Gateway não suportado' };
       }
     } catch (error) {
-      console.error('Erro ao buscar métodos de pagamento:', error);
+
       return { success: false, error: 'Erro inesperado ao buscar métodos de pagamento' };
     }
   }

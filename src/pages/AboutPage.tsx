@@ -1,13 +1,21 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Target, 
-  TrendingUp, 
-  Users, 
-  BarChart3, 
-  Zap, 
-  Mail, 
-  Linkedin, 
+import {
+
+  Target,
+
+  TrendingUp,
+
+  Users,
+
+  BarChart3,
+
+  Zap,
+
+  Mail,
+
+  Linkedin,
+
   Calendar,
   Phone
 } from 'lucide-react';
@@ -17,11 +25,8 @@ export default function AboutPage() {
   // Forçar modo claro na página Sobre
   useEffect(() => {
     document.documentElement.classList.remove('dark');
-    console.log('✅ Página Sobre - modo claro forçado');
+
   }, []);
-
-
-
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -38,8 +43,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-purple-50 to-pink-50">
-      
-
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -55,8 +58,10 @@ export default function AboutPage() {
               </span>
             </h1>
             <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-              Transformar a prospecção B2B através da educação, automação e inovação. 
-              Somos a fonte definitiva para profissionais que buscam dominar a arte de 
+              Transformar a prospecção B2B através da educação, automação e inovação.
+
+              Somos a fonte definitiva para profissionais que buscam dominar a arte de
+
               gerar leads qualificados e escalar suas operações de vendas.
             </p>
           </motion.div>
@@ -77,9 +82,12 @@ export default function AboutPage() {
               Por que o LeadBaze?
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Em um mercado saturado de informações genéricas sobre marketing, o LeadBaze se destaca 
-              por sua especialização única: <span className="font-semibold text-purple-600">prospecção B2B inteligente</span>. 
-              Nossa abordagem combina estratégias comprovadas com as mais recentes tecnologias de 
+              Em um mercado saturado de informações genéricas sobre marketing, o LeadBaze se destaca
+
+              por sua especialização única: <span className="font-semibold text-purple-600">prospecção B2B inteligente</span>.
+
+              Nossa abordagem combina estratégias comprovadas com as mais recentes tecnologias de
+
               automação e IA.
             </p>
           </motion.div>
@@ -100,7 +108,8 @@ export default function AboutPage() {
               Nossa Especialização
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Domine as estratégias mais eficazes de prospecção B2B com metodologias 
+              Domine as estratégias mais eficazes de prospecção B2B com metodologias
+
               comprovadas e ferramentas de última geração.
             </p>
           </motion.div>
@@ -184,7 +193,8 @@ export default function AboutPage() {
               Nossa Metodologia
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Cada artigo, guia e case study do LeadBaze é baseado em princípios sólidos 
+              Cada artigo, guia e case study do LeadBaze é baseado em princípios sólidos
+
               e resultados comprovados no mercado.
             </p>
           </motion.div>
@@ -252,7 +262,8 @@ export default function AboutPage() {
               Para Quem Escrevemos
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Nossos conteúdos são desenvolvidos especificamente para profissionais 
+              Nossos conteúdos são desenvolvidos especificamente para profissionais
+
               que buscam excelência em prospecção B2B.
             </p>
           </motion.div>
@@ -322,7 +333,8 @@ export default function AboutPage() {
               Conecte-se Conosco
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Mantenha-se atualizado com as melhores práticas de prospecção B2B 
+              Mantenha-se atualizado com as melhores práticas de prospecção B2B
+
               e conecte-se com outros profissionais da área.
             </p>
           </motion.div>
@@ -390,7 +402,8 @@ export default function AboutPage() {
                 <LogoImage className="h-9 w-auto" />
               </div>
               <p className="text-gray-300 mb-6 max-w-md">
-                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps. 
+                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps.
+
                 Transforme localizações em oportunidades de negócio.
               </p>
               <div className="flex space-x-4">

@@ -22,7 +22,7 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [categories, setCategories] = useState<BlogTypes.BlogCategory[]>([]);
-  
+
   // Estados para controlar a navbar
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -39,7 +39,7 @@ export default function BlogPage() {
   const controlNavbar = useCallback(() => {
     if (typeof window !== 'undefined') {
       const currentScrollY = window.scrollY;
-      
+
       // Se está scrollando para baixo e a navbar está visível, esconde
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setIsNavbarVisible(false);
@@ -48,7 +48,7 @@ export default function BlogPage() {
       else if (currentScrollY < lastScrollY) {
         setIsNavbarVisible(true);
       }
-      
+
       setLastScrollY(currentScrollY);
     }
   }, [lastScrollY]);
@@ -64,11 +64,11 @@ export default function BlogPage() {
           currentPage,
           9 // 9 posts per page (3x3 grid)
         );
-        
+
         setPosts(postsData);
         setPagination(paginationData);
       } catch (error) {
-        console.error('Erro ao carregar posts:', error);
+
       } finally {
         setLoading(false);
       }
@@ -80,14 +80,14 @@ export default function BlogPage() {
   // Forçar modo claro no Blog
   useEffect(() => {
     document.documentElement.classList.remove('dark');
-    console.log('✅ Blog - modo claro forçado');
+
   }, []);
 
   // Adicionar listener de scroll para controlar a navbar
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', controlNavbar, { passive: true });
-      
+
       return () => {
         window.removeEventListener('scroll', controlNavbar);
       };
@@ -101,7 +101,7 @@ export default function BlogPage() {
         const categoriesData = await BlogService.getCategories();
         setCategories(categoriesData);
       } catch (error) {
-        console.error('Erro ao carregar categorias:', error);
+
       }
     };
 
@@ -112,12 +112,12 @@ export default function BlogPage() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      
+
       // Para filtros - fechar se clicar fora do dropdown
       if (!target.closest('.filters-dropdown')) {
         setShowFilters(false);
       }
-      
+
       // Para busca - fechar apenas se clicar fora da barra de pesquisa expandida
       if (showSearch && !target.closest('.search-bar-expanded')) {
         setShowSearch(false);
@@ -131,15 +131,15 @@ export default function BlogPage() {
 
   const handleFiltersChange = (newFilters: BlogFilters) => {
     const params = new URLSearchParams();
-    
+
     if (newFilters.category) params.set('category', newFilters.category);
     if (newFilters.tag) params.set('tag', newFilters.tag);
     if (newFilters.search) params.set('search', newFilters.search);
     if (newFilters.sortBy && newFilters.sortBy !== 'newest') params.set('sortBy', newFilters.sortBy);
-    
+
     // Reset to first page when filters change
     params.delete('page');
-    
+
     setSearchParams(params);
   };
 
@@ -165,8 +165,6 @@ export default function BlogPage() {
     }
     setSearchParams(params);
   };
-
-
   const getPageDescription = () => {
     if (filters.category || filters.tag || filters.search) {
       return `${pagination?.totalPosts || 0} artigo(s) encontrado(s)`;
@@ -197,7 +195,7 @@ export default function BlogPage() {
                            Voltar ao LeadBaze
                          </Link>
                        </div>
-                       
+
                        <div className="flex items-center space-x-4">
                          {/* Search Icon */}
                          <button
@@ -321,8 +319,6 @@ export default function BlogPage() {
                              </div>
                            )}
                          </div>
-                         
-
                        </div>
                      </div>
                    </div>
@@ -383,12 +379,12 @@ export default function BlogPage() {
                      Blog
                    </span>
                  </h1>
-                 
+
                  {/* Texto de Impacto */}
                  <p className="text-lg text-gray-600  mb-4 font-medium">
                    Sua fonte definitiva de informação e prospecção B2B
                  </p>
-                
+
                 {/* Estatísticas */}
                 {getPageDescription() && (
                   <div className="text-base font-medium text-blue-600 ">
@@ -443,8 +439,10 @@ export default function BlogPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <BlogPostCard 
-                    post={post} 
+                  <BlogPostCard
+
+                    post={post}
+
                     variant="default"
                     showAuthor={true}
                     showStats={false}
@@ -553,7 +551,8 @@ export default function BlogPage() {
                 <LogoImage className="h-9 w-auto" />
               </div>
               <p className="text-gray-300 mb-6 max-w-md">
-                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps. 
+                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps.
+
                 Transforme localizações em oportunidades de negócio.
               </p>
               <div className="flex space-x-4">
@@ -572,7 +571,8 @@ export default function BlogPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
               <div className="space-y-2">
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/');
                     setTimeout(() => {
@@ -583,7 +583,8 @@ export default function BlogPage() {
                 >
                   Início
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/dashboard');
                     setTimeout(() => {
@@ -594,7 +595,8 @@ export default function BlogPage() {
                 >
                   Dashboard
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/gerador');
                     setTimeout(() => {
@@ -605,7 +607,8 @@ export default function BlogPage() {
                 >
                   Gerar Leads
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/disparador');
                     setTimeout(() => {
@@ -616,7 +619,8 @@ export default function BlogPage() {
                 >
                   Disparador
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/blog');
                     setTimeout(() => {
@@ -634,14 +638,17 @@ export default function BlogPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Suporte</h3>
               <div className="space-y-2">
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/');
                     setTimeout(() => {
                       const faqSection = document.getElementById('faq-section-desktop');
                       if (faqSection) {
-                        faqSection.scrollIntoView({ 
-                          behavior: 'smooth', 
+                        faqSection.scrollIntoView({
+
+                          behavior: 'smooth',
+
                           block: 'start'
                         });
                       }
@@ -651,7 +658,8 @@ export default function BlogPage() {
                 >
                   FAQ
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
@@ -671,7 +679,7 @@ export default function BlogPage() {
           </div>
         </div>
       </footer>
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>

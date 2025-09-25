@@ -26,7 +26,7 @@ export class EvolutionApiService {
   static async dispatchCampaignToWebhook(payload: unknown[]): Promise<{ success: boolean; data?: unknown; error?: string }>{
     try {
       // Enviando campanha para backend
-      
+
       const response = await fetch(`${BACKEND_URL}/api/dispatch-campaign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,7 +37,7 @@ export class EvolutionApiService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        console.error('❌ [EVOLUTION-API] Erro na resposta:', errorData)
+
         throw new Error(errorData.error || `Erro HTTP ${response.status}`)
       }
 
@@ -45,7 +45,7 @@ export class EvolutionApiService {
       // Resposta do backend recebida
       return data
     } catch (error: unknown) {
-      console.error('❌ [EVOLUTION-API] Erro ao enviar campanha ao backend:', error)
+
       const errorMessage = error instanceof Error ? error.message : String(error)
       return { success: false, error: errorMessage || 'Erro desconhecido' }
     }
@@ -58,11 +58,8 @@ export class EvolutionApiService {
    */
   static async createInstanceAndQRCode(instanceName: string, userName?: string): Promise<EvolutionInstance> {
     try {
-      console.log('🔄 Criando instância:', instanceName);
-      console.log('🌐 BACKEND_URL:', BACKEND_URL);
-      
       const url = BACKEND_URL ? `${BACKEND_URL}/api/create-instance-and-qrcode` : '/api/create-instance-and-qrcode';
-      console.log('🔗 URL completa:', url);
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -77,8 +74,7 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ Instância criada com sucesso:', data);
-      
+
       return {
         instanceName: data.instanceName,
         qrCodeBase64: data.qrCodeBase64,
@@ -86,7 +82,7 @@ export class EvolutionApiService {
         message: data.message
       };
     } catch (error) {
-      console.error('❌ Erro ao criar instância:', error);
+
       throw error;
     }
   }
@@ -98,8 +94,7 @@ export class EvolutionApiService {
    */
   static async deleteInstance(instanceName: string): Promise<{ success: boolean; message: string }> {
     try {
-      console.log('🗑️ [EVOLUTION-API] Deletando instância:', instanceName);
-      
+
       const response = await fetch(`${BACKEND_URL}/api/delete-instance/${instanceName}`, {
         method: 'DELETE',
         headers: {
@@ -113,14 +108,13 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ [EVOLUTION-API] Instância deletada com sucesso:', data);
-      
+
       return {
         success: true,
         message: data.message || 'Instância deletada com sucesso'
       };
     } catch (error) {
-      console.error('❌ [EVOLUTION-API] Erro ao deletar instância:', error);
+
       throw error;
     }
   }
@@ -139,8 +133,7 @@ export class EvolutionApiService {
     documentation: string;
   }> {
     try {
-      console.log('🔍 [EVOLUTION-API] Obtendo informações da API...');
-      
+
       const response = await fetch(`${BACKEND_URL}/api/evolution/info`, {
         method: 'GET',
         headers: {
@@ -153,11 +146,10 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('📊 [EVOLUTION-API] Informações obtidas:', data);
-      
+
       return data;
     } catch (error) {
-      console.error('❌ Erro ao obter informações da Evolution API:', error);
+
       throw error;
     }
   }
@@ -181,16 +173,15 @@ export class EvolutionApiService {
     message: string;
   }> {
     try {
-      console.log('🔍 Buscando QR Code para instância:', instanceName);
-      
+
       // Construir URL baseada no endpoint do backend
       // Endpoint correto do backend: /api/qrcode/{instanceName}
       let url = `${BACKEND_URL}/api/qrcode/${instanceName}`;
       if (phoneNumber) {
         url += `?number=${encodeURIComponent(phoneNumber)}`;
-        console.log('📞 Conectando com número específico:', phoneNumber);
+
       }
-      
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -204,17 +195,14 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('📱 Resposta do QR Code:', data);
-      
+
       // Estruturar resposta baseada na documentação oficial da Evolution API
       // Documentação: https://doc.evolution-api.com/v1/api-reference/instance-controller/instance-connect
-      console.log('📋 [EVOLUTION-API] Resposta completa da API:', data);
-      
+
       // Processar código de pareamento - baseado na documentação oficial
       let simplePairingCode = null;
       if (data.pairingCode) {
-        console.log('🔑 [EVOLUTION-API] Código de pareamento recebido:', data.pairingCode);
-        
+
         // Se o pairingCode é um código longo, tentar extrair um código simples
         if (data.pairingCode.length > 8) {
           // Método 1: Tentar extrair código de 8 caracteres alfanuméricos consecutivos
@@ -235,7 +223,7 @@ export class EvolutionApiService {
                 simplePairingCode = shortMatch[0];
                 console.log('🔑 [EVOLUTION-API] Código extraído (método 3):', simplePairingCode);
               } else {
-                console.log('⚠️ [EVOLUTION-API] Não foi possível extrair código válido do pairingCode');
+
                 simplePairingCode = null;
               }
             }
@@ -243,16 +231,14 @@ export class EvolutionApiService {
         } else {
           // Se já é um código curto, usar diretamente
           simplePairingCode = data.pairingCode;
-          console.log('🔑 [EVOLUTION-API] Código já é válido:', simplePairingCode);
+
         }
       }
-      
+
       // Log final para debug
       if (data.pairingCode && data.pairingCode !== simplePairingCode) {
-        console.log('🔑 [EVOLUTION-API] Código original:', data.pairingCode);
-        console.log('🔑 [EVOLUTION-API] Código processado:', simplePairingCode);
       }
-      
+
       return {
         success: true,
         instanceName,
@@ -265,7 +251,7 @@ export class EvolutionApiService {
         message: data.message || 'QR Code gerado com sucesso'
       };
     } catch (error) {
-      console.error('❌ Erro ao buscar QR Code:', error);
+
       throw error;
     }
   }
@@ -279,8 +265,7 @@ export class EvolutionApiService {
    */
   static async setWebhook(instanceName: string, webhookUrl: string): Promise<{ success: boolean; message: string }> {
     try {
-      console.log('🔗 [EVOLUTION-API] Configurando webhook para instância:', instanceName);
-      
+
       const payload = {
         url: webhookUrl,
         webhook_by_events: false,
@@ -292,7 +277,7 @@ export class EvolutionApiService {
           "MESSAGES_UPDATE"
         ]
       };
-      
+
       const response = await fetch(`${BACKEND_URL}/api/webhook/instance/${instanceName}`, {
         method: 'POST',
         headers: {
@@ -307,14 +292,12 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ [EVOLUTION-API] Webhook configurado com sucesso:', data);
-      
+
       return {
         success: true,
         message: data.message || 'Webhook configurado com sucesso'
       };
     } catch (error) {
-      console.error('❌ [EVOLUTION-API] Erro ao configurar webhook:', error);
       throw error;
     }
   }
@@ -331,8 +314,7 @@ export class EvolutionApiService {
     error?: string;
   }> {
     try {
-      console.log('🏥 [EVOLUTION-API] Verificando saúde da API...');
-      
+
       const response = await fetch(`${BACKEND_URL}/api/evolution/health`, {
         method: 'GET',
         headers: {
@@ -345,15 +327,14 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ [EVOLUTION-API] API está funcionando:', data);
-      
+
       return {
         isHealthy: true,
         version: data.version,
         message: data.message
       };
     } catch (error) {
-      console.error('❌ [EVOLUTION-API] API não está funcionando:', error);
+
       return {
         isHealthy: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido'
@@ -368,8 +349,7 @@ export class EvolutionApiService {
    */
   static async getConnectionState(instanceName: string): Promise<ConnectionState> {
     try {
-      console.log('🔄 Verificando estado da instância:', instanceName);
-      
+
       const response = await fetch(`${BACKEND_URL}/api/connection-state/${instanceName}`, {
         method: 'GET',
         headers: {
@@ -383,20 +363,17 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ Estado da conexão:', data);
-      
+
       return {
         instanceName: data.instanceName,
         state: data.state,
         message: data.message
       };
     } catch (error) {
-      console.error('❌ Erro ao verificar estado da conexão:', error);
+
       throw error;
     }
   }
-
-
   /**
    * Verifica se o backend está funcionando
    * @returns Status de saúde do backend
@@ -415,10 +392,10 @@ export class EvolutionApiService {
       }
 
       const data = await response.json();
-      console.log('✅ Backend saudável:', data);
+
       return data.success;
     } catch (error) {
-      console.error('❌ Backend não está respondendo:', error);
+
       return false;
     }
   }
@@ -432,7 +409,7 @@ export class EvolutionApiService {
   static generateInstanceName(userId?: string, userName?: string): string {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 8);
-    
+
     // Usar o nome do usuário se disponível, senão usar o ID
     let userPrefix = 'user';
     if (userName) {
@@ -444,7 +421,7 @@ export class EvolutionApiService {
     } else if (userId) {
       userPrefix = userId.replace(/[^a-zA-Z0-9]/g, '');
     }
-    
+
     return `${userPrefix}_${timestamp}_${random}`;
   }
 
@@ -469,28 +446,27 @@ export class EvolutionApiService {
 
     const poll = async () => {
       if (!isPolling) {
-        console.log('🛑 [POLLING] Polling parado, não continuando...');
+
         return;
       }
 
       try {
-        console.log('🔄 [POLLING] Verificando estado da instância:', instanceName);
+
         const state = await this.getConnectionState(instanceName);
-        console.log('📊 [POLLING] Estado atual:', state);
-        
+
         // Só chama o callback se o estado mudou
         if (state.state !== currentState) {
-          console.log('🔄 [POLLING] Estado mudou de', currentState, 'para', state.state);
+
           currentState = state.state;
           stateChangeCount++;
           lastStateChangeTime = Date.now();
-          
+
           // Detectar loop infinito
           if (stateChangeCount >= maxStateChanges) {
-            console.log('⚠️ [POLLING] Muitas mudanças de estado detectadas, possível loop infinito');
+
             const timeInLoop = Date.now() - lastStateChangeTime;
             if (timeInLoop > maxTimeInLoop) {
-              console.log('❌ [POLLING] Loop infinito detectado, parando polling');
+
               isPolling = false;
               onStateChange({
                 instanceName,
@@ -500,30 +476,29 @@ export class EvolutionApiService {
               return;
             }
           }
-          
+
           onStateChange(state);
         } else {
-          console.log('⏸️ [POLLING] Estado não mudou, continuando...');
+
         }
 
         // Para o polling se a conexão foi estabelecida
         if (state.state === 'open') {
-          console.log('✅ [POLLING] Conexão estabelecida, parando polling...');
+
           isPolling = false;
           return;
         }
 
         // Continua o polling
         if (isPolling) {
-          console.log('⏰ [POLLING] Agendando próxima verificação em', interval, 'ms...');
+
           setTimeout(poll, interval);
         }
       } catch (error) {
-        console.error('❌ [POLLING] Erro no polling:', error);
-        
+
         // Continua o polling mesmo com erro
         if (isPolling) {
-          console.log('🔄 [POLLING] Continuando polling mesmo com erro...');
+
           setTimeout(poll, interval);
         }
       }
@@ -539,4 +514,4 @@ export class EvolutionApiService {
   }
 }
 
-export default EvolutionApiService; 
+export default EvolutionApiService;

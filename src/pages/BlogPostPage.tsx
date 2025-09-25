@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Eye, 
-  Heart, 
+import {
+
+  ArrowLeft,
+
+  Calendar,
+
+  Clock,
+
+  Eye,
+
+  Heart,
+
   User,
   ChevronRight,
   Facebook,
@@ -35,7 +41,7 @@ export default function BlogPostPage() {
   // Forçar modo claro no Blog
   useEffect(() => {
     document.documentElement.classList.remove('dark');
-    console.log('✅ BlogPost - modo claro forçado');
+
   }, []);
 
   useEffect(() => {
@@ -53,7 +59,7 @@ export default function BlogPostPage() {
         }
         setPost(postData);
       } catch (error) {
-        console.error('Erro ao carregar post:', error);
+
         navigate('/blog');
       } finally {
         setLoading(false);
@@ -153,7 +159,7 @@ export default function BlogPostPage() {
                 {post.title}
               </span>
             </nav>
-            
+
             <Link
               to="/blog"
               className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
@@ -197,19 +203,19 @@ export default function BlogPostPage() {
                 <User className="w-4 h-4 mr-2" />
                 <span className="font-medium">{post.author.name}</span>
               </div>
-              
+
               {/* Date */}
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
                 <span>{formattedDate}</span>
               </div>
-              
+
               {/* Read Time */}
               <div className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
                 <span>{post.readTime} minutos de leitura</span>
               </div>
-              
+
               {/* Views */}
               {post.views && (
                 <div className="flex items-center">
@@ -243,7 +249,8 @@ export default function BlogPostPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="prose prose-lg max-w-none mb-8"
           >
-            <div 
+            <div
+
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </motion.div>
@@ -367,7 +374,8 @@ export default function BlogPostPage() {
                 <LogoImage className="h-9 w-auto" />
               </div>
               <p className="text-gray-300 mb-6 max-w-md">
-                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps. 
+                A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps.
+
                 Transforme localizações em oportunidades de negócio.
               </p>
               <div className="flex space-x-4">
@@ -386,7 +394,8 @@ export default function BlogPostPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
               <div className="space-y-2">
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/');
                     setTimeout(() => {
@@ -397,7 +406,8 @@ export default function BlogPostPage() {
                 >
                   Início
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/dashboard');
                     setTimeout(() => {
@@ -408,7 +418,8 @@ export default function BlogPostPage() {
                 >
                   Dashboard
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/gerador');
                     setTimeout(() => {
@@ -419,7 +430,8 @@ export default function BlogPostPage() {
                 >
                   Gerar Leads
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/disparador');
                     setTimeout(() => {
@@ -430,7 +442,8 @@ export default function BlogPostPage() {
                 >
                   Disparador
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/blog');
                     setTimeout(() => {
@@ -448,14 +461,17 @@ export default function BlogPostPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Suporte</h3>
               <div className="space-y-2">
-                <button 
+                <button
+
                   onClick={() => {
                     navigate('/');
                     setTimeout(() => {
                       const faqSection = document.getElementById('faq-section-desktop');
                       if (faqSection) {
-                        faqSection.scrollIntoView({ 
-                          behavior: 'smooth', 
+                        faqSection.scrollIntoView({
+
+                          behavior: 'smooth',
+
                           block: 'start'
                         });
                       }
@@ -465,7 +481,8 @@ export default function BlogPostPage() {
                 >
                   FAQ
                 </button>
-                <button 
+                <button
+
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
@@ -485,7 +502,7 @@ export default function BlogPostPage() {
           </div>
         </div>
       </footer>
-      
+
       {/* Botão Voltar ao Topo */}
       <ScrollToTopButton />
     </div>

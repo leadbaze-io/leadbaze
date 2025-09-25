@@ -3,8 +3,10 @@
  * Usa webhooks em vez de polling para atualizações em tempo real
  */
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadbaze.io' 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+
+  ? 'https://leadbaze.io'
+
   : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
 
 export interface CampaignStatus {
@@ -70,7 +72,7 @@ export class CampaignStatusServiceV2 {
       const data = await response.json();
       return data.success;
     } catch (error) {
-      console.error('Erro ao iniciar rastreamento da campanha:', error);
+
       return false;
     }
   }
@@ -92,15 +94,15 @@ export class CampaignStatusServiceV2 {
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
         return data.campaign;
       } else {
-        console.error('Erro ao buscar status da campanha:', data.error);
+
         return null;
       }
     } catch (error) {
-      console.error('Erro ao verificar status da campanha:', error);
+
       return null;
     }
   }
@@ -109,150 +111,92 @@ export class CampaignStatusServiceV2 {
    * Inicia Server-Sent Events para receber atualizações em tempo real
    */
   static startRealTimeUpdates(campaignId: string, onProgress: (progress: CampaignProgress) => void, onComplete: (completion: CampaignCompletion) => void): () => void {
-    console.log('🔌 [CampaignStatusServiceV2] Iniciando conexão SSE...');
-    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onProgress é uma função?', typeof onProgress);
-    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onComplete é uma função?', typeof onComplete);
-    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onProgress:', onProgress);
-    console.log('🔍 [CampaignStatusServiceV2] startRealTimeUpdates - onComplete:', onComplete);
-    
     // Parar conexão anterior se existir
     this.stopRealTimeUpdates();
 
     // Criar nova conexão SSE
     const sseUrl = `${API_BASE_URL}/api/campaign/status/stream/${campaignId}`;
-    console.log('🌐 [CampaignStatusServiceV2] Conectando SSE em:', sseUrl);
-    
+
     const eventSource = new EventSource(sseUrl);
     this.eventSource = eventSource;
-    
-    console.log('📡 [CampaignStatusServiceV2] EventSource criado:', eventSource);
-
     // Listener para progresso
     eventSource.addEventListener('progress', (event) => {
-      console.log('📊 [CampaignStatusServiceV2] Evento progress recebido:', event);
+
       try {
         const progressData: CampaignProgress = JSON.parse(event.data);
-        console.log('📈 [CampaignStatusServiceV2] Dados de progresso:', progressData);
+
         onProgress(progressData);
       } catch (error) {
-        console.error('❌ [CampaignStatusServiceV2] Erro ao processar evento de progresso:', error);
+
       }
     });
 
     // Listener para conexão estabelecida
     eventSource.addEventListener('open', (event) => {
-      console.log('✅ [CampaignStatusServiceV2] Conexão SSE estabelecida:', event);
+
     });
 
     // Listener para erros
     eventSource.addEventListener('error', (event) => {
-      console.error('❌ [CampaignStatusServiceV2] Erro na conexão SSE:', event);
-      console.log('🔌 [CampaignStatusServiceV2] Fechando conexão SSE devido a erro');
+
       eventSource.close();
     });
 
     // Listener para mensagens genéricas (fallback)
     eventSource.addEventListener('message', (event) => {
-      console.log('📨 [CampaignStatusServiceV2] Mensagem genérica recebida:', event);
-      console.log('📨 [CampaignStatusServiceV2] Dados da mensagem:', event.data);
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'progress') {
-          console.log('📈 [CampaignStatusServiceV2] ===== EVENTO PROGRESS RECEBIDO =====');
-          console.log('📈 [CampaignStatusServiceV2] Processando progresso via mensagem genérica:', data.data);
-          console.log('🔄 [CampaignStatusServiceV2] Chamando callback onProgress...');
-          console.log('🔍 [CampaignStatusServiceV2] Callback onProgress é uma função?', typeof onProgress);
-          console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onProgress:', data.data);
-          
           // Verificar se os dados estão no formato correto
           const progressData = data.data;
           if (progressData && typeof progressData === 'object') {
-            console.log('📊 [CampaignStatusServiceV2] Dados de progresso válidos:', {
-              campaignId: progressData.campaignId,
-              progress: progressData.progress,
-              leadIndex: progressData.leadIndex,
-              totalLeads: progressData.totalLeads,
-              successCount: progressData.successCount,
-              failedCount: progressData.failedCount
-            });
+
           }
-          
+
           try {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onProgress(data.data)...');
             onProgress(data.data);
-            console.log('✅ [CampaignStatusServiceV2] Callback onProgress executado com sucesso');
-            console.log('📈 [CampaignStatusServiceV2] ===== FIM EVENTO PROGRESS =====');
           } catch (error) {
-            console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onProgress:', error);
-            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
         } else if (data.type === 'complete') {
-          console.log('🎉 [CampaignStatusServiceV2] ===== EVENTO COMPLETE RECEBIDO =====');
-          console.log('🎉 [CampaignStatusServiceV2] Processando conclusão via mensagem genérica:', data.data);
-          console.log('🔄 [CampaignStatusServiceV2] Chamando callback onComplete...');
-          console.log('🔍 [CampaignStatusServiceV2] Callback onComplete é uma função?', typeof onComplete);
-          console.log('🔍 [CampaignStatusServiceV2] Dados que serão passados para onComplete:', data.data);
           try {
             console.log('🔄 [CampaignStatusServiceV2] EXECUTANDO onComplete(data.data)...');
             onComplete(data.data);
-            console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado com sucesso');
-            console.log('🎉 [CampaignStatusServiceV2] ===== FIM EVENTO COMPLETE =====');
           } catch (error) {
-            console.error('❌ [CampaignStatusServiceV2] Erro ao executar callback onComplete:', error);
-            console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
           }
         } else if (data.type === 'connected') {
-          console.log('🔌 [CampaignStatusServiceV2] Conexão SSE estabelecida');
-          console.log('🔌 [CampaignStatusServiceV2] Campaign ID:', data.campaignId);
-          console.log('🔌 [CampaignStatusServiceV2] Timestamp:', data.timestamp);
         } else if (data.type === 'heartbeat') {
-          console.log('💓 [CampaignStatusServiceV2] Heartbeat recebido');
-          console.log('💓 [CampaignStatusServiceV2] Timestamp:', data.timestamp);
         } else {
-          console.log('❓ [CampaignStatusServiceV2] Tipo de evento desconhecido:', data.type);
-          console.log('❓ [CampaignStatusServiceV2] Dados completos:', data);
           console.log('❓ [CampaignStatusServiceV2] Timestamp do evento desconhecido:', new Date().toISOString());
         }
       } catch (error) {
-        console.error('❌ [CampaignStatusServiceV2] Erro ao processar mensagem genérica:', error);
+
       }
     });
 
     // Listener para conclusão
     eventSource.addEventListener('complete', (event) => {
-      console.log('✅ [CampaignStatusServiceV2] Evento complete recebido:', event);
-      console.log('✅ [CampaignStatusServiceV2] Dados do evento complete:', event.data);
       try {
         const data = JSON.parse(event.data);
-        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão parseados:', data);
-        
+
         // Se os dados estão aninhados em 'data', extrair
         const completionData = data.data || data;
-        console.log('🎉 [CampaignStatusServiceV2] Dados de conclusão finais:', completionData);
-        
+
         onComplete(completionData);
-        console.log('✅ [CampaignStatusServiceV2] Callback onComplete executado via listener complete');
+
       } catch (error) {
-        console.error('❌ [CampaignStatusServiceV2] Erro ao processar evento de conclusão:', error);
-        console.error('❌ [CampaignStatusServiceV2] Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
       }
     });
 
     // Listener para erros
     eventSource.addEventListener('error', (event) => {
-      console.error('❌ [CampaignStatusServiceV2] Erro na conexão SSE:', event);
-      console.error('❌ [CampaignStatusServiceV2] EventSource readyState:', eventSource.readyState);
       console.error('❌ [CampaignStatusServiceV2] Timestamp do erro:', new Date().toISOString());
-      console.error('❌ [CampaignStatusServiceV2] Campaign ID:', campaignId);
-      console.error('❌ [CampaignStatusServiceV2] URL:', eventSource.url);
     });
 
     // Listener para abertura da conexão
     eventSource.addEventListener('open', () => {
-      console.log('✅ [CampaignStatusServiceV2] Conexão SSE estabelecida para campanha:', campaignId);
+
       console.log('✅ [CampaignStatusServiceV2] Timestamp da abertura:', new Date().toISOString());
-      console.log('✅ [CampaignStatusServiceV2] URL da conexão:', eventSource.url);
-      console.log('✅ [CampaignStatusServiceV2] ReadyState:', eventSource.readyState);
     });
 
     // Retornar função para parar as atualizações
@@ -266,12 +210,12 @@ export class CampaignStatusServiceV2 {
    */
   static stopRealTimeUpdates(): void {
     if (this.eventSource) {
-      console.log('🔌 [CampaignStatusServiceV2] Fechando conexão SSE...');
+
       this.eventSource.close();
       this.eventSource = null;
-      console.log('✅ [CampaignStatusServiceV2] Conexão SSE fechada');
+
     } else {
-      console.log('ℹ️ [CampaignStatusServiceV2] Nenhuma conexão SSE ativa para fechar');
+
     }
   }
 
@@ -286,16 +230,16 @@ export class CampaignStatusServiceV2 {
     maxAttempts: number = 120 // 10 minutos máximo
   ): () => void {
     let attempts = 0;
-    
+
     const checkStatus = async () => {
       attempts++;
-      
+
       try {
         const status = await this.getCampaignStatus(campaignId);
-        
+
         if (status) {
           onStatusUpdate(status);
-          
+
           // Se a campanha foi concluída ou falhou, parar o polling
           if (status.status === 'completed' || status.status === 'failed') {
             clearInterval(intervalId);
@@ -303,16 +247,15 @@ export class CampaignStatusServiceV2 {
             return;
           }
         }
-        
+
         // Se excedeu o número máximo de tentativas, parar o polling
         if (attempts >= maxAttempts) {
-          console.warn(`Polling da campanha ${campaignId} excedeu o tempo limite`);
+
           clearInterval(intervalId);
           onComplete();
         }
       } catch (error) {
-        console.error('Erro no polling de status:', error);
-        
+
         // Se excedeu o número máximo de tentativas, parar o polling
         if (attempts >= maxAttempts) {
           clearInterval(intervalId);
@@ -342,23 +285,14 @@ export class CampaignStatusServiceV2 {
     onComplete: (completion: CampaignCompletion) => void,
     onStatusUpdate?: (status: CampaignStatus) => void
   ): () => void {
-    console.log('🚀 [CampaignStatusServiceV2] Iniciando rastreamento da campanha:', campaignId);
-    console.log('🔗 [CampaignStatusServiceV2] URL base:', API_BASE_URL);
-    console.log('🔍 [CampaignStatusServiceV2] onProgress é uma função?', typeof onProgress);
-    console.log('🔍 [CampaignStatusServiceV2] onComplete é uma função?', typeof onComplete);
-    console.log('🔍 [CampaignStatusServiceV2] onStatusUpdate é uma função?', typeof onStatusUpdate);
-    
     // Tentar SSE primeiro
     try {
-      console.log('📡 [CampaignStatusServiceV2] Tentando conectar via SSE...');
+
       const stopSSE = this.startRealTimeUpdates(campaignId, onProgress, onComplete);
-      
-      console.log('✅ [CampaignStatusServiceV2] SSE conectado com sucesso');
       // Se SSE funcionou, retornar função de parada
       return stopSSE;
     } catch (error) {
-      console.warn('❌ [CampaignStatusServiceV2] SSE não disponível, usando polling como fallback:', error);
-      
+
       // Fallback para polling
       return this.startFallbackPolling(
         campaignId,
@@ -372,7 +306,7 @@ export class CampaignStatusServiceV2 {
             successCount: status.success_count || 0,
             failedCount: status.failed_count || 0
           };
-          
+
           onProgress(progress);
           onStatusUpdate?.(status);
         },
@@ -386,7 +320,7 @@ export class CampaignStatusServiceV2 {
             totalProcessed: 0,
             completedAt: new Date().toISOString()
           };
-          
+
           onComplete(completion);
         }
       );
@@ -401,7 +335,7 @@ export class CampaignStatusServiceV2 {
     for (let i = 1; i <= totalLeads; i++) {
       // Aguardar 2 segundos entre cada envio
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Simular envio bem-sucedido
       await fetch(`${API_BASE_URL}/api/campaign/status/progress`, {
         method: 'POST',
@@ -416,10 +350,10 @@ export class CampaignStatusServiceV2 {
         })
       });
     }
-    
+
     // Aguardar mais 1 segundo e marcar como concluída
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Finalizar campanha
     const response = await fetch(`${API_BASE_URL}/api/campaign/status/complete`, {
       method: 'POST',

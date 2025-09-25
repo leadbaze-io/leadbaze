@@ -41,7 +41,7 @@ export const usePerfectPay = () => {
     const script = document.createElement('script');
     script.src = 'https://sdk.perfectpay.com/js/v2';
     script.async = true;
-    
+
     script.onload = () => {
       try {
         const perfectPay = new window.PerfectPay(
@@ -52,9 +52,9 @@ export const usePerfectPay = () => {
         );
         setMp(perfectPay);
         setIsLoading(false);
-        console.log('✅ Perfect Pay SDK carregado com sucesso');
+
       } catch (err) {
-        console.error('❌ Erro ao inicializar Perfect Pay:', err);
+
         setError('Erro ao carregar Perfect Pay');
         setIsLoading(false);
       }
@@ -80,8 +80,7 @@ export const usePerfectPay = () => {
     }
 
     try {
-      console.log('🔄 Criando token do cartão...');
-      
+
       const cardToken = await mp.createCardToken({
         cardNumber: cardData.cardNumber,
         cardholderName: cardData.cardholderName,
@@ -91,11 +90,9 @@ export const usePerfectPay = () => {
         identificationType: cardData.identificationType,
         identificationNumber: cardData.identificationNumber,
       });
-
-      console.log('✅ Token criado:', cardToken.id);
       return cardToken;
     } catch (error) {
-      console.error('❌ Erro ao criar token:', error);
+
       throw error;
     }
   };
@@ -109,7 +106,7 @@ export const usePerfectPay = () => {
       const identificationTypes = await mp.getIdentificationTypes();
       return identificationTypes;
     } catch (error) {
-      console.error('❌ Erro ao buscar tipos de identificação:', error);
+
       throw error;
     }
   };
@@ -127,7 +124,7 @@ export const usePerfectPay = () => {
       });
       return installments;
     } catch (error) {
-      console.error('❌ Erro ao buscar parcelas:', error);
+
       throw error;
     }
   };

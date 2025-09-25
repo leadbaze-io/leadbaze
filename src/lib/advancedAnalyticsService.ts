@@ -7,23 +7,23 @@ export interface AdvancedAnalyticsData {
   totalCampaigns: number
   messagesSent: number
   deliveryRate: number
-  
+
   // Métricas avançadas
   responseRate: number
   conversionRate: number
   averageResponseTime: number
   totalSales: number
   roi: number
-  
+
   // Métricas de qualidade
   averageLeadQuality: number
   highQualityLeads: number
   conversionProbability: number
-  
+
   // Análise temporal
   bestSendingHours: Array<{ hour: number; performance: number }>
   bestSendingDays: Array<{ day: string; performance: number }>
-  
+
   // Performance por categoria
   categoryPerformance: Array<{
     category: string
@@ -32,7 +32,7 @@ export interface AdvancedAnalyticsData {
     conversionRate: number
     averageQuality: number
   }>
-  
+
   // Templates performance
   templatePerformance: Array<{
     templateId: string
@@ -42,7 +42,7 @@ export interface AdvancedAnalyticsData {
     conversionRate: number
     performanceScore: number
   }>
-  
+
   // Insights e alertas
   insights: Array<{
     id: string
@@ -54,7 +54,7 @@ export interface AdvancedAnalyticsData {
     actionUrl?: string
     createdAt: string
   }>
-  
+
   // Dados para gráficos
   chartData: {
     leadsOverTime: Array<{ date: string; count: number }>
@@ -164,7 +164,7 @@ export async function getAdvancedAnalyticsData(timeRange: '7d' | '30d' | '90d' =
     }
 
   } catch (error) {
-    console.error('Erro ao buscar dados avançados de analytics:', error)
+
     throw error
   }
 }
@@ -274,7 +274,7 @@ async function getTemporalAnalysis(userId: string, startDate: Date): Promise<Tem
   // Análise por dia da semana
   const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
   const dailyStats: Record<string, { sent: number; responses: number; positive: number }> = {}
-  
+
   dayNames.forEach(day => {
     dailyStats[day] = { sent: 0, responses: 0, positive: 0 }
   })
@@ -402,7 +402,7 @@ async function getChartData(days: number) {
 // Funções auxiliares para recomendações
 function getHourRecommendations(hour: number, stats: { sent: number; responses: number; rate: number }): string[] {
   const recommendations = []
-  
+
   if (hour >= 9 && hour <= 11) {
     recommendations.push('Horário ideal para envio - manhã produtiva')
   } else if (hour >= 14 && hour <= 16) {
@@ -412,17 +412,17 @@ function getHourRecommendations(hour: number, stats: { sent: number; responses: 
   } else if (hour >= 22 || hour <= 7) {
     recommendations.push('Evitar envios - horário inadequado')
   }
-  
+
   if (stats.rate > 70) {
     recommendations.push('Excelente taxa de respostas positivas')
   }
-  
+
   return recommendations
 }
 
 function getDayRecommendations(day: string, stats: { performance: number }): string[] {
   const recommendations = []
-  
+
   if (['Segunda', 'Terça', 'Quarta', 'Quinta'].includes(day)) {
     recommendations.push('Dia útil - boa performance esperada')
   } else if (day === 'Sexta') {
@@ -430,21 +430,27 @@ function getDayRecommendations(day: string, stats: { performance: number }): str
   } else if (['Sábado', 'Domingo'].includes(day)) {
     recommendations.push('Fim de semana - performance reduzida')
   }
-  
+
   if (stats.performance > 60) {
     recommendations.push('Dia com boa taxa de conversão')
   }
-  
+
   return recommendations
 }
 
 // Função para calcular score de qualidade de um lead
-export async function calculateLeadQualityScore(lead: { 
-  rating?: number; 
-  reviews_count?: number; 
-  website?: string; 
-  phone?: string; 
-  business_type?: string; 
+export async function calculateLeadQualityScore(lead: {
+
+  rating?: number;
+
+  reviews_count?: number;
+
+  website?: string;
+
+  phone?: string;
+
+  business_type?: string;
+
 }): Promise<LeadQualityScore> {
   const rating = lead.rating || 0
   const reviewsCount = lead.reviews_count || 0
@@ -501,7 +507,7 @@ export async function generateAutomaticInsights(userId: string): Promise<void> {
 
     if (error) throw error
   } catch (error) {
-    console.error('Erro ao gerar insights automáticos:', error)
+
     throw error
   }
 }
@@ -516,7 +522,7 @@ export async function markInsightAsRead(insightId: string): Promise<void> {
 
     if (error) throw error
   } catch (error) {
-    console.error('Erro ao marcar insight como lido:', error)
+
     throw error
   }
 }

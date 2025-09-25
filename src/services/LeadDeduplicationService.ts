@@ -14,25 +14,25 @@ export class LeadDeduplicationService {
     if (!phone || typeof phone !== 'string') {
       return ''
     }
-    
+
     // Remove todos os caracteres não numéricos
     const cleaned = phone.replace(/\D/g, '')
-    
+
     // Se estiver vazio após limpeza, retorna vazio
     if (!cleaned) {
       return ''
     }
-    
+
     // Se começar com 55 (Brasil) e tiver 12+ dígitos, remove o 55
     if (cleaned.startsWith('55') && cleaned.length >= 12) {
       return cleaned.substring(2)
     }
-    
+
     // Se começar com 0 e tiver 11+ dígitos, remove o 0
     if (cleaned.startsWith('0') && cleaned.length >= 11) {
       return cleaned.substring(1)
     }
-    
+
     return cleaned
   }
 
@@ -42,7 +42,7 @@ export class LeadDeduplicationService {
   static generatePhoneHash(phone: string): string {
     const normalized = this.normalizePhone(phone)
     if (!normalized) return ''
-    
+
     // Usar hash simples para performance
     let hash = 0
     for (let i = 0; i < normalized.length; i++) {
@@ -58,7 +58,7 @@ export class LeadDeduplicationService {
    */
   static convertToCampaignLead(lead: Lead, listId: string): CampaignLead {
     const phoneHash = this.generatePhoneHash(lead.phone || '')
-    
+
     return {
       id: `${listId}-${lead.phone || 'unknown'}`,
       listId,
@@ -80,14 +80,14 @@ export class LeadDeduplicationService {
 
     for (const lead of leads) {
       const normalizedPhone = this.normalizePhone(lead.phone)
-      
+
       // Pular leads sem telefone válido
       if (!normalizedPhone) {
         continue
       }
 
       const phoneHash = this.generatePhoneHash(lead.phone || '')
-      
+
       // Se já existe um lead com este telefone, pular
       if (phoneMap.has(phoneHash)) {
         continue
@@ -112,14 +112,14 @@ export class LeadDeduplicationService {
 
     for (const lead of leads) {
       const normalizedPhone = this.normalizePhone(lead.phone)
-      
+
       // Pular leads sem telefone válido
       if (!normalizedPhone) {
         continue
       }
 
       const phoneHash = this.generatePhoneHash(lead.phone || '')
-      
+
       // Se já existe um lead com este telefone, contar como duplicado
       if (phoneMap.has(phoneHash)) {
         duplicatesCount++
@@ -144,7 +144,7 @@ export class LeadDeduplicationService {
 
     for (const { listId, leads } of listLeads) {
       const uniqueLeads = this.deduplicateLeads(leads, listId)
-      
+
       for (const lead of uniqueLeads) {
         // Se já existe um lead com este telefone, pular
         if (globalPhoneMap.has(lead.phoneHash)) {
@@ -163,26 +163,27 @@ export class LeadDeduplicationService {
    * Adicionar novos leads mantendo deduplicação
    */
   static addLeadsWithDeduplication(
-    existingLeads: CampaignLead[], 
+    existingLeads: CampaignLead[],
+
     newLeads: CampaignLead[]
   ): CampaignLead[] {
     const phoneMap = new Map<string, CampaignLead>()
-    
+
     // Mapear leads existentes
     for (const lead of existingLeads) {
       phoneMap.set(lead.phoneHash, lead)
     }
-    
+
     // Adicionar novos leads únicos
     const updatedLeads = [...existingLeads]
-    
+
     for (const newLead of newLeads) {
       if (!phoneMap.has(newLead.phoneHash)) {
         phoneMap.set(newLead.phoneHash, newLead)
         updatedLeads.push(newLead)
       }
     }
-    
+
     return updatedLeads
   }
 

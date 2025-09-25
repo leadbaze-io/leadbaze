@@ -69,7 +69,8 @@ export const CampaignProgressModal = memo(function CampaignProgressModal({
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'sending': 
+      case 'sending':
+
         return (
           <AnimatedCircularProgressBar
             value={progress}
@@ -121,11 +122,13 @@ export const CampaignProgressModal = memo(function CampaignProgressModal({
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-pink-500/10" />
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent dark:via-white/10"
-                animate={{ 
+                animate={{
+
                   x: ['-100%', '100%'],
                   opacity: [0, 1, 0]
                 }}
-                transition={{ 
+                transition={{
+
                   duration: 3,
                   repeat: Infinity,
                   ease: "easeInOut"
@@ -232,13 +235,16 @@ export const CampaignProgressModal = memo(function CampaignProgressModal({
             {currentLead && status === 'sending' && (
               <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <motion.div 
+                  <motion.div
+
                     className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
-                    animate={{ 
+                    animate={{
+
                       scale: [1, 1.1, 1],
                       rotate: [0, 5, -5, 0]
                     }}
-                    transition={{ 
+                    transition={{
+
                       duration: 2,
                       repeat: Infinity,
                       ease: "easeInOut"
@@ -259,11 +265,13 @@ export const CampaignProgressModal = memo(function CampaignProgressModal({
                   </div>
                   <div className="flex items-center gap-1">
                     <motion.div
-                      animate={{ 
+                      animate={{
+
                         scale: [1, 1.2, 1],
                         opacity: [1, 0.7, 1]
                       }}
-                      transition={{ 
+                      transition={{
+
                         duration: 1.5,
                         repeat: Infinity,
                         ease: "easeInOut"
@@ -323,8 +331,10 @@ export const CampaignProgressModal = memo(function CampaignProgressModal({
                     Fechar
                   </Button>
                 ) : (
-                  <Button 
-                    variant="outline" 
+                  <Button
+
+                    variant="outline"
+
                     onClick={onClose}
                     className="campaign-modal-minimize-button-claro campaign-modal-minimize-button-escuro"
                   >

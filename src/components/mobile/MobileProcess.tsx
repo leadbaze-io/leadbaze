@@ -91,20 +91,20 @@ export default function MobileProcess() {
                   <div className={`w-12 h-12 bg-gradient-to-br ${step.color} rounded-xl flex items-center justify-center text-white shadow-lg flex-shrink-0`}>
                     <step.icon className="w-6 h-6" />
                   </div>
-                  
+
                   {/* Content */}
                   <div className="flex-1">
                     <div className="font-bold text-gray-900 text-sm">{step.title}</div>
                     <div className="text-xs text-gray-600">{step.subtitle}</div>
                     <div className="text-xs text-gray-600">{step.description}</div>
                   </div>
-                  
+
                   {/* Number Badge */}
                   <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-600">
                     {index + 1}
                   </div>
                 </div>
-                
+
                 {/* Connector Line */}
                 {index < steps.length - 1 && (
                   <div className="absolute left-6 top-16 w-0.5 h-4 bg-gray-200"></div>
@@ -129,24 +129,3 @@ export default function MobileProcess() {
     </section>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

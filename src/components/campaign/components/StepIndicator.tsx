@@ -32,8 +32,10 @@ export function StepIndicator({ steps, currentStep, onStepChange }: StepIndicato
                 {/* Conector (linha) */}
                 {index > 0 && (
                   <div className={`hidden sm:block w-8 h-0.5 transition-colors duration-300 ${
-                    steps[index - 1].completed 
-                      ? 'bg-green-500' 
+                    steps[index - 1].completed
+
+                      ? 'bg-green-500'
+
                       : steps[index - 1].id < currentStep
                         ? 'bg-slate-400'
                         : 'bg-gray-300'
@@ -62,7 +64,7 @@ export function StepIndicator({ steps, currentStep, onStepChange }: StepIndicato
                     ) : (
                       <Circle className="w-6 h-6" />
                     )}
-                    
+
                     {/* Número da etapa */}
                     {!isCompleted && (
                       <span className="absolute inset-0 flex items-center justify-center text-sm font-bold">
@@ -112,8 +114,10 @@ export function StepIndicator({ steps, currentStep, onStepChange }: StepIndicato
               <motion.div
                 className="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"
                 initial={{ width: 0 }}
-                animate={{ 
-                  width: `${(currentStep / steps.length) * 100}%` 
+                animate={{
+
+                  width: `${(currentStep / steps.length) * 100}%`
+
                 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />

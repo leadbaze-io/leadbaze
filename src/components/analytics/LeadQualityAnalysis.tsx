@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Star, 
-  Users, 
-  Globe, 
-  Phone, 
+import {
+
+  Star,
+
+  Users,
+
+  Globe,
+
+  Phone,
+
   Target,
   Award,
   AlertTriangle,
@@ -48,26 +53,24 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
     setIsCalculating(true)
     try {
       const scores: LeadQualityScore[] = []
-      
+
       for (const lead of leads) {
         try {
           const score = await calculateLeadQualityScore(lead)
           scores.push(score)
         } catch (error) {
-          console.error('Erro ao calcular score do lead:', lead.id, error)
+
         }
       }
-      
+
       setQualityScores(scores)
       onQualityCalculated?.(scores)
     } catch (error) {
-      console.error('Erro ao calcular scores de qualidade:', error)
+
     } finally {
       setIsCalculating(false)
     }
   }
-
-
   const getQualityBadge = (score: number) => {
     if (score >= 80) return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
     if (score >= 60) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
@@ -115,14 +118,16 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
   }
 
   const filteredScores = qualityScores.filter(score => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch = searchTerm === '' ||
+
       leads.find(lead => lead.id === score.leadId)?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesQuality = qualityFilter === 'all' || 
+
+    const matchesQuality = qualityFilter === 'all' ||
+
       (qualityFilter === 'high' && score.qualityScore >= 70) ||
       (qualityFilter === 'medium' && score.qualityScore >= 40 && score.qualityScore < 70) ||
       (qualityFilter === 'low' && score.qualityScore < 40)
-    
+
     return matchesSearch && matchesQuality
   })
 
@@ -141,7 +146,8 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
     }
   })
 
-  const averageQuality = qualityScores.length > 0 
+  const averageQuality = qualityScores.length > 0
+
     ? Math.round(qualityScores.reduce((sum, score) => sum + score.qualityScore, 0) / qualityScores.length * 10) / 10
     : 0
 
@@ -273,7 +279,7 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
                 />
               </div>
             </div>
-            
+
             <Select value={qualityFilter} onValueChange={setQualityFilter}>
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Filtrar por qualidade" />
@@ -285,7 +291,7 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
                 <SelectItem value="low">Baixa (0-39)</SelectItem>
               </SelectContent>
             </Select>
-            
+
             <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
               <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Ordenar por" />
@@ -327,7 +333,7 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
                       <div className="flex-shrink-0">
                         {getQualityIcon(score.qualityScore)}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-foreground truncate">
                           {lead.name}
@@ -335,20 +341,20 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
                         <p className="text-sm text-muted-foreground">
                           {lead.business_type} • {lead.address}
                         </p>
-                        
+
                         <div className="flex items-center space-x-4 mt-2">
                           <div className="flex items-center space-x-1">
                             <Star className="w-3 h-3 text-yellow-500" />
                             <span className="text-xs">{lead.rating || 'N/A'}</span>
                           </div>
-                          
+
                           {lead.website && (
                             <div className="flex items-center space-x-1">
                               <Globe className="w-3 h-3 text-blue-500" />
                               <span className="text-xs">Website</span>
                             </div>
                           )}
-                          
+
                           {lead.phone && (
                             <div className="flex items-center space-x-1">
                               <Phone className="w-3 h-3 text-green-500" />
@@ -358,7 +364,7 @@ export default function LeadQualityAnalysis({ leads, onQualityCalculated }: Lead
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-4">
                       <div className="text-right">
                         <div className="flex items-center space-x-2">

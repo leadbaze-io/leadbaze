@@ -23,7 +23,8 @@ export default function MobileFooter() {
               <LogoImage className="h-8 w-auto" />
             </div>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-              A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps. 
+              A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps.
+
               Transforme localizações em oportunidades de negócio.
             </p>
             <div className="space-y-2">
@@ -42,31 +43,36 @@ export default function MobileFooter() {
           <div className="text-center">
             <h3 className="text-base font-semibold mb-3">Links Rápidos</h3>
             <div className="space-y-2">
-              <button 
+              <button
+
                 onClick={() => handleNavigation('/')}
                 className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
               >
                 Início
               </button>
-              <button 
+              <button
+
                 onClick={() => handleNavigation('/dashboard')}
                 className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
               >
                 Dashboard
               </button>
-              <button 
+              <button
+
                 onClick={() => handleNavigation('/gerador')}
                 className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
               >
                 Gerar Leads
               </button>
-              <button 
+              <button
+
                 onClick={() => handleNavigation('/disparador')}
                 className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
               >
                 Disparador
               </button>
-              <button 
+              <button
+
                 onClick={() => handleNavigation('/blog')}
                 className="block text-gray-300 hover:text-white transition-colors text-sm w-full"
               >
@@ -74,13 +80,12 @@ export default function MobileFooter() {
               </button>
             </div>
           </div>
-
-
           {/* Suporte */}
           <div className="text-center">
             <h3 className="text-base font-semibold mb-3">Suporte</h3>
             <div className="space-y-2">
-              <button 
+              <button
+
                 onClick={() => {
                   const faqSection = document.getElementById('faq-section-mobile');
                   if (faqSection) {
@@ -91,7 +96,8 @@ export default function MobileFooter() {
               >
                 FAQ
               </button>
-              <button 
+              <button
+
                 onClick={() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}

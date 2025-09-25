@@ -43,21 +43,17 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
       console.log('🚀 CampaignManager.loadCampaigns() - Iniciando...')
       setLoading(true)
       setError(null)
-      
+
       console.log('📞 Chamando CampaignService.getUserCampaigns()...')
       const data = await CampaignService.getUserCampaigns()
-      
-      console.log('📋 Dados recebidos:', data)
-      console.log('📊 Número de campanhas:', data.length)
-      
       setCampaigns(data)
-      console.log('✅ Campanhas definidas no state')
+
     } catch (err) {
-      console.error('❌ Erro ao carregar campanhas:', err)
+
       setError(err instanceof Error ? err.message : 'Erro ao carregar campanhas')
     } finally {
       setLoading(false)
-      console.log('🏁 Loading finalizado')
+
     }
   }
 
@@ -113,7 +109,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
             Nova Campanha
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
             <Card key={i} className="animate-pulse campaign-manager-card-claro campaign-manager-card-escuro">
@@ -161,8 +157,10 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
               size="sm"
               onClick={onConfigClick}
               className={`group border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-lg px-3 py-2 h-8 text-sm w-auto ${
-                connectedInstance 
-                  ? 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white' 
+                connectedInstance
+
+                  ? 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white'
+
                   : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
               }`}
             >
@@ -196,8 +194,10 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
               size="sm"
               onClick={onConfigClick}
               className={`group border-0 shadow-md hover:shadow-lg transition-all duration-300 rounded-lg px-3 py-2 h-8 text-sm w-auto ${
-                connectedInstance 
-                  ? 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white' 
+                connectedInstance
+
+                  ? 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white'
+
                   : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
               }`}
             >
@@ -221,7 +221,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
               )}
             </Button>
           </div>
-          
+
           <div className="flex items-center gap-2 sm:gap-3 mb-1">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-blue-400 campaign-manager-title-claro campaign-manager-title-escuro truncate">Minhas Campanhas</h1>
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg flex-shrink-0">
@@ -233,7 +233,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
             <span>{lists.length} Listas de Leads</span>
           </div>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             {!connectedInstance && (
               <div className="flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs sm:text-sm w-fit">
@@ -242,7 +242,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                 <span className="sm:hidden">WhatsApp offline</span>
               </div>
             )}
-            
+
             <Button
               onClick={handleCreateCampaign}
               className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-9 sm:h-10 px-3 sm:px-4 text-xs sm:text-sm w-full sm:w-auto"
@@ -294,7 +294,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                           </span>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-1">
                         <Button
                           variant="ghost"
@@ -315,7 +315,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                       </div>
                     </div>
                   </CardHeader>
-                  
+
                   <CardContent className="pt-0 flex-1 flex flex-col">
                     <div className="space-y-3 flex-1">
                       {/* Estatísticas */}
@@ -337,14 +337,14 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Data de criação */}
                       <div className="flex items-center gap-2 text-xs text-text-tertiary campaign-manager-date-claro campaign-manager-date-escuro">
                         <Calendar className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                         Criada em {new Date(campaign.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     </div>
-                    
+
                     {/* Ações - sempre no final */}
                     <div className="flex items-center gap-2 pt-2 mt-auto">
                       <Button

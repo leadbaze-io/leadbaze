@@ -23,21 +23,17 @@ export default function ToastDemo() {
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
-    
+
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    
-    console.log("🔍 [ToastDemo] Tema alterado para:", newDarkMode ? "dark" : "light");
-    console.log("🔍 [ToastDemo] HTML classes após mudança:", document.documentElement.className);
   };
 
   // Testar CSS diretamente
   const testCSS = () => {
-    console.log("🔍 [ToastDemo] Testando CSS...");
-    
+
     // Verificar se o CSS está carregado
     const styleSheets = Array.from(document.styleSheets);
     const toastCSS = styleSheets.find(sheet => {
@@ -47,9 +43,6 @@ export default function ToastDemo() {
         return false;
       }
     });
-    
-    console.log("🔍 [ToastDemo] CSS encontrado:", toastCSS);
-    
     // Testar seletor específico
     const testElement = document.createElement('div');
     testElement.className = 'toast-modern toast-success';
@@ -59,18 +52,14 @@ export default function ToastDemo() {
     testElement.style.right = '50px';
     testElement.style.zIndex = '9999';
     document.body.appendChild(testElement);
-    
+
     const gridElement = testElement.querySelector('.grid div:first-child');
     if (!gridElement) {
-      console.error('❌ [ToastDemo] Elemento do grid não encontrado');
+
       return;
     }
     const computedStyle = window.getComputedStyle(gridElement);
     const backgroundStyle = window.getComputedStyle(testElement);
-    console.log("🔍 [ToastDemo] Cor computada do teste:", computedStyle.color);
-    console.log("🔍 [ToastDemo] Background do toast:", backgroundStyle.background);
-    console.log("🔍 [ToastDemo] Background color:", backgroundStyle.backgroundColor);
-    
     // Remover após 5 segundos
     setTimeout(() => {
       if (document.body.contains(testElement)) {
@@ -81,42 +70,32 @@ export default function ToastDemo() {
 
   // Toast Success
   const showSuccessToast = () => {
-    console.log("🔍 [ToastDemo] Criando toast de sucesso...");
-    console.log("🔍 [ToastDemo] Classes aplicadas:", "toast-modern toast-success");
-    console.log("🔍 [ToastDemo] Modo atual:", isDarkMode ? "dark" : "light");
-    console.log("🔍 [ToastDemo] HTML classes:", document.documentElement.className);
-    
     toast({
       title: "🎉 Sucesso!",
       description: "Operação realizada com sucesso.",
       variant: "default",
       className: "toast-modern toast-success"
     });
-    
+
     // Verificar se o toast foi criado após um delay
     setTimeout(() => {
       const toastElement = document.querySelector('.toast-modern.toast-success');
       if (toastElement) {
-        console.log("🔍 [ToastDemo] Toast encontrado:", toastElement);
-        console.log("🔍 [ToastDemo] Classes do toast:", toastElement.className);
         console.log("🔍 [ToastDemo] Estilos computados:", window.getComputedStyle(toastElement));
-        
+
         const textElements = toastElement.querySelectorAll('.grid div');
         textElements.forEach((el, index) => {
-          console.log(`🔍 [ToastDemo] Texto ${index + 1}:`, el.textContent);
-          console.log(`🔍 [ToastDemo] Classes do texto ${index + 1}:`, el.className);
           console.log(`🔍 [ToastDemo] Cor computada do texto ${index + 1}:`, window.getComputedStyle(el).color);
         });
       } else {
-        console.log("❌ [ToastDemo] Toast não encontrado!");
+
       }
     }, 100);
   };
 
   // Toast Success com duração maior
   const showLongSuccessToast = () => {
-    console.log("🔍 [ToastDemo] Criando toast de sucesso com duração maior...");
-    
+
     toast({
       title: "🎉 Sucesso Longo!",
       description: "Este toast fica aberto por mais tempo para testar a cor.",
@@ -215,8 +194,6 @@ export default function ToastDemo() {
       className: "toast-modern toast-default"
     });
   };
-
-
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header */}
@@ -259,7 +236,7 @@ export default function ToastDemo() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
+
           {/* Success Toasts */}
           <Card className={`transition-colors duration-300 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
             <CardHeader>

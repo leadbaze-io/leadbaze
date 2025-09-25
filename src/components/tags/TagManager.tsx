@@ -32,7 +32,8 @@ interface TagManagerProps {
 
 const PRESET_COLORS = [
   '#3B82F6', // blue
-  '#10B981', // green  
+  '#10B981', // green
+
   '#8B5CF6', // purple
   '#F59E0B', // yellow
   '#EF4444', // red
@@ -104,7 +105,7 @@ export default function TagManager({
     const newSelectedTags = selectedTags.includes(tagId)
       ? selectedTags.filter(id => id !== tagId)
       : [...selectedTags, tagId]
-    
+
     onTagsChange(newSelectedTags)
   }
 
@@ -120,7 +121,7 @@ export default function TagManager({
             <Hash className="w-5 h-5" />
             <span>Tags e Categorias</span>
           </div>
-          
+
           {onCreateTag && (
             <Button
               variant="outline"
@@ -146,7 +147,7 @@ export default function TagManager({
               className="pl-10"
             />
           </div>
-          
+
           <Select value={filterCategory} onValueChange={setFilterCategory}>
             <SelectTrigger className="w-40">
               <Filter className="w-4 h-4 mr-2" />
@@ -183,12 +184,12 @@ export default function TagManager({
                 Limpar Todas
               </Button>
             </div>
-            
+
             <div className="flex flex-wrap gap-2">
               {selectedTags.map(tagId => {
                 const tag = tags.find(t => t.id === tagId)
                 if (!tag) return null
-                
+
                 return (
                   <motion.div
                     key={tagId}
@@ -229,7 +230,7 @@ export default function TagManager({
                   onChange={(e) => setNewTagName(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleCreateTag()}
                 />
-                
+
                 <div className="grid grid-cols-2 gap-3">
                   <Select value={newTagCategory} onValueChange={setNewTagCategory}>
                     <SelectTrigger>
@@ -243,7 +244,7 @@ export default function TagManager({
                       ))}
                     </SelectContent>
                   </Select>
-                  
+
                   <div className="flex space-x-1">
                     {PRESET_COLORS.slice(0, 5).map(color => (
                       <button
@@ -257,7 +258,7 @@ export default function TagManager({
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="flex space-x-2">
                   <Button
                     size="sm"
@@ -286,7 +287,7 @@ export default function TagManager({
               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {category}
               </h4>
-              
+
               <div className="flex flex-wrap gap-2">
                 {categoryTags.map(tag => (
                   <motion.div
@@ -308,7 +309,7 @@ export default function TagManager({
                       <span className="ml-1 text-xs opacity-70">
                         ({tag.count})
                       </span>
-                      
+
                       {onDeleteTag && (
                         <button
                           onClick={(e) => {
@@ -330,7 +331,8 @@ export default function TagManager({
 
         {filteredTags.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            {searchTerm || filterCategory !== 'all' 
+            {searchTerm || filterCategory !== 'all'
+
               ? 'Nenhuma tag encontrada com os filtros aplicados'
               : 'Nenhuma tag criada ainda'
             }
@@ -367,7 +369,8 @@ export function useTagManager() {
   }
 
   const updateTagCount = (tagId: string, count: number) => {
-    setTags(prev => prev.map(tag => 
+    setTags(prev => prev.map(tag =>
+
       tag.id === tagId ? { ...tag, count } : tag
     ))
   }

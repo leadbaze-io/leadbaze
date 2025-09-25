@@ -32,7 +32,7 @@ export const BulkOperationButtons: React.FC<BulkOperationButtonsProps> = ({
 
   const handleAddAllLists = async () => {
     // Adicionando todas as listas
-    
+
     const result = await addAllLists(
       campaignId,
       availableLists,
@@ -45,21 +45,21 @@ export const BulkOperationButtons: React.FC<BulkOperationButtonsProps> = ({
       await onOperationComplete(result.data)
       // Operação concluída com sucesso
     } else {
-      console.error('❌ BulkOperationButtons - Erro na operação:', result.message)
+
       // Aqui você pode adicionar uma notificação de erro se quiser
     }
   }
 
   const handleRemoveAllLists = async () => {
     // Removendo todas as listas
-    
+
     const result = await removeAllLists(campaignId, ignoredLists)
 
     if (result.success && result.data) {
       await onOperationComplete(result.data)
       // Operação concluída com sucesso
     } else {
-      console.error('❌ BulkOperationButtons - Erro na operação:', result.message)
+
       // Aqui você pode adicionar uma notificação de erro se quiser
     }
   }

@@ -15,7 +15,8 @@ export const useLeadLists = () => {
     refetchOnWindowFocus: true,
     select: (data: LeadList[]) => {
       // Ordenar por data de criação (mais recentes primeiro)
-      return data.sort((a, b) => 
+      return data.sort((a, b) =>
+
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       )
     },
@@ -39,7 +40,7 @@ export const useLeadListStats = (listId: string) => {
     queryFn: async () => {
       const list = await LeadService.getLeadList(listId)
       if (!list) return null
-      
+
       const leads = list.leads || []
       return {
         total_leads: leads.length,
@@ -63,7 +64,7 @@ export const useLeadListStats = (listId: string) => {
 export const useSaveLeadList = () => {
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  
+
   return useMutation({
     mutationFn: ({ name, leads, description, tags }: {
       name: string
@@ -71,14 +72,14 @@ export const useSaveLeadList = () => {
       description?: string
       tags?: string[]
     }) => LeadService.saveLeadList(name, leads, description, tags),
-    
+
     onMutate: async ({ name, leads }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: CACHE_KEYS.LEAD_LISTS })
-      
+
       // Snapshot the previous value
       const previousLists = queryClient.getQueryData(CACHE_KEYS.LEAD_LISTS)
-      
+
       // Optimistically update with new list
       const tempList = {
         id: 'temp-' + Date.now(),
@@ -89,25 +90,25 @@ export const useSaveLeadList = () => {
         created_at: new Date().toISOString(),
         status: 'processing' as const,
       }
-      
+
       optimisticUpdates.addNewList(tempList)
-      
+
       return { previousLists, tempList }
     },
-    
+
     onError: (_, __, context) => {
       // Rollback on error
       if (context?.previousLists) {
         queryClient.setQueryData(CACHE_KEYS.LEAD_LISTS, context.previousLists)
       }
-      
+
       toast({
         title: "❌ Erro ao Salvar Lista",
         description: "Não foi possível salvar a lista. Tente novamente.",
         variant: 'destructive',
       })
     },
-    
+
     onSuccess: (data) => {
       toast({
         title: "Lista Salva com Sucesso!",
@@ -115,7 +116,7 @@ export const useSaveLeadList = () => {
         variant: 'success',
       })
     },
-    
+
     onSettled: () => {
       // Always refetch after error or success
       invalidateQueries.leadLists()
@@ -127,34 +128,34 @@ export const useSaveLeadList = () => {
 export const useAddLeadsToList = () => {
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  
+
   return useMutation({
     mutationFn: ({ listId, leads }: { listId: string; leads: Lead[] }) =>
       LeadService.addLeadsToList(listId, leads),
-    
+
     onMutate: async ({ listId, leads }) => {
       await queryClient.cancelQueries({ queryKey: CACHE_KEYS.LEAD_LIST(listId) })
-      
+
       const previousList = queryClient.getQueryData(CACHE_KEYS.LEAD_LIST(listId))
-      
+
       // Optimistic update
       optimisticUpdates.updateLeadCount(listId, leads.length)
-      
+
       return { previousList }
     },
-    
+
     onError: (_, { listId }, context) => {
       if (context?.previousList) {
         queryClient.setQueryData(CACHE_KEYS.LEAD_LIST(listId), context.previousList)
       }
-      
+
       toast({
         title: "Erro ao Adicionar Leads",
         description: "Não foi possível adicionar os leads. Tente novamente.",
         variant: "destructive",
       })
     },
-    
+
     onSuccess: (data, { leads }) => {
       toast({
         title: "Leads Adicionados!",
@@ -162,7 +163,7 @@ export const useAddLeadsToList = () => {
         variant: 'success',
       })
     },
-    
+
     onSettled: (_, __, { listId }) => {
       queryClient.invalidateQueries({ queryKey: CACHE_KEYS.LEAD_LIST(listId) })
       queryClient.invalidateQueries({ queryKey: CACHE_KEYS.LEAD_LIST_STATS(listId) })
@@ -175,36 +176,36 @@ export const useAddLeadsToList = () => {
 export const useDeleteLeadList = () => {
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  
+
   return useMutation({
     mutationFn: LeadService.deleteLeadList,
-    
+
     onMutate: async (listId: string) => {
       await queryClient.cancelQueries({ queryKey: CACHE_KEYS.LEAD_LISTS })
-      
+
       const previousLists = queryClient.getQueryData(CACHE_KEYS.LEAD_LISTS)
-      
+
       // Optimistically remove from cache
       queryClient.setQueryData(
         CACHE_KEYS.LEAD_LISTS,
         (oldData: LeadList[]) => oldData?.filter(list => list.id !== listId) || []
       )
-      
+
       return { previousLists }
     },
-    
+
     onError: (_, __, context) => {
       if (context?.previousLists) {
         queryClient.setQueryData(CACHE_KEYS.LEAD_LISTS, context.previousLists)
       }
-      
+
       toast({
         title: "Erro ao Deletar Lista",
         description: "Não foi possível deletar a lista. Tente novamente.",
         variant: "destructive",
       })
     },
-    
+
     onSuccess: () => {
       toast({
         title: "Lista Deletada",
@@ -212,7 +213,7 @@ export const useDeleteLeadList = () => {
         variant: 'success',
       })
     },
-    
+
     onSettled: () => {
       invalidateQueries.leadLists()
     },
@@ -227,44 +228,45 @@ export const useFilteredLeadLists = (filters: {
   sortOrder?: 'asc' | 'desc'
 }) => {
   const { data: lists, ...query } = useLeadLists()
-  
+
   const filteredLists = React.useMemo(() => {
     if (!lists) return []
-    
+
     let filtered = lists
-    
+
     // Filtro de busca
     if (filters.search) {
       const searchLower = filters.search.toLowerCase()
-      filtered = filtered.filter(list => 
+      filtered = filtered.filter(list =>
+
         list.name.toLowerCase().includes(searchLower) ||
         list.description?.toLowerCase().includes(searchLower)
       )
     }
-    
+
     // Filtro de tags
     if (filters.tags && filters.tags.length > 0) {
       filtered = filtered.filter(list =>
         filters.tags!.some(tag => list.tags?.includes(tag))
       )
     }
-    
+
     // Ordenação
     if (filters.sortBy) {
       filtered.sort((a, b) => {
         const aValue = a[filters.sortBy!]
         const bValue = b[filters.sortBy!]
-        
+
         if (filters.sortOrder === 'desc') {
           return String(bValue).localeCompare(String(aValue))
         }
         return String(aValue).localeCompare(String(bValue))
       })
     }
-    
+
     return filtered
   }, [lists, filters])
-  
+
   return {
     ...query,
     data: filteredLists,

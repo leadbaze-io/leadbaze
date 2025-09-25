@@ -29,7 +29,7 @@ export default function MobilePricingPlans() {
         }, 100)
       }
     } catch (error) {
-      console.error('Error checking user:', error)
+
       navigate('/login')
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -128,7 +128,8 @@ export default function MobilePricingPlans() {
             className="mb-8"
           >
             <p className="text-lg text-gray-600 leading-relaxed">
-              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce. 
+              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.
+
               <span className="font-semibold text-green-600"> Garantia de 30 dias ou seu dinheiro de volta!</span>
             </p>
           </motion.div>
@@ -147,7 +148,8 @@ export default function MobilePricingPlans() {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              whileHover={{ 
+              whileHover={{
+
                 y: -5,
                 transition: { duration: 0.3 }
               }}
@@ -162,14 +164,14 @@ export default function MobilePricingPlans() {
                   🏆 Mais Vendido
                 </div>
               )}
-              
+
               {/* Best Value Badge for Start Plan */}
               {plan.id === 'start' && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
                   💎 Custo-Benefício
                 </div>
               )}
-              
+
               {/* Premium Badge for Enterprise Plan */}
               {plan.id === 'enterprise' && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
@@ -178,13 +180,15 @@ export default function MobilePricingPlans() {
               )}
 
               <div className={`relative bg-white rounded-2xl p-6 shadow-xl border-2 transition-all duration-500 overflow-hidden ${
-                selectedPlan === plan.id 
-                  ? 'border-purple-500 shadow-2xl' 
+                selectedPlan === plan.id
+
+                  ? 'border-purple-500 shadow-2xl'
+
                   : 'border-gray-100 hover:border-gray-200'
               }`}>
                 {/* Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                
+
                 {/* Header */}
                 <div className="relative text-center mb-6">
                   <div className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br ${plan.color} rounded-2xl text-white mb-4`}>
@@ -201,7 +205,7 @@ export default function MobilePricingPlans() {
                 <div className="text-center mb-6">
                   <div className="text-sm text-gray-600 mb-1">Preço por Lead</div>
                   <div className="text-xl font-bold text-gray-900">{plan.pricePerLead}</div>
-                  
+
                   {/* Urgency Badge - Only for Scale Plan */}
                   {plan.id === 'scale' && (
                     <div className="mt-3 space-y-2">
@@ -213,7 +217,7 @@ export default function MobilePricingPlans() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Limited spots for other plans */}
                   {plan.id === 'start' && (
                     <div className="mt-3">
@@ -222,7 +226,7 @@ export default function MobilePricingPlans() {
                       </div>
                     </div>
                   )}
-                  
+
                   {plan.id === 'enterprise' && (
                     <div className="mt-3">
                       <div className="text-xs text-gray-500">
@@ -275,7 +279,8 @@ export default function MobilePricingPlans() {
             <p className="text-sm text-gray-600 mb-4">
               Escolha seu plano e comece a gerar leads hoje mesmo com nossa garantia de 30 dias.
             </p>
-            <button 
+            <button
+
               onClick={handleStartNow}
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
             >

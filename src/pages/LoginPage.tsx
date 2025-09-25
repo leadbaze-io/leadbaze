@@ -16,8 +16,6 @@ const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(1, 'Senha é obrigatória')
 })
-
-
 // Tipos para os formulários
 type LoginForm = z.infer<typeof loginSchema>
 
@@ -37,12 +35,10 @@ export default function LoginPage() {
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema)
   })
-
-
   // Forçar modo claro na página de Login
   useEffect(() => {
     forceLightMode()
-    console.log('✅ Página de Login - modo claro forçado via ThemeContext')
+
   }, [forceLightMode])
 
   // Verificar se usuário já está logado e configurar listener de sessão
@@ -87,7 +83,7 @@ export default function LoginPage() {
 
       if (error) {
         let errorMessage = "Erro ao fazer login. Tente novamente."
-        
+
         if (error.message.includes('Invalid login credentials')) {
           errorMessage = "Email ou senha incorretos. Verifique os dados e tente novamente."
         } else if (error.message.includes('Email not confirmed')) {
@@ -105,7 +101,7 @@ export default function LoginPage() {
         } else if (error.message) {
           errorMessage = error.message
         }
-        
+
         setMessage({ type: 'error', text: errorMessage })
       } else if (authData.user) {
         setMessage({ type: 'success', text: 'Login realizado com sucesso! Redirecionando...' })
@@ -119,10 +115,9 @@ export default function LoginPage() {
         }, 1000)
       }
     } catch (error: any) {
-      console.error('Erro no login:', error)
-      
+
       let errorMessage = "Erro interno. Tente novamente."
-      
+
       if (error.message && error.message.includes('network')) {
         errorMessage = "Erro de conexão. Verifique sua internet e tente novamente."
       } else if (error.message && error.message.includes('timeout')) {
@@ -132,14 +127,12 @@ export default function LoginPage() {
       } else if (error.message) {
         errorMessage = error.message
       }
-      
+
       setMessage({ type: 'error', text: errorMessage })
     } finally {
       setIsLoading(false)
     }
   }
-
-
   const toggleMode = () => {
     setIsLogin(!isLogin)
     setMessage(null)
@@ -147,17 +140,23 @@ export default function LoginPage() {
   }
 
   const handleEnhancedSignupSuccess = () => {
-    setMessage({ 
-      type: 'success', 
-      text: 'Conta criada com sucesso! Verifique seu email para confirmar.' 
+    setMessage({
+
+      type: 'success',
+
+      text: 'Conta criada com sucesso! Verifique seu email para confirmar.'
+
     })
     setIsLogin(true)
   }
 
   const handleEnhancedSignupError = (error: string) => {
-    setMessage({ 
-      type: 'error', 
-      text: error 
+    setMessage({
+
+      type: 'error',
+
+      text: error
+
     })
   }
 
@@ -177,12 +176,12 @@ export default function LoginPage() {
               Preencha seus dados para começar a gerar leads
             </p>
           </div>
-          
+
           <EnhancedSignupForm
             onSuccess={handleEnhancedSignupSuccess}
             onError={handleEnhancedSignupError}
           />
-          
+
           <div className="text-center mt-8">
             <p className="login-help-text">
               Já tem uma conta?
@@ -201,20 +200,22 @@ export default function LoginPage() {
 
   return (
     <div className="login-page-container flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-      
+
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <Link to="/" className="inline-flex justify-center mb-8">
             <LogoImage className="h-8 w-auto" />
           </Link>
-          
+
           <h2 className="login-title text-3xl font-bold">
             {isLogin ? 'Faça seu login' : 'Crie sua conta'}
           </h2>
           <p className="login-subtitle mt-2">
-            {isLogin 
-              ? 'Acesse sua conta e continue gerando leads' 
+            {isLogin
+
+              ? 'Acesse sua conta e continue gerando leads'
+
               : 'Comece a gerar leads qualificados hoje mesmo'
             }
           </p>
@@ -225,8 +226,10 @@ export default function LoginPage() {
           {/* Message */}
           {message && (
             <div className={`mb-6 ${
-              message.type === 'success' 
-                ? 'login-message-success' 
+              message.type === 'success'
+
+                ? 'login-message-success'
+
                 : 'login-message-error'
             }`}>
               {message.text}
@@ -286,8 +289,6 @@ export default function LoginPage() {
               {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Entrar</span>}
             </button>
           </form>
-
-
           {/* Toggle Mode */}
           <div className="mt-6 text-center">
             <p className="login-help-text">
@@ -304,8 +305,10 @@ export default function LoginPage() {
 
         {/* Back to Home */}
         <div className="text-center">
-          <Link 
-            to="/" 
+          <Link
+
+            to="/"
+
             className="login-back-link transition-colors"
           >
             ← Voltar para o início

@@ -31,7 +31,7 @@ export default function MagicPricingPlans() {
         }, 100)
       }
     } catch (error) {
-      console.error('Error checking user:', error)
+
       navigate('/login')
       // Scroll para o topo após navegação
       setTimeout(() => {
@@ -107,8 +107,6 @@ export default function MagicPricingPlans() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-
-
           {/* Main Heading */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -133,7 +131,8 @@ export default function MagicPricingPlans() {
             className="mb-12"
           >
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce. 
+              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.
+
               <span className="font-semibold text-green-600"> Garantia de 30 dias ou seu dinheiro de volta!</span>
             </p>
           </motion.div>
@@ -152,7 +151,8 @@ export default function MagicPricingPlans() {
               initial={{ opacity: 0, y: 30 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              whileHover={{ 
+              whileHover={{
+
                 y: -10,
                 transition: { duration: 0.3 }
               }}
@@ -167,14 +167,14 @@ export default function MagicPricingPlans() {
                   🏆 Mais Vendido
                 </div>
               )}
-              
+
               {/* Best Value Badge for Start Plan */}
               {plan.id === 'start' && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
                   💎 Custo-Benefício
                 </div>
               )}
-              
+
               {/* Premium Badge for Enterprise Plan */}
               {plan.id === 'enterprise' && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-pink-400 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10">
@@ -183,13 +183,15 @@ export default function MagicPricingPlans() {
               )}
 
               <div className={`relative bg-white rounded-3xl p-8 shadow-xl border-2 transition-all duration-500 overflow-hidden h-full flex flex-col ${
-                selectedPlan === plan.id 
-                  ? 'border-purple-500 shadow-2xl' 
+                selectedPlan === plan.id
+
+                  ? 'border-purple-500 shadow-2xl'
+
                   : 'border-gray-100 hover:border-gray-200'
               }`}>
                 {/* Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                
+
                 {/* Header */}
                 <div className="relative text-center mb-8">
                   <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${plan.color} rounded-2xl text-white mb-4`}>
@@ -206,7 +208,7 @@ export default function MagicPricingPlans() {
                 <div className="text-center mb-6">
                   <div className="text-sm text-gray-600 mb-1">Preço por Lead</div>
                   <div className="text-2xl font-bold text-gray-900">{plan.pricePerLead}</div>
-                  
+
                   {/* Urgency Badge - Only for Scale Plan */}
                   {plan.id === 'scale' && (
                     <div className="mt-3 space-y-2">
@@ -218,7 +220,7 @@ export default function MagicPricingPlans() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Limited spots for other plans */}
                   {plan.id === 'start' && (
                     <div className="mt-3">
@@ -227,7 +229,7 @@ export default function MagicPricingPlans() {
                       </div>
                     </div>
                   )}
-                  
+
                   {plan.id === 'enterprise' && (
                     <div className="mt-3">
                       <div className="text-xs text-gray-500">
@@ -254,9 +256,6 @@ export default function MagicPricingPlans() {
                     </div>
                   ))}
                 </div>
-
-
-
                 {/* CTA Button */}
                 <button className={`w-full py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300 mt-auto transform hover:scale-105 ${
                   selectedPlan === plan.id
@@ -282,7 +281,8 @@ export default function MagicPricingPlans() {
             <p className="text-gray-600 mb-6">
               Escolha seu plano e comece a gerar leads hoje mesmo com nossa garantia de 30 dias.
             </p>
-            <button 
+            <button
+
               onClick={handleStartNow}
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
             >
@@ -294,4 +294,3 @@ export default function MagicPricingPlans() {
     </section>
   )
 }
-

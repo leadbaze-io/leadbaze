@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Clock, 
-  Calendar, 
-  TrendingUp, 
+import {
+
+  Clock,
+
+  Calendar,
+
+  TrendingUp,
+
   TrendingDown,
   Target,
   Lightbulb,
@@ -32,9 +36,12 @@ interface TemporalAnalysisProps {
   bestSendingDays: DailyPerformance[]
 }
 
-export default function TemporalAnalysis({ 
-  hourlyPerformance, 
-  bestSendingDays 
+export default function TemporalAnalysis({
+
+  hourlyPerformance,
+
+  bestSendingDays
+
 }: TemporalAnalysisProps) {
   const [activeTab, setActiveTab] = useState<'hours' | 'days' | 'recommendations'>('hours')
 
@@ -237,7 +244,7 @@ export default function TemporalAnalysis({
           {activeTab === 'days' && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Performance por Dia da Semana</h3>
-              
+
               <div className="space-y-3">
                 {bestSendingDays.map((day, index) => (
                   <motion.div
@@ -260,7 +267,7 @@ export default function TemporalAnalysis({
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="text-right">
                       <Badge className={getPerformanceBadge(day.performance)}>
                         {day.performance}%
@@ -275,7 +282,7 @@ export default function TemporalAnalysis({
           {activeTab === 'recommendations' && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Recomendações Inteligentes</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Recomendações de Horário */}
                 <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20">
@@ -362,7 +369,7 @@ export default function TemporalAnalysis({
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
                     <p className="text-sm text-gray-700 dark:text-gray-300">
                       <strong>Agende suas campanhas para:</strong><br />

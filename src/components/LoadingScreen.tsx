@@ -6,12 +6,17 @@ interface LoadingScreenProps {
   fullScreen?: boolean
 }
 
-export default function LoadingScreen({ 
-  message = "Carregando...", 
-  fullScreen = true 
+export default function LoadingScreen({
+
+  message = "Carregando...",
+
+  fullScreen = true
+
 }: LoadingScreenProps) {
-  const containerClass = fullScreen 
-    ? "fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm z-50 transition-colors duration-300" 
+  const containerClass = fullScreen
+
+    ? "fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm z-50 transition-colors duration-300"
+
     : "w-full h-64 bg-white dark:bg-gray-800 transition-colors duration-300"
 
   return (
@@ -24,11 +29,13 @@ export default function LoadingScreen({
       >
         {/* Spinner duplo para melhor visual */}
         <motion.div
-          animate={{ 
+          animate={{
+
             rotate: 360,
             scale: [1, 1.05, 1]
           }}
-          transition={{ 
+          transition={{
+
             rotate: { duration: 2, repeat: Infinity, ease: "linear" },
             scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
           }}
@@ -37,7 +44,7 @@ export default function LoadingScreen({
           <div className="w-12 h-12 border-2 border-gray-200 dark:border-gray-700 rounded-full"></div>
           <div className="w-12 h-12 border-2 border-transparent border-t-blue-500 rounded-full absolute top-0 left-0 animate-spin"></div>
         </motion.div>
-        
+
         {/* Texto de carregamento */}
         <motion.p
           initial={{ opacity: 0 }}
@@ -47,7 +54,7 @@ export default function LoadingScreen({
         >
           {message}
         </motion.p>
-        
+
         {/* Barra de progresso animada */}
         <motion.div
           initial={{ width: 0 }}
@@ -56,17 +63,19 @@ export default function LoadingScreen({
           className="mt-4 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
           style={{ maxWidth: "200px", margin: "16px auto 0" }}
         />
-        
+
         {/* Pontos de loading */}
         <div className="flex justify-center space-x-2 mt-4">
           {[0, 1, 2].map((index) => (
             <motion.div
               key={index}
-              animate={{ 
+              animate={{
+
                 scale: [1, 1.3, 1],
                 opacity: [0.4, 1, 0.4]
               }}
-              transition={{ 
+              transition={{
+
                 duration: 1.2,
                 repeat: Infinity,
                 delay: index * 0.2,
@@ -169,29 +178,3 @@ export function AnalyticsSkeleton() {
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -17,7 +17,7 @@ export default function AddPostToQueue() {
     const timestamp = new Date().toISOString();
     const dateStr = new Date().toLocaleDateString('pt-BR');
     const timeStr = new Date().toLocaleTimeString('pt-BR');
-    
+
     const topics = [
       'Estratégias de Prospecção B2B',
       'Automação de Vendas',
@@ -28,9 +28,9 @@ export default function AddPostToQueue() {
       'Análise de Performance',
       'Técnicas de Follow-up'
     ];
-    
+
     const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-    
+
     return {
       title: `Artigo Automático - ${randomTopic} - ${dateStr}`,
       content: `# ${randomTopic}
@@ -79,9 +79,6 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
 
     try {
       const postData = generateUniqueContent();
-      
-      console.log('🚀 Adicionando post à fila:', postData);
-
       const response = await fetch('/api/blog/queue/add', {
         method: 'POST',
         headers: {
@@ -91,9 +88,6 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
       });
 
       const data = await response.json();
-      
-      console.log('📡 Resposta da API:', data);
-
       if (data.success) {
         setResult({
           success: true,
@@ -108,7 +102,7 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
         });
       }
     } catch (error) {
-      console.error('❌ Erro ao adicionar post:', error);
+
       setResult({
         success: false,
         message: 'Erro de conexão',
@@ -130,7 +124,7 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
           Gera automaticamente um post único para testar o sistema de processamento
         </p>
       </div>
-      
+
       <div className="p-6">
         <div className="space-y-4">
           {/* Botão para adicionar post */}
@@ -155,8 +149,10 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
           {/* Resultado da operação */}
           {result && (
             <div className={`p-4 rounded-lg border ${
-              result.success 
-                ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800' 
+              result.success
+
+                ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
+
                 : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
             }`}>
               <div className="flex items-start gap-3">
@@ -167,20 +163,20 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
                     <AlertCircle className="h-5 w-5 text-red-500" />
                   )}
                 </div>
-                
+
                 <div className="flex-1">
                   <p className={`text-sm font-medium ${
                     result.success ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
                   }`}>
                     {result.message}
                   </p>
-                  
+
                   {result.error && (
                     <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                       {result.error}
                     </p>
                   )}
-                  
+
                   {result.data && (
                     <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
                       <p><strong>ID:</strong> {result.data.id}</p>
@@ -211,13 +207,3 @@ O ${randomTopic} é essencial para o crescimento das empresas modernas. Com as e
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-

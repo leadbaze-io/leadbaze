@@ -14,12 +14,12 @@ export default function MobileNavbar() {
 
   // Verificar se deve mostrar o botão "Assinar Plano"
   const shouldShowSubscribeButton = user && !subscriptionLoading && (
-    !subscription || 
-    subscription.status === 'cancelled' || 
+    !subscription ||
+
+    subscription.status === 'cancelled' ||
+
     subscription.status === 'expired'
   )
-
-
   useEffect(() => {
     // Verificar usuário logado inicialmente
     const checkUser = async () => {
@@ -82,7 +82,7 @@ export default function MobileNavbar() {
                 <span className="hidden sm:inline">Assinar</span>
               </button>
             )}
-            
+
             {/* Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -98,38 +98,46 @@ export default function MobileNavbar() {
           <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <div className="px-4 py-4 space-y-3">
               {/* Navigation Links */}
-              <Link 
-                to="/" 
+              <Link
+
+                to="/"
+
                 className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                 onClick={closeMenu}
               >
                 Início
               </Link>
-              
+
               {user ? (
                 <>
-                  <Link 
-                    to="/dashboard" 
+                  <Link
+
+                    to="/dashboard"
+
                     className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                     onClick={closeMenu}
                   >
                     Dashboard
                   </Link>
-                  <Link 
-                    to="/gerador" 
+                  <Link
+
+                    to="/gerador"
+
                     className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                     onClick={closeMenu}
                   >
                     Gerar Leads
                   </Link>
-                  <Link 
-                    to="/disparador" 
+                  <Link
+
+                    to="/disparador"
+
                     className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                     onClick={closeMenu}
                   >
                     Disparador
                   </Link>
-                  
+
                   {/* User Info */}
                   <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
                     <div className="flex items-center space-x-2 py-2">
@@ -138,7 +146,7 @@ export default function MobileNavbar() {
                         {user.user_metadata?.name || user.email}
                       </span>
                     </div>
-                    
+
                     {/* Logout Button */}
                     <button
                       onClick={handleLogout}
@@ -151,15 +159,19 @@ export default function MobileNavbar() {
                 </>
               ) : (
                 <>
-                  <Link 
-                    to="/login" 
+                  <Link
+
+                    to="/login"
+
                     className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
                     onClick={closeMenu}
                   >
                     Entrar
                   </Link>
-                  <Link 
-                    to="/login" 
+                  <Link
+
+                    to="/login"
+
                     className="block py-2 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-center"
                     onClick={closeMenu}
                   >

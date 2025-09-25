@@ -10,13 +10,20 @@ import {
   SelectValue,
 } from "./ui/select"
 import { Badge } from "./ui/badge"
-import { 
-  Search, 
-  Filter, 
-  Star, 
-  Users, 
-  Globe, 
-  MapPin, 
+import {
+
+  Search,
+
+  Filter,
+
+  Star,
+
+  Users,
+
+  Globe,
+
+  MapPin,
+
   ChevronDown,
   RotateCcw,
   SlidersHorizontal,
@@ -104,7 +111,7 @@ export function LeadFiltersPro({
     setSortBy("relevance")
     setSortOrder("desc")
     setMaxReviews("none")
-    
+
     if (onResetFilters) {
       onResetFilters()
     }
@@ -142,7 +149,7 @@ export function LeadFiltersPro({
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-3">
           {activeFiltersCount > 0 && (
             <Badge variant="secondary" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 shadow-md">
@@ -198,8 +205,10 @@ export function LeadFiltersPro({
               <Star className="w-4 h-4 mr-2 text-yellow-600 dark:text-yellow-400" />
               Avaliação Mínima
             </Label>
-            <Select 
-              value={ratingFilter} 
+            <Select
+
+              value={ratingFilter}
+
               onValueChange={(value) => handleFilterChange(setRatingFilter, value)}
             >
               <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-yellow-400 dark:hover:border-yellow-500 transition-all duration-200">
@@ -221,8 +230,10 @@ export function LeadFiltersPro({
               <Globe className="w-4 h-4 mr-2 text-purple-600 dark:text-purple-400" />
               Website
             </Label>
-            <Select 
-              value={websiteFilter} 
+            <Select
+
+              value={websiteFilter}
+
               onValueChange={(value) => handleFilterChange(setWebsiteFilter, value)}
             >
               <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-purple-400 dark:hover:border-purple-500 transition-all duration-200">
@@ -261,7 +272,7 @@ export function LeadFiltersPro({
           >
             {allSelected ? 'Desmarcar Todos' : 'Selecionar Todos'}
           </Button>
-          
+
           {/* Contador de leads selecionados */}
           {selectedCount !== undefined && (
             <div className="text-center">
@@ -291,8 +302,10 @@ export function LeadFiltersPro({
                     <Users className="w-4 h-4 mr-2 text-blue-600 dark:text-blue-400" />
                     Avaliações Mínimas
                   </Label>
-                  <Select 
-                    value={reviewsFilter} 
+                  <Select
+
+                    value={reviewsFilter}
+
                     onValueChange={(value) => handleFilterChange(setReviewsFilter, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200">
@@ -317,8 +330,10 @@ export function LeadFiltersPro({
                     <TrendingDown className="w-4 h-4 mr-2 text-red-600 dark:text-red-400" />
                     Até X Avaliações
                   </Label>
-                  <Select 
-                    value={maxReviews} 
+                  <Select
+
+                    value={maxReviews}
+
                     onValueChange={(value) => handleFilterChange(setMaxReviews, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-red-400 dark:hover:border-red-500 transition-all duration-200">
@@ -346,8 +361,10 @@ export function LeadFiltersPro({
                     <Award className="w-4 h-4 mr-2 text-green-600 dark:text-green-400" />
                     Ordenar Por
                   </Label>
-                  <Select 
-                    value={sortBy} 
+                  <Select
+
+                    value={sortBy}
+
                     onValueChange={(value) => handleFilterChange(setSortBy, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-green-400 dark:hover:border-green-500 transition-all duration-200">
@@ -368,8 +385,10 @@ export function LeadFiltersPro({
                     <TrendingUp className="w-4 h-4 mr-2 text-orange-600 dark:text-orange-400" />
                     Ordem
                   </Label>
-                  <Select 
-                    value={sortOrder} 
+                  <Select
+
+                    value={sortOrder}
+
                     onValueChange={(value) => handleFilterChange(setSortOrder, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-200">
@@ -388,8 +407,10 @@ export function LeadFiltersPro({
                     <Users className="w-4 h-4 mr-2 text-indigo-600 dark:text-indigo-400" />
                     Selecionar quantidade de Leads
                   </Label>
-                  <Select 
-                    value={leadsPerPage} 
+                  <Select
+
+                    value={leadsPerPage}
+
                     onValueChange={(value) => handleFilterChange(setLeadsPerPage, value)}
                   >
                     <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200">
@@ -407,7 +428,7 @@ export function LeadFiltersPro({
                 </div>
 
               </div>
-              
+
             </div>
           </motion.div>
         )}

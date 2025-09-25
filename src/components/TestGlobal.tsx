@@ -25,7 +25,8 @@ export function TestGlobal() {
     <div className="fixed top-4 left-4 bg-green-500 text-white p-2 rounded z-[10000]">
       <p>Campanha ativa: {activeCampaign.campaignName}</p>
       <p>Modal aberto: {isModalOpen ? 'Sim' : 'Não'}</p>
-      <button 
+      <button
+
         onClick={openModal}
         className="bg-blue-500 text-white px-2 py-1 rounded mt-1"
       >

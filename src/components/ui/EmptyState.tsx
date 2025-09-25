@@ -11,11 +11,16 @@ interface EmptyStateProps {
   showWhatsAppHint?: boolean
 }
 
-export function EmptyState({ 
-  title, 
-  description, 
-  buttonText, 
-  onButtonClick, 
+export function EmptyState({
+
+  title,
+
+  description,
+
+  buttonText,
+
+  onButtonClick,
+
   icon: Icon = Megaphone,
   showWhatsAppHint = false
 }: EmptyStateProps) {
@@ -28,7 +33,7 @@ export function EmptyState({
     >
       {/* Background com gradiente sutil */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/20 rounded-xl" />
-      
+
       <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm rounded-xl p-8 text-center">
         {/* Ícone simples */}
         <motion.div
@@ -95,7 +100,7 @@ export function EmptyState({
               whileHover={{ x: '100%' }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
             />
-            
+
             <div className="relative flex items-center gap-2">
               <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
               <span className="font-semibold">{buttonText}</span>

@@ -17,11 +17,9 @@ export class CampaignService {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      
-      
       return data || []
     } catch (error) {
-      console.error('Erro ao carregar campanhas:', error)
+
       return []
     }
   }
@@ -48,12 +46,12 @@ export class CampaignService {
         .single()
 
       if (error) {
-        console.error('Erro ao criar campanha:', error)
+
         throw new Error(`Erro ao criar campanha: ${error.message}`)
       }
       return data
     } catch (error) {
-      console.error('Erro ao criar campanha:', error)
+
       throw error
     }
   }
@@ -73,8 +71,6 @@ export class CampaignService {
         ...updates,
         updated_at: new Date().toISOString()
       }
-      
-      
       const { data, error } = await supabase
         .from('campaigns')
         .update(updateData)
@@ -84,21 +80,15 @@ export class CampaignService {
         .single()
 
       if (error) {
-        console.error('❌ Erro na atualização:', error)
+
         throw error
       }
 
       // Campanha atualizada no banco
-      console.log('Campanha atualizada:', {
-        id: data?.id,
-        totalLeads: data?.total_leads,
-        selectedLists: [], // Será carregado da tabela campaign_lists
-        message: data?.message
-      })
 
       return data
     } catch (error) {
-      console.error('❌ [CAMPAIGN-SERVICE] Erro ao atualizar campanha:', error)
+
       return null
     }
   }
@@ -120,7 +110,7 @@ export class CampaignService {
       if (error) throw error
       return true
     } catch (error) {
-      console.error('Erro ao deletar campanha:', error)
+
       return false
     }
   }
@@ -143,7 +133,7 @@ export class CampaignService {
         .single()
 
       if (error) {
-        console.error('❌ Erro na query:', error)
+
         throw error
       }
 
@@ -151,7 +141,7 @@ export class CampaignService {
 
       return data
     } catch (error) {
-      console.error('❌ Erro ao buscar campanha:', error)
+
       return null
     }
   }
@@ -214,7 +204,7 @@ export class CampaignService {
         list_id: listId,
         status: 'selected'
       }))
-      
+
       await supabase
         .from('campaign_lists')
         .insert(selectedData)
@@ -227,7 +217,7 @@ export class CampaignService {
         list_id: listId,
         status: 'ignored'
       }))
-      
+
       await supabase
         .from('campaign_lists')
         .insert(ignoredData)
@@ -254,16 +244,18 @@ export class CampaignService {
 
       const { error } = await supabase
         .from('campaign_unique_leads')
-        .upsert(leadsData, { 
+        .upsert(leadsData, {
+
           onConflict: 'campaign_id,phone_hash',
-          ignoreDuplicates: false 
+          ignoreDuplicates: false
+
         })
 
       if (error) {
         throw new Error(`Erro ao adicionar leads: ${error.message}`)
       }
     } catch (error) {
-      console.error('Erro ao adicionar leads:', error)
+
       throw error
     }
   }
@@ -285,7 +277,7 @@ export class CampaignService {
         throw new Error(`Erro ao remover leads: ${error.message}`)
       }
     } catch (error) {
-      console.error('Erro ao remover leads:', error)
+
       throw error
     }
   }
@@ -320,7 +312,7 @@ export class CampaignService {
         hash = hash & hash
       }
       const phoneHash = Math.abs(hash).toString(36)
-      
+
       const { data, error } = await supabase
         .from('campaign_unique_leads')
         .select(`
@@ -339,7 +331,8 @@ export class CampaignService {
 
       const campaigns = data?.map(item => ({
         campaign_id: item.campaign_id,
-        campaign_name: Array.isArray(item.campaigns) 
+        campaign_name: Array.isArray(item.campaigns)
+
           ? (item.campaigns[0] as { name: string })?.name || 'Campanha desconhecida'
           : (item.campaigns as { name: string })?.name || 'Campanha desconhecida',
         list_name: Array.isArray(item.lead_lists)
@@ -357,8 +350,8 @@ export class CampaignService {
         campaigns
       }
     } catch (error) {
-      console.error('Erro ao verificar telefone:', error)
+
       return { exists: false, totalOccurrences: 0, campaigns: [] }
     }
   }
-} 
+}

@@ -1,13 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Plus, 
-  Eye, 
-  Calendar, 
-  Users, 
-  Loader, 
-  AlertCircle, 
+import {
+
+  Plus,
+
+  Eye,
+
+  Calendar,
+
+  Users,
+
+  Loader,
+
+  AlertCircle,
+
   Trash2,
   Download,
   Search,
@@ -44,7 +51,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
   const [sortBy, setSortBy] = useState<'created_at' | 'name' | 'total_leads'>('created_at')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'archived'>('all')
-  
+
   const { toast } = useToast()
 
   const filterAndSortLists = useCallback(() => {
@@ -61,7 +68,8 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
 
     // Filtrar por status
     if (filterStatus !== 'all') {
-      filtered = filtered.filter(list => 
+      filtered = filtered.filter(list =>
+
         (list.status || 'active') === filterStatus
       )
     }
@@ -109,7 +117,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
       const userLists = await LeadService.getUserLeadLists()
       setLists(userLists)
     } catch (err) {
-      console.error('Erro ao carregar listas:', err)
+
       setError(err instanceof Error ? err.message : 'Erro ao carregar listas')
     } finally {
       setIsLoading(false)
@@ -370,7 +378,8 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
               {lists.length === 0 ? 'Nenhuma lista criada ainda' : 'Nenhuma lista encontrada'}
             </h3>
             <p className="lista-texto-muted-claro dark:text-muted-foreground mb-8 max-w-md mx-auto">
-              {lists.length === 0 
+              {lists.length === 0
+
                 ? 'Comece criando sua primeira lista de leads usando links do Google Maps'
                 : 'Tente ajustar os filtros para encontrar suas listas'
               }
@@ -415,7 +424,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
                           </p>
                         )}
                       </div>
-                      
+
                     </div>
 
                     {/* Estatísticas */}
@@ -455,7 +464,8 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
                     {/* Ações */}
                     <div className="flex items-center space-x-2">
                       <Link to={`/lista/${list.id}`} className="flex-1">
-                        <Button 
+                        <Button
+
                           className="lista-card-btn-primary-claro lista-card-btn-primary-escuro w-full h-10 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
                         >
                           <Eye className="w-4 h-4 mr-2" />

@@ -35,7 +35,7 @@ export class WhatsAppInstanceService {
 
       return data
     } catch (error) {
-      console.error('Erro ao buscar instância do usuário:', error)
+
       return null
     }
   }
@@ -59,7 +59,7 @@ export class WhatsAppInstanceService {
 
       return data
     } catch (error) {
-      console.error('Erro ao criar instância:', error)
+
       throw error
     }
   }
@@ -68,7 +68,8 @@ export class WhatsAppInstanceService {
    * Atualiza o status da instância
    */
   static async updateInstanceStatus(
-    instanceName: string, 
+    instanceName: string,
+
     status: WhatsAppInstance['status'],
     whatsappNumber?: string
   ): Promise<void> {
@@ -81,7 +82,7 @@ export class WhatsAppInstanceService {
       if (status === 'connected') {
         // Para marcar como connected, sempre definir last_connection_at
         updateData.last_connection_at = new Date().toISOString()
-        
+
         // Se whatsappNumber foi fornecido, salvar também
         if (whatsappNumber) {
           updateData.whatsapp_number = whatsappNumber
@@ -98,10 +99,8 @@ export class WhatsAppInstanceService {
         .eq('instance_name', instanceName)
 
       if (error) throw error
-      
-      console.log(`✅ Status da instância ${instanceName} atualizado para: ${status}`)
     } catch (error) {
-      console.error('Erro ao atualizar status da instância:', error)
+
       throw error
     }
   }
@@ -118,7 +117,7 @@ export class WhatsAppInstanceService {
 
       if (error) throw error
     } catch (error) {
-      console.error('Erro ao deletar instância:', error)
+
       throw error
     }
   }
@@ -139,8 +138,8 @@ export class WhatsAppInstanceService {
 
       return data && data.length > 0
     } catch (error) {
-      console.error('Erro ao verificar instância conectada:', error)
+
       return false
     }
   }
-} 
+}

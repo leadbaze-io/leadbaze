@@ -8,7 +8,7 @@ export const queryClient = new QueryClient({
       // Cache por 5 minutos por padrão
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes (novo nome para cacheTime)
-      
+
       // Retry inteligente
       retry: (failureCount, error: unknown) => {
         // Não retry em erros de autenticação
@@ -19,11 +19,11 @@ export const queryClient = new QueryClient({
         // Máximo 3 tentativas
         return failureCount < 3
       },
-      
+
       // Refetch em foco para dados críticos
       refetchOnWindowFocus: true,
       refetchOnReconnect: true,
-      
+
       // Network error handling
       networkMode: 'online',
     },
@@ -40,25 +40,27 @@ export const CACHE_KEYS = {
   // User data
   USER: ['user'] as const,
   USER_PROFILE: (userId: string) => ['user', 'profile', userId] as const,
-  
+
   // Lead lists
   LEAD_LISTS: ['lead-lists'] as const,
   LEAD_LIST: (listId: string) => ['lead-lists', listId] as const,
   LEAD_LIST_STATS: (listId: string) => ['lead-lists', listId, 'stats'] as const,
-  
+
   // Lead generation
-  LEAD_GENERATION: (url: string, limit: number) => 
+  LEAD_GENERATION: (url: string, limit: number) =>
+
     ['lead-generation', url, limit] as const,
-  
+
   // Analytics
   ANALYTICS_OVERVIEW: ['analytics', 'overview'] as const,
-  ANALYTICS_PERFORMANCE: (period: string) => 
+  ANALYTICS_PERFORMANCE: (period: string) =>
+
     ['analytics', 'performance', period] as const,
-  
+
   // Usage tracking
   USAGE_CURRENT: ['usage', 'current'] as const,
   USAGE_HISTORY: (period: string) => ['usage', 'history', period] as const,
-  
+
   // System health
   HEALTH_CHECK: ['health'] as const,
 } as const
@@ -66,28 +68,38 @@ export const CACHE_KEYS = {
 // Utility functions para invalidação de cache
 export const invalidateQueries = {
   // Invalidar todas as listas do usuário
-  leadLists: () => queryClient.invalidateQueries({ 
-    queryKey: CACHE_KEYS.LEAD_LISTS 
+  leadLists: () => queryClient.invalidateQueries({
+
+    queryKey: CACHE_KEYS.LEAD_LISTS
+
   }),
-  
+
   // Invalidar lista específica
-  leadList: (listId: string) => queryClient.invalidateQueries({ 
-    queryKey: CACHE_KEYS.LEAD_LIST(listId) 
+  leadList: (listId: string) => queryClient.invalidateQueries({
+
+    queryKey: CACHE_KEYS.LEAD_LIST(listId)
+
   }),
-  
+
   // Invalidar dados do usuário
-  user: () => queryClient.invalidateQueries({ 
-    queryKey: CACHE_KEYS.USER 
+  user: () => queryClient.invalidateQueries({
+
+    queryKey: CACHE_KEYS.USER
+
   }),
-  
+
   // Invalidar analytics
-  analytics: () => queryClient.invalidateQueries({ 
-    queryKey: ['analytics'] 
+  analytics: () => queryClient.invalidateQueries({
+
+    queryKey: ['analytics']
+
   }),
-  
+
   // Invalidar usage
-  usage: () => queryClient.invalidateQueries({ 
-    queryKey: ['usage'] 
+  usage: () => queryClient.invalidateQueries({
+
+    queryKey: ['usage']
+
   }),
 }
 
@@ -100,7 +112,7 @@ export const prefetchQueries = {
       staleTime: 2 * 60 * 1000, // 2 minutes para prefetch
     })
   },
-  
+
   // Prefetch analytics do dashboard
   dashboardData: async () => {
     await Promise.all([
@@ -122,18 +134,20 @@ export const backgroundSync = {
   startUsageSync: () => {
     return setInterval(() => {
       if (document.visibilityState === 'visible') {
-        queryClient.invalidateQueries({ 
+        queryClient.invalidateQueries({
+
           queryKey: CACHE_KEYS.USAGE_CURRENT,
           refetchType: 'active'
         })
       }
     }, 30 * 1000)
   },
-  
+
   // Sync health check a cada 2 minutos
   startHealthSync: () => {
     return setInterval(() => {
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
+
         queryKey: CACHE_KEYS.HEALTH_CHECK,
         refetchType: 'active'
       })
@@ -153,7 +167,7 @@ export const optimisticUpdates = {
       } : oldData
     )
   },
-  
+
   // Adicionar nova lista otimisticamente
   addNewList: (newList: LeadList) => {
     queryClient.setQueryData(

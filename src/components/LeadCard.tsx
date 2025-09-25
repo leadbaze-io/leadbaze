@@ -10,24 +10,30 @@ interface LeadCardProps {
   className?: string
 }
 
-export function LeadCard({ 
-  lead, 
-  index, 
-  onToggleSelection, 
+export function LeadCard({
+
+  lead,
+
+  index,
+
+  onToggleSelection,
+
   showCheckbox = true,
   className = ""
 }: LeadCardProps) {
   const renderStars = (rating?: number) => {
     if (!rating) return null
-    
+
     return (
       <div className="flex items-center space-x-1">
         {Array.from({ length: 5 }, (_, i) => (
           <Star
             key={i}
             className={`w-3 h-3 ${
-              i < Math.floor(rating) 
-                ? 'text-yellow-400 fill-current' 
+              i < Math.floor(rating)
+
+                ? 'text-yellow-400 fill-current'
+
                 : 'text-gray-300'
             }`}
           />
@@ -39,7 +45,7 @@ export function LeadCard({
 
   const renderReviewsCount = (reviewsCount?: number) => {
     const count = reviewsCount || 0
-    
+
     return (
       <div className="flex items-center space-x-2">
         <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 disparador-texto-claro">
@@ -64,16 +70,20 @@ export function LeadCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
-        lead.selected 
-          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md gerador-lead-selecionado-claro gerador-lead-selecionado-escuro dark:border-blue-400 dark:ring-blue-400' 
+        lead.selected
+
+          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md gerador-lead-selecionado-claro gerador-lead-selecionado-escuro dark:border-blue-400 dark:ring-blue-400'
+
           : 'gerador-lead-card-claro gerador-lead-card-escuro hover:border-blue-300 dark:hover:border-blue-200'
       } ${className}`}
       onClick={handleClick}
     >
       {/* Header do Card */}
       <div className={`p-4 border-b-2 rounded-b-none ${
-        lead.selected 
-          ? 'border-blue-200 dark:border-blue-700 gerador-lead-header-selecionado-claro gerador-lead-header-selecionado-escuro' 
+        lead.selected
+
+          ? 'border-blue-200 dark:border-blue-700 gerador-lead-header-selecionado-claro gerador-lead-header-selecionado-escuro'
+
           : 'border-gray-200 dark:border-border gerador-lead-header-claro gerador-lead-header-escuro'
       }`}>
         <div className="flex items-start justify-between mb-3">
@@ -87,8 +97,10 @@ export function LeadCard({
                   handleClick()
                 }}
                 className={`rounded w-4 h-4 focus:ring-2 focus:ring-blue-500 ${
-                  lead.selected 
-                    ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white' 
+                  lead.selected
+
+                    ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white'
+
                     : 'border-gray-300 text-blue-600 dark:border-gray-600'
                 }`}
               />
@@ -101,7 +113,7 @@ export function LeadCard({
             {renderStars(lead.rating)}
           </div>
         </div>
-        
+
         {/* Nome do estabelecimento */}
         <h3 className="font-semibold gerador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
           {lead.name}

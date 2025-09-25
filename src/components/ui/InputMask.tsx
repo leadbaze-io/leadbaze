@@ -16,18 +16,28 @@ interface InputMaskProps extends React.InputHTMLAttributes<HTMLInputElement> {
  * Suporta máscaras como: 999.999.999-99, (99) 99999-9999, etc.
  */
 export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
-  ({ 
-    mask, 
-    placeholder, 
-    onValueChange, 
-    error, 
-    label, 
-    icon, 
-    className, 
-    value, 
+  ({
+
+    mask,
+
+    placeholder,
+
+    onValueChange,
+
+    error,
+
+    label,
+
+    icon,
+
+    className,
+
+    value,
+
     onChange,
     forceLightMode = false,
-    ...props 
+    ...props
+
   }, ref) => {
     const [formattedValue, setFormattedValue] = useState('')
 
@@ -97,14 +107,14 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
             {label}
           </label>
         )}
-        
+
         <div className="relative">
           {icon && (
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
               {icon}
             </div>
           )}
-          
+
           <input
             ref={ref}
             type="text"
@@ -114,7 +124,8 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
             className={cn(
               "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors",
               // Modo claro forçado
-              forceLightMode 
+              forceLightMode
+
                 ? "border-gray-300 bg-white text-gray-900 placeholder-gray-400"
                 : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500",
               icon && "pl-10",
@@ -124,7 +135,7 @@ export const InputMask = forwardRef<HTMLInputElement, InputMaskProps>(
             {...props}
           />
         </div>
-        
+
         {error && (
           <p className="text-sm text-red-600 dark:text-red-400">
             {error}

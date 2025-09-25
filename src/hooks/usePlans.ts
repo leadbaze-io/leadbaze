@@ -25,14 +25,14 @@ export const usePlans = (): UsePlansReturn => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('Erro ao buscar planos:', data.message);
+
         setError('Erro ao carregar planos disponíveis');
         return;
       }
 
       setPlans(data.data || []);
     } catch (err) {
-      console.error('Erro inesperado ao buscar planos:', err);
+
       setError('Erro inesperado ao carregar planos');
     } finally {
       setIsLoading(false);

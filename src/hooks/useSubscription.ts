@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import type { 
-  UserSubscription, 
-  LeadsAvailabilityResponse, 
+import type {
+
+  UserSubscription,
+
+  LeadsAvailabilityResponse,
+
   ConsumeLeadsResponse,
-  UseSubscriptionReturn 
+  UseSubscriptionReturn
+
 } from '../types/subscription';
 
 export const useSubscription = (): UseSubscriptionReturn => {
@@ -29,7 +33,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('Erro ao buscar assinatura:', data.message);
+
         setError('Erro ao carregar dados da assinatura');
         return;
       }
@@ -38,11 +42,9 @@ export const useSubscription = (): UseSubscriptionReturn => {
         setSubscription(null);
         return;
       }
-
-      console.log('📊 [useSubscription] Dados da API carregados:', data.data);
       setSubscription(data.data);
     } catch (err) {
-      console.error('Erro inesperado ao buscar assinatura:', err);
+
       setError('Erro inesperado ao carregar assinatura');
     } finally {
       setIsLoading(false);
@@ -66,28 +68,16 @@ export const useSubscription = (): UseSubscriptionReturn => {
       // Buscar assinatura atual diretamente
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         // Verificar se o acesso não expirou
         const accessUntil = new Date(data.data.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
-        console.log('🔍 [useSubscription] Verificando acesso:', {
-          access_until: data.data.access_until,
-          now: now.toISOString(),
-          isAccessExpired,
-          leads_remaining: data.data.leads_remaining,
-          leadsToGenerate
-        });
-        
+
         // Se o acesso não expirou e tem leads suficientes
         if (!isAccessExpired && data.data.leads_remaining >= leadsToGenerate) {
-          console.log('✅ [useSubscription] Assinatura com leads suficientes:', {
-            leads_remaining: data.data.leads_remaining,
-            leadsToGenerate,
-            can_generate: true
-          });
+
           return {
             can_generate: true,
             reason: 'sufficient_subscription_leads',
@@ -96,10 +86,10 @@ export const useSubscription = (): UseSubscriptionReturn => {
             leads_limit: data.data.leads_limit
           };
         }
-        
+
         // Se o acesso expirou, não usar leads da assinatura
         if (isAccessExpired) {
-          console.log('⚠️ [useSubscription] Acesso expirado, verificando apenas leads bônus');
+
         }
       }
 
@@ -111,7 +101,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
         .single();
 
       if (profileError) {
-        console.error('Erro ao buscar perfil do usuário:', profileError);
+
         return {
           can_generate: false,
           reason: 'no_active_subscription',
@@ -122,21 +112,8 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
-      console.log('🔍 [useSubscription] Verificando leads bônus:', {
-        bonus_leads: profile.bonus_leads,
-        bonus_leads_used: profile.bonus_leads_used,
-        bonusLeadsRemaining,
-        leadsToGenerate,
-        subscription: subscription ? 'existe' : 'não existe'
-      });
-      
       if (bonusLeadsRemaining >= leadsToGenerate) {
-        console.log('✅ [useSubscription] Leads bônus suficientes:', {
-          bonusLeadsRemaining,
-          leadsToGenerate,
-          can_generate: true
-        });
+
         return {
           can_generate: true,
           reason: 'sufficient_bonus_leads',
@@ -145,13 +122,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
           leads_limit: profile.bonus_leads || 0
         };
       }
-
-      console.log('❌ [useSubscription] Leads insuficientes:', {
-        bonusLeadsRemaining,
-        leadsToGenerate,
-        can_generate: false
-      });
-      
       return {
         can_generate: false,
         reason: 'insufficient_leads',
@@ -161,7 +131,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
       };
 
     } catch (err) {
-      console.error('Erro inesperado ao verificar leads:', err);
+
       return {
         can_generate: false,
         reason: 'no_active_subscription',
@@ -187,21 +157,17 @@ export const useSubscription = (): UseSubscriptionReturn => {
       // Primeiro, tentar consumir leads da assinatura (se existir)
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         const subscriptionData = data.data;
-        
+
         // Verificar se o acesso não expirou
         const accessUntil = new Date(subscriptionData.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
+
         // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
         if (!isAccessExpired && subscriptionData.leads_remaining >= leadsToConsume) {
-          console.log('🔄 [useSubscription] Consumindo leads da assinatura:', {
-            leads_remaining: subscriptionData.leads_remaining,
-            leadsToConsume
-          });
 
           // Atualizar leads_balance diretamente
           const { data: updateResult, error: updateError } = await supabase
@@ -215,7 +181,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
             .single();
 
           if (updateError) {
-            console.error('Erro ao atualizar leads da assinatura:', updateError);
+
             // Se falhar, tentar consumir bonus leads
           } else {
             // Atualizar dados locais da assinatura
@@ -237,7 +203,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       // Se não conseguiu consumir da assinatura, tentar consumir bonus leads
-      console.log('🔄 [useSubscription] Tentando consumir bonus leads...');
 
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
@@ -246,7 +211,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
         .single();
 
       if (profileError) {
-        console.error('Erro ao buscar perfil do usuário:', profileError);
+
         return {
           success: false,
           error: 'profile_error',
@@ -255,7 +220,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
+
       if (bonusLeadsRemaining < leadsToConsume) {
         return {
           success: false,
@@ -276,20 +241,13 @@ export const useSubscription = (): UseSubscriptionReturn => {
         .eq('user_id', user.id);
 
       if (updateError) {
-        console.error('Erro ao atualizar bonus leads:', updateError);
+
         return {
           success: false,
           error: 'update_error',
           message: 'Erro ao atualizar leads bônus'
         };
       }
-
-      console.log('✅ [useSubscription] Bonus leads consumidos com sucesso:', {
-        leads_consumed: leadsToConsume,
-        bonus_leads_remaining: bonusLeadsRemaining - leadsToConsume,
-        bonus_leads_total: profile.bonus_leads
-      });
-
       return {
         success: true,
         leads_consumed: leadsToConsume,
@@ -299,7 +257,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
       };
 
     } catch (err) {
-      console.error('Erro inesperado ao consumir leads:', err);
+
       return {
         success: false,
         error: 'unexpected_error',

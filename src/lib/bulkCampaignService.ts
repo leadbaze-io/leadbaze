@@ -39,11 +39,11 @@ export class BulkCampaignService {
       // Preparar dados para adicionar todas as listas de uma vez
       const newListIds = availableLists.map(list => list.id)
       const newSelectedLists = [...new Set([...currentSelectedLists, ...newListIds])] // Remove duplicatas
-      
+
       // Processar todos os leads de uma vez
       let newLeads = [...currentLeads]
       let totalDuplicates = 0
-      
+
       for (const list of availableLists) {
         const { uniqueLeads, duplicatesCount } = LeadDeduplicationService.deduplicateLeadsWithCount(list.leads, list.id)
         newLeads = LeadDeduplicationService.addLeadsWithDeduplication(newLeads, uniqueLeads)
@@ -66,7 +66,7 @@ export class BulkCampaignService {
         }
       }
     } catch (error) {
-      console.error('❌ BulkCampaignService - Erro ao adicionar todas as listas:', error)
+
       return {
         success: false,
         message: `Erro ao adicionar listas: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
@@ -108,7 +108,7 @@ export class BulkCampaignService {
         }
       }
     } catch (error) {
-      console.error('❌ BulkCampaignService - Erro ao remover todas as listas:', error)
+
       return {
         success: false,
         message: `Erro ao remover listas: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
@@ -226,17 +226,13 @@ export class BulkCampaignService {
 
     // Adicionar novos leads se houver leads válidos
     if (validLeads.length > 0) {
-      console.log('🔍 BulkCampaignService - Processando leads:', {
-        totalLeads: leads.length,
-        validLeads: validLeads.length,
-        firstLead: leads[0],
-        leadKeys: Object.keys(leads[0] || {})
+
       })
-      
+
       const leadRecords = validLeads.map(lead => {
         // Garantir que phoneHash existe, se não, gerar um
         const phoneHash = lead.phoneHash || LeadDeduplicationService.generatePhoneHash(lead.phone || '')
-        
+
         return {
           campaign_id: campaignId,
           list_id: lead.listId,
@@ -259,19 +255,13 @@ export class BulkCampaignService {
       }, new Map())
 
       const deduplicatedRecords = Array.from(uniqueLeadRecords.values())
-
-      console.log('🔍 BulkCampaignService - Deduplicação:', {
-        totalLeads: validLeads.length,
-        leadRecords: leadRecords.length,
-        deduplicatedRecords: deduplicatedRecords.length,
-        duplicatesRemoved: leadRecords.length - deduplicatedRecords.length
-      })
-
       const { error: insertError } = await supabase
         .from('campaign_unique_leads')
-        .upsert(deduplicatedRecords, { 
+        .upsert(deduplicatedRecords, {
+
           onConflict: 'campaign_id,phone_hash',
-          ignoreDuplicates: false 
+          ignoreDuplicates: false
+
         })
 
       if (insertError) {

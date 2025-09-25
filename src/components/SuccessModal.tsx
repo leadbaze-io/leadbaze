@@ -11,13 +11,20 @@ interface SuccessModalProps {
   isNewList: boolean
 }
 
-export default function SuccessModal({ 
-  isOpen, 
-  onClose, 
-  onGoToDashboard, 
-  listName, 
-  leadsCount, 
-  isNewList 
+export default function SuccessModal({
+
+  isOpen,
+
+  onClose,
+
+  onGoToDashboard,
+
+  listName,
+
+  leadsCount,
+
+  isNewList
+
 }: SuccessModalProps) {
   if (!isOpen) return null
 
@@ -34,9 +41,12 @@ export default function SuccessModal({
           initial={{ scale: 0.8, opacity: 0, y: 30 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 30 }}
-          transition={{ 
-            type: "spring", 
-            damping: 20, 
+          transition={{
+
+            type: "spring",
+
+            damping: 20,
+
             stiffness: 300,
             duration: 0.6
           }}
@@ -46,18 +56,23 @@ export default function SuccessModal({
           {/* Background Decoration */}
           <div className="absolute inset-0 modal-sucesso-decoration-claro modal-sucesso-decoration-escuro opacity-60" />
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-40 modal-sucesso-glow-claro modal-sucesso-glow-escuro rounded-full blur-3xl" />
-          
+
           {/* Content */}
           <div className="relative z-10 p-4 sm:p-6 lg:p-8">
             {/* Success Icon */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{ 
-                delay: 0.2, 
-                type: "spring", 
-                damping: 15, 
-                stiffness: 300 
+              transition={{
+
+                delay: 0.2,
+
+                type: "spring",
+
+                damping: 15,
+
+                stiffness: 300
+
               }}
               className="mx-auto w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 modal-sucesso-icon-claro modal-sucesso-icon-escuro rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
             >
@@ -81,7 +96,8 @@ export default function SuccessModal({
               transition={{ delay: 0.4 }}
               className="text-sm sm:text-base lg:text-lg modal-sucesso-descricao-claro modal-sucesso-descricao-escuro mb-4 sm:mb-6 lg:mb-8 text-center leading-relaxed px-2"
             >
-              {isNewList 
+              {isNewList
+
                 ? `"${listName}" está pronta para uso!`
                 : `${leadsCount} leads adicionados à "${listName}"!`
               }
@@ -150,7 +166,7 @@ export default function SuccessModal({
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Ir para Dashboard
               </Button>
-              
+
               <Button
                 onClick={onClose}
                 variant="outline"

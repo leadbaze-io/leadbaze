@@ -34,27 +34,19 @@ export class CampaignService {
    */
   static async getUserCampaigns(): Promise<Campaign[]> {
     console.log('🔍 CampaignService.getUserCampaigns() - Iniciando busca...')
-    
-    const { data: { user } } = await supabase.auth.getUser()
-    console.log('👤 Usuário autenticado:', user ? { id: user.id, email: user.email } : 'NENHUM')
-    
-    if (!user) throw new Error('Usuário não autenticado')
 
-    console.log('📡 Fazendo query no Supabase...')
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) throw new Error('Usuário não autenticado')
     const { data, error } = await supabase
       .from('campaigns')
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-
-    console.log('📊 Resultado da query:', { data, error })
-    
     if (error) {
-      console.error('❌ Erro na query:', error)
+
       throw new Error(`Erro ao buscar campanhas: ${error.message}`)
     }
-    
-    console.log('✅ Campanhas encontradas:', data?.length || 0)
     return data || []
   }
 
@@ -164,8 +156,7 @@ export class CampaignService {
    * Buscar leads únicos da campanha
    */
   static async getCampaignLeads(campaignId: string): Promise<CampaignLead[]> {
-    console.log('🔍 CampaignService.getCampaignLeads - Buscando leads para campanha:', campaignId)
-    
+
     const { data, error } = await supabase
       .from('campaign_unique_leads')
       .select('*')
@@ -173,9 +164,6 @@ export class CampaignService {
       .order('created_at', { ascending: true })
 
     if (error) throw new Error(`Erro ao buscar leads: ${error.message}`)
-
-    console.log('📊 CampaignService.getCampaignLeads - Dados brutos:', data)
-
     const result = (data || []).map(lead => ({
       id: lead.id,
       listId: lead.list_id,
@@ -186,9 +174,6 @@ export class CampaignService {
       position: lead.lead_position,
       phoneHash: lead.phone_hash
     }))
-
-    console.log('✅ CampaignService.getCampaignLeads - Resultado:', result.length, 'leads')
-
     return result
   }
 
@@ -233,17 +218,13 @@ export class CampaignService {
    * Buscar listas da campanha
    */
   static async getCampaignLists(campaignId: string): Promise<{ selected: string[], ignored: string[] }> {
-    console.log('🔍 CampaignService.getCampaignLists - Buscando listas para campanha:', campaignId)
-    
+
     const { data, error } = await supabase
       .from('campaign_lists')
       .select('list_id, status')
       .eq('campaign_id', campaignId)
 
     if (error) throw new Error(`Erro ao buscar listas: ${error.message}`)
-
-    console.log('📊 CampaignService.getCampaignLists - Dados brutos:', data)
-
     const selected: string[] = []
     const ignored: string[] = []
 
@@ -254,9 +235,6 @@ export class CampaignService {
         ignored.push(item.list_id)
       }
     })
-
-    console.log('✅ CampaignService.getCampaignLists - Resultado:', { selected, ignored })
-
     return { selected, ignored }
   }
 

@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Send, 
-  CheckCircle, 
-  AlertTriangle, 
-  Clock, 
+import {
+
+  Send,
+
+  CheckCircle,
+
+  AlertTriangle,
+
+  Clock,
+
   TrendingUp,
   XCircle,
   X,
@@ -78,8 +83,6 @@ export default function CampaignProgressModalSimple({
 
     return () => clearInterval(interval)
   }, [startTime, status])
-
-
   // Obter informações do status
   const getStatusInfo = (): CampaignStatusInfo => {
     switch (status) {
@@ -174,7 +177,8 @@ export default function CampaignProgressModalSimple({
                       <p className="text-sm opacity-80">Excelente performance! 🎉</p>
                     </div>
                   </div>
-                  <button 
+                  <button
+
                     onClick={onClose}
                     className="p-2 hover:bg-white/20 rounded-full transition-colors"
                   >
@@ -231,7 +235,8 @@ export default function CampaignProgressModalSimple({
                     </span>
                   </div>
                   <div className="w-full bg-slate-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
-                    <div 
+                    <div
+
                       className="h-full bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 rounded-full relative"
                       style={{ width: `${successRate}%` }}
                     >
@@ -263,7 +268,7 @@ export default function CampaignProgressModalSimple({
                     <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3">
                       📊 Relatório Detalhado
                     </h3>
-                    
+
                     <div className="space-y-4">
                       {/* Estatísticas Detalhadas */}
                       <div>
@@ -303,8 +308,10 @@ export default function CampaignProgressModalSimple({
                           <div className="flex justify-between">
                             <span className="text-slate-700 dark:text-gray-300">Velocidade Média:</span>
                             <span className="font-medium text-slate-900 dark:text-white">
-                              {totalLeads > 0 && startTime ? 
-                                `${Math.round(totalLeads / ((new Date().getTime() - startTime.getTime()) / 60000))} leads/min` : 
+                              {totalLeads > 0 && startTime ?
+
+                                `${Math.round(totalLeads / ((new Date().getTime() - startTime.getTime()) / 60000))} leads/min` :
+
                                 'N/A'
                               }
                             </span>
@@ -327,7 +334,8 @@ export default function CampaignProgressModalSimple({
                           <span className="text-slate-700 dark:text-gray-300">Eficiência de Envio:</span>
                           <div className="flex items-center space-x-2">
                             <div className="w-16 bg-slate-200 dark:bg-gray-700 rounded-full h-2">
-                              <div 
+                              <div
+
                                 className="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full"
                                 style={{ width: `${successRate}%` }}
                               ></div>
@@ -355,9 +363,12 @@ export default function CampaignProgressModalSimple({
                         📋 Resumo Executivo
                       </h4>
                       <p className="text-xs text-blue-700 dark:text-blue-300">
-                        A campanha <strong>"{campaignName}"</strong> foi executada com sucesso, 
-                        alcançando uma taxa de sucesso de <strong>{successRate}%</strong> em {elapsedTime} de duração. 
-                        {parseFloat(successRate) >= 90 ? 
+                        A campanha <strong>"{campaignName}"</strong> foi executada com sucesso,
+
+                        alcançando uma taxa de sucesso de <strong>{successRate}%</strong> em {elapsedTime} de duração.
+
+                        {parseFloat(successRate) >= 90 ?
+
                           ' Excelente performance!' :
                           parseFloat(successRate) >= 70 ?
                           ' Boa performance!' :

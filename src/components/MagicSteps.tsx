@@ -72,15 +72,17 @@ export default function MagicSteps() {
         <div className="relative">
           {/* Linha conectora - apenas desktop */}
           <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 transform -translate-y-1/2"></div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, index) => (
               <div
                 key={index}
                 data-step={index}
                 className={`relative bg-white p-6 rounded-2xl border border-gray-100 shadow-lg transition-all duration-700 transform ${
-                  visibleSteps.has(index) 
-                    ? 'translate-y-0 opacity-100 scale-100' 
+                  visibleSteps.has(index)
+
+                    ? 'translate-y-0 opacity-100 scale-100'
+
                     : 'translate-y-8 opacity-0 scale-95'
                 }`}
                 style={{ transitionDelay: `${index * 200}ms` }}

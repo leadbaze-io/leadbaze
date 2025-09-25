@@ -68,8 +68,10 @@ export const StatsCard: React.FC<StatsCardProps> = ({
             </h3>
             {trend && (
               <div className={`flex items-center space-x-1 text-xs font-medium ${
-                trend.isPositive 
-                  ? 'text-green-600 dark:text-green-400' 
+                trend.isPositive
+
+                  ? 'text-green-600 dark:text-green-400'
+
                   : 'text-red-600 dark:text-red-400'
               }`}>
                 <span>{trend.isPositive ? '+' : ''}{trend.value}%</span>

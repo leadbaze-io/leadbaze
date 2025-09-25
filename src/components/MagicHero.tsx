@@ -11,13 +11,15 @@ export default function MagicHero() {
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20 md:py-32 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-10">
-        <motion.div 
+        <motion.div
+
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.3 }}
           transition={{ duration: 2, delay: 0.5 }}
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl"
         />
-        <motion.div 
+        <motion.div
+
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.3 }}
           transition={{ duration: 2, delay: 1 }}
@@ -58,57 +60,54 @@ export default function MagicHero() {
           {/* CTA Centralizado */}
           <AnimatedBeam delay={0.8}>
             <div className="flex justify-center mb-12">
-              <ShimmerButton 
+              <ShimmerButton
+
                 onClick={() => {
-                  console.log('🔍 Botão Ver Planos clicado!')
-                  
+
                   // Tentar múltiplos métodos para encontrar a seção
                   let pricingSection = document.getElementById('pricing-plans-section')
-                  
+
                   // Verificar se é a seção correta (não mobile)
                   if (pricingSection && pricingSection.classList.contains('md:hidden')) {
-                    console.log('📍 Seção mobile encontrada, procurando versão desktop...')
+
                     pricingSection = null
                   }
-                  
+
                   // Se não encontrar, tentar por classe (desktop)
                   if (!pricingSection) {
                     pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
-                    console.log('📍 Tentando por classe pricing desktop:', pricingSection)
+
                   }
-                  
+
                   // Se ainda não encontrar, tentar por texto (desktop)
                   if (!pricingSection) {
                     const sections = document.querySelectorAll('section:not(.md\\:hidden)')
                     for (const section of sections) {
                       if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
                         pricingSection = section as HTMLElement
-                        console.log('📍 Encontrado por texto desktop:', pricingSection)
+
                         break
                       }
                     }
                   }
-                  
+
                   // Fallback: usar qualquer seção com pricing
                   if (!pricingSection) {
                     pricingSection = document.querySelector('[id*="pricing"]')
-                    console.log('📍 Fallback - qualquer seção pricing:', pricingSection)
+
                   }
-                  
-                  console.log('📍 Seção encontrada:', pricingSection)
-                  
                   if (pricingSection) {
                     // Scroll com offset para compensar navbar fixa
                     const elementPosition = pricingSection.getBoundingClientRect().top
                     const offsetPosition = elementPosition + window.pageYOffset - 80
-                    
+
                     window.scrollTo({
                       top: offsetPosition,
                       behavior: 'smooth'
                     })
-                    console.log('✅ Scroll executado com offset!')
+
                   } else {
-                    console.log('❌ Seção não encontrada! Tentando método alternativo...')
+
                     // Método alternativo: scroll para o final da página
                     window.scrollTo({
                       top: document.body.scrollHeight,
@@ -130,14 +129,17 @@ export default function MagicHero() {
               <motion.div
                 initial={{ scale: 0, opacity: 0, y: 50 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: 1.2, 
+                transition={{
+
+                  duration: 1.2,
+
                   delay: 1.0,
                   type: "spring",
                   stiffness: 100,
                   damping: 20
                 }}
-                whileHover={{ 
+                whileHover={{
+
                   scale: 1.05,
                   y: -5,
                   transition: { duration: 0.4, ease: "easeOut" }
@@ -145,23 +147,31 @@ export default function MagicHero() {
                 className="relative group cursor-pointer"
               >
                 <motion.div
-                  animate={{ 
+                  animate={{
+
                     boxShadow: [
                       "0 10px 25px -3px rgba(0, 0, 0, 0.1)",
                       "0 20px 40px -3px rgba(0, 0, 0, 0.15)",
                       "0 10px 25px -3px rgba(0, 0, 0, 0.1)"
                     ]
                   }}
-                  transition={{ 
-                    duration: 3, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
+                  transition={{
+
+                    duration: 3,
+
+                    repeat: Infinity,
+
+                    ease: "easeInOut"
+
                   }}
                   className="p-2 rounded-full bg-gradient-to-br from-white via-gray-50 to-white"
                 >
-                  <img 
-                    src={LGPDImage} 
-                    alt="LGPD Compliant" 
+                  <img
+
+                    src={LGPDImage}
+
+                    alt="LGPD Compliant"
+
                     className="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-2xl group-hover:drop-shadow-3xl transition-all duration-500"
                   />
                 </motion.div>
@@ -184,7 +194,7 @@ export default function MagicHero() {
                   <div className="text-gray-500 text-sm mt-2">que métodos tradicionais</div>
                 </BorderBeam>
               </div>
-              
+
               <div className="relative group">
                 <BorderBeam delay={0.4} className="text-center p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
@@ -197,7 +207,7 @@ export default function MagicHero() {
                   <div className="text-gray-500 text-sm mt-2">nos dados extraídos</div>
                 </BorderBeam>
               </div>
-              
+
               <div className="relative group">
                 <BorderBeam delay={0.6} className="text-center p-8 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">

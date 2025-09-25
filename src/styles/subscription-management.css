@@ -2,6 +2,26 @@
    SUBSCRIPTION MANAGEMENT BUTTONS
    ===================================================== */
 
+/* Aviso de Cancelamento Manual - Modo Claro */
+.cancellation-warning-title {
+  font-weight: 700 !important;
+  color: #dc2626 !important; /* text-red-600 */
+  margin-bottom: 0.25rem !important;
+}
+
+.cancellation-warning-text {
+  color: #111827 !important; /* text-gray-900 */
+}
+
+/* Aviso de Cancelamento Manual - Modo Escuro */
+.dark .cancellation-warning-title {
+  color: #f87171 !important; /* text-red-400 */
+}
+
+.dark .cancellation-warning-text {
+  color: #f3f4f6 !important; /* text-gray-100 */
+}
+
 /* Botão de Upgrade - Versão Claro */
 .subscription-upgrade-btn {
   display: flex;

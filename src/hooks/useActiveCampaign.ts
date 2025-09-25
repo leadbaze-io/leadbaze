@@ -29,14 +29,14 @@ export function useActiveCampaign() {
   // Carregar campanha ativa do localStorage ao inicializar
   useEffect(() => {
     const savedCampaign = localStorage.getItem('activeCampaign')
-    
+
     if (savedCampaign) {
       try {
         const campaign = JSON.parse(savedCampaign)
-        
+
         // Verificar se a campanha ainda está ativa (menos de 1 hora)
         const isRecent = Date.now() - campaign.timestamp < 60 * 60 * 1000
-        
+
         if (isRecent && campaign.status === 'sending') {
           setActiveCampaign({
             ...campaign,
@@ -50,7 +50,7 @@ export function useActiveCampaign() {
           localStorage.removeItem('activeCampaign')
         }
       } catch (error) {
-        console.error('Erro ao carregar campanha ativa:', error)
+
         localStorage.removeItem('activeCampaign')
       }
     }
@@ -66,22 +66,22 @@ export function useActiveCampaign() {
       localStorage.setItem('activeCampaign', JSON.stringify(campaignToSave))
       setActiveCampaign(campaign)
     } catch (error) {
-      console.error('Erro ao salvar campanha no localStorage:', error)
+
     }
   }, [])
 
   // Iniciar nova campanha
   const startCampaign = useCallback((campaign: Omit<ActiveCampaign, 'timestamp'>) => {
-    console.log('🚀 [useActiveCampaign] Iniciando nova campanha:', campaign)
+
     const newCampaign: ActiveCampaign = {
       ...campaign,
       timestamp: Date.now()
     }
     saveActiveCampaign(newCampaign)
-    console.log('✅ [useActiveCampaign] Campanha salva no localStorage')
+
     // Não abrir modal automaticamente - deixar o usuário decidir
     setIsModalOpen(false)
-    console.log('📱 [useActiveCampaign] Modal fechado por padrão')
+
   }, [saveActiveCampaign])
 
   // Atualizar progresso da campanha
@@ -96,26 +96,29 @@ export function useActiveCampaign() {
   const finishCampaign = useCallback((status: 'completed' | 'failed') => {
     if (activeCampaign) {
       // Calcular duração da campanha
-      const duration = activeCampaign.startTime 
+      const duration = activeCampaign.startTime
+
         ? Math.floor((Date.now() - activeCampaign.startTime.getTime()) / 1000)
         : 0
 
-      const finishedCampaign = { 
-        ...activeCampaign, 
+      const finishedCampaign = {
+
+        ...activeCampaign,
+
         status,
         duration
       }
-      
+
       saveActiveCampaign(finishedCampaign)
-      
+
       // Mostrar notificação de conclusão
       setShowCompletionNotification(true)
-      
+
       // Fechar modal após 2 segundos
       setTimeout(() => {
         setIsModalOpen(false)
       }, 2000)
-      
+
       // Limpar campanha após 25 segundos (tempo para ver a notificação)
       setTimeout(() => {
         localStorage.removeItem('activeCampaign')
@@ -127,32 +130,32 @@ export function useActiveCampaign() {
 
   // Abrir modal
   const openModal = useCallback(() => {
-    console.log('📱 [useActiveCampaign] Abrindo modal...')
+
     setIsModalOpen(true)
-    console.log('✅ [useActiveCampaign] Modal aberto')
+
   }, [])
 
   // Fechar modal (minimizar)
   const closeModal = useCallback(() => {
-    console.log('📱 [useActiveCampaign] Fechando modal...')
+
     setIsModalOpen(false)
-    console.log('✅ [useActiveCampaign] Modal fechado')
+
   }, [])
 
   // Minimizar modal
   const minimizeModal = useCallback(() => {
-    console.log('📱 [useActiveCampaign] Minimizando modal...')
+
     setIsModalMinimized(true)
     setIsModalOpen(false)
-    console.log('✅ [useActiveCampaign] Modal minimizado')
+
   }, [])
 
   // Expandir modal
   const expandModal = useCallback(() => {
-    console.log('📱 [useActiveCampaign] Expandindo modal...')
+
     setIsModalMinimized(false)
     setIsModalOpen(true)
-    console.log('✅ [useActiveCampaign] Modal expandido')
+
   }, [])
 
   // Limpar campanha ativa

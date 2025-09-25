@@ -87,9 +87,6 @@ export default function MagicBenefits() {
 
   // Criar carrossel infinito duplicando os cards
   const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials]
-
-
-
   // Funções para drag do carrossel
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true)
@@ -100,17 +97,17 @@ export default function MagicBenefits() {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return
     e.preventDefault()
-    
+
     const x = e.pageX - (carouselRef.current?.offsetLeft || 0)
     const walk = (x - startX) * 1.5 // Reduzido para movimento mais suave
-    
+
     // Calcula o novo índice com suavização
     const newIndex = (scrollLeft - walk) / 320
     const targetIndex = Math.round(newIndex)
-    
+
     // Aplica suavização para evitar mudanças bruscas
     const smoothIndex = currentLogoIndex + (targetIndex - currentLogoIndex) * 0.1
-    
+
     // Carrossel infinito - quando passa do último, volta ao primeiro
     let finalIndex = smoothIndex
     if (finalIndex >= infiniteTestimonials.length) {
@@ -118,7 +115,7 @@ export default function MagicBenefits() {
     } else if (finalIndex < 0) {
       finalIndex = infiniteTestimonials.length + (finalIndex % infiniteTestimonials.length)
     }
-    
+
     setCurrentLogoIndex(finalIndex)
   }
 
@@ -126,7 +123,7 @@ export default function MagicBenefits() {
     setIsDragging(false)
     // Snap para o card mais próximo
     const snappedIndex = Math.round(currentLogoIndex)
-    
+
     // Garantir que o índice esteja dentro dos limites do array infinito
     let finalIndex = snappedIndex
     if (finalIndex >= infiniteTestimonials.length) {
@@ -134,7 +131,7 @@ export default function MagicBenefits() {
     } else if (finalIndex < 0) {
       finalIndex = infiniteTestimonials.length + (finalIndex % infiniteTestimonials.length)
     }
-    
+
     setCurrentLogoIndex(finalIndex)
   }
 
@@ -168,9 +165,6 @@ export default function MagicBenefits() {
     }, 4000)
     return () => clearInterval(interval)
   }, [nextSlide])
-
-
-
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50" ref={sectionRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,12 +173,13 @@ export default function MagicBenefits() {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8">
             Líderes de Vendas confiam na <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LeadBaze</span>!
           </h2>
-          
+
           {/* Carrossel Horizontal de Depoimentos */}
           <div className="relative overflow-hidden mb-16">
             <div className="max-w-6xl mx-auto">
               {/* Container do Carrossel */}
-              <div 
+              <div
+
                 className={`relative cursor-grab active:cursor-grabbing transition-all duration-200 ${
                   isDragging ? 'scale-[0.98] opacity-90' : 'scale-100 opacity-100'
                 }`}
@@ -209,19 +204,25 @@ export default function MagicBenefits() {
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                      animate={{ 
-                        opacity: 1, 
-                        scale: 1, 
+                      animate={{
+
+                        opacity: 1,
+
+                        scale: 1,
+
                         y: 0,
                         rotateY: index === currentLogoIndex ? 0 : 5
                       }}
-                      transition={{ 
-                        duration: 0.6, 
+                      transition={{
+
+                        duration: 0.6,
+
                         delay: index * 0.1,
                         type: "spring",
                         stiffness: 100
                       }}
-                      whileHover={{ 
+                      whileHover={{
+
                         scale: 1.05,
                         y: -10,
                         rotateY: 0,
@@ -244,8 +245,10 @@ export default function MagicBenefits() {
                             whileHover={{ scale: 1.1 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <img 
-                              src={testimonial.photo} 
+                            <img
+
+                              src={testimonial.photo}
+
                               alt={testimonial.name}
                               className="w-full h-full object-cover"
                             />
@@ -333,10 +336,6 @@ export default function MagicBenefits() {
             </div>
           </div>
         </div>
-
-
-
-
       </div>
     </section>
   )

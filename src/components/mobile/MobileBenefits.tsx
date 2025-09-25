@@ -105,7 +105,7 @@ export default function MobileBenefits() {
             Líderes de Vendas confiam na <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LeadBaze</span>!
           </h2>
         </div>
-        
+
         {/* Carrossel Vertical de Depoimentos */}
         <div className="relative">
           {/* Container do Carrossel */}
@@ -133,8 +133,10 @@ export default function MobileBenefits() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <img 
-                      src={testimonials[currentIndex].photo} 
+                    <img
+
+                      src={testimonials[currentIndex].photo}
+
                       alt={testimonials[currentIndex].name}
                       className="w-full h-full object-cover"
                     />
@@ -218,25 +220,3 @@ export default function MobileBenefits() {
     </section>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

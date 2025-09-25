@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  X, 
-  Send, 
-  CheckCircle, 
-  AlertTriangle, 
-  Clock, 
-  Minimize2, 
+import {
+
+  X,
+
+  Send,
+
+  CheckCircle,
+
+  AlertTriangle,
+
+  Clock,
+
+  Minimize2,
+
   Maximize2,
   TrendingUp,
   Timer,
@@ -63,19 +70,6 @@ export default function CampaignProgressModalV2({
   const [finalTime, setFinalTime] = useState<string | null>(null)
 
   // Log para debug
-  console.log('📊 [MODAL] Props recebidos:', {
-    isVisible,
-    campaignName,
-    totalLeads,
-    status,
-    successCount,
-    failedCount,
-    isMinimized
-  })
-  
-  console.log('🎯 [MODAL] Modal deve ser visível?', isVisible)
-  console.log('🎯 [MODAL] Modal deve ser minimizado?', isMinimized)
-
   // Capturar tempo final quando campanha for concluída
   useEffect(() => {
     if ((status === 'completed' || status === 'failed') && startTime && !finalTime) {
@@ -93,7 +87,7 @@ export default function CampaignProgressModalV2({
       } else {
         timeString = `${seconds}s`
       }
-      
+
       setFinalTime(timeString)
     }
   }, [status, startTime, finalTime])
@@ -124,14 +118,6 @@ export default function CampaignProgressModalV2({
   // Informações de status
   const getStatusInfo = (): CampaignStatusInfo => {
     const progress = totalLeads > 0 ? Math.round((successCount + failedCount) / totalLeads * 100) : 0
-    
-    console.log('📊 [MODAL] Calculando progresso:', {
-      successCount,
-      failedCount,
-      totalLeads,
-      progress
-    })
-    
     switch (status) {
       case 'sending':
         return {
@@ -181,10 +167,10 @@ export default function CampaignProgressModalV2({
   // Tempo estimado
   const getEstimatedTime = (): string => {
     if (status !== 'sending' || totalLeads === 0) return '0 min'
-    
+
     const remaining = totalLeads - successCount - failedCount
     if (remaining <= 0) return 'Concluindo...'
-    
+
     // Estimativa baseada em 2 mensagens por minuto
     const estimatedMinutes = Math.ceil(remaining / 2)
     return estimatedMinutes === 1 ? '1 min' : `${estimatedMinutes} min`
@@ -209,8 +195,10 @@ export default function CampaignProgressModalV2({
       >
         <div className={`
           rounded-2xl border-2 shadow-2xl backdrop-blur-md overflow-hidden
-          ${isDark 
-            ? 'bg-gray-900/95 border-gray-700 text-white' 
+          ${isDark
+
+            ? 'bg-gray-900/95 border-gray-700 text-white'
+
             : 'bg-white/95 border-gray-200 text-gray-900'
           }
         `}>
@@ -222,7 +210,8 @@ export default function CampaignProgressModalV2({
             <div className="flex items-center space-x-3">
               <div className={`
                 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                ${statusInfo.color === 'blue' ? 'bg-blue-500' :
+
                   statusInfo.color === 'green' ? 'bg-green-500' :
                   statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
                 }
@@ -241,7 +230,7 @@ export default function CampaignProgressModalV2({
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-1">
               <Button
                 variant="ghost"
@@ -249,8 +238,10 @@ export default function CampaignProgressModalV2({
                 onClick={onExpand}
                 className={`
                   w-8 h-8 p-0 rounded-lg
-                  ${isDark 
-                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
+                  ${isDark
+
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white'
+
                     : 'hover:bg-gray-200 text-gray-500 hover:text-gray-900'
                   }
                 `}
@@ -264,8 +255,10 @@ export default function CampaignProgressModalV2({
                 onClick={onClose}
                 className={`
                   w-8 h-8 p-0 rounded-lg
-                  ${isDark 
-                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
+                  ${isDark
+
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-white'
+
                     : 'hover:bg-gray-200 text-gray-500 hover:text-gray-900'
                   }
                 `}
@@ -304,7 +297,8 @@ export default function CampaignProgressModalV2({
                   transition={{ duration: 0.8, ease: "easeOut" }}
                   className={`
                     h-full rounded-full
-                    ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                    ${statusInfo.color === 'blue' ? 'bg-blue-500' :
+
                       statusInfo.color === 'green' ? 'bg-green-500' :
                       statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
                     }
@@ -317,8 +311,10 @@ export default function CampaignProgressModalV2({
             <div className="grid grid-cols-3 gap-3">
               <div className={`
                 p-3 rounded-lg text-center border
-                ${isDark 
-                  ? 'bg-gray-800/50 border-gray-700' 
+                ${isDark
+
+                  ? 'bg-gray-800/50 border-gray-700'
+
                   : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm'
                 }
               `}>
@@ -335,11 +331,13 @@ export default function CampaignProgressModalV2({
                   {totalLeads}
                 </p>
               </div>
-              
+
               <div className={`
                 p-3 rounded-lg text-center border
-                ${isDark 
-                  ? 'bg-gray-800/50 border-gray-700' 
+                ${isDark
+
+                  ? 'bg-gray-800/50 border-gray-700'
+
                   : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-sm'
                 }
               `}>
@@ -356,11 +354,13 @@ export default function CampaignProgressModalV2({
                   {successCount}
                 </p>
               </div>
-              
+
               <div className={`
                 p-3 rounded-lg text-center border
-                ${isDark 
-                  ? 'bg-gray-800/50 border-gray-700' 
+                ${isDark
+
+                  ? 'bg-gray-800/50 border-gray-700'
+
                   : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-sm'
                 }
               `}>
@@ -463,8 +463,10 @@ export default function CampaignProgressModalV2({
           transition={{ type: "spring", duration: 0.3 }}
           className={`
             relative w-full max-w-2xl mx-auto
-            ${isDark 
-              ? 'bg-gray-900 border-gray-700 text-white' 
+            ${isDark
+
+              ? 'bg-gray-900 border-gray-700 text-white'
+
               : 'bg-white border-gray-200 text-gray-900'
             }
             rounded-2xl border shadow-2xl max-h-[90vh] overflow-y-auto
@@ -478,7 +480,8 @@ export default function CampaignProgressModalV2({
             <div className="flex items-center space-x-3">
               <div className={`
                 w-10 h-10 rounded-xl flex items-center justify-center
-                ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                ${statusInfo.color === 'blue' ? 'bg-blue-500' :
+
                   statusInfo.color === 'green' ? 'bg-green-500' :
                   statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
                 }
@@ -497,15 +500,17 @@ export default function CampaignProgressModalV2({
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onMinimize}
                 className={`
-                  ${isDark 
-                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                  ${isDark
+
+                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white'
+
                     : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
                   }
                 `}
@@ -518,8 +523,10 @@ export default function CampaignProgressModalV2({
                 size="sm"
                 onClick={onClose}
                 className={`
-                  ${isDark 
-                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white' 
+                  ${isDark
+
+                    ? 'hover:bg-gray-800 text-gray-400 hover:text-white'
+
                     : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
                   }
                 `}
@@ -559,7 +566,8 @@ export default function CampaignProgressModalV2({
                       transition={{ duration: 0.5, ease: "easeOut" }}
                       className={`
                         h-full rounded-full
-                        ${statusInfo.color === 'blue' ? 'bg-blue-500' : 
+                        ${statusInfo.color === 'blue' ? 'bg-blue-500' :
+
                           statusInfo.color === 'green' ? 'bg-green-500' :
                           statusInfo.color === 'red' ? 'bg-red-500' : 'bg-gray-500'
                         }
@@ -574,16 +582,20 @@ export default function CampaignProgressModalV2({
                 {/* Total */}
                 <div className={`
                   p-4 rounded-xl border
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-700' 
+                  ${isDark
+
+                    ? 'bg-gray-800 border-gray-700'
+
                     : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                      ${isDark 
-                        ? 'bg-gradient-to-br from-blue-500 to-blue-600' 
+                      ${isDark
+
+                        ? 'bg-gradient-to-br from-blue-500 to-blue-600'
+
                         : 'bg-gradient-to-br from-blue-500 to-indigo-600'
                       }
                     `}>
@@ -609,16 +621,20 @@ export default function CampaignProgressModalV2({
                 {/* Enviados */}
                 <div className={`
                   p-4 rounded-xl border
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-700' 
+                  ${isDark
+
+                    ? 'bg-gray-800 border-gray-700'
+
                     : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                      ${isDark 
-                        ? 'bg-gradient-to-br from-green-500 to-green-600' 
+                      ${isDark
+
+                        ? 'bg-gradient-to-br from-green-500 to-green-600'
+
                         : 'bg-gradient-to-br from-green-500 to-emerald-600'
                       }
                     `}>
@@ -644,16 +660,20 @@ export default function CampaignProgressModalV2({
                 {/* Falhas */}
                 <div className={`
                   p-4 rounded-xl border
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-700' 
+                  ${isDark
+
+                    ? 'bg-gray-800 border-gray-700'
+
                     : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                      ${isDark 
-                        ? 'bg-gradient-to-br from-red-500 to-red-600' 
+                      ${isDark
+
+                        ? 'bg-gradient-to-br from-red-500 to-red-600'
+
                         : 'bg-gradient-to-br from-red-500 to-rose-600'
                       }
                     `}>
@@ -679,16 +699,20 @@ export default function CampaignProgressModalV2({
                 {/* Tempo */}
                 <div className={`
                   p-4 rounded-xl border
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-700' 
+                  ${isDark
+
+                    ? 'bg-gray-800 border-gray-700'
+
                     : 'bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                      ${isDark 
-                        ? 'bg-gradient-to-br from-purple-500 to-purple-600' 
+                      ${isDark
+
+                        ? 'bg-gradient-to-br from-purple-500 to-purple-600'
+
                         : 'bg-gradient-to-br from-purple-500 to-violet-600'
                       }
                     `}>
@@ -718,16 +742,20 @@ export default function CampaignProgressModalV2({
                 {statusInfo.showTimeEstimate && (
                   <div className={`
                     p-4 rounded-xl border
-                    ${isDark 
-                      ? 'bg-gray-800 border-gray-700' 
+                    ${isDark
+
+                      ? 'bg-gray-800 border-gray-700'
+
                       : 'bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200 shadow-sm'
                     }
                   `}>
                     <div className="flex items-center space-x-3">
                       <div className={`
                         w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                        ${isDark 
-                          ? 'bg-gradient-to-br from-amber-500 to-amber-600' 
+                        ${isDark
+
+                          ? 'bg-gradient-to-br from-amber-500 to-amber-600'
+
                           : 'bg-gradient-to-br from-amber-500 to-yellow-600'
                         }
                       `}>
@@ -760,16 +788,20 @@ export default function CampaignProgressModalV2({
                 {/* Taxa de Sucesso */}
                 <div className={`
                   p-4 rounded-xl border
-                  ${isDark 
-                    ? 'bg-gray-800 border-gray-700' 
+                  ${isDark
+
+                    ? 'bg-gray-800 border-gray-700'
+
                     : 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200 shadow-sm'
                   }
                 `}>
                   <div className="flex items-center space-x-3">
                     <div className={`
                       w-10 h-10 rounded-xl flex items-center justify-center shadow-lg
-                      ${isDark 
-                        ? 'bg-gradient-to-br from-emerald-500 to-emerald-600' 
+                      ${isDark
+
+                        ? 'bg-gradient-to-br from-emerald-500 to-emerald-600'
+
                         : 'bg-gradient-to-br from-emerald-500 to-teal-600'
                       }
                     `}>

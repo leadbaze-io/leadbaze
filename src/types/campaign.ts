@@ -10,7 +10,7 @@ export interface Campaign {
   name: string
   message: string
   status: 'draft' | 'active' | 'completed' | 'paused' | 'scheduled' | 'sending' | 'failed'
-  
+
   // Contadores
   total_leads: number
   unique_leads: number
@@ -19,7 +19,7 @@ export interface Campaign {
   ignored_lists_count: number
   success_count: number
   failed_count: number
-  
+
   // Timestamps
   created_at: string
   updated_at: string

@@ -11,18 +11,21 @@ interface BlogPostCardProps {
   showStats?: boolean;
 }
 
-export default function BlogPostCard({ 
-  post, 
+export default function BlogPostCard({
+
+  post,
+
   variant = 'default',
   showAuthor = false, // Removido por padrão
   showStats = true
 }: BlogPostCardProps) {
   const formattedDate = BlogService.formatDate(post.publishedAt);
-  
+
   if (variant === 'featured') {
     return (
       <article className="group relative">
-        <Link 
+        <Link
+
           to={`/blog/${post.slug}`}
           className="block bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
         >
@@ -34,8 +37,6 @@ export default function BlogPostCard({
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            
-            
             {/* Read Time Badge */}
             <div className="absolute top-4 right-4">
               <div className="flex items-center space-x-1 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full border border-white/20 shadow-sm">
@@ -44,19 +45,19 @@ export default function BlogPostCard({
               </div>
             </div>
           </div>
-          
+
           {/* Content Section */}
           <div className="p-7">
             {/* Title */}
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight min-h-[3.5rem]">
               {post.title}
             </h2>
-            
+
             {/* Excerpt */}
             <p className="text-gray-600 mb-5 leading-relaxed line-clamp-3">
               {post.excerpt}
             </p>
-            
+
             {/* Meta Info */}
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
               <div className="flex items-center space-x-4 text-sm text-gray-500">
@@ -66,14 +67,14 @@ export default function BlogPostCard({
                     <span className="font-medium text-gray-700">{post.author.name}</span>
                   </div>
                 )}
-                
+
                 {/* Date */}
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-1 text-gray-400" />
                   <span>{formattedDate}</span>
                 </div>
               </div>
-              
+
               {/* CTA Button */}
               <div className="flex items-center space-x-2 text-blue-600 font-medium group-hover:text-blue-700 transition-colors">
                 <span>Ler artigo</span>
@@ -87,11 +88,12 @@ export default function BlogPostCard({
       </article>
     );
   }
-  
+
   if (variant === 'compact') {
     return (
       <article className="group">
-        <Link 
+        <Link
+
           to={`/blog/${post.slug}`}
           className="flex items-start space-x-4 p-4 bg-white  rounded-xl hover:bg-gray-50  transition-colors"
         >
@@ -103,7 +105,7 @@ export default function BlogPostCard({
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
           </div>
-          
+
           {/* Content */}
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-3 leading-tight">
@@ -121,11 +123,12 @@ export default function BlogPostCard({
       </article>
     );
   }
-  
+
   // Default variant - Compact and uniform design
   return (
     <article className="h-full">
-      <Link 
+      <Link
+
         to={`/blog/${post.slug}`}
         className="block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 hover:border-blue-200 h-full flex flex-col"
       >
@@ -137,17 +140,17 @@ export default function BlogPostCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        
+
         {/* Content */}
         <div className="p-5 flex-1 flex flex-col">
           <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-3 h-16 leading-tight">
             {post.title}
           </h3>
-          
+
           <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
             {post.excerpt}
           </p>
-          
+
           {/* Meta Info */}
           <div className="pt-3 border-t border-gray-100 mt-auto">
             <div className="flex items-center justify-between text-xs text-gray-500">
@@ -158,14 +161,14 @@ export default function BlogPostCard({
                     <span className="text-xs font-medium text-gray-600">{post.author.name}</span>
                   </div>
                 )}
-                
+
                 {/* Date */}
                 <div className="flex items-center">
                   <Calendar className="w-3 h-3 mr-1" />
                   <span className="text-xs">{formattedDate}</span>
                 </div>
               </div>
-              
+
               {/* CTA */}
               <div className="text-blue-600 font-medium text-xs">
                 Ler →

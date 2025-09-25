@@ -31,11 +31,11 @@ export function AnimatedCounter({
       const animateCount = (timestamp: number) => {
         if (!startTime) startTime = timestamp
         const progress = Math.min((timestamp - startTime) / duration, 1)
-        
+
         // Easing function for smooth animation
         const easeOutCubic = 1 - Math.pow(1 - progress, 3)
         const currentValue = easeOutCubic * value
-        
+
         // Handle decimal values properly
         if (value % 1 !== 0) {
           // For decimal values, use toFixed(2) to maintain precision
@@ -44,14 +44,14 @@ export function AnimatedCounter({
           // For integer values, use Math.floor
           setCount(Math.floor(currentValue))
         }
-        
+
         if (progress < 1) {
           requestAnimationFrame(animateCount)
         } else {
           setCount(value)
         }
       }
-      
+
       requestAnimationFrame(animateCount)
     }, delay)
 

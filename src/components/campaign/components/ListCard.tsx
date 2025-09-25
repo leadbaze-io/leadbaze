@@ -50,7 +50,8 @@ export const ListCard: React.FC<ListCardProps> = ({
       whileHover={{ y: -2, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      <Card 
+      <Card
+
         className={`transition-all duration-300 hover:shadow-xl ${getCardClass()} cursor-pointer sm:cursor-default`}
         onClick={(e) => {
           // No mobile, permitir toque no card inteiro para adicionar/remover
@@ -64,14 +65,15 @@ export const ListCard: React.FC<ListCardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               {/* Ícone otimizado para mobile */}
-              <motion.div 
+              <motion.div
+
                 className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg"
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 transition={{ duration: 0.2 }}
               >
                 <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </motion.div>
-              
+
               <div className="flex-1 min-w-0 overflow-hidden">
                 <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate mb-1" title={list.name}>
                   {list.name}
@@ -87,7 +89,7 @@ export const ListCard: React.FC<ListCardProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {!isIgnored && (
                 <motion.div
@@ -106,7 +108,7 @@ export const ListCard: React.FC<ListCardProps> = ({
                   </Button>
                 </motion.div>
               )}
-              
+
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -118,8 +120,10 @@ export const ListCard: React.FC<ListCardProps> = ({
                   onClick={onToggle}
                   disabled={loading}
                   className={`h-8 w-8 p-0 ${
-                    isSelected 
-                      ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg" 
+                    isSelected
+
+                      ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg"
+
                       : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-md hover:shadow-lg"
                   } transition-all duration-200`}
                 >

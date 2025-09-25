@@ -48,7 +48,8 @@ export function useCampaignSteps({
 
   // Função para toggle de lista
   const toggleList = useCallback((listId: string) => {
-    setSelectedLists(prev => 
+    setSelectedLists(prev =>
+
       prev.includes(listId)
         ? prev.filter(id => id !== listId)
         : [...prev, listId]
@@ -72,7 +73,7 @@ export function useCampaignSteps({
             lead_hash: `${listId}-${lead.phone}`,
             added_at: new Date().toISOString()
           }))
-        
+
         setCampaignLeads(prev => [...prev, ...newLeads])
       }
     } else {
@@ -118,13 +119,13 @@ export function useCampaignSteps({
     selectedLists,
     message,
     campaignLeads,
-    
+
     // Funções de navegação
     goToStep,
     nextStep,
     prevStep,
     resetWizard,
-    
+
     // Funções de dados
     setMessage,
     toggleList,
@@ -132,7 +133,7 @@ export function useCampaignSteps({
     removeLead,
     removeListLeads,
     setCampaignLeads,
-    
+
     // Validações
     isStep1Valid,
     isStep2Valid,

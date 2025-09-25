@@ -76,7 +76,7 @@ class BlogAutomationServiceClient {
 
   constructor() {
     this.baseUrl = import.meta.env.VITE_BACKEND_URL || (process.env.NODE_ENV === 'production' ? 'https://leadbaze.io' : '');
-    
+
     // Escutar mudanças de autenticação
     supabase.auth.onAuthStateChange((_event, session) => {
       this.currentUser = session?.user ? {
@@ -91,13 +91,13 @@ class BlogAutomationServiceClient {
    */
   private async generateEmailHash(email: string): Promise<string> {
     const salt = 'leadflow-blog-automation-2024'; // Mesmo salt do backend
-    
+
     try {
       // Usar Web Crypto API para HMAC-SHA256
       const encoder = new TextEncoder();
       const keyData = encoder.encode(salt);
       const messageData = encoder.encode(email);
-      
+
       const key = await crypto.subtle.importKey(
         'raw',
         keyData,
@@ -105,12 +105,12 @@ class BlogAutomationServiceClient {
         false,
         ['sign']
       );
-      
+
       const signature = await crypto.subtle.sign('HMAC', key, messageData);
       const hashArray = Array.from(new Uint8Array(signature));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     } catch (error) {
-      console.warn('Erro ao gerar hash do e-mail:', error);
+
       // Fallback para e-mail direto se crypto falhar
       return email;
     }
@@ -121,19 +121,19 @@ class BlogAutomationServiceClient {
    */
   async isAuthorizedAdmin(): Promise<boolean> {
     if (!this.currentUser?.email) return false;
-    
+
     // Verificação por e-mail direto (fallback)
     if (this.currentUser.email === 'creaty12345@gmail.com') {
       return true;
     }
-    
+
     // Verificação por hash (mais seguro)
     try {
       const emailHash = await this.generateEmailHash(this.currentUser.email);
       const expectedHash = '742b0188bdd92a56f71b6cd8cd3f10679af59842413ae26468f681e129584747';
       return emailHash === expectedHash;
     } catch (error) {
-      console.warn('Erro ao verificar hash do e-mail:', error);
+
       return false;
     }
   }
@@ -159,9 +159,6 @@ class BlogAutomationServiceClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const headers = this.getHeaders();
-
-    console.log('🌐 [BlogAutomation] ===== FAZENDO FETCH =====');
-    console.log('🌐 [BlogAutomation] URL completa:', url);
     console.log('📋 [BlogAutomation] Headers:', JSON.stringify(headers, null, 2));
     console.log('⚙️ [BlogAutomation] Options:', JSON.stringify(options, null, 2));
     console.log('⏰ [BlogAutomation] Timestamp da requisição:', new Date().toISOString());
@@ -173,26 +170,19 @@ class BlogAutomationServiceClient {
         ...options.headers,
       },
     });
-
-    console.log('📡 [BlogAutomation] ===== RESPOSTA RECEBIDA =====');
-    console.log('📡 [BlogAutomation] Response status:', response.status);
-    console.log('📡 [BlogAutomation] Response ok:', response.ok);
-    console.log('📡 [BlogAutomation] Response statusText:', response.statusText);
     console.log('📡 [BlogAutomation] Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
-      console.error('❌ [BlogAutomation] ===== ERRO HTTP =====');
+
       const errorData = await response.json().catch(() => ({}));
       console.error('❌ [BlogAutomation] Error data:', JSON.stringify(errorData, null, 2));
       throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
     }
-
-    console.log('✅ [BlogAutomation] ===== PROCESSANDO RESPOSTA =====');
     const result = await response.json();
-    console.log('📄 [BlogAutomation] Response data tipo:', typeof result);
+
     console.log('📄 [BlogAutomation] Response data completo:', JSON.stringify(result, null, 2));
     console.log('⏰ [BlogAutomation] Timestamp da resposta:', new Date().toISOString());
-    
+
     return result;
   }
 
@@ -227,40 +217,22 @@ class BlogAutomationServiceClient {
    * Processar fila manualmente
    */
   async processQueue(): Promise<ProcessResult> {
-    console.log('🚀 [BlogAutomation] ===== INICIANDO PROCESSAMENTO DA FILA =====');
-    console.log('👤 [BlogAutomation] Usuário atual:', this.currentUser?.email);
-    console.log('🔧 [BlogAutomation] Base URL:', this.baseUrl);
     console.log('⏰ [BlogAutomation] Timestamp:', new Date().toISOString());
-    
+
     this.ensureAdminAccess();
-    console.log('✅ [BlogAutomation] Verificação de admin passou');
-    
+
     try {
-      console.log('📡 [BlogAutomation] ===== FAZENDO REQUISIÇÃO =====');
-      console.log('🌐 [BlogAutomation] URL completa:', `${this.baseUrl}/api/blog/automation/admin/process`);
       console.log('📋 [BlogAutomation] Headers que serão enviados:', this.getHeaders());
-      console.log('⚙️ [BlogAutomation] Options:', { method: 'POST' });
-      
+
       const result = await this.request<ProcessResult>('/api/blog/automation/admin/process', {
         method: 'POST',
       });
-      
-      console.log('✅ [BlogAutomation] ===== RESULTADO RECEBIDO =====');
-      console.log('📄 [BlogAutomation] Tipo do resultado:', typeof result);
       console.log('📄 [BlogAutomation] Resultado completo:', JSON.stringify(result, null, 2));
-      console.log('📄 [BlogAutomation] result.success:', result?.success);
-      console.log('📄 [BlogAutomation] result.processed:', result?.processed);
-      console.log('📄 [BlogAutomation] result.errors:', result?.errors);
-      console.log('📄 [BlogAutomation] result.details:', result?.details);
-      
       return result;
-      
+
     } catch (error) {
-      console.error('❌ [BlogAutomation] ===== ERRO NO PROCESSAMENTO =====');
-      console.error('❌ [BlogAutomation] Tipo do erro:', typeof error);
-      console.error('❌ [BlogAutomation] Erro completo:', error);
       console.error('❌ [BlogAutomation] Error message:', error instanceof Error ? error.message : String(error));
-      console.error('❌ [BlogAutomation] Error stack:', error instanceof Error ? error.stack : 'N/A');
+
       throw error;
     }
   }
@@ -343,7 +315,7 @@ class BlogAutomationServiceClient {
    */
   subscribeToQueueChanges(callback: (payload: { id: string; status: string; message?: string }) => void) {
     if (!this.isAuthorizedAdmin()) {
-      console.warn('Subscription para fila requer acesso admin');
+
       return null;
     }
 
@@ -404,15 +376,15 @@ class BlogAutomationServiceClient {
     if (item.error_message) {
       return { status: 'Erro', color: 'text-red-500', icon: '❌' };
     }
-    
+
     if (item.processed && item.blog_post_id) {
       return { status: 'Publicado', color: 'text-green-500', icon: '✅' };
     }
-    
+
     if (item.processed) {
       return { status: 'Processado', color: 'text-blue-500', icon: '🔄' };
     }
-    
+
     return { status: 'Pendente', color: 'text-yellow-500', icon: '⏳' };
   }
 
@@ -422,7 +394,7 @@ class BlogAutomationServiceClient {
   calculateProgress(stats: BlogAutomationStats): number {
     const total = stats.total_queue;
     if (total === 0) return 100;
-    
+
     const completed = stats.processed;
     return Math.round((completed / total) * 100);
   }
@@ -432,15 +404,15 @@ class BlogAutomationServiceClient {
    */
   getStatusSummary(stats: BlogAutomationStats): string {
     const { pending, processed, errors } = stats;
-    
+
     if (errors > 0) {
       return `${processed} processados, ${pending} pendentes, ${errors} erros`;
     }
-    
+
     if (pending === 0) {
       return 'Todos os itens foram processados';
     }
-    
+
     return `${processed} processados, ${pending} pendentes`;
   }
 }

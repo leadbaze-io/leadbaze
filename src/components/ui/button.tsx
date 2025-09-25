@@ -24,7 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
-  
+
   const variantClasses = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm',
     secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 focus:ring-blue-500 border border-gray-300 dark:border-gray-600',
@@ -34,7 +34,7 @@ export const Button: React.FC<ButtonProps> = ({
     gradient: 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:opacity-90 focus:ring-blue-500 shadow-sm',
     default: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm'
   }
-  
+
   const sizeClasses = {
     sm: 'h-8 px-3 text-sm',
     md: 'h-10 px-4 text-sm',
@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
     icon: 'h-10 w-10',
     default: 'h-10 px-4 text-sm'
   }
-  
+
   return (
     <button
       className={cn(

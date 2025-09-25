@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { 
-  Loader, 
-  BarChart3, 
-  Home, 
-  Users, 
-  Target, 
+import {
+
+  Loader,
+
+  BarChart3,
+
+  Home,
+
+  Users,
+
+  Target,
+
   CheckCircle,
   ArrowRight,
   Sparkles,
@@ -52,7 +58,7 @@ export default function Dashboard() {
     if (subscription?.plan_display_name) {
       return subscription.plan_display_name
     }
-    
+
     // Fallback para plan_name
     const planName = subscription?.plan_name || ''
     switch (planName) {
@@ -88,7 +94,7 @@ export default function Dashboard() {
     if (isFreeTrial) {
       return 'bg-blue-400'
     }
-    
+
     switch (status) {
       case 'active':
         return 'bg-green-400'
@@ -103,11 +109,11 @@ export default function Dashboard() {
 
   const getUsagePercentage = () => {
     if (!subscription) return 0
-    
+
     // Calcular porcentagem baseada no total de leads disponíveis (usados + restantes)
     const totalLeadsAvailable = subscription.leads_used + subscription.leads_remaining
     if (totalLeadsAvailable <= 0) return 0
-    
+
     return Math.round((subscription.leads_used / totalLeadsAvailable) * 100)
   }
 
@@ -129,7 +135,7 @@ export default function Dashboard() {
         }
         setUser(currentUser)
       } catch (error) {
-        console.error('Erro ao verificar usuário:', error)
+
         navigate('/login')
         setTimeout(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -143,7 +149,7 @@ export default function Dashboard() {
   }, [navigate])
 
   const handleSelectList = (list: LeadList) => {
-    console.log('Lista selecionada:', list.name)
+
     navigate(`/lista/${list.id}`)
   }
 
@@ -203,7 +209,7 @@ export default function Dashboard() {
                 opacity: 0.1
               }}></div>
             </div>
-            
+
             <div className="relative z-10">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="space-y-4">
@@ -225,7 +231,7 @@ export default function Dashboard() {
                       </p>
                     </div>
                   </motion.div>
-                  
+
                   <motion.p
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -235,14 +241,14 @@ export default function Dashboard() {
                     Gerencie suas listas de leads e maximize suas conversões com nossa plataforma inteligente
                   </motion.p>
                 </div>
-                
+
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
                   className="flex flex-col sm:flex-row lg:flex-col gap-4"
                 >
-                  
+
                   {/* Status Card */}
                   <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/30">
                     {subscriptionLoading ? (
@@ -261,7 +267,7 @@ export default function Dashboard() {
                           </div>
                           {getPlanIcon((subscription as any).plan_name || '')}
                         </div>
-                        
+
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-white/80">Leads restantes</span>
@@ -270,7 +276,8 @@ export default function Dashboard() {
                             </span>
                           </div>
                           <div className="w-full bg-white/20 rounded-full h-2">
-                            <div 
+                            <div
+
                               className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-300"
                               style={{ width: getUsageBarWidth() }}
                             ></div>
@@ -281,9 +288,11 @@ export default function Dashboard() {
                               <span>Status: {subscription.status === 'active' ? 'Ativo' : subscription.status === 'cancelled' ? 'Cancelado' : subscription.status}</span>
                             </div>
                             <span>
-                              {subscription.is_free_trial 
+                              {subscription.is_free_trial
+
                                 ? `Expira em ${formatDate(subscription.current_period_end)}`
-                                : subscription.status === 'cancelled' 
+                                : subscription.status === 'cancelled'
+
                                   ? `Acesso até ${formatDate(subscription.current_period_end)}`
                                   : `Renova em ${formatDate(subscription.current_period_end)}`
                               }
@@ -300,7 +309,7 @@ export default function Dashboard() {
                           </div>
                           <Award className="w-5 h-5 text-gray-300" />
                         </div>
-                        
+
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-white/80">Leads disponíveis</span>
@@ -355,7 +364,7 @@ export default function Dashboard() {
                   />
                 )}
               </button>
-              
+
               <button
                 onClick={() => setActiveTab('analytics')}
                 className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
@@ -391,7 +400,8 @@ export default function Dashboard() {
               transition={{ duration: 0.3 }}
             >
               {/* Gerenciador de Listas */}
-              <ListManager 
+              <ListManager
+
                 onSelectList={handleSelectList}
               />
             </motion.div>
@@ -424,9 +434,10 @@ export default function Dashboard() {
               Comece a gerar leads e maximizar suas conversões
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div 
+            <motion.div
+
               whileHover={{ scale: 1.02, y: -8 }}
               whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
@@ -468,7 +479,8 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
+
               whileHover={{ scale: 1.02, y: -8 }}
               whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
@@ -599,10 +611,10 @@ export default function Dashboard() {
         </motion.div>
         </div>
       </div>
-      
+
       {/* Footer */}
         <Footer />
-        
+
         {/* Botão Voltar ao Topo */}
         <ScrollToTopButton />
       </div>

@@ -35,7 +35,8 @@ export default function Footer() {
               <LogoImage className="h-9 w-auto" />
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
-              A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps. 
+              A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps.
+
               Transforme localizações em oportunidades de negócio.
             </p>
             <div className="flex space-x-4">
@@ -57,7 +58,8 @@ export default function Footer() {
               {/* Links para usuários NÃO logados */}
               {!user && (
                 <>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/')
                       // Scroll para o topo após navegação
@@ -69,12 +71,15 @@ export default function Footer() {
                   >
                     Início
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       // Verificar se estamos na landing page
                       if (window.location.pathname === '/') {
-                        document.getElementById('pricing-plans-section')?.scrollIntoView({ 
-                          behavior: 'smooth' 
+                        document.getElementById('pricing-plans-section')?.scrollIntoView({
+
+                          behavior: 'smooth'
+
                         })
                       } else {
                         // Se não estiver na landing page, navegar para lá
@@ -82,17 +87,17 @@ export default function Footer() {
                         setTimeout(() => {
                           // Tentar múltiplos métodos para encontrar a seção
                           let pricingSection = document.getElementById('pricing-plans-section')
-                          
+
                           // Verificar se é a seção correta (não mobile)
                           if (pricingSection && pricingSection.classList.contains('md:hidden')) {
                             pricingSection = null
                           }
-                          
+
                           // Se não encontrar, tentar por classe (desktop)
                           if (!pricingSection) {
                             pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
                           }
-                          
+
                           // Se ainda não encontrar, tentar por texto (desktop)
                           if (!pricingSection) {
                             const sections = document.querySelectorAll('section:not(.md\\:hidden)')
@@ -103,16 +108,16 @@ export default function Footer() {
                               }
                             }
                           }
-                          
+
                           // Fallback: usar qualquer seção com pricing
                           if (!pricingSection) {
                             pricingSection = document.querySelector('[id*="pricing"]')
                           }
-                          
+
                           if (pricingSection) {
                             const elementPosition = pricingSection.getBoundingClientRect().top
                             const offsetPosition = elementPosition + window.pageYOffset - 80
-                            
+
                             window.scrollTo({
                               top: offsetPosition,
                               behavior: 'smooth'
@@ -131,7 +136,8 @@ export default function Footer() {
                   >
                     Planos
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/blog/sobre')
                       // Scroll para o topo após navegação
@@ -143,7 +149,8 @@ export default function Footer() {
                   >
                     Sobre
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/blog')
                       // Scroll para o topo após navegação
@@ -157,11 +164,12 @@ export default function Footer() {
                   </button>
                 </>
               )}
-              
+
               {/* Links para usuários logados */}
               {user && (
                 <>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/profile')
                       // Scroll para o topo após navegação
@@ -173,7 +181,8 @@ export default function Footer() {
                   >
                     Meu Perfil
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/dashboard')
                       // Scroll para o topo após navegação
@@ -185,7 +194,8 @@ export default function Footer() {
                   >
                     Dashboard
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/gerador')
                       // Scroll para o topo após navegação
@@ -197,7 +207,8 @@ export default function Footer() {
                   >
                     Gerar Leads
                   </button>
-                  <button 
+                  <button
+
                     onClick={() => {
                       handleNavigation('/disparador')
                       // Scroll para o topo após navegação
@@ -213,93 +224,77 @@ export default function Footer() {
               )}
             </div>
           </div>
-
-
           {/* Suporte */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Suporte</h3>
             <div className="space-y-2">
-              <button 
+              <button
+
                 onClick={() => {
-                  console.log('📍 1. Botão FAQ clicado');
-                  
+
                   // Verificar se o elemento existe
                   const faqSection = document.getElementById('faq-section-desktop');
-                  console.log('📍 2. Elemento FAQ encontrado:', faqSection);
-                  
+
                   if (faqSection) {
-                    console.log('📍 3. Propriedades do elemento FAQ:');
-                    console.log('   - ID:', faqSection.id);
-                    console.log('   - Tag:', faqSection.tagName);
-                    console.log('   - Classes:', faqSection.className);
-                    console.log('   - offsetTop:', faqSection.offsetTop);
-                    console.log('   - offsetHeight:', faqSection.offsetHeight);
                     console.log('   - getBoundingClientRect():', faqSection.getBoundingClientRect());
-                    
+
                     // Verificar posição atual da página
                     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                    console.log('📍 4. Posição atual do scroll:', currentScroll);
-                    
+
                     // Verificar se o elemento está visível
                     const rect = faqSection.getBoundingClientRect();
-                    console.log('📍 5. Posição relativa ao viewport:', rect);
-                    console.log('   - Está visível?', rect.top >= 0 && rect.bottom <= window.innerHeight);
-                    
                     // Tentar scroll
-                    console.log('📍 6. Tentando scroll...');
+
                     try {
-                      faqSection.scrollIntoView({ 
-                        behavior: 'smooth', 
+                      faqSection.scrollIntoView({
+
+                        behavior: 'smooth',
+
                         block: 'start'
                       });
-                      console.log('✅ scrollIntoView executado com sucesso');
+
                     } catch (error) {
-                      console.error('❌ Erro no scrollIntoView:', error);
+
                     }
-                    
+
                     // Verificar posição após scroll
                     setTimeout(() => {
                       const newScroll = window.pageYOffset || document.documentElement.scrollTop;
-                      console.log('📍 7. Nova posição do scroll após 500ms:', newScroll);
-                      console.log('📍 8. Diferença:', newScroll - currentScroll);
-                      
                       // Tentar método alternativo se não funcionou
                       if (Math.abs(newScroll - currentScroll) < 10) {
-                        console.log('📍 9. scrollIntoView não funcionou, tentando window.scrollTo...');
+
                         const targetPosition = faqSection.offsetTop - 100;
                         window.scrollTo({
                           top: targetPosition,
                           behavior: 'smooth'
                         });
-                        console.log('📍 10. window.scrollTo executado para posição:', targetPosition);
+
                       }
                     }, 500);
-                    
+
                   } else {
-                    console.log('❌ Elemento FAQ não encontrado!');
-                    console.log('📍 Procurando por elementos com ID similar...');
-                    
                     // Procurar por elementos similares
                     const allSections = document.querySelectorAll('section');
-                    console.log('📍 Todas as seções encontradas:', allSections.length);
+
                     allSections.forEach((section, index) => {
-                      console.log(`   ${index}:`, section.id, section.className);
+
                     });
-                    
+
                     // Procurar por elementos com "faq" no ID ou classe
                     const faqElements = document.querySelectorAll('[id*="faq"], [class*="faq"]');
-                    console.log('📍 Elementos com "faq" no ID ou classe:', faqElements.length);
+
                     faqElements.forEach((el, index) => {
-                      console.log(`   ${index}:`, el.tagName, el.id, el.className);
+
                     });
                   }
-                  
+
                 }}
                 className="block text-gray-300 hover:text-white transition-colors text-left w-full"
               >
                 FAQ
               </button>
-              <button 
+              <button
+
                 onClick={() => {
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}

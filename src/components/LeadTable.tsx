@@ -21,10 +21,10 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
       const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            lead.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            (lead.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
-      
+
       const matchesRating = !lead.rating || lead.rating >= minRating
       const matchesReviews = !lead.reviews_count || lead.reviews_count >= minReviews
-      
+
       return matchesSearch && matchesRating && matchesReviews
     })
 
@@ -65,9 +65,6 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
       setSortOrder('asc')
     }
   }
-
-
-
   const exportToCSV = () => {
     const headers = ['Nome', 'Endereço', 'Telefone', 'Avaliação', 'Website', 'Tipo de Negócio']
     const csvData = [
@@ -106,7 +103,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
               {filteredAndSortedLeads.length} de {leads.length} leads
             </p>
           </div>
-          
+
           <button
             onClick={exportToCSV}
             className="inline-flex items-center space-x-2 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
@@ -205,13 +202,15 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
         <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th 
+              <th
+
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => handleSort('name')}
               >
                 Estabelecimento & Cidade
               </th>
-              <th 
+              <th
+
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
                 onClick={() => handleSort('rating')}
               >
@@ -232,7 +231,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                   <div className="flex items-start space-x-3">
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">{lead.name}</div>
-                      
+
                       {/* Cidade abaixo do nome */}
                       <div className="flex items-start space-x-2 mb-2">
                         <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
@@ -291,8 +290,10 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                     <DollarSign className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                     <div className="flex">
                       {Array.from({ length: 4 }, (_, i) => (
-                        <span 
-                          key={i} 
+                        <span
+
+                          key={i}
+
                           className={`text-xs ${i < lead.price_level! ? 'text-green-600 dark:text-green-400' : 'text-gray-300 dark:text-gray-600'}`}
                         >
                           $
@@ -309,7 +310,8 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                 {lead.phone && (
                   <div className="flex items-center space-x-2">
                     <Phone className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    <a 
+                    <a
+
                       href={`tel:${lead.phone}`}
                       className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                     >
@@ -317,12 +319,13 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
                     </a>
                   </div>
                 )}
-                
+
                 {/* Website */}
                 {lead.website && (
                   <div className="flex items-center space-x-2">
                     <Globe className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    <a 
+                    <a
+
                       href={lead.website}
                       target="_blank"
                       rel="noopener noreferrer"

@@ -44,10 +44,14 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
     <motion.div
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 400, 
-        damping: 17 
+      transition={{
+
+        type: "spring",
+
+        stiffness: 400,
+
+        damping: 17
+
       }}
     >
       <Button
@@ -70,7 +74,8 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           {icon && (
             <motion.div
               animate={loading ? { rotate: 360 } : { rotate: 0 }}
-              transition={{ 
+              transition={{
+
                 duration: loading ? 1 : 0.3,
                 repeat: loading ? Infinity : 0,
                 ease: "linear"
@@ -79,9 +84,9 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
               {icon}
             </motion.div>
           )}
-          
+
           <span>{children}</span>
-          
+
           {count !== undefined && count > 0 && (
             <motion.span
               className="ml-1 text-xs bg-white/20 text-white px-1.5 py-0.5 rounded-full"

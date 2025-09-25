@@ -19,15 +19,15 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function formatPhone(phone: string): string {
   if (!phone) return ''
-  
+
   const cleaned = phone.replace(/\D/g, '')
-  
+
   if (cleaned.length === 11) {
     return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
   } else if (cleaned.length === 10) {
     return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
   }
-  
+
   return phone
 }
 
@@ -55,7 +55,7 @@ export function debounce<T extends (...args: any[]) => any>(
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null
-  
+
   return (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => func(...args), wait)
@@ -70,7 +70,7 @@ export function throttle<T extends (...args: any[]) => any>(
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args)
@@ -108,12 +108,12 @@ export function formatRelativeTime(date: string | Date): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date
   const now = new Date()
   const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000)
-  
+
   if (diffInSeconds < 60) return 'agora mesmo'
   if (diffInSeconds < 3600) return `há ${Math.floor(diffInSeconds / 60)} min`
   if (diffInSeconds < 86400) return `há ${Math.floor(diffInSeconds / 3600)}h`
   if (diffInSeconds < 2592000) return `há ${Math.floor(diffInSeconds / 86400)} dias`
-  
+
   return formatDate(dateObj)
 }
 
@@ -137,13 +137,13 @@ export function capitalize(text: string): string {
  */
 export function formatBytes(bytes: number, decimals: number = 2): string {
   if (bytes === 0) return '0 Bytes'
-  
+
   const k = 1024
   const dm = decimals < 0 ? 0 : decimals
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  
+
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  
+
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
@@ -168,7 +168,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     document.body.appendChild(textArea)
     textArea.focus()
     textArea.select()
-    
+
     try {
       document.execCommand('copy')
       document.body.removeChild(textArea)
@@ -226,10 +226,10 @@ export async function retry<T>(
  */
 export function isValidCPF(cpf: string): boolean {
   const cleaned = cpf.replace(/\D/g, '')
-  
+
   if (cleaned.length !== 11) return false
   if (/^(\d)\1{10}$/.test(cleaned)) return false
-  
+
   let sum = 0
   for (let i = 0; i < 9; i++) {
     sum += parseInt(cleaned.charAt(i)) * (10 - i)
@@ -237,7 +237,7 @@ export function isValidCPF(cpf: string): boolean {
   let remainder = (sum * 10) % 11
   if (remainder === 10 || remainder === 11) remainder = 0
   if (remainder !== parseInt(cleaned.charAt(9))) return false
-  
+
   sum = 0
   for (let i = 0; i < 10; i++) {
     sum += parseInt(cleaned.charAt(i)) * (11 - i)
@@ -245,7 +245,7 @@ export function isValidCPF(cpf: string): boolean {
   remainder = (sum * 10) % 11
   if (remainder === 10 || remainder === 11) remainder = 0
   if (remainder !== parseInt(cleaned.charAt(10))) return false
-  
+
   return true
 }
 
@@ -254,10 +254,10 @@ export function isValidCPF(cpf: string): boolean {
  */
 export function isValidCNPJ(cnpj: string): boolean {
   const cleaned = cnpj.replace(/\D/g, '')
-  
+
   if (cleaned.length !== 14) return false
   if (/^(\d)\1{13}$/.test(cleaned)) return false
-  
+
   let sum = 0
   let weight = 2
   for (let i = 11; i >= 0; i--) {
@@ -267,7 +267,7 @@ export function isValidCNPJ(cnpj: string): boolean {
   let remainder = sum % 11
   const digit1 = remainder < 2 ? 0 : 11 - remainder
   if (digit1 !== parseInt(cleaned.charAt(12))) return false
-  
+
   sum = 0
   weight = 2
   for (let i = 12; i >= 0; i--) {
@@ -277,6 +277,6 @@ export function isValidCNPJ(cnpj: string): boolean {
   remainder = sum % 11
   const digit2 = remainder < 2 ? 0 : 11 - remainder
   if (digit2 !== parseInt(cleaned.charAt(13))) return false
-  
+
   return true
 }

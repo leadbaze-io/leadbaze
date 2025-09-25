@@ -107,7 +107,7 @@ export default function ChangePasswordForm({ onSuccess, onCancel }: ChangePasswo
       reset()
       onSuccess?.()
     } catch (error: any) {
-      console.error('Erro ao alterar senha:', error)
+
       toast({
         title: "❌ Erro inesperado",
         description: "Ocorreu um erro inesperado. Tente novamente.",
@@ -254,5 +254,3 @@ export default function ChangePasswordForm({ onSuccess, onCancel }: ChangePasswo
     </Card>
   )
 }
-
-

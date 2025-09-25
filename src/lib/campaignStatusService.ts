@@ -2,8 +2,10 @@
  * Serviço para verificar e atualizar o status das campanhas
  */
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://leadbaze.io' 
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+
+  ? 'https://leadbaze.io'
+
   : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
 
 export interface CampaignStatus {
@@ -34,15 +36,15 @@ export class CampaignStatusService {
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
         return data.campaign;
       } else {
-        console.error('Erro ao buscar status da campanha:', data.error);
+
         return null;
       }
     } catch (error) {
-      console.error('Erro ao verificar status da campanha:', error);
+
       return null;
     }
   }
@@ -51,7 +53,8 @@ export class CampaignStatusService {
    * Atualiza o status de uma campanha
    */
   static async updateCampaignStatus(
-    campaignId: string, 
+    campaignId: string,
+
     status: 'draft' | 'sending' | 'completed' | 'failed',
     successCount?: number,
     failedCount?: number
@@ -77,7 +80,7 @@ export class CampaignStatusService {
       const data = await response.json();
       return data.success;
     } catch (error) {
-      console.error('Erro ao atualizar status da campanha:', error);
+
       return false;
     }
   }
@@ -93,16 +96,16 @@ export class CampaignStatusService {
     maxAttempts: number = 60 // 10 minutos máximo
   ): () => void {
     let attempts = 0;
-    
+
     const checkStatus = async () => {
       attempts++;
-      
+
       try {
         const status = await this.getCampaignStatus(campaignId);
-        
+
         if (status) {
           onStatusUpdate(status);
-          
+
           // Se a campanha foi concluída ou falhou, parar o polling
           if (status.status === 'completed' || status.status === 'failed') {
             clearInterval(intervalId);
@@ -110,16 +113,15 @@ export class CampaignStatusService {
             return;
           }
         }
-        
+
         // Se excedeu o número máximo de tentativas, parar o polling
         if (attempts >= maxAttempts) {
-          console.warn(`Polling da campanha ${campaignId} excedeu o tempo limite`);
+
           clearInterval(intervalId);
           onComplete();
         }
       } catch (error) {
-        console.error('Erro no polling de status:', error);
-        
+
         // Se excedeu o número máximo de tentativas, parar o polling
         if (attempts >= maxAttempts) {
           clearInterval(intervalId);
@@ -147,18 +149,18 @@ export class CampaignStatusService {
     // Simular progresso gradual: versão acelerada para teste (1 mensagem por 10 segundos)
     const totalMessages = 2; // Assumindo 2 mensagens para teste
     const intervalMs = 10000; // 10 segundos por mensagem (para teste)
-    
+
     for (let i = 1; i <= totalMessages; i++) {
       // Aguardar 10 segundos
       await new Promise(resolve => setTimeout(resolve, intervalMs));
-      
+
       // Atualizar progresso parcial
       await this.updateCampaignStatus(campaignId, 'sending', i, 0);
     }
-    
+
     // Aguardar mais 5 segundos e marcar como concluída
     await new Promise(resolve => setTimeout(resolve, 5000));
-    
+
     // Atualizar status para completed
     return await this.updateCampaignStatus(campaignId, 'completed', totalMessages, 0);
   }

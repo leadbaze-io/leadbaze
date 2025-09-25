@@ -77,8 +77,6 @@ export const MessageStep: React.FC<MessageStepProps> = ({
           Crie uma mensagem personalizada para sua campanha usando variáveis e templates
         </p>
       </motion.div>
-
-
       <div className="max-w-4xl mx-auto">
         {/* Editor de Mensagem */}
         <div className="space-y-6">
@@ -89,14 +87,16 @@ export const MessageStep: React.FC<MessageStepProps> = ({
           >
             <Card className="overflow-hidden shadow-xl">
               <CardHeader>
-                <CardTitle 
+                <CardTitle
+
                   className="flex items-center gap-3 text-xl message-card-title-claro message-card-title-escuro"
                   style={{ color: 'var(--title-color)' }}
                 >
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                     <MessageSquare className="w-4 h-4 text-white" />
                   </div>
-                  <span 
+                  <span
+
                     className="message-card-title-claro message-card-title-escuro"
                     style={{ color: 'var(--title-color)' }}
                   >
@@ -114,7 +114,7 @@ export const MessageStep: React.FC<MessageStepProps> = ({
                     placeholder="Digite sua mensagem aqui... Use {nome}, {empresa}, etc. para personalizar"
                     className="w-full h-48 px-4 py-3 border-2 rounded-xl message-textarea-claro message-textarea-escuro resize-none text-base leading-relaxed shadow-sm focus:shadow-lg transition-all duration-300"
                   />
-                  
+
                 </div>
 
                 {/* Dica sobre Personalização */}
@@ -127,7 +127,8 @@ export const MessageStep: React.FC<MessageStepProps> = ({
                       <div className="flex-1 min-w-0">
                         <div className="text-sm message-tip-text-forced-claro message-tip-text-forced-escuro">
                           <div className="flex flex-wrap items-center gap-1">
-                            <strong>Dica:</strong> 
+                            <strong>Dica:</strong>
+
                             <span className="whitespace-nowrap">Use</span>
                             <motion.div
                               whileHover={{ scale: 1.05 }}
@@ -165,14 +166,16 @@ export const MessageStep: React.FC<MessageStepProps> = ({
           >
             <Card className="overflow-hidden shadow-xl">
               <CardHeader>
-                <CardTitle 
+                <CardTitle
+
                   className="flex items-center gap-3 text-xl message-card-title-claro message-card-title-escuro"
                   style={{ color: 'var(--title-color)' }}
                 >
                   <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
                     <Lightbulb className="w-4 h-4 text-white" />
                   </div>
-                  <span 
+                  <span
+
                     className="message-card-title-claro message-card-title-escuro"
                     style={{ color: 'var(--title-color)' }}
                   >

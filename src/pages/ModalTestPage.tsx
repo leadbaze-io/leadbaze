@@ -19,13 +19,13 @@ export default function ModalTestPage() {
     const checkAuthorization = async () => {
       try {
         const currentUser = await getCurrentUser()
-        
+
         if (!currentUser) {
           // Usuário não logado - redirecionar para login
           navigate('/login')
           return
         }
-        
+
         // Verificar se é o e-mail autorizado
         if (currentUser.email === 'creaty12345@gmail.com') {
           setIsAuthorized(true)
@@ -35,14 +35,14 @@ export default function ModalTestPage() {
           return
         }
       } catch (error) {
-        console.error('Erro ao verificar autorização:', error)
+
         navigate('/login')
         return
       } finally {
         setIsLoading(false)
       }
     }
-    
+
     checkAuthorization()
   }, [navigate])
 
@@ -112,7 +112,7 @@ export default function ModalTestPage() {
             )}
           </Button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Modal de Progresso */}
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
@@ -122,7 +122,8 @@ export default function ModalTestPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Modal que aparece durante o envio das mensagens
             </p>
-            <Button 
+            <Button
+
               onClick={() => setShowProgressModal(true)}
               className="w-full"
             >
@@ -138,7 +139,8 @@ export default function ModalTestPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Modal que aparece quando a campanha é finalizada
             </p>
-            <Button 
+            <Button
+
               onClick={() => setShowSuccessModal(true)}
               className="w-full"
             >
