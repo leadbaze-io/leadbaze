@@ -24,21 +24,21 @@ class PerfectPayService {
     // UM PRODUTO com 3 PLANOS DE ASSINATURA
     this.planMapping = {
       '1': { // Start
-        perfectPayPlanCode: 'PPLQQNG92',
+        perfectPayPlanCode: 'PPLQQNGCO',
         perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OT',
         name: 'start',
         price: 5.00,
         leads: 1000
       },
       '2': { // Scale  
-        perfectPayPlanCode: 'PPLQQNG90',
+        perfectPayPlanCode: 'PPLQQNGCM',
         perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OP',
         name: 'scale',
         price: 497.00,
         leads: 4000
       },
       '3': { // Enterprise
-        perfectPayPlanCode: 'PPLQQNG91',
+        perfectPayPlanCode: 'PPLQQNGCN',
         perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OS',
         name: 'enterprise',
         price: 997.00,
@@ -89,7 +89,9 @@ class PerfectPayService {
         period: 'monthly',
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/success`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription/cancel`,
-        webhook_url: `${process.env.BACKEND_URL}/api/perfect-pay/webhook`
+        webhook_url: `${process.env.BACKEND_URL}/api/perfect-pay/webhook`,
+        plan_id: planId, // Adicionar plan_id para mapeamento correto
+        plan_name: plan.name
       };
 
       console.log('🔧 [PerfectPay] Dados do checkout:', {
@@ -842,10 +844,19 @@ class PerfectPayService {
     try {
       console.log('🔗 [PerfectPay] Criando checkout real via API...');
 
+      // Mapear UUID do plano para código Perfect Pay correto
+      const planUuidMap = {
+        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCO', // Start
+        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGCM', // Scale
+        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGCN'  // Enterprise
+      };
+      
+      const perfectPayPlanCode = planUuidMap[checkoutData.plan_id] || 'PPLQQNGCO';
+      
       // Preparar dados para API Perfect Pay (conforme documentação oficial)
       const apiData = {
-        product_code: checkoutData.plan_code || 'PPLQQNG92', // Código do produto no Perfect Pay
-        plan_code: checkoutData.plan_code || 'PPLQQNG92', // Código do plano
+        product_code: perfectPayPlanCode, // Código do produto no Perfect Pay
+        plan_code: perfectPayPlanCode, // Código do plano
         customer_email: checkoutData.customer_email,
         customer_full_name: checkoutData.customer_name,
         external_reference: externalReference,
@@ -900,24 +911,24 @@ class PerfectPayService {
       
       // Mapear para os links reais que você forneceu
       const realLinks = {
-        'PPLQQNG92': 'https://go.perfectpay.com.br/PPU38CQ17OO', // Start
-        'PPLQQNG90': 'https://go.perfectpay.com.br/PPU38CQ17OP', // Scale
-        'PPLQQNG91': 'https://go.perfectpay.com.br/PPU38CQ17OS'  // Enterprise
+        'PPLQQNGCO': 'https://go.perfectpay.com.br/PPU38CQ17OT', // Start
+        'PPLQQNGCM': 'https://go.perfectpay.com.br/PPU38CQ17OP', // Scale
+        'PPLQQNGCN': 'https://go.perfectpay.com.br/PPU38CQ17OS'  // Enterprise
       };
       
       // Tentar encontrar o link correto baseado no plano
-      const planCode = checkoutData.plan_code || 'PPLQQNG92';
+      const planCode = checkoutData.plan_code || 'PPLQQNGCO';
       
       // Mapear UUID do plano para código correto
       const planUuidMap = {
-        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNG92', // Start
-        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNG90', // Scale
-        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNG91'  // Enterprise
+        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCO', // Start
+        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGCM', // Scale
+        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGCN'  // Enterprise
       };
       
       // Se recebeu UUID, mapear para código
       const mappedCode = planUuidMap[checkoutData.plan_id] || planCode;
-      const realLink = realLinks[mappedCode] || realLinks['PPLQQNG92'];
+      const realLink = realLinks[mappedCode] || realLinks['PPLQQNGCO'];
       
       console.log(`🔍 [PerfectPay] Debug mapeamento:`, {
         plan_id: checkoutData.plan_id,
