@@ -267,15 +267,13 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       // Atualizar bonus leads usados
-      const { data: updateResult, error: updateError } = await supabase
+      const { error: updateError } = await supabase
         .from('user_profiles')
         .update({
           bonus_leads_used: (profile.bonus_leads_used || 0) + leadsToConsume,
           updated_at: new Date().toISOString()
         })
-        .eq('user_id', user.id)
-        .select()
-        .single();
+        .eq('user_id', user.id);
 
       if (updateError) {
         console.error('Erro ao atualizar bonus leads:', updateError);
