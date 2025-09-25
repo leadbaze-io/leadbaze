@@ -184,79 +184,122 @@ export const useSubscription = (): UseSubscriptionReturn => {
         };
       }
 
-      // Buscar assinatura atual
+      // Primeiro, tentar consumir leads da assinatura (se existir)
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
       
-      if (!data.success || !data.data) {
+      if (data.success && data.data) {
+        const subscriptionData = data.data;
+        
+        // Verificar se o acesso não expirou
+        const accessUntil = new Date(subscriptionData.access_until);
+        const now = new Date();
+        const isAccessExpired = now > accessUntil;
+        
+        // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
+        if (!isAccessExpired && subscriptionData.leads_remaining >= leadsToConsume) {
+          console.log('🔄 [useSubscription] Consumindo leads da assinatura:', {
+            leads_remaining: subscriptionData.leads_remaining,
+            leadsToConsume
+          });
+
+          // Atualizar leads_balance diretamente
+          const { data: updateResult, error: updateError } = await supabase
+            .from('user_payment_subscriptions')
+            .update({
+              leads_balance: subscriptionData.leads_remaining - leadsToConsume,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', subscriptionData.id)
+            .select()
+            .single();
+
+          if (updateError) {
+            console.error('Erro ao atualizar leads da assinatura:', updateError);
+            // Se falhar, tentar consumir bonus leads
+          } else {
+            // Atualizar dados locais da assinatura
+            setSubscription(prev => prev ? {
+              ...prev,
+              leads_used: prev.leads_used + leadsToConsume,
+              leads_remaining: updateResult.leads_balance
+            } : null);
+
+            return {
+              success: true,
+              leads_consumed: leadsToConsume,
+              leads_remaining: updateResult.leads_balance,
+              leads_limit: subscriptionData.leads_limit,
+              message: `${leadsToConsume} leads da assinatura consumidos com sucesso`
+            };
+          }
+        }
+      }
+
+      // Se não conseguiu consumir da assinatura, tentar consumir bonus leads
+      console.log('🔄 [useSubscription] Tentando consumir bonus leads...');
+
+      const { data: profile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('bonus_leads, bonus_leads_used')
+        .eq('user_id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Erro ao buscar perfil do usuário:', profileError);
         return {
           success: false,
-          error: 'no_subscription',
-          message: 'Nenhuma assinatura encontrada'
+          error: 'profile_error',
+          message: 'Erro ao verificar perfil do usuário'
         };
       }
 
-      const subscriptionData = data.data;
+      const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
       
-      // Verificar se o acesso não expirou
-      const accessUntil = new Date(subscriptionData.access_until);
-      const now = new Date();
-      const isAccessExpired = now > accessUntil;
-      
-      if (isAccessExpired) {
+      if (bonusLeadsRemaining < leadsToConsume) {
         return {
           success: false,
-          error: 'access_expired',
-          message: 'Acesso expirado - não é possível consumir leads da assinatura',
-          leads_remaining: 0,
-          leads_limit: 0
-        };
-      }
-      
-      if (subscriptionData.leads_remaining < leadsToConsume) {
-        return {
-          success: false,
-          error: 'insufficient_leads',
-          message: 'Leads insuficientes para consumir',
-          leads_remaining: subscriptionData.leads_remaining,
-          leads_limit: subscriptionData.leads_limit
+          error: 'insufficient_bonus_leads',
+          message: 'Leads bônus insuficientes para consumir',
+          leads_remaining: bonusLeadsRemaining,
+          leads_limit: profile.bonus_leads || 0
         };
       }
 
-      // Atualizar leads_balance diretamente
+      // Atualizar bonus leads usados
       const { data: updateResult, error: updateError } = await supabase
-        .from('user_payment_subscriptions')
+        .from('user_profiles')
         .update({
-          leads_balance: subscriptionData.leads_remaining - leadsToConsume,
+          bonus_leads_used: (profile.bonus_leads_used || 0) + leadsToConsume,
           updated_at: new Date().toISOString()
         })
-        .eq('id', subscriptionData.id)
+        .eq('user_id', user.id)
         .select()
         .single();
 
       if (updateError) {
-        console.error('Erro ao atualizar leads:', updateError);
+        console.error('Erro ao atualizar bonus leads:', updateError);
         return {
           success: false,
           error: 'update_error',
-          message: 'Erro ao atualizar saldo de leads'
+          message: 'Erro ao atualizar leads bônus'
         };
       }
 
-      // Atualizar dados locais da assinatura
-      setSubscription(prev => prev ? {
-        ...prev,
-        leads_used: prev.leads_used + leadsToConsume,
-        leads_remaining: updateResult.leads_balance
-      } : null);
+      console.log('✅ [useSubscription] Bonus leads consumidos com sucesso:', {
+        leads_consumed: leadsToConsume,
+        bonus_leads_remaining: bonusLeadsRemaining - leadsToConsume,
+        bonus_leads_total: profile.bonus_leads
+      });
 
       return {
         success: true,
         leads_consumed: leadsToConsume,
-        leads_remaining: updateResult.leads_balance,
-        leads_limit: subscriptionData.leads_limit,
-        message: `${leadsToConsume} leads consumidos com sucesso`
+        leads_remaining: bonusLeadsRemaining - leadsToConsume,
+        leads_limit: profile.bonus_leads || 0,
+        message: `${leadsToConsume} leads bônus consumidos com sucesso`
       };
+
     } catch (err) {
       console.error('Erro inesperado ao consumir leads:', err);
       return {
