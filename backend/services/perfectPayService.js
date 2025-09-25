@@ -286,7 +286,20 @@ class PerfectPayService {
 
     // Determinar o tipo de operação baseado no status da subscription
     if (subscriptionEvent === 'subscription_renewed' || subscriptionEvent === 'subscription_started') {
-      operationType = 'renewal';
+      // Verificar se o usuário tem assinatura ativa para determinar se é renovação ou nova assinatura
+      const { data: existingSubscription } = await this.supabase
+        .from('user_payment_subscriptions')
+        .select('id, status')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .single();
+      
+      if (existingSubscription) {
+        operationType = 'renewal';
+      } else {
+        operationType = 'new'; // Tratar como nova assinatura se não há assinatura ativa
+        console.log('🆕 [PerfectPay] Tratando como nova assinatura (usuário sem assinatura ativa)');
+      }
     } else if (subscriptionEvent === 'subscription_cancelled') {
       operationType = 'cancellation';
     } else if (subscriptionEvent === 'subscription_failed') {
