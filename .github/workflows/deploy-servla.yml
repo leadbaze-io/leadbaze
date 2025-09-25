@@ -21,6 +21,11 @@ jobs:
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        
+    - name: 🔧 Fix origin/HEAD
+      run: git remote set-head origin -a
       
     - name: 🟢 Setup Node.js
       uses: actions/setup-node@v4
