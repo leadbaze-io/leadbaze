@@ -1092,11 +1092,10 @@ app.use('/api/perfect-pay', perfectPayRoutes);
 console.log('✅ [Server] Perfect Pay system registrado com sucesso');
 app.use('/api/webhook-monitor', webhookMonitorRoutes);
 app.use('/api/subscription-sync', subscriptionSyncRoutes);
-app.use('/api/subscription', subscriptionOriginalRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
 app.use('/api/lead-packages', leadPackagesRoutes);
 
-// Redirecionar /api/subscription/plans para /api/perfect-pay/plans (compatibilidade)
+// Rota específica DEVE vir ANTES da rota genérica
 app.get('/api/subscription/plans', async (req, res) => {
   try {
     const perfectPayService = require('./services/perfectPayService');
@@ -1125,7 +1124,9 @@ app.get('/api/subscription/plans', async (req, res) => {
 
     res.json({
       success: true,
-      plans: formattedPlans
+      data: {
+        availablePlans: formattedPlans
+      }
     });
   } catch (error) {
     console.error('❌ [Server] Erro ao listar planos:', error);
@@ -1136,6 +1137,9 @@ app.get('/api/subscription/plans', async (req, res) => {
     });
   }
 });
+
+// Rota genérica DEVE vir DEPOIS das rotas específicas
+app.use('/api/subscription', subscriptionOriginalRoutes);
 console.log('✅ [Server] Subscription Sync system registrado com sucesso');
 console.log('✅ [Server] Subscription Original system registrado com sucesso');
 console.log('✅ [Server] Lead Packages system registrado com sucesso');
