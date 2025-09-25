@@ -573,17 +573,42 @@ class PerfectPayService {
       refund_deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
     };
 
-    // Tentar inserir com retry para resolver problemas de cache do Supabase
+    // Estratégia robusta: tentar inserção completa primeiro, depois fallback sem coluna problemática
     let subscription = null;
     let subscriptionError = null;
-    let retryCount = 0;
-    const maxRetries = 3;
     
-    while (retryCount < maxRetries && !subscription) {
+    // Primeira tentativa: inserção completa (com perfect_pay_subscription_id)
+    try {
+      console.log('🔄 [PerfectPay] Tentativa 1: Inserção completa com todas as colunas...');
+      const result = await this.supabase
+        .from('user_payment_subscriptions')
+        .insert(subscriptionData)
+        .select()
+        .single();
+      
+      subscription = result.data;
+      subscriptionError = result.error;
+      
+      if (subscription) {
+        console.log('✅ [PerfectPay] Inserção completa bem-sucedida!');
+      }
+    } catch (err) {
+      subscriptionError = err;
+      console.log('⚠️ [PerfectPay] Erro na inserção completa:', err.message);
+    }
+    
+    // Segunda tentativa: inserção sem a coluna problemática (fallback seguro)
+    if (!subscription && subscriptionError && subscriptionError.message.includes('schema cache')) {
       try {
+        console.log('🔄 [PerfectPay] Tentativa 2: Fallback seguro - inserindo sem perfect_pay_subscription_id...');
+        
+        // Criar dados sem a coluna problemática
+        const fallbackData = { ...subscriptionData };
+        delete fallbackData.perfect_pay_subscription_id;
+        
         const result = await this.supabase
           .from('user_payment_subscriptions')
-          .insert(subscriptionData)
+          .insert(fallbackData)
           .select()
           .single();
         
@@ -591,19 +616,49 @@ class PerfectPayService {
         subscriptionError = result.error;
         
         if (subscription) {
-          break; // Sucesso
-        }
-        
-        if (subscriptionError && subscriptionError.message.includes('schema cache')) {
-          console.log(`🔄 [PerfectPay] Tentativa ${retryCount + 1}: Problema de cache do Supabase, tentando novamente...`);
-          retryCount++;
-          await new Promise(resolve => setTimeout(resolve, 500 * retryCount)); // Delay progressivo
-        } else {
-          break; // Erro não relacionado ao cache
+          console.log('✅ [PerfectPay] Fallback bem-sucedido! Assinatura criada sem perfect_pay_subscription_id');
+          
+          // Tentar atualizar com a coluna problemática em background (não crítico)
+          this.updateSubscriptionIdInBackground(subscription.id, webhookData.subscription?.code);
         }
       } catch (err) {
         subscriptionError = err;
-        break;
+        console.log('❌ [PerfectPay] Erro no fallback:', err.message);
+      }
+    }
+    
+    // Terceira tentativa: inserção mínima (último recurso)
+    if (!subscription) {
+      try {
+        console.log('🔄 [PerfectPay] Tentativa 3: Inserção mínima (último recurso)...');
+        
+        const minimalData = {
+          user_id: subscriptionData.user_id,
+          plan_id: subscriptionData.plan_id,
+          status: subscriptionData.status,
+          leads_balance: subscriptionData.leads_balance,
+          current_period_start: subscriptionData.current_period_start,
+          current_period_end: subscriptionData.current_period_end
+        };
+        
+        const result = await this.supabase
+          .from('user_payment_subscriptions')
+          .insert(minimalData)
+          .select()
+          .single();
+        
+        subscription = result.data;
+        subscriptionError = result.error;
+        
+        if (subscription) {
+          console.log('✅ [PerfectPay] Inserção mínima bem-sucedida! Assinatura criada com dados essenciais');
+          
+          // Tentar atualizar com dados adicionais em background
+          this.updateSubscriptionDetailsInBackground(subscription.id, subscriptionData);
+        }
+      } catch (err) {
+        subscriptionError = err;
+        console.log('❌ [PerfectPay] Erro na inserção mínima:', err.message);
       }
     }
 
@@ -1439,6 +1494,49 @@ class PerfectPayService {
     } catch (error) {
       console.error('❌ [PerfectPay] Erro na validação de assinatura:', error.message);
       return false;
+    }
+  }
+
+  /**
+   * Atualiza subscription_id em background (não crítico)
+   */
+  async updateSubscriptionIdInBackground(subscriptionId, perfectPaySubscriptionId) {
+    try {
+      console.log(`🔄 [PerfectPay] Atualizando subscription_id em background: ${subscriptionId}`);
+      
+      await this.supabase
+        .from('user_payment_subscriptions')
+        .update({ perfect_pay_subscription_id: perfectPaySubscriptionId })
+        .eq('id', subscriptionId);
+      
+      console.log('✅ [PerfectPay] Subscription_id atualizado em background');
+    } catch (err) {
+      console.log('⚠️ [PerfectPay] Erro ao atualizar subscription_id em background (não crítico):', err.message);
+    }
+  }
+
+  /**
+   * Atualiza detalhes da assinatura em background (não crítico)
+   */
+  async updateSubscriptionDetailsInBackground(subscriptionId, originalData) {
+    try {
+      console.log(`🔄 [PerfectPay] Atualizando detalhes da assinatura em background: ${subscriptionId}`);
+      
+      const updateData = {
+        perfect_pay_transaction_id: originalData.perfect_pay_transaction_id,
+        perfect_pay_subscription_id: originalData.perfect_pay_subscription_id,
+        first_payment_date: originalData.first_payment_date,
+        refund_deadline: originalData.refund_deadline
+      };
+      
+      await this.supabase
+        .from('user_payment_subscriptions')
+        .update(updateData)
+        .eq('id', subscriptionId);
+      
+      console.log('✅ [PerfectPay] Detalhes da assinatura atualizados em background');
+    } catch (err) {
+      console.log('⚠️ [PerfectPay] Erro ao atualizar detalhes em background (não crítico):', err.message);
     }
   }
 }
