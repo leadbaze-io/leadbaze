@@ -27,7 +27,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
   const { toast } = useToast();
 
   // Processar cancelamento de assinatura
-  const processRefund = useCallback(async (subscriptionData: any) => {
+  const processRefund = useCallback(async (_subscriptionData: any) => {
     try {
       // Refund automático desabilitado - usando Perfect Pay
       console.log('ℹ️ [Cancelamento] Refund automático desabilitado - usando Perfect Pay');
