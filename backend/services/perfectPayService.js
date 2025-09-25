@@ -1224,14 +1224,15 @@ class PerfectPayService {
    */
   validateRealPayment(webhookData) {
     try {
-      // 1. Verificar se tem transaction_id válido
-      if (!webhookData.transaction_id || webhookData.transaction_id.startsWith('TEST_') || webhookData.transaction_id.startsWith('RESET_')) {
-        console.log('⚠️ [PerfectPay] Transaction ID inválido ou de teste:', webhookData.transaction_id);
+      // 1. Verificar se tem transaction_id ou code válido
+      const transactionId = webhookData.transaction_id || webhookData.code;
+      if (!transactionId || transactionId.startsWith('TEST_') || transactionId.startsWith('RESET_')) {
+        console.log('⚠️ [PerfectPay] Transaction ID/Code inválido ou de teste:', transactionId);
         return false;
       }
 
       // 2. Verificar se tem valor válido (maior que 0)
-      const amount = webhookData.amount || webhookData.value;
+      const amount = webhookData.amount || webhookData.value || webhookData.subscription_amount;
       if (!amount || amount <= 0) {
         console.log('⚠️ [PerfectPay] Valor inválido:', amount);
         return false;
@@ -1257,7 +1258,7 @@ class PerfectPayService {
       }
 
       console.log('✅ [PerfectPay] Pagamento real validado:', {
-        transaction_id: webhookData.transaction_id,
+        transaction_id: transactionId,
         amount: amount,
         status: saleStatusEnum,
         product: webhookData.product?.external_reference
