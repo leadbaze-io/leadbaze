@@ -24,7 +24,7 @@ class PerfectPayService {
     this.planMapping = {
       '1': { // Start
         perfectPayPlanCode: 'PPLQQNG92',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OO',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OT',
         name: 'start',
         price: 5.00,
         leads: 1000

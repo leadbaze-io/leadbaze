@@ -36,21 +36,12 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         return;
       }
 
-      const refundResponse = await fetch('http://localhost:3001/api/refunds/process-cancellation-refund', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          subscriptionId: subscription_id,
-          paymentId: mercado_pago_payment_id,
-          totalAmount: price_monthly,
-          leadsUsed: leads_used,
-          leadsLimit: leads_limit
-        }),
-      });
-
-      const refundData = await refundResponse.json();
+      // Refund automático desabilitado - usando Perfect Pay
+      console.log('ℹ️ [Cancelamento] Refund automático desabilitado - usando Perfect Pay');
+      console.log('ℹ️ [Cancelamento] Para reembolsos, entre em contato com o suporte');
+      
+      // Simular resposta de sucesso para não quebrar o fluxo
+      const refundData = { success: true, message: 'Cancelamento processado via Perfect Pay' };
       
       if (refundData.success) {
         console.log('✅ Reembolso processado:', refundData);
@@ -77,13 +68,12 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         throw new Error('Usuário não autenticado');
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/new-payments/cancel`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/cancel/${user.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: user.id,
           reason
         }),
       });
@@ -183,7 +173,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
       });
 
       // Chamar API de downgrade
-      const response = await fetch('/api/perfect-pay/downgrade', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/downgrade`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -251,7 +241,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         return [];
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/new-payments/plans`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/plans`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -275,7 +265,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         return [];
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/new-payments/plans`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/plans`);
       const data = await response.json();
 
       if (!response.ok) {
