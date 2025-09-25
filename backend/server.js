@@ -28,6 +28,7 @@ const smtpTestRoutes = require('./routes/smtpTest');
 const perfectPayRoutes = require('./routes/perfectPay');
 const webhookMonitorRoutes = require('./routes/webhook-monitor');
 const subscriptionSyncRoutes = require('./routes/subscriptionSync');
+const subscriptionOriginalRoutes = require('./routes/subscription-original');
 const recurringPaymentsRoutes = require('./routes/recurringPayments');
 const leadPackagesRoutes = require('./routes/leadPackages');
 const DailySyncJob = require('./jobs/dailySyncJob');
@@ -1091,9 +1092,52 @@ app.use('/api/perfect-pay', perfectPayRoutes);
 console.log('✅ [Server] Perfect Pay system registrado com sucesso');
 app.use('/api/webhook-monitor', webhookMonitorRoutes);
 app.use('/api/subscription-sync', subscriptionSyncRoutes);
+app.use('/api/subscription', subscriptionOriginalRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
 app.use('/api/lead-packages', leadPackagesRoutes);
+
+// Redirecionar /api/subscription/plans para /api/perfect-pay/plans (compatibilidade)
+app.get('/api/subscription/plans', async (req, res) => {
+  try {
+    const perfectPayService = require('./services/perfectPayService');
+    const service = new perfectPayService();
+    
+    console.log('📋 [Server] Listando planos via /api/subscription/plans');
+    
+    const { data: plans, error } = await service.supabase
+      .from('payment_plans')
+      .select('*')
+      .order('price_cents', { ascending: true });
+
+    if (error) {
+      throw new Error(`Erro ao buscar planos: ${error.message}`);
+    }
+
+    // Formatar planos para o frontend
+    const formattedPlans = plans.map(plan => ({
+      id: plan.id,
+      name: plan.name,
+      displayName: plan.display_name,
+      price: plan.price_cents / 100,
+      leads: plan.leads_included,
+      features: plan.features || []
+    }));
+
+    res.json({
+      success: true,
+      plans: formattedPlans
+    });
+  } catch (error) {
+    console.error('❌ [Server] Erro ao listar planos:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar planos',
+      error: error.message
+    });
+  }
+});
 console.log('✅ [Server] Subscription Sync system registrado com sucesso');
+console.log('✅ [Server] Subscription Original system registrado com sucesso');
 console.log('✅ [Server] Lead Packages system registrado com sucesso');
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
