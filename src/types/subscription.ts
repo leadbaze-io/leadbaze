@@ -35,7 +35,7 @@ export interface UserSubscription {
   gateway_customer_id?: string;
   created_at: string;
   updated_at: string;
-
+  
   // Dados do plano (join)
   plan?: SubscriptionPlan;
   plan_display_name?: string;
@@ -299,7 +299,7 @@ export interface SubscriptionContextType {
   plans: SubscriptionPlan[];
   isLoading: boolean;
   error: string | null;
-
+  
   // Actions
   selectPlan: (planId: string) => Promise<void>;
   cancelSubscription: () => Promise<void>;
@@ -335,3 +335,6 @@ export interface UsageStats {
   daysUntilReset: number;
   usagePercentage: number;
 }
+
+
+

@@ -72,7 +72,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [isSaving, setIsSaving] = useState(false)
   const [showQuantityAdjustment, setShowQuantityAdjustment] = useState(false)
   const [user, setUser] = useState<any>(null)
-
+  
   // Buscar usuário atual
   useEffect(() => {
     const getUser = async () => {
@@ -81,14 +81,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     }
     getUser()
   }, [])
-
+  
   const { profile } = useProfileCheck(user); // Obter dados do perfil do usuário
-
+  
   // Estados para verificação de duplicatas
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
   const [newLeads, setNewLeads] = useState<Lead[]>([])
   const [showDuplicateInfo, setShowDuplicateInfo] = useState(false)
-
+  
   // Estados para modal de sucesso
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [successData, setSuccessData] = useState<{
@@ -96,7 +96,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     leadsCount: number
     isNewList: boolean
   } | null>(null)
-
+  
   // Filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [cityFilter, setCityFilter] = useState("")
@@ -105,12 +105,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [websiteFilter, setWebsiteFilter] = useState("all")
   const [leadsPerPage, setLeadsPerPage] = useState("9")
   const [currentPage, setCurrentPage] = useState(1)
-
+  
   // Novos filtros
   const [sortBy, setSortBy] = useState("relevance")
   const [sortOrder, setSortOrder] = useState("desc")
   const [maxReviews, setMaxReviews] = useState("none")
-
+  
   const { toast } = useToast()
 
   const urlForm = useForm<z.infer<typeof urlFormSchema>>({
@@ -126,55 +126,47 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
   // Filtrar leads
   const filteredLeads = generatedLeads.filter(lead => {
-    const matchesSearch = searchTerm === "" ||
-
+    const matchesSearch = searchTerm === "" || 
       lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.phone?.toLowerCase().includes(searchTerm.toLowerCase())
-
-    const matchesCity = cityFilter === "" ||
-
+    
+    const matchesCity = cityFilter === "" || 
       lead.address?.toLowerCase().includes(cityFilter.toLowerCase())
-
-    const matchesRating = ratingFilter === "all" ||
-
+    
+    const matchesRating = ratingFilter === "all" || 
       (lead.rating && lead.rating >= parseFloat(ratingFilter))
-
-    const matchesReviews = reviewsFilter === "all" ||
-
+    
+    const matchesReviews = reviewsFilter === "all" || 
       (lead.reviews_count && lead.reviews_count >= parseInt(reviewsFilter))
-
-    const matchesMaxReviews = maxReviews === "" || maxReviews === "none" ||
-
+    
+    const matchesMaxReviews = maxReviews === "" || maxReviews === "none" || 
       (lead.reviews_count && lead.reviews_count <= parseInt(maxReviews))
-
-    const matchesWebsite = websiteFilter === "all" ||
-
+    
+    const matchesWebsite = websiteFilter === "all" || 
       (websiteFilter === "with" && lead.website) ||
       (websiteFilter === "without" && !lead.website)
-
+    
     return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite
   })
 
   // Desmarcar automaticamente leads que não estão mais visíveis quando filtros mudam
   useEffect(() => {
     if (generatedLeads.length === 0) return
-
-    const filteredLeadIds = new Set(filteredLeads.map(lead =>
-
+    
+    const filteredLeadIds = new Set(filteredLeads.map(lead => 
       `${lead.name}-${lead.phone}` // Usar combinação única para identificar leads
     ))
-
+    
     // Verificar se há leads selecionados que não estão mais visíveis
     const hasInvisibleSelected = generatedLeads.some(lead => {
       const leadKey = `${lead.name}-${lead.phone}`
       return !filteredLeadIds.has(leadKey) && lead.selected
     })
-
+    
     // Só atualizar se necessário para evitar loops
     if (hasInvisibleSelected) {
-      setGeneratedLeads(prev =>
-
+      setGeneratedLeads(prev => 
         prev.map(lead => {
           const leadKey = `${lead.name}-${lead.phone}`
           // Se o lead não está mais visível e estava selecionado, desmarcá-lo
@@ -190,7 +182,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   // Ordenar leads
   const sortedLeads = [...filteredLeads].sort((a, b) => {
     let comparison = 0
-
+    
     switch (sortBy) {
       case "rating":
         comparison = (a.rating || 0) - (b.rating || 0)
@@ -207,7 +199,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         comparison = (a.reviews_count || 0) - (b.reviews_count || 0)
         break
     }
-
+    
     // Aplicar a ordem selecionada (Maior para Menor / Menor para Maior)
     return sortOrder === "desc" ? -comparison : comparison
   })
@@ -230,13 +222,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       const buttonRect = selectAllButton.getBoundingClientRect()
       const navbarHeight = 80 // Altura aproximada da navbar
       const scrollPosition = window.pageYOffset + buttonRect.top - navbarHeight - 20 // 20px de margem extra
-
-      window.scrollTo({
-
-        top: scrollPosition,
-
-        behavior: 'smooth'
-
+      
+      window.scrollTo({ 
+        top: scrollPosition, 
+        behavior: 'smooth' 
       })
     } else {
       // Fallback: encontrar o container dos leads
@@ -245,22 +234,16 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
         const containerRect = leadsContainer.getBoundingClientRect()
         const navbarHeight = 80 // Altura aproximada da navbar
         const scrollPosition = window.pageYOffset + containerRect.top - navbarHeight - 20 // 20px de margem extra
-
-        window.scrollTo({
-
-          top: scrollPosition,
-
-          behavior: 'smooth'
-
+        
+        window.scrollTo({ 
+          top: scrollPosition, 
+          behavior: 'smooth' 
         })
       } else {
         // Fallback final: scroll para o topo da página
-        window.scrollTo({
-
-          top: 0,
-
-          behavior: 'smooth'
-
+        window.scrollTo({ 
+          top: 0, 
+          behavior: 'smooth' 
         })
       }
     }
@@ -272,9 +255,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     setGeneratedLeads([])
     setShowSaveOptions(false)
     resetPagination()
-
+    
     try {
-
+      console.log('🚀 Iniciando geração de leads para:', searchUrl)
       const result = await LeadService.generateLeads(searchUrl, limit)
 
       // Verificar se está em modo demo
@@ -288,7 +271,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       }
 
       if (!result.success) {
-
+        console.error('❌ Erro na resposta do serviço:', result.error)
         setExtractionStatus('error')
         toast({
           title: "❌ Erro na Extração",
@@ -318,10 +301,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
       setGeneratedLeads(leadsWithSelection)
       setExtractionStatus('completed')
-
+      
       // Mostrar opções de salvar automaticamente
       setShowSaveOptions(true)
-
+      
       toast({
         title: "🎉 Leads Extraídos com Sucesso!",
         description: `${result.leads.length} leads encontrados. Selecione os que deseja salvar.`,
@@ -334,7 +317,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       }
 
     } catch (error) {
-
+      console.error('❌ Erro na geração de leads:', error)
       setExtractionStatus('error')
       toast({
         title: "❌ Erro na Extração",
@@ -348,14 +331,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }
 
   const toggleLeadSelection = (leadIndex: number) => {
-    setGeneratedLeads(prev =>
-
-      prev.map((lead, i) =>
-
+    setGeneratedLeads(prev => 
+      prev.map((lead, i) => 
         i === leadIndex ? { ...lead, selected: !lead.selected } : lead
       )
     )
-
+    
     // Verificar duplicatas após mudança na seleção
     setTimeout(() => {
       if (saveMode === 'existing' && selectedListId) {
@@ -379,10 +360,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     const filteredLead = paginatedLeads[filteredIndex]
     if (filteredLead) {
       // Encontrar o índice real na lista original
-      const actualIndex = generatedLeads.findIndex(lead =>
-
-        lead.name === filteredLead.name &&
-
+      const actualIndex = generatedLeads.findIndex(lead => 
+        lead.name === filteredLead.name && 
         lead.phone === filteredLead.phone
       )
       if (actualIndex !== -1) {
@@ -394,28 +373,25 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const toggleSelectAll = () => {
     // Verificar se todos os leads filtrados estão selecionados
     const allFilteredSelected = filteredLeads.every(lead => lead.selected)
-
-    setGeneratedLeads(prev =>
-
+    
+    setGeneratedLeads(prev => 
       prev.map(lead => {
         // Verificar se este lead está na lista filtrada
-        const isInFiltered = filteredLeads.some(filteredLead =>
-
-          filteredLead.name === lead.name &&
-
+        const isInFiltered = filteredLeads.some(filteredLead => 
+          filteredLead.name === lead.name && 
           filteredLead.phone === lead.phone
         )
-
+        
         // Se está na lista filtrada, alterar o estado de seleção
         if (isInFiltered) {
           return { ...lead, selected: !allFilteredSelected }
         }
-
+        
         // Se não está na lista filtrada, manter o estado atual
         return lead
       })
     )
-
+    
     // Verificar duplicatas após mudança na seleção
     setTimeout(() => {
       if (saveMode === 'existing' && selectedListId) {
@@ -459,7 +435,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
     selectedLeads.forEach(lead => {
       const normalizedPhone = lead.phone?.replace(/\D/g, '')
-
+      
       if (normalizedPhone && existingPhones.has(normalizedPhone)) {
         duplicateLeads.push(lead)
       } else {
@@ -475,7 +451,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
   const handleSaveLeads = async () => {
     const selectedLeads = getSelectedLeads()
-
+    
     if (selectedLeads.length === 0) {
       toast({
         title: "⚠️ Nenhum Lead Selecionado",
@@ -508,7 +484,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
     // Verificar duplicatas antes de salvar
     const { newLeads: leadsToSave, duplicateLeads: duplicates } = checkDuplicateLeads(selectedLeads, selectedListId)
-
+    
     setNewLeads(leadsToSave)
     setDuplicateLeads(duplicates)
     setShowDuplicateInfo(true)
@@ -518,7 +494,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       const shouldContinue = window.confirm(
         `${leadsToSave.length} leads novos serão adicionados.\n${duplicates.length} leads duplicados serão ignorados.\n\nDeseja continuar?`
       )
-
+      
       if (!shouldContinue) {
         setShowDuplicateInfo(false)
         return
@@ -536,19 +512,18 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       }
 
       // Preparar dados para o modal de sucesso
-      const finalListName = saveMode === 'new' ? newListName :
-
+      const finalListName = saveMode === 'new' ? newListName : 
         existingLists.find(list => list.id === selectedListId)?.name || 'Lista'
-
+      
       setSuccessData({
         listName: finalListName,
         leadsCount: leadsToSave.length,
         isNewList: saveMode === 'new'
       })
-
+      
       // Mostrar modal de sucesso
       setShowSuccessModal(true)
-
+      
       // Limpar estados
       setShowSaveOptions(false)
       setShowDuplicateInfo(false)
@@ -558,7 +533,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       setNewLeads([])
       setDuplicateLeads([])
     } catch (error) {
-
+      console.error('❌ Erro ao salvar leads:', error)
       toast({
         title: "❌ Erro ao Salvar",
         description: "Não foi possível salvar os leads. Tente novamente.",
@@ -578,11 +553,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false)
     setSuccessData(null)
-
+    
     // Atualizar a página para mostrar o saldo de leads atualizado
-
+    console.log('🔄 Atualizando página para mostrar saldo de leads atualizado...')
     window.location.reload()
   }
+
+
   const handleGoToDashboard = () => {
     // Emitir evento para o componente pai navegar para o dashboard
     if (onLeadsSaved) {
@@ -601,7 +578,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   // Verificar duplicatas quando lista existente é selecionada
   const handleListSelection = (listId: string) => {
     setSelectedListId(listId)
-
+    
     if (listId && generatedLeads.length > 0) {
       const selectedLeads = getSelectedLeads()
       if (selectedLeads.length > 0) {
@@ -616,6 +593,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
       setDuplicateLeads([])
     }
   }
+
+
   return (
     <div className="min-h-screen gerador-bg-claro gerador-bg-escuro">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -685,21 +664,22 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             <CardContent className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
               {/* Alerta simples para leads bônus - só aparece se NÃO tem assinatura ativa */}
               {(() => {
+                console.log('🔍 [LeadGeneratorPro] showQuantityAdjustment:', showQuantityAdjustment);
+                console.log('🔍 [LeadGeneratorPro] subscription:', subscription);
                 console.log('🔍 [LeadGeneratorPro] bonus_leads:', (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0));
-
+                
                 const hasActiveSubscription = subscription && subscription.status === 'active'
                 const hasBonusLeads = (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0) > 0
-
+                
                 // Só mostra se: não tem assinatura ativa E tem leads bônus E não está ajustando quantidade
                 return !showQuantityAdjustment && !hasActiveSubscription && hasBonusLeads
               })() && (
-                <SimpleBonusLeadsAlert
-
+                <SimpleBonusLeadsAlert 
                   leadsRemaining={(profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0)}
                   onAdjustQuantity={handleAdjustQuantity}
                 />
               )}
-
+              
               {showQuantityAdjustment ? (
                 // Mostrar formulário diretamente quando ajustando quantidade
                 <div>
@@ -754,7 +734,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                                 {(() => {
                                   const leadsRemaining = (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0);
                                   const options = [];
-
+                                  
                                   if (leadsRemaining <= 0) {
                                     return [
                                       <SelectItem key="0" value="0" disabled>
@@ -762,7 +742,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                                       </SelectItem>
                                     ];
                                   }
-
+                                  
                                   // Opções inteligentes baseadas nos leads restantes
                                   if (leadsRemaining >= 1) options.push(1);
                                   if (leadsRemaining >= 5) options.push(5);
@@ -771,12 +751,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                                   if (leadsRemaining >= 20) options.push(20);
                                   if (leadsRemaining >= 25) options.push(25);
                                   if (leadsRemaining >= 30) options.push(30);
-
+                                  
                                   // Sempre incluir o valor máximo disponível
                                   if (leadsRemaining > 30 && !options.includes(leadsRemaining)) {
                                     options.push(leadsRemaining);
                                   }
-
+                                  
                                   return options.map((num) => (
                                     <SelectItem key={num} value={num.toString()}>
                                       {num} lead{num > 1 ? 's' : ''} {num === leadsRemaining ? '(máximo)' : ''}
@@ -819,8 +799,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 </Form>
                 </div>
               ) : (
-                <LeadsControlGuard
-
+                <LeadsControlGuard 
                   leadsToGenerate={parseInt(urlForm.watch("quantity") || "10")}
                   onAdjustQuantity={handleAdjustQuantity}
                   forceShowForm={showQuantityAdjustment}
@@ -852,7 +831,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       </FormItem>
                     )}
                   />
-
+                  
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-2 sm:space-y-3">
                       <Label className="text-sm sm:text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
@@ -865,17 +844,15 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         )}
                       </Label>
                       <Select onValueChange={(value) => {
-
+                        console.log('🔄 [Select Standalone] Valor alterado para:', value)
                         setQuantity(value)
                         urlForm.setValue('quantity', value) // Sincronizar com o formulário
                         console.log('📝 [Select Standalone] Formulário sincronizado:', urlForm.getValues())
                         setShowQuantityAdjustment(false) // Reset highlight when user changes
                       }} defaultValue={quantity} disabled={isGenerating}>
                         <SelectTrigger className={`h-10 sm:h-12 border-2 text-sm sm:text-base transition-all duration-300 ${
-                          showQuantityAdjustment
-
-                            ? 'gerador-adjustment-select-claro gerador-adjustment-select-escuro'
-
+                          showQuantityAdjustment 
+                            ? 'gerador-adjustment-select-claro gerador-adjustment-select-escuro' 
                             : 'gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                         }`}>
                           <SelectValue placeholder="Selecione..." />
@@ -889,16 +866,14 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         </SelectContent>
                       </Select>
                     </div>
-
+                    
                     <div className="space-y-2 sm:space-y-3">
                       <Label className="text-sm sm:text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
                         <Zap className="w-4 h-4" />
                         <span>Status</span>
                       </Label>
-                      <StatusIndicator
-
-                        status={extractionStatus}
-
+                      <StatusIndicator 
+                        status={extractionStatus} 
                         className="w-full"
                       />
                     </div>
@@ -906,15 +881,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
                   <motion.div
                     initial={{ scale: 1 }}
-                    animate={{
-
+                    animate={{ 
                       scale: isFormValid ? 1.02 : 1,
                       boxShadow: isFormValid ? "0 20px 40px rgba(59, 130, 246, 0.3)" : "0 4px 12px rgba(0, 0, 0, 0.1)"
                     }}
                     transition={{ duration: 0.3 }}
                     className="inline-block"
-                    style={{
-
+                    style={{ 
                       width: '100%',
                       height: 'auto',
                       display: 'inline-block'
@@ -923,10 +896,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     <Button
                       type="submit"
                       className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl m-0 p-0 ${
-                        isFormValid
-
-                          ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1'
-
+                        isFormValid 
+                          ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
                       }`}
                       disabled={isGenerating || !isFormValid}
@@ -985,9 +956,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   <CardDescription className="text-base sm:text-lg gerador-descricao-claro gerador-descricao-escuro text-center">
                     Selecione os leads que deseja salvar em sua lista
                   </CardDescription>
-
+                  
                 </CardHeader>
-
+                
                 <CardContent className="px-8">
                   {/* Filtros */}
                   <div className="gerador-filtros-claro gerador-filtros-escuro rounded-xl border border-border/50 mb-8 p-6">
@@ -1075,12 +1046,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       initial={{ opacity: 0, scale: 0.8, y: 20 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                      transition={{
-
-                        type: "spring",
-
-                        stiffness: 300,
-
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 300, 
                         damping: 30
                       }}
                       className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
@@ -1103,8 +1071,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   )}
 
                   {/* Grid de Cards */}
-                  <div
-
+                  <div 
                     data-leads-container
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                   >
@@ -1184,7 +1151,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                   <CardDescription className="text-base sm:text-lg gerador-descricao-claro gerador-descricao-escuro text-center">
                     {getSelectedLeads().length} leads selecionados para salvar
                   </CardDescription>
-
+                  
                   {/* Botão Selecionar Todos na seção de salvar */}
                   <div className="flex justify-center mt-4">
                     <Button
@@ -1192,10 +1159,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       size="sm"
                       onClick={toggleSelectAll}
                       className={`focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed text-white focus:ring-blue-500 inline-flex items-center justify-center whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 rounded-md px-3 text-xs border-2 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg ${
-                        filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected)
-
-                          ? 'gerador-botao-desmarcar-todos-claro gerador-botao-desmarcar-todos-escuro'
-
+                        filteredLeads.length > 0 && filteredLeads.every(lead => lead.selected) 
+                          ? 'gerador-botao-desmarcar-todos-claro gerador-botao-desmarcar-todos-escuro' 
                           : 'gerador-botao-selecionar-todos-claro gerador-botao-selecionar-todos-escuro'
                       }`}
                     >
@@ -1203,17 +1168,15 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     </Button>
                   </div>
                 </CardHeader>
-
+                
                 <CardContent className="px-8 pb-8">
                   <div className="space-y-6">
                     {/* Opções de Salvamento */}
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <label className={`flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                          saveMode === 'new'
-
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-
+                          saveMode === 'new' 
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
                             : 'border-border hover:border-blue-300'
                         }`}>
                           <input
@@ -1235,12 +1198,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             <span className="font-medium gerador-texto-claro dark:text-foreground">Criar nova lista</span>
                           </div>
                         </label>
-
+                        
                         <label className={`flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                          saveMode === 'existing'
-
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-
+                          saveMode === 'existing' 
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
                             : 'border-border hover:border-blue-300'
                         } ${existingLists.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>
                           <input
@@ -1293,10 +1254,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               </SelectTrigger>
                               <SelectContent className="gerador-lista-select-claro gerador-lista-select-escuro border-2 shadow-xl max-h-60">
                                 {existingLists.map((list) => (
-                                  <SelectItem
-
-                                    key={list.id}
-
+                                  <SelectItem 
+                                    key={list.id} 
                                     value={list.id}
                                     className="gerador-lista-item-claro gerador-lista-item-escuro hover:gerador-lista-item-hover-claro hover:gerador-lista-item-hover-escuro transition-all duration-200 cursor-pointer"
                                   >
@@ -1323,7 +1282,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                                   </div>
                                 </div>
                               )}
-
+                              
                               {duplicateLeads.length > 0 && (
                                 <div className="gerador-aviso-duplicados-claro gerador-aviso-duplicados-escuro p-4 border-2 rounded-xl shadow-sm">
                                   <div className="flex items-center space-x-3 mb-3">
@@ -1360,8 +1319,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                       <motion.div
                         initial={{ scale: 1 }}
-                        animate={{
-
+                        animate={{ 
                           scale: getSelectedLeads().length > 0 ? 1.02 : 1,
                           boxShadow: getSelectedLeads().length > 0 ? "0 8px 16px rgba(34, 197, 94, 0.2)" : "0 2px 8px rgba(0, 0, 0, 0.1)"
                         }}
@@ -1372,10 +1330,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           onClick={handleSaveLeads}
                           disabled={isSaving || getSelectedLeads().length === 0}
                           className={`w-full h-11 transition-all duration-300 text-base font-semibold rounded-lg ${
-                            getSelectedLeads().length > 0
-
-                              ? 'gerador-botao-claro gerador-botao-escuro shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-102 active:scale-98'
-
+                            getSelectedLeads().length > 0 
+                              ? 'gerador-botao-claro gerador-botao-escuro shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-102 active:scale-98' 
                               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           }`}
                           size="default"
@@ -1407,7 +1363,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           )}
                         </Button>
                       </motion.div>
-
+                      
                       <Button
                         variant="outline"
                         onClick={() => {

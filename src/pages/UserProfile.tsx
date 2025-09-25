@@ -28,6 +28,7 @@ import { SubscriptionStatusCard } from '../components/SubscriptionStatusCard'
 import { LeadsUsageTracker } from '../components/LeadsUsageTracker'
 import { ConnectionStatus } from '../components/ConnectionStatus'
 import { SubscriptionHistory } from '../components/SubscriptionHistory'
+import { WebhookMonitor } from '../components/WebhookMonitor'
 import { OriginalSubscriptionInfo } from '../components/OriginalSubscriptionInfo'
 import { useSmartSubscription } from '../hooks/useSmartSubscription'
 import { usePlans } from '../hooks/usePlans'
@@ -39,13 +40,16 @@ export default function UserProfile() {
   const [isLoading, setIsLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [activeTab, setActiveTab] = useState('subscription')
-
+  
   // Hooks para sistema de planos
   const { subscription, isLoading: subscriptionLoading, isUpdating, isConnected } = useSmartSubscription()
   const { plans, isLoading: plansLoading } = usePlans()
   const [showChangePassword, setShowChangePassword] = useState(false)
+  // const [showWebhookMonitor, setShowWebhookMonitor] = useState(false)
   const navigate = useNavigate()
   const { toast } = useToast()
+
+
   // Estados para edição
   const [editData, setEditData] = useState({
     fullName: '',
@@ -69,10 +73,10 @@ export default function UserProfile() {
   const loadUserData = async () => {
     try {
       setIsLoading(true)
-
+      
       // Carregar usuário atual
       const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
-
+      
       if (userError || !currentUser) {
         navigate('/login')
         return
@@ -82,7 +86,7 @@ export default function UserProfile() {
 
       // Carregar perfil do usuário
       const userProfile = await UserProfileService.getProfile(currentUser.id)
-
+      
       if (userProfile) {
         setProfile(userProfile)
         setEditData({
@@ -99,10 +103,10 @@ export default function UserProfile() {
           billingState: userProfile.billing_state || '',
           billingZipCode: userProfile.billing_zip_code || ''
         })
-
+        
       }
     } catch (error) {
-
+      console.error('Erro ao carregar dados do usuário:', error)
       toast({
         title: "❌ Erro",
         description: "Não foi possível carregar os dados do perfil.",
@@ -143,7 +147,7 @@ export default function UserProfile() {
         })
       }
     } catch (error) {
-
+      console.error('Erro ao salvar perfil:', error)
       toast({
         title: "❌ Erro",
         description: "Não foi possível salvar as alterações.",
@@ -158,7 +162,7 @@ export default function UserProfile() {
       await supabase.auth.signOut()
       navigate('/')
     } catch (error) {
-
+      console.error('Erro ao fazer logout:', error)
     }
   }
 
@@ -218,7 +222,7 @@ export default function UserProfile() {
                 </div>
               </div>
             </div>
-
+            
             <div className="flex items-center justify-end sm:justify-start">
               <Button
                 variant="outline"
@@ -288,6 +292,8 @@ export default function UserProfile() {
             </div>
           </div>
         </div>
+
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Sidebar - Desktop Only */}
           <div className="hidden lg:block lg:col-span-1">
@@ -345,7 +351,7 @@ export default function UserProfile() {
 
           {/* Main Content */}
           <div className="lg:col-span-2">
-              <div className="profile-tabs-list p-1 grid w-full grid-cols-3 gap-1 mb-4 sm:mb-6">
+              <div className="profile-tabs-list p-1 grid w-full grid-cols-4 gap-1 mb-4 sm:mb-6">
                 <button
                   className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
                     activeTab === 'subscription' ? 'profile-tab-active' : ''
@@ -372,6 +378,15 @@ export default function UserProfile() {
                 >
                   <span className="hidden sm:inline">Dados Pessoais</span>
                   <span className="sm:hidden">Dados</span>
+                </button>
+                <button
+                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                    activeTab === 'webhooks' ? 'profile-tab-active' : ''
+                  }`}
+                  onClick={() => setActiveTab('webhooks')}
+                >
+                  <span className="hidden sm:inline">Webhooks</span>
+                  <span className="sm:hidden">Logs</span>
                 </button>
               </div>
 
@@ -421,12 +436,13 @@ export default function UserProfile() {
 
                     {/* Histórico de Atividades da Assinatura */}
                     {subscription && (
-                      <SubscriptionHistory
-
+                      <SubscriptionHistory 
                         subscription={subscription}
                         className="profile-card"
                       />
                     )}
+
+
                     {/* Informações dos Planos */}
                     {!subscription && (
                       <div className="profile-card p-6">
@@ -458,7 +474,7 @@ export default function UserProfile() {
                                 </p>
                               </div>
                             </div>
-
+                            
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
                                 <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
@@ -485,7 +501,7 @@ export default function UserProfile() {
                                 </div>
                               </div>
                             </div>
-
+                            
                             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                               <div className="flex items-start gap-3">
                                 <div className="text-blue-500 mt-0.5">💡</div>
@@ -494,8 +510,7 @@ export default function UserProfile() {
                                     Como usar seus leads bônus
                                   </h4>
                                   <p className="text-xs text-blue-700 dark:text-blue-300">
-                                    Vá para o <strong>Gerador de Leads</strong> e cole uma URL do Google Maps.
-
+                                    Vá para o <strong>Gerador de Leads</strong> e cole uma URL do Google Maps. 
                                     Cada busca consome 1 lead. Quando acabar, você pode assinar um plano para continuar!
                                   </p>
                                 </div>
@@ -527,7 +542,7 @@ export default function UserProfile() {
                                     por mês
                                   </div>
                                 </div>
-
+                                
                                 <div className="mb-4">
                                   <div className="text-center">
                                     <div className="text-xl font-bold text-green-600 dark:text-green-400">
@@ -634,8 +649,7 @@ export default function UserProfile() {
                               <h4 className="profile-title font-medium text-sm sm:text-base">Alterar Senha</h4>
                               <p className="profile-text-muted text-xs sm:text-sm">Atualize sua senha de acesso</p>
                             </div>
-                            <Button
-
+                            <Button 
                               className="profile-btn-outline text-xs sm:text-sm px-3 py-2 self-start sm:self-auto"
                               size="sm"
                               onClick={() => setShowChangePassword(true)}
@@ -915,6 +929,13 @@ export default function UserProfile() {
                   </div>
                 </div>
               )}
+
+              {activeTab === 'webhooks' && (
+                <div className="mt-4 sm:mt-6 animate-fade-in">
+                  <WebhookMonitor />
+                </div>
+              )}
+
             </div>
           </div>
         </div>
@@ -940,8 +961,7 @@ export default function UserProfile() {
       )}
 
       {/* Status de Conexão (Debug) */}
-      <ConnectionStatus
-
+      <ConnectionStatus 
         isConnected={isConnected}
         isUpdating={isUpdating}
         lastUpdate={subscription ? new Date() : null}

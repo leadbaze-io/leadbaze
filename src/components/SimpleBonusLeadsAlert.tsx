@@ -11,31 +11,32 @@ export const SimpleBonusLeadsAlert: React.FC<SimpleBonusLeadsAlertProps> = ({
   leadsRemaining,
   onAdjustQuantity
 }) => {
-
+  console.log('🚀 [SimpleBonusLeadsAlert] Componente renderizado!');
+  
   // Se não há leads restantes, não renderizar o componente
   if (leadsRemaining <= 0) {
     return null;
   }
-
+  
   const handleAdjustQuantity = () => {
-
+    console.log('🔧 [SimpleBonusLeadsAlert] Botão clicado!');
     onAdjustQuantity();
   };
 
   // Detectar se está no modo escuro
   const isDark = document.documentElement.classList.contains('dark');
-
+  
   const containerStyle = {
     background: isDark ? '#374151' : 'linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%)',
     borderColor: '#fb923c'
   };
-
+  
   const titleStyle = {
     color: isDark ? '#ffffff' : '#9a3412',
     fontWeight: '700',
     fontSize: '20px'
   };
-
+  
   const descriptionStyle = {
     color: isDark ? '#ffffff' : '#c2410c',
     fontWeight: '500',
@@ -43,8 +44,7 @@ export const SimpleBonusLeadsAlert: React.FC<SimpleBonusLeadsAlertProps> = ({
   };
 
   return (
-    <div
-
+    <div 
       className="bonus-leads-alert"
       style={containerStyle}
     >
@@ -63,7 +63,7 @@ export const SimpleBonusLeadsAlert: React.FC<SimpleBonusLeadsAlertProps> = ({
           </div>
         </div>
       </div>
-
+      
       <div className="bonus-leads-buttons">
         <button
           onClick={handleAdjustQuantity}
@@ -72,7 +72,7 @@ export const SimpleBonusLeadsAlert: React.FC<SimpleBonusLeadsAlertProps> = ({
           <Settings />
           Ajustar Quantidade
         </button>
-
+        
         <button
           onClick={() => window.location.href = '/plans'}
           className="bonus-leads-btn-plans bonus-leads-btn-plans-light dark:bonus-leads-btn-plans-dark"

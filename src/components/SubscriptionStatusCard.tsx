@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Zap, TrendingUp, Settings, X } from 'lucide-react';
+import { Calendar, Zap, TrendingUp, Settings } from 'lucide-react';
 import type { SubscriptionStatusCardProps } from '../types/subscription';
 import { SubscriptionManagement } from './SubscriptionManagement';
 import { CancelledSubscriptionWarning } from './CancelledSubscriptionWarning';
@@ -51,12 +51,12 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
     // Calcular porcentagem baseada no limite do plano
     const planLimit = subscription.leads_limit || 0;
     if (planLimit <= 0) return 0;
-
+    
     // Se tem leads excedentes (upgrade), mostrar 0% usado
     if (subscription.leads_remaining > planLimit) {
       return 0; // Usuário tem mais leads que o plano permite
     }
-
+    
     return Math.round((subscription.leads_used / planLimit) * 100);
   };
 
@@ -77,14 +77,14 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
   const calculateDaysRemaining = () => {
     const now = new Date();
     const periodEnd = new Date(subscription.current_period_end);
-
+    
     // Se a data de fim do período já passou, calcular próximo ciclo
     if (periodEnd <= now) {
       // Calcular próximo ciclo (30 dias a partir de agora)
       const nextCycle = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
       return Math.ceil((nextCycle.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     }
-
+    
     // Se ainda está no período atual, calcular dias restantes
     return Math.ceil((periodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
   };
@@ -94,16 +94,14 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
   return (
     <div>
       {/* Aviso para assinatura cancelada */}
-      {subscription.status === 'cancelled' &&
-
+      {subscription.status === 'cancelled' && 
        new Date(subscription.current_period_end) > new Date() && (
-        <CancelledSubscriptionWarning
-
+        <CancelledSubscriptionWarning 
           leadsRemaining={subscription.leads_remaining}
           accessUntil={subscription.current_period_end}
         />
       )}
-
+      
       <div className={`subscription-card rounded-2xl p-6 ${subscription.is_free_trial ? 'subscription-card-free-trial' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -112,8 +110,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             {subscription.plan_display_name || subscription.plan_name || 'Plano'}
           </h3>
           <p className="subscription-card-description text-sm">
-            {subscription.is_free_trial
-
+            {subscription.is_free_trial 
               ? `${formatLeads(subscription.leads_limit || 0)} leads gratuitos para teste`
               : `${formatLeads(subscription.leads_limit || 0)} leads por mês`
             }
@@ -145,38 +142,25 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
       {/* Status da Assinatura */}
       <div className="flex items-center gap-2 mb-6">
         <div className={`w-3 h-3 rounded-full ${
-          subscription.status === 'active'
-
-            ? 'bg-green-500'
-
-            : subscription.status === 'cancelled'
-
-              ? 'bg-red-500'
-
+          subscription.status === 'active' 
+            ? 'bg-green-500' 
+            : subscription.status === 'cancelled' 
+              ? 'bg-red-500' 
               : 'bg-yellow-500'
         }`} />
         <span className={`subscription-card-status-text text-sm font-medium ${
-          subscription.status === 'active'
-
-            ? 'text-green-600 dark:text-green-400'
-
-            : subscription.status === 'cancelled'
-
-              ? 'text-red-600 dark:text-red-400'
-
+          subscription.status === 'active' 
+            ? 'text-green-600 dark:text-green-400' 
+            : subscription.status === 'cancelled' 
+              ? 'text-red-600 dark:text-red-400' 
               : 'text-yellow-600 dark:text-yellow-400'
         }`}>
-          {subscription.is_free_trial
-
+          {subscription.is_free_trial 
             ? 'Teste Gratuito'
-            : subscription.status === 'active'
-
-              ? 'Ativa'
-
-              : subscription.status === 'cancelled'
-
-                ? 'Cancelada'
-
+            : subscription.status === 'active' 
+              ? 'Ativa' 
+              : subscription.status === 'cancelled' 
+                ? 'Cancelada' 
                 : subscription.status}
         </span>
         {subscription.status === 'cancelled' && (
@@ -234,8 +218,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
                   🎁 Teste Gratuito Ativo
                 </h4>
                 <p className="subscription-cancellation-text text-sm text-blue-700 dark:text-blue-300">
-                  Você tem <strong>{formatLeads(subscription.leads_remaining)} leads gratuitos</strong> para testar o sistema.
-
+                  Você tem <strong>{formatLeads(subscription.leads_remaining)} leads gratuitos</strong> para testar o sistema. 
                   Após usar todos os leads, <strong>assine um plano</strong> para continuar gerando leads.
                 </p>
               </div>
@@ -257,16 +240,15 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             {usagePercentage}%
           </span>
         </div>
-
+        
         {/* Barra de Progresso */}
         <div className="subscription-card-usage-bar-bg w-full rounded-full h-2 mb-2">
-          <div
-
+          <div 
             className={`subscription-card-usage-bar h-2 rounded-full transition-all duration-500 ease-out ${getUsageBarColor(usagePercentage)}`}
             style={{ width: `${Math.min(usagePercentage, 100)}%` }}
           />
         </div>
-
+        
         <div className="flex justify-between subscription-card-usage-text text-xs">
           <span>
             {subscription.leads_remaining > subscription.leads_limit ? (
@@ -299,14 +281,10 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
           <div className="flex items-center gap-2 mb-1">
             <Calendar className="subscription-card-info-icon w-4 h-4" />
             <span className="subscription-card-info-label text-xs">
-              {subscription.is_free_trial
-
-                ? 'Expira em'
-
-                : subscription.status === 'cancelled'
-
-                  ? 'Acesso até'
-
+              {subscription.is_free_trial 
+                ? 'Expira em' 
+                : subscription.status === 'cancelled' 
+                  ? 'Acesso até' 
                   : 'Próxima cobrança'
               }
             </span>
@@ -315,7 +293,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             {formatDate(subscription.current_period_end)}
           </div>
         </div>
-
+        
         <div className="subscription-card-info-card rounded-lg p-3">
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="subscription-card-info-icon w-4 h-4" />
@@ -324,8 +302,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             </span>
           </div>
           <div className="subscription-card-info-value text-sm font-semibold">
-            {subscription.is_free_trial
-
+            {subscription.is_free_trial 
               ? `${subscription.leads_remaining} leads`
               : `${daysRemaining} dias`
             }
@@ -344,7 +321,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             Assinar Plano
           </button>
         )}
-
+        
         {onUpgrade && subscription.status === 'active' && !subscription.is_free_trial && (
           <button
             onClick={onUpgrade}
@@ -354,12 +331,11 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
             Atualizar Plano
           </button>
         )}
-
-        {!subscription.is_free_trial && subscription.status === 'active' && (
+        
+        {!subscription.is_free_trial && (
           <button
             onClick={() => setShowManagement(!showManagement)}
-            className="subscription-cancel-btn flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2"
-            title="Gerenciar assinatura"
+            className="subscription-card-btn-secondary flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2"
           >
             <Settings className="w-4 h-4" />
             {showManagement ? 'Ocultar' : 'Gerenciar'}
@@ -386,11 +362,9 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
           <div className="flex items-center gap-2">
             <div className="subscription-card-warning-dot w-2 h-2 rounded-full" />
             <span className="subscription-card-warning-text text-sm font-medium">
-              {usagePercentage >= 100
-
+              {usagePercentage >= 100 
                 ? 'Limite esgotado! Considere atualizar seu plano.'
-                : usagePercentage >= 90
-
+                : usagePercentage >= 90 
                 ? 'Limite quase esgotado! Considere atualizar seu plano.'
                 : 'Você está usando mais de 80% do seu limite mensal.'
               }

@@ -26,15 +26,22 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
   const [availability, setAvailability] = useState<LeadsAvailabilityResponse | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const [hasShownWarning, setHasShownWarning] = useState(false);
+
+
   // Verificar disponibilidade de leads
   const checkAvailability = async () => {
     try {
       setIsChecking(true);
-
+      console.log('🔍 [LeadsControlGuard] Verificando disponibilidade:', {
+        leadsToGenerate,
+        subscription: subscription ? 'existe' : 'não existe',
+        subscriptionLeads: subscription?.leads_remaining
+      });
+      
       const result = await checkLeadsAvailability(leadsToGenerate);
-
+      console.log('📊 [LeadsControlGuard] Resultado da verificação:', result);
       setAvailability(result);
-
+      
       // Se não pode gerar leads, mostrar toast de erro
       if (!result.can_generate) {
         toast({
@@ -43,17 +50,17 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
           variant: "destructive",
           className: "toast-modern toast-error-validation"
         });
-
+        
         // Chamar callback se fornecido
         if (onLeadsExhausted) {
           onLeadsExhausted();
         }
       }
-
+      
       // Verificar se deve mostrar aviso de limite próximo
       if (result.can_generate && subscription) {
         const usagePercentage = (subscription.leads_used / (subscription.leads_limit || 1)) * 100;
-
+        
         if (usagePercentage >= showWarningAt && !hasShownWarning) {
           toast({
             title: "⚠️ Limite Próximo",
@@ -64,9 +71,9 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
           setHasShownWarning(true);
         }
       }
-
+      
     } catch (error) {
-
+      console.error('Erro ao verificar disponibilidade de leads:', error);
       toast({
         title: "❌ Erro de Verificação",
         description: "Não foi possível verificar a disponibilidade de leads. Tente novamente.",
@@ -82,6 +89,8 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
   useEffect(() => {
     checkAvailability();
   }, [leadsToGenerate]);
+
+
   // Se está verificando, mostrar loading
   if (isChecking) {
     return (
@@ -117,37 +126,40 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
       </div>
     );
   }
+
+
   // Se não pode gerar leads E não está forçando a exibição do formulário, mostrar mensagem
   if (availability && !availability.can_generate && !forceShowForm) {
     const isInsufficient = availability.reason === 'insufficient_leads';
-
+    console.log('🚨 [LeadsControlGuard] Mostrando mensagem de erro:', {
+      can_generate: availability.can_generate,
+      forceShowForm,
+      isInsufficient
+    });
+    
+    
     return (
       <div>
         {/* Mensagem de limite atingido */}
         <div className="test-generation-limit-reached-card rounded-2xl p-8 text-center mb-6">
           <div className="text-6xl mb-4">
-            {isInsufficient ? '🚫' :
-
-             (!subscription && availability && availability.leads_remaining > 0) ? '🎁' :
-
+            {isInsufficient ? '🚫' : 
+             (!subscription && availability && availability.leads_remaining > 0) ? '🎁' : 
              '💳'}
           </div>
-
+          
           <h3 className="test-generation-limit-reached-title text-xl font-bold mb-2">
-            {isInsufficient ? 'Limite de Leads Atingido' :
-
-             (availability && availability.leads_remaining > 0) ? 'Quantidade Maior que Leads Disponíveis' :
-
+            {isInsufficient ? 'Limite de Leads Atingido' : 
+             (availability && availability.leads_remaining > 0) ? 'Quantidade Maior que Leads Disponíveis' : 
              'Assinatura Necessária'}
           </h3>
-
+          
           <p className="test-generation-limit-reached-description mb-6">
-            {(availability && availability.leads_remaining > 0) ?
-
+            {(availability && availability.leads_remaining > 0) ? 
               `Você tem ${availability.leads_remaining} leads restantes. Ajuste a quantidade para ${availability.leads_remaining} ou menos.` :
               availability.message}
           </p>
-
+          
           {isInsufficient && (
             <div className="test-generation-limit-reached-progress-card rounded-lg p-4 mb-6">
               <div className="flex items-center justify-between text-sm mb-2">
@@ -163,19 +175,16 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
                 </span>
               </div>
               <div className="test-generation-limit-reached-progress-bg w-full rounded-full h-2">
-                <div
-
+                <div 
                   className="test-generation-limit-reached-progress-bar h-2 rounded-full"
-                  style={{
-
-                    width: `${Math.min(((subscription?.leads_used || 0) / (subscription?.leads_limit || 1)) * 100, 100)}%`
-
+                  style={{ 
+                    width: `${Math.min(((subscription?.leads_used || 0) / (subscription?.leads_limit || 1)) * 100, 100)}%` 
                   }}
                 />
               </div>
             </div>
           )}
-
+          
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {/* Botão para ajustar quantidade - sempre aparece se tem leads bônus */}
             {!subscription && availability && availability.leads_remaining > 0 && onAdjustQuantity && (
@@ -187,7 +196,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
                 Ajustar Quantidade
               </button>
             )}
-
+            
             <button
               onClick={() => window.location.href = '/plans'}
               className="test-generation-limit-reached-button-primary px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
@@ -195,7 +204,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
               <TrendingUp className="w-5 h-5" />
               {isInsufficient ? 'Atualizar Plano' : 'Ver Planos'}
             </button>
-
+            
             {isInsufficient && (
               <button
                 onClick={() => window.location.href = '/profile'}
@@ -207,7 +216,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
             )}
           </div>
         </div>
-
+        
         {/* Não mostrar o formulário quando limite é atingido */}
       </div>
     );
@@ -231,11 +240,16 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
           </div>
         </div>
       )}
-
+      
       {children}
     </div>
   );
-
+  
   // Log final para confirmar que está mostrando o formulário
-
+  console.log('✅ [LeadsControlGuard] Mostrando formulário:', {
+    can_generate: availability?.can_generate,
+    forceShowForm,
+    hasChildren: !!children
+  });
+  
 };

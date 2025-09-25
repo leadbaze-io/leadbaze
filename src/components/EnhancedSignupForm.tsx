@@ -3,18 +3,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-
-  User,
-
-  Phone,
-
-  MapPin,
-
-  CheckCircle,
-
-  ArrowRight,
-
+import { 
+  User, 
+  Phone, 
+  MapPin, 
+  CheckCircle, 
+  ArrowRight, 
   ArrowLeft,
   Loader,
   Building,
@@ -27,16 +21,11 @@ import { InputMask, MASKS } from './ui/InputMask'
 import { PasswordStrengthIndicator } from './PasswordStrengthIndicator'
 import { useToast } from '../hooks/use-toast'
 import { supabase } from '../lib/supabaseClient'
-import {
-
-  validateCPF,
-
-  validateCNPJ,
-
-  validateCEP,
-
-  validateEmail,
-
+import { 
+  validateCPF, 
+  validateCNPJ, 
+  validateCEP, 
+  validateEmail, 
   validatePhone
 } from '../lib/validationUtils'
 import '../styles/toast-modern.css'
@@ -123,10 +112,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setLoading] = useState(false)
   const [, setVerificationStatus] = useState<Record<string, boolean>>({})
-  const [, setCepData] = useState<Record<string, unknown> | null>(null)
-
+  const [, setCepData] = useState<any>(null)
+  
   const { toast } = useToast()
-
+  
   const totalSteps = 3
 
   // Formulários para cada etapa
@@ -264,14 +253,11 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       const paymentErrors = paymentForm.formState.errors
       const complianceErrors = complianceForm.formState.errors
 
-      if (Object.keys(personalErrors).length > 0 ||
-
-          Object.keys(addressErrors).length > 0 ||
-
-          Object.keys(paymentErrors).length > 0 ||
-
+      if (Object.keys(personalErrors).length > 0 || 
+          Object.keys(addressErrors).length > 0 || 
+          Object.keys(paymentErrors).length > 0 || 
           Object.keys(complianceErrors).length > 0) {
-
+        console.log('❌ BLOQUEANDO SUBMIT - Há erros de validação')
         toast({
           title: "⚠️ Erro de Validação",
           description: "Por favor, corrija os erros no formulário antes de continuar.",
@@ -281,8 +267,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         setLoading(false)
         return
       }
-    } catch (validationError: unknown) {
-      console.error('Erro de validação:', validationError);
+
+      console.log('✅ Dados validados com sucesso')
+    } catch (validationError: any) {
+      console.error('❌ Erro de validação:', validationError)
       toast({
         title: "⚠️ Erro de Validação",
         description: "Dados inválidos. Verifique os campos obrigatórios.",
@@ -320,20 +308,21 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
 
       if (authData.user) {
         // SEMPRE criar perfil, independente da confirmação de email
-
+        console.log('📝 Criando perfil com dados reais do formulário...')
+        
         // Converter data de nascimento do formato brasileiro (DD/MM/YYYY) para ISO (YYYY-MM-DD)
         const convertBirthDate = (dateStr: string): string | null => {
           if (!dateStr) return null;
-
+          
           // Verificar se está no formato DD/MM/YYYY
           const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
           const match = dateStr.match(dateRegex);
-
+          
           if (match) {
             const [, day, month, year] = match;
             return `${year}-${month}-${day}`;
           }
-
+          
           return dateStr; // Se já estiver no formato correto, retorna como está
         };
 
@@ -363,10 +352,16 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         }
 
         // Aguardar um pouco para garantir que o usuário esteja na tabela auth.users
-
+        console.log('⏳ Aguardando usuário ser registrado no sistema...')
         await new Promise(resolve => setTimeout(resolve, 3000)) // Aguardar 3 segundos
+        
+        console.log('🔐 Prosseguindo com criação do perfil para usuário:', authData.user.id)
+        
         // Criar perfil usando função RPC (bypassa RLS)
-        const { error: profileError } = await supabase.rpc('create_user_profile', {
+        console.log('🔐 Usuário autenticado:', authData.user.id)
+        console.log('📊 Dados do perfil:', profileData)
+        
+        const { data: profileResult, error: profileError } = await supabase.rpc('create_user_profile', {
           p_user_id: authData.user.id,
           p_tax_type: profileData.tax_type,
           p_full_name: profileData.full_name,
@@ -393,14 +388,15 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         })
 
         if (profileError) {
-
+          console.error('❌ Erro ao criar perfil:', profileError)
+          
           // Tratar erro específico de foreign key do usuário
           if (profileError.code === '23503' && profileError.message.includes('user_id')) {
-
+            console.log('🔄 Erro de foreign key - tentando novamente em 2 segundos...')
             await new Promise(resolve => setTimeout(resolve, 2000))
-
+            
             // Tentar criar o perfil novamente
-            const { error: retryError } = await supabase.rpc('create_user_profile', {
+            const { data: retryResult, error: retryError } = await supabase.rpc('create_user_profile', {
               p_user_id: authData.user.id,
               p_tax_type: profileData.tax_type,
               p_full_name: profileData.full_name,
@@ -425,17 +421,17 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
               p_lgpd_consent_ip: profileData.lgpd_consent_ip,
               p_lgpd_consent_user_agent: profileData.lgpd_consent_user_agent
             })
-
+            
             if (retryError) {
               throw new Error("Erro de sincronização. Aguarde alguns minutos e tente novamente ou entre em contato com o suporte.")
             } else {
-
+              console.log('✅ Perfil criado com sucesso na segunda tentativa!', retryResult)
               // Continuar com o fluxo normal - não há erro
             }
           } else {
             // Outros tipos de erro
             let profileErrorMessage = "Erro ao criar perfil. Tente novamente."
-
+            
             if (profileError.code === '23505') {
               // Violação de constraint única
               if (profileError.message.includes('cpf')) {
@@ -454,21 +450,24 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             } else if (profileError.message.includes('invalid input')) {
               profileErrorMessage = "Dados inválidos. Verifique as informações e tente novamente."
             }
-
+            
             throw new Error(profileErrorMessage)
           }
         }
-        // Dar 30 leads bônus para o usuário (após criar o perfil)
 
+        console.log('✅ Perfil criado com sucesso!', profileResult)
+
+        // Dar 30 leads bônus para o usuário (após criar o perfil)
+        console.log('🎁 Dando 30 leads bônus para o usuário...')
         const { data: bonusResult, error: bonusError } = await supabase.rpc('give_bonus_leads_to_new_user', {
           p_user_id: authData.user.id
         })
 
         if (bonusError) {
-          console.error('Erro ao criar bonus leads:', bonusError);
+          console.error('❌ Erro ao dar leads bônus:', bonusError)
           // Não falhar o cadastro por causa disso, apenas logar o erro
         } else {
-          console.log('Bonus leads criados com sucesso');
+          console.log('✅ Leads bônus dados com sucesso!', bonusResult)
         }
 
         // Verificar se o email foi confirmado para mostrar mensagem apropriada
@@ -493,10 +492,11 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         onSuccess?.()
       }
     } catch (error: any) {
-
+      console.error('Erro ao criar conta:', error)
+      
       let errorMessage = "Erro inesperado. Tente novamente mais tarde."
       let errorTitle = "❌ Erro ao criar conta"
-
+      
       // Tratar erros de autenticação
       if (error.message && error.message.includes('User already registered')) {
         errorMessage = "Este email já está cadastrado. Tente fazer login ou use outro email."
@@ -541,7 +541,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         // Usar a mensagem personalizada se disponível
         errorMessage = error.message
       }
-
+      
       // Determinar o tipo de erro para o CSS
       let errorClass = 'toast-modern toast-error'
       if (errorMessage.includes('CPF')) {
@@ -555,7 +555,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       } else if (errorMessage.includes('validação') || errorMessage.includes('Validação')) {
         errorClass = 'toast-modern toast-error-validation'
       }
-
+      
       toast({
         title: errorTitle,
         description: errorMessage,
@@ -634,7 +634,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             error={personalForm.formState.errors.cpf?.message}
             forceLightMode={true}
           />
-
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Data de Nascimento
@@ -660,7 +660,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             error={personalForm.formState.errors.cnpj?.message}
             forceLightMode={true}
           />
-
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Razão Social
@@ -921,6 +921,8 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       </div>
     </motion.div>
   )
+
+
   // ==============================================
   // RENDERIZAÇÃO PRINCIPAL
   // ==============================================

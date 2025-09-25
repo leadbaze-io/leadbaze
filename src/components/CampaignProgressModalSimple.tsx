@@ -63,7 +63,7 @@ export default function CampaignProgressModalSimple({
   onCancel,
   onClose
 }: CampaignProgressModalSimpleProps) {
-  const { theme } = useTheme()
+  const { } = useTheme()
   const [elapsedTime, setElapsedTime] = useState<string>('00:00')
   const [showDetails, setShowDetails] = useState<boolean>(false)
 

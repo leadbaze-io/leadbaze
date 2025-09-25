@@ -18,13 +18,13 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
   const fetchUsageHistory = async () => {
     try {
       setIsLoading(true);
-
+      
       if (!subscription) return;
 
       // Buscar o user_id do usuário autenticado
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-
+        console.error('Usuário não autenticado');
         return;
       }
 
@@ -38,13 +38,13 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
         .limit(100);
 
       if (error) {
-
+        console.error('Erro ao buscar histórico de uso:', error);
         return;
       }
 
       setUsageHistory(data || []);
     } catch (error) {
-      console.error('Erro ao carregar histórico de uso:', error);
+      console.error('Erro inesperado ao buscar histórico:', error);
     } finally {
       setIsLoading(false);
     }
@@ -57,15 +57,15 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
     const now = new Date();
     const periodStart = new Date(subscription.current_period_start);
     const periodEnd = new Date(subscription.current_period_end);
-
+    
     // Usar dados reais da assinatura em vez de calcular do histórico
     const totalUsed = subscription.leads_used || 0;
     const totalLeadsAvailable = subscription.leads_limit || 0;
-
+    
     const daysInPeriod = Math.ceil((periodEnd.getTime() - periodStart.getTime()) / (1000 * 60 * 60 * 24));
     const daysPassed = Math.ceil((now.getTime() - periodStart.getTime()) / (1000 * 60 * 60 * 24));
     const averageDailyUsage = daysPassed > 0 ? totalUsed / daysPassed : 0;
-
+    
     // Projeção baseada no plano real, não na média diária
     const projectedMonthlyUsage = totalLeadsAvailable;
     // Calcular dias até reset baseado no ciclo de cobrança
@@ -76,13 +76,13 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
         const nextCycle = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         return Math.ceil((nextCycle.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
       }
-
+      
       // Se ainda está no período atual, calcular dias restantes
       return Math.ceil((periodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
     };
 
     const daysUntilReset = calculateDaysUntilReset();
-
+    
     // Calcular porcentagem de uso baseada no limite real
     const usagePercentage = totalLeadsAvailable > 0 ? (totalUsed / totalLeadsAvailable) * 100 : 0;
 
@@ -136,26 +136,26 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
     const now = new Date();
     const periodStart = new Date(subscription.current_period_start);
     const daysInPeriod = Math.ceil((new Date(subscription.current_period_end).getTime() - periodStart.getTime()) / (1000 * 60 * 60 * 24));
-
+    
     const chartData = [];
     for (let i = 0; i < Math.min(daysInPeriod, 30); i++) {
       const date = new Date(periodStart);
       date.setDate(date.getDate() + i);
-
+      
       const dayUsage = usageHistory
         .filter(usage => {
           const usageDate = new Date(usage.created_at);
           return usageDate.toDateString() === date.toDateString();
         })
         .reduce((sum, usage) => sum + usage.leads_generated, 0);
-
+      
       chartData.push({
         date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
         usage: dayUsage,
         isToday: date.toDateString() === now.toDateString()
       });
     }
-
+    
     return chartData;
   };
 
@@ -165,56 +165,56 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
 
     const periodStart = new Date(subscription.current_period_start);
     const weeks = [];
-
+    
     // Gerar dados dos últimos 28 dias (4 semanas)
     for (let weekIndex = 0; weekIndex < 4; weekIndex++) {
       const weekStart = new Date(periodStart);
       weekStart.setDate(weekStart.getDate() + (weekIndex * 7));
-
+      
       const weekDays = [];
       let totalLeads = 0;
-
+      
       for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
         const date = new Date(weekStart);
         date.setDate(date.getDate() + dayIndex);
-
+        
         const dayUsage = usageHistory
           .filter(usage => {
             const usageDate = new Date(usage.created_at);
             return usageDate.toDateString() === date.toDateString();
           })
           .reduce((sum, usage) => sum + usage.leads_generated, 0);
-
+        
         weekDays.push({
           date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
           leadsUsed: dayUsage
         });
-
+        
         totalLeads += dayUsage;
       }
-
+      
       weeks.push({
         days: weekDays,
         totalLeads,
         averageLeads: totalLeads / 7
       });
     }
-
+    
     return weeks;
   };
 
   // Calcular tendência de uso
   const getUsageTrend = () => {
     if (!stats || chartData.length < 7) return 'Estável';
-
+    
     const recentWeek = chartData.slice(-7);
     const previousWeek = chartData.slice(-14, -7);
-
+    
     const recentAvg = recentWeek.reduce((sum, day) => sum + day.usage, 0) / 7;
     const previousAvg = previousWeek.reduce((sum, day) => sum + day.usage, 0) / 7;
-
+    
     const change = ((recentAvg - previousAvg) / (previousAvg || 1)) * 100;
-
+    
     if (change > 20) return 'Crescendo';
     if (change < -20) return 'Diminuindo';
     return 'Estável';
@@ -279,7 +279,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
             </p>
           </div>
         </div>
-
+        
         <button
           onClick={handleRefresh}
           disabled={isLoading}
@@ -304,7 +304,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               de {new Intl.NumberFormat('pt-BR').format(subscription.leads_limit || 0)}
             </div>
           </div>
-
+          
           <div className="leads-usage-stat-card rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-green-500" />
@@ -317,7 +317,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               leads por dia
             </div>
           </div>
-
+          
           <div className="leads-usage-stat-card rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-purple-500" />
@@ -330,7 +330,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               leads disponíveis
             </div>
           </div>
-
+          
           <div className="leads-usage-stat-card rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Calendar className="w-4 h-4 text-orange-500" />
@@ -357,10 +357,9 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               {Math.round(stats.usagePercentage)}%
             </span>
           </div>
-
+          
           <div className="leads-usage-progress-bg w-full rounded-full h-3">
-            <div
-
+            <div 
               className={`leads-usage-progress-bar h-3 rounded-full transition-all duration-300 ${
                 stats.usagePercentage >= 90 ? 'bg-red-500' :
                 stats.usagePercentage >= 70 ? 'bg-yellow-500' : 'bg-green-500'
@@ -368,7 +367,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               style={{ width: `${Math.min(stats.usagePercentage, 100)}%` }}
             />
           </div>
-
+          
           <div className="flex justify-between leads-usage-progress-text text-xs mt-1">
             <span>{new Intl.NumberFormat('pt-BR').format(stats.totalUsed)} utilizados</span>
             <span>{new Intl.NumberFormat('pt-BR').format(subscription.leads_remaining || 0)} restantes</span>
@@ -382,7 +381,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
           <h4 className="leads-usage-title text-sm font-semibold mb-4">
             Uso por Semana (Últimas 4 semanas)
           </h4>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {getWeeklyUsage().map((week, weekIndex) => (
               <div key={weekIndex} className="leads-usage-week-card rounded-lg p-4">
@@ -395,10 +394,8 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
                       <div
                         key={dayIndex}
                         className={`w-2 h-2 rounded-full ${
-                          day.leadsUsed > 0
-
-                            ? 'leads-usage-week-dot-active'
-
+                          day.leadsUsed > 0 
+                            ? 'leads-usage-week-dot-active' 
                             : 'leads-usage-week-dot-inactive'
                         }`}
                         title={`${day.date}: ${day.leadsUsed} leads`}
@@ -406,7 +403,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
                     ))}
                   </div>
                 </div>
-
+                
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="leads-usage-week-label text-xs">Total:</span>
@@ -414,21 +411,19 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
                       {week.totalLeads}
                     </span>
                   </div>
-
+                  
                   <div className="flex justify-between items-center">
                     <span className="leads-usage-week-label text-xs">Média:</span>
                     <span className="leads-usage-week-metric text-sm font-semibold">
                       {week.averageLeads.toFixed(1)}
                     </span>
                   </div>
-
+                  
                   <div className="leads-usage-progress-bg w-full rounded-full h-2">
                     <div
                       className="leads-usage-progress-bar h-2 rounded-full transition-all duration-300"
-                      style={{
-
-                        width: `${Math.min((week.totalLeads / (subscription?.plan?.leads || 1000)) * 100, 100)}%`
-
+                      style={{ 
+                        width: `${Math.min((week.totalLeads / (subscription?.plan?.leads || 1000)) * 100, 100)}%` 
                       }}
                     />
                   </div>
@@ -445,7 +440,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
           <h4 className="leads-usage-title text-sm font-semibold mb-4">
             Padrão de Uso
           </h4>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="leads-usage-pattern-card rounded-lg p-4">
               <div className="flex items-center gap-3 mb-3">
@@ -459,7 +454,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
                 {((stats.activeDays || 0) / chartData.length * 100).toFixed(1)}% dos dias
               </div>
             </div>
-
+            
             <div className="leads-usage-pattern-card rounded-lg p-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -472,7 +467,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
                 {stats.maxUsageDate || 'N/A'}
               </div>
             </div>
-
+            
             <div className="leads-usage-pattern-card rounded-lg p-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -495,7 +490,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
           <h4 className="leads-usage-title text-sm font-semibold mb-3">
             Atividade Recente
           </h4>
-
+          
           {/* Nota explicativa para planos de teste */}
           {subscription.is_free_trial && (
             <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg">
@@ -507,7 +502,7 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
               </div>
             </div>
           )}
-
+          
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {usageHistory.slice(0, 8).map((usage) => (
               <div key={usage.id} className="leads-usage-activity-item flex items-center justify-between p-3 rounded-lg transition-colors">
@@ -542,11 +537,9 @@ export const LeadsUsageTracker: React.FC<LeadsUsageTrackerProps> = ({ className 
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${stats.usagePercentage >= 100 ? 'bg-red-500' : 'bg-yellow-500'}`} />
             <span className="leads-usage-warning-text text-sm font-medium">
-              {stats.usagePercentage >= 100
-
+              {stats.usagePercentage >= 100 
                 ? 'Limite esgotado! Considere atualizar seu plano.'
-                : stats.usagePercentage >= 90
-
+                : stats.usagePercentage >= 90 
                 ? 'Limite quase esgotado! Considere atualizar seu plano.'
                 : 'Você está usando mais de 80% do seu limite mensal.'
               }

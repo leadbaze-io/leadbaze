@@ -51,14 +51,14 @@ export const SubscriptionHistory: React.FC<SubscriptionHistoryProps> = ({
 
       // Para trial gratuito, usar null como subscription_id
       const subscriptionId = subscription.id === 'bonus-trial' ? null : subscription.id;
-
+      
       const { data, error } = await supabase.rpc('get_subscription_activity_history', {
         p_user_id: user.id,
         p_subscription_id: subscriptionId
       });
 
       if (error) {
-
+        console.error('Erro ao buscar histórico:', error);
         setError('Erro ao carregar histórico');
         return;
       }
@@ -81,7 +81,7 @@ export const SubscriptionHistory: React.FC<SubscriptionHistoryProps> = ({
 
       setActivities(activities);
     } catch (err) {
-
+      console.error('Erro ao buscar histórico:', err);
       setError('Erro ao carregar histórico');
     } finally {
       setIsLoading(false);
@@ -241,13 +241,12 @@ export const SubscriptionHistory: React.FC<SubscriptionHistoryProps> = ({
                     </span>
                   </div>
                   <p className="subscription-activity-description">
-                    {activity.type === 'leads_consumed' && activity.details?.reason
-
+                    {activity.type === 'leads_consumed' && activity.details?.reason 
                       ? formatReason(activity.details.reason)
                       : activity.description
                     }
                   </p>
-
+                  
                   {activity.details && (
                     <div className="subscription-activity-details">
                       {activity.details.plan_name && (

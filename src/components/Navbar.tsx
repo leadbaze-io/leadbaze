@@ -404,7 +404,7 @@ const isActiveLink = (path: string) => {
                             })
 
                           } else {
-                            console.log('Elemento não encontrado');
+
                           }
                         }, 1000)
                       }

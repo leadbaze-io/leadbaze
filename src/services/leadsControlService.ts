@@ -17,16 +17,19 @@ export class LeadsControlService {
           leads_limit: 0
         };
       }
+
+      console.log('🔍 [LeadsControlService] Verificando leads para usuário:', user.id, 'quantidade:', leadsToGenerate);
+      
       // Buscar assinatura atual diretamente da API
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-
+      
       if (data.success && data.data) {
         // Verificar se o acesso não expirou
         const accessUntil = new Date(data.data.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-
+        
         console.log('🔍 [LeadsControlService] Verificando acesso:', {
           access_until: data.data.access_until,
           now: now.toISOString(),
@@ -34,10 +37,14 @@ export class LeadsControlService {
           leads_remaining: data.data.leads_remaining,
           leadsToGenerate
         });
-
+        
         // Se o acesso não expirou e tem leads suficientes
         if (!isAccessExpired && data.data.leads_remaining >= leadsToGenerate) {
-
+          console.log('✅ [LeadsControlService] Assinatura com leads suficientes:', {
+            leads_remaining: data.data.leads_remaining,
+            leadsToGenerate,
+            can_generate: true
+          });
           return {
             can_generate: true,
             reason: 'sufficient_subscription_leads',
@@ -46,10 +53,10 @@ export class LeadsControlService {
             leads_limit: data.data.leads_limit
           };
         }
-
+        
         // Se o acesso expirou, não usar leads da assinatura
         if (isAccessExpired) {
-
+          console.log('⚠️ [LeadsControlService] Acesso expirado, verificando apenas leads bônus');
         }
       }
 
@@ -61,7 +68,7 @@ export class LeadsControlService {
         .single();
 
       if (profileError) {
-
+        console.error('Erro ao buscar perfil do usuário:', profileError);
         return {
           can_generate: false,
           reason: 'no_active_subscription',
@@ -72,8 +79,20 @@ export class LeadsControlService {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
+      
+      console.log('🔍 [LeadsControlService] Verificando leads bônus:', {
+        bonus_leads: profile.bonus_leads,
+        bonus_leads_used: profile.bonus_leads_used,
+        bonusLeadsRemaining,
+        leadsToGenerate
+      });
+      
       if (bonusLeadsRemaining >= leadsToGenerate) {
-
+        console.log('✅ [LeadsControlService] Leads bônus suficientes:', {
+          bonusLeadsRemaining,
+          leadsToGenerate,
+          can_generate: true
+        });
         return {
           can_generate: true,
           reason: 'sufficient_bonus_leads',
@@ -82,6 +101,13 @@ export class LeadsControlService {
           leads_limit: profile.bonus_leads || 0
         };
       }
+
+      console.log('❌ [LeadsControlService] Leads insuficientes:', {
+        bonusLeadsRemaining,
+        leadsToGenerate,
+        can_generate: false
+      });
+      
       return {
         can_generate: false,
         reason: 'insufficient_leads',
@@ -90,7 +116,7 @@ export class LeadsControlService {
         leads_limit: profile.bonus_leads || 0
       };
     } catch (error) {
-
+      console.error('Erro inesperado ao verificar leads:', error);
       return {
         can_generate: false,
         reason: 'no_active_subscription',
@@ -114,20 +140,31 @@ export class LeadsControlService {
           message: 'Usuário não autenticado'
         };
       }
+
+      console.log('🔍 [LeadsControlService] Consumindo leads:', {
+        userId: user.id,
+        leadsToConsume,
+        reason
+      });
+
       // Primeiro, tentar consumir leads da assinatura (se existir)
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-
+      
       if (data.success && data.data) {
         const subscription = data.data;
-
+        
         // Verificar se o acesso não expirou
         const accessUntil = new Date(subscription.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-
+        
         // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
         if (!isAccessExpired && subscription.leads_remaining >= leadsToConsume) {
+          console.log('🔄 [LeadsControlService] Consumindo leads da assinatura:', {
+            leads_remaining: subscription.leads_remaining,
+            leadsToConsume
+          });
 
           // Atualizar leads_balance diretamente
           const { data: updateResult, error: updateError } = await supabase
@@ -141,9 +178,13 @@ export class LeadsControlService {
             .single();
 
           if (updateError) {
-
+            console.error('Erro ao atualizar leads da assinatura:', updateError);
             // Se falhar, tentar consumir bonus leads
           } else {
+            console.log('✅ [LeadsControlService] Leads da assinatura consumidos com sucesso:', {
+              leadsConsumed: leadsToConsume,
+              newBalance: updateResult.leads_balance
+            });
 
             return {
               success: true,
@@ -157,6 +198,7 @@ export class LeadsControlService {
       }
 
       // Se não conseguiu consumir da assinatura, tentar consumir bonus leads
+      console.log('🔄 [LeadsControlService] Tentando consumir bonus leads...');
 
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
@@ -165,7 +207,7 @@ export class LeadsControlService {
         .single();
 
       if (profileError) {
-
+        console.error('Erro ao buscar perfil do usuário:', profileError);
         return {
           success: false,
           error: 'profile_error',
@@ -174,7 +216,7 @@ export class LeadsControlService {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-
+      
       if (bonusLeadsRemaining < leadsToConsume) {
         return {
           success: false,
@@ -195,13 +237,20 @@ export class LeadsControlService {
         .eq('user_id', user.id);
 
       if (updateError) {
-
+        console.error('Erro ao atualizar bonus leads:', updateError);
         return {
           success: false,
           error: 'update_error',
           message: 'Erro ao atualizar leads bônus'
         };
       }
+
+      console.log('✅ [LeadsControlService] Bonus leads consumidos com sucesso:', {
+        leadsConsumed: leadsToConsume,
+        bonus_leads_remaining: bonusLeadsRemaining - leadsToConsume,
+        bonus_leads_total: profile.bonus_leads
+      });
+
       return {
         success: true,
         leads_consumed: leadsToConsume,
@@ -211,7 +260,7 @@ export class LeadsControlService {
       };
 
     } catch (error) {
-
+      console.error('Erro inesperado ao consumir leads:', error);
       return {
         success: false,
         error: 'unexpected_error',
@@ -238,7 +287,7 @@ export class LeadsControlService {
       });
 
       if (error) {
-
+        console.error('Erro ao buscar status da assinatura:', error);
         return {
           has_subscription: false,
           message: 'Erro ao carregar dados da assinatura'
@@ -247,7 +296,7 @@ export class LeadsControlService {
 
       return data;
     } catch (error) {
-
+      console.error('Erro inesperado ao buscar assinatura:', error);
       return {
         has_subscription: false,
         message: 'Erro inesperado ao carregar assinatura'
@@ -295,7 +344,7 @@ export class LeadsControlService {
       // Consumir leads após sucesso da ação
       const consumeResult = await this.consumeLeads(leadsRequired, reason);
       if (!consumeResult.success) {
-
+        console.warn('Ação executada mas leads não foram consumidos:', consumeResult.message);
         return {
           success: true,
           result,
@@ -310,7 +359,7 @@ export class LeadsControlService {
         leadsConsumed: true
       };
     } catch (error) {
-
+      console.error('Erro ao executar ação com consumo de leads:', error);
       return {
         success: false,
         leadsConsumed: false,
@@ -344,7 +393,7 @@ export class LeadsControlService {
         .limit(100);
 
       if (error) {
-
+        console.error('Erro ao buscar histórico de uso:', error);
         return null;
       }
 
@@ -353,7 +402,7 @@ export class LeadsControlService {
         usageHistory: usageHistory || []
       };
     } catch (error) {
-
+      console.error('Erro inesperado ao buscar estatísticas:', error);
       return null;
     }
   }
@@ -390,7 +439,7 @@ export class LeadsControlService {
       });
 
       if (error) {
-
+        console.error('Erro ao adicionar leads bonus:', error);
         return {
           success: false,
           error: 'bonus_error',
@@ -405,7 +454,7 @@ export class LeadsControlService {
         leads_remaining: data.leads_remaining
       };
     } catch (error) {
-
+      console.error('Erro inesperado ao adicionar leads bonus:', error);
       return {
         success: false,
         error: 'unexpected_error',

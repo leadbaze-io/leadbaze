@@ -26,10 +26,8 @@ export const OriginalSubscriptionInfo: React.FC<OriginalSubscriptionInfoProps> =
   }
 
   // Verificar se a data é válida
-  const isValidDate = subscriptionData.created_at &&
-
-    subscriptionData.created_at !== 'Invalid Date' &&
-
+  const isValidDate = subscriptionData.created_at && 
+    subscriptionData.created_at !== 'Invalid Date' && 
     !isNaN(new Date(subscriptionData.created_at).getTime());
 
   if (!isValidDate) {

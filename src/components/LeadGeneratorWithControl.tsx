@@ -50,11 +50,9 @@ export const LeadGeneratorWithControl: React.FC<LeadGeneratorWithControlProps> =
 
         // Disparar evento customizado para atualizar a interface
         setTimeout(() => {
-
-          window.dispatchEvent(new CustomEvent('leadsUpdated', {
-
-            detail: { leadsConsumed: leadsToGenerate }
-
+          console.log('🔄 Disparando evento de atualização...');
+          window.dispatchEvent(new CustomEvent('leadsUpdated', { 
+            detail: { leadsConsumed: leadsToGenerate } 
           }));
         }, 1000);
       } else if (result.success && !result.leadsConsumed) {
@@ -84,7 +82,7 @@ export const LeadGeneratorWithControl: React.FC<LeadGeneratorWithControlProps> =
         }
       }
     } catch (error) {
-
+      console.error('Erro inesperado ao gerar leads:', error);
       toast({
         title: "❌ Erro Inesperado",
         description: "Ocorreu um erro inesperado. Tente novamente.",
@@ -161,10 +159,10 @@ export const LeadGeneratorButton: React.FC<LeadGeneratorButtonProps> = ({
   const generateLeads = async () => {
     // Simular delay de processamento
     await new Promise(resolve => setTimeout(resolve, 2000));
-
+    
     // Simular geração de leads
     console.log(`Gerando ${leadsToGenerate} lead(s)...`);
-
+    
     // Retornar dados simulados
     return {
       success: true,
@@ -190,10 +188,8 @@ export const LeadGeneratorButton: React.FC<LeadGeneratorButtonProps> = ({
       onClick={handleClick}
       disabled={isGenerating}
       className={`
-        bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700
-
-        text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200
-
+        bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 
+        text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 
         disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2
         ${className}
       `}
@@ -211,11 +207,11 @@ export const LeadGeneratorButton: React.FC<LeadGeneratorButtonProps> = ({
 export const ExampleLeadGenerator: React.FC = () => {
 
   const handleLeadsGenerated = (count: number) => {
-
+    console.log(`${count} leads gerados com sucesso!`);
   };
 
   const handleLeadsExhausted = () => {
-
+    console.log('Limite de leads atingido!');
   };
 
   return (

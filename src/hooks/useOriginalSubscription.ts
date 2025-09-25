@@ -29,7 +29,7 @@ export const useOriginalSubscription = (userId: string) => {
         }
 
       } catch (err) {
-
+        console.error('Erro ao buscar dados da assinatura:', err);
         // Não mostrar erro para o usuário
       } finally {
         setLoading(false);
@@ -43,12 +43,12 @@ export const useOriginalSubscription = (userId: string) => {
     if (!dateString || dateString === 'Invalid Date') {
       return 'Data não disponível';
     }
-
+    
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       return 'Data não disponível';
     }
-
+    
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -63,3 +63,4 @@ export const useOriginalSubscription = (userId: string) => {
     formatDate
   };
 };
+

@@ -9,7 +9,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
   isPopular = false
 }) => {
   const isCurrentPlan = currentPlan?.plan_id === plan.id && currentPlan?.status === 'active';
-
+  
   // Usar sempre o preço mensal
   const price = plan.price;
 
@@ -28,10 +28,8 @@ export const PlanCard: React.FC<PlanCardProps> = ({
     <div className={`
       relative bg-white dark:bg-gray-800 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl
       flex flex-col h-full
-      ${isCurrentPlan
-
-        ? 'border-blue-500 shadow-blue-200 dark:shadow-blue-900'
-
+      ${isCurrentPlan 
+        ? 'border-blue-500 shadow-blue-200 dark:shadow-blue-900' 
         : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'
       }
       ${isPopular ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}
@@ -63,11 +61,11 @@ export const PlanCard: React.FC<PlanCardProps> = ({
             {plan.name === 'scale' && <Star className="w-8 h-8 text-purple-500" />}
             {plan.name === 'enterprise' && <Check className="w-8 h-8 text-green-500" />}
           </div>
-
+          
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             {plan.display_name}
           </h3>
-
+          
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
             {plan.description}
           </p>

@@ -13,7 +13,7 @@ const PlansPage: React.FC = () => {
   const navigate = useNavigate();
   const { plans, isLoading: plansLoading, error: plansError } = usePlans();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
-
+  
   const [userData, setUserData] = useState<{ id: string; email: string } | null>(null);
 
   // Buscar dados do usuário
@@ -28,12 +28,14 @@ const PlansPage: React.FC = () => {
           });
         }
       } catch (error) {
-
+        console.error('Erro ao buscar dados do usuário:', error);
       }
     };
 
     getUserData();
   }, []);
+
+
   const handleUpgrade = () => {
     // Scroll para a seção de planos
     const plansSection = document.getElementById('plans-section');
@@ -96,23 +98,21 @@ const PlansPage: React.FC = () => {
               <ArrowLeft className="w-5 h-5" />
               Voltar
             </button>
-
+            
             <h1 className="text-2xl font-bold plans-title">
               Escolha seu Plano
             </h1>
-
+            
             <div className="w-20" /> {/* Spacer */}
           </div>
         </div>
       </div>
 
       {/* Aviso para assinatura cancelada */}
-      {subscription && subscription.status === 'cancelled' &&
-
+      {subscription && subscription.status === 'cancelled' && 
        new Date(subscription.current_period_end) > new Date() && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <CancelledSubscriptionWarning
-
+          <CancelledSubscriptionWarning 
             leadsRemaining={subscription.leads_remaining}
             accessUntil={subscription.current_period_end}
           />
@@ -131,7 +131,7 @@ const PlansPage: React.FC = () => {
                 Gerencie sua assinatura ou atualize para um plano com mais recursos
               </p>
             </div>
-
+            
             <div className="max-w-md mx-auto">
               <div className="plans-card rounded-2xl p-6 shadow-lg">
                 <div className="text-center mb-6">
@@ -148,7 +148,7 @@ const PlansPage: React.FC = () => {
                     por mês
                   </div>
                 </div>
-
+                
                 <div className="mb-6">
                   <div className="flex justify-between text-sm plans-text-muted mb-2">
                     <span>Leads utilizados</span>
@@ -163,13 +163,10 @@ const PlansPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div
-
+                    <div 
                       className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{
-
-                        width: `${Math.min(((subscription.leads_used / subscription.leads_limit) * 100) || 0, 100)}%`
-
+                      style={{ 
+                        width: `${Math.min(((subscription.leads_used / subscription.leads_limit) * 100) || 0, 100)}%` 
                       }}
                     />
                   </div>
@@ -184,16 +181,14 @@ const PlansPage: React.FC = () => {
                         Sobre Upgrades
                       </h4>
                       <p className="text-xs text-blue-700 dark:text-blue-300">
-                        <strong>Exemplo:</strong> Se você tem Plano Start (1000 leads) e faz upgrade para Scale (4000 leads),
-
-                        receberá apenas 3000 leads adicionais imediatamente. A diferença de preço será cobrada no momento da atualização.
-
+                        <strong>Exemplo:</strong> Se você tem Plano Start (1000 leads) e faz upgrade para Scale (4000 leads), 
+                        receberá apenas 3000 leads adicionais imediatamente. A diferença de preço será cobrada no momento da atualização. 
                         No próximo ciclo de cobrança, você receberá o total de 4000 leads do novo plano.
                       </p>
                     </div>
                   </div>
                 </div>
-
+                
                 <button
                   onClick={handleUpgrade}
                   className="w-full plans-btn-primary py-3 px-6 rounded-lg font-semibold transition-all duration-200"
@@ -212,8 +207,7 @@ const PlansPage: React.FC = () => {
               {subscription ? 'Atualize seu Plano' : 'Escolha o Plano Ideal'}
             </h2>
             <p className="text-xl plans-text-muted mb-8">
-              {subscription
-
+              {subscription 
                 ? 'Desbloqueie mais recursos e aumente sua capacidade de geração de leads'
                 : 'Comece a gerar leads de qualidade hoje mesmo'
               }

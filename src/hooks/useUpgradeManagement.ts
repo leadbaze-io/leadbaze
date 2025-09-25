@@ -20,8 +20,7 @@ export const useUpgradeManagement = () => {
 
   // Fazer upgrade
   const upgradeSubscription = useCallback(async (
-    newPlanId: string,
-
+    newPlanId: string, 
     _reason: string = 'Solicitado pelo usuário'
   ): Promise<UpgradeResponse | null> => {
     try {
@@ -63,9 +62,9 @@ export const useUpgradeManagement = () => {
 
       return data.data;
     } catch (err: any) {
-
+      console.error('Erro ao fazer upgrade:', err);
       setError(err.message);
-
+      
       toast({
         title: "❌ Erro no Upgrade",
         description: err.message || 'Não foi possível fazer o upgrade',

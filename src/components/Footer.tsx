@@ -242,7 +242,7 @@ export default function Footer() {
                     const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
                     // Verificar se o elemento está visível
-                    faqSection.getBoundingClientRect();
+                    const rect = faqSection.getBoundingClientRect();
                     // Tentar scroll
 
                     try {
@@ -254,7 +254,7 @@ export default function Footer() {
                       });
 
                     } catch (error) {
-                      console.error('Erro ao rolar para seção:', error);
+
                     }
 
                     // Verificar posição após scroll
@@ -276,15 +276,15 @@ export default function Footer() {
                     // Procurar por elementos similares
                     const allSections = document.querySelectorAll('section');
 
-                    allSections.forEach(() => {
-                      // Procurar por elementos similares
+                    allSections.forEach((section, index) => {
+
                     });
 
                     // Procurar por elementos com "faq" no ID ou classe
                     const faqElements = document.querySelectorAll('[id*="faq"], [class*="faq"]');
 
-                    faqElements.forEach(() => {
-                      // Procurar por elementos com "faq" no ID ou classe
+                    faqElements.forEach((el, index) => {
+
                     });
                   }
 
