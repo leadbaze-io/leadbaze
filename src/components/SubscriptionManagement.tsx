@@ -5,7 +5,8 @@ import {
   TrendingDown, 
   ChevronDown,
   ChevronUp,
-  CreditCard
+  CreditCard,
+  ExternalLink
 } from 'lucide-react';
 import { useSubscriptionManagement } from '../hooks/useSubscriptionManagement';
 import { useRecurringSubscription } from '../hooks/useRecurringSubscription';
@@ -204,6 +205,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
                 }}
                 className="subscription-cancel-btn"
                 disabled={isLoading || isRecurringLoading}
+                title="Cancelar assinatura (requer cancelamento manual no Perfect Pay)"
               >
                 <X className="w-4 h-4" />
                 Cancelar Assinatura
@@ -212,26 +214,64 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
           </div>
         ) : isCancelledInPeriod ? (
           <div className="space-y-3">
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-              <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                <strong>Assinatura cancelada</strong> - Você pode continuar usando os {subscription.leads_remaining} leads restantes até {new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}.
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <p className="text-sm text-red-800 dark:text-red-200">
+                <strong>🚨 ASSINATURA CANCELADA - AÇÃO MANUAL NECESSÁRIA</strong><br/>
+                Sua assinatura foi cancelada no LeadBaze, mas você DEVE cancelar manualmente no Perfect Pay para evitar cobranças futuras!
               </p>
             </div>
-            {/* Informação sobre acesso até o fim do período */}
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <div className="text-blue-600 mt-0.5">📋</div>
+                <div>
+                  <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">
+                    Instruções para Cancelamento Manual
+                  </p>
+                  <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                    Para evitar cobranças futuras, você deve cancelar no Perfect Pay:
+                  </p>
+                  <ol className="text-xs text-blue-700 dark:text-blue-300 list-decimal list-inside space-y-1">
+                    <li>Acesse: <strong>https://app.perfectpay.com.br</strong></li>
+                    <li>Faça login com suas credenciais</li>
+                    <li>Vá para "Minhas Assinaturas"</li>
+                    <li>Cancele a assinatura do LeadBaze</li>
+                    <li>Confirme o cancelamento</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                <strong>✅ Acesso Mantido</strong> - Você pode continuar usando os <strong>{subscription.leads_remaining} leads restantes</strong> até <strong>{new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}</strong>.
+              </p>
+            </div>
+
             <div className="bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
               <div className="flex items-start gap-2">
                 <div className="text-gray-500 mt-0.5">ℹ️</div>
                 <div>
                   <p className="text-sm text-gray-800 dark:text-gray-200 font-medium mb-1">
-                    Acesso Mantido
+                    Status da Assinatura
                   </p>
                   <p className="text-xs text-gray-700 dark:text-gray-300">
-                    Você pode continuar usando os leads restantes até o final do período atual. Após isso, você precisará assinar um novo plano para continuar.
+                    • <strong>Cancelamento local:</strong> Registrado no LeadBaze<br/>
+                    • <strong>Cancelamento manual:</strong> Pendente no Perfect Pay<br/>
+                    • <strong>Acesso:</strong> Mantido até {new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}<br/>
+                    • <strong>Suporte:</strong> Entre em contato se precisar de ajuda
                   </p>
                 </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => window.open('https://app.perfectpay.com.br', '_blank')}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Cancelar no Perfect Pay
+              </button>
               <button
                 onClick={() => window.location.href = '/plans'}
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
@@ -289,6 +329,26 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
               <strong className="text-green-600 dark:text-green-400"> Você poderá continuar usando os {subscription.leads_remaining} leads restantes até {new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}.</strong>
             </p>
             
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4">
+              <p className="text-sm text-red-800 dark:text-red-200">
+                <strong>🚨 ATENÇÃO - CANCELAMENTO MANUAL OBRIGATÓRIO:</strong><br/>
+                • <strong>Cancelamento local:</strong> Registrado no LeadBaze<br/>
+                • <strong>CANCELAMENTO MANUAL:</strong> Você DEVE cancelar no Perfect Pay<br/>
+                • <strong>IMPORTANTE:</strong> Se não cancelar no Perfect Pay, você continuará sendo cobrado!
+              </p>
+            </div>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>📋 Instruções para Cancelamento Manual:</strong><br/>
+                1. Acesse: <strong>https://app.perfectpay.com.br</strong><br/>
+                2. Faça login com suas credenciais<br/>
+                3. Vá para "Minhas Assinaturas"<br/>
+                4. Cancele a assinatura do LeadBaze<br/>
+                5. Confirme o cancelamento
+              </p>
+            </div>
+
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 <strong>⚠️ Política de Cancelamento:</strong><br/>
