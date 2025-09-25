@@ -5,12 +5,11 @@ import { supabase } from '../lib/supabaseClient';
 interface UpgradeResponse {
   success: boolean;
   message: string;
-  old_plan: string;
-  new_plan: string;
-  leads_remaining: number;
+  checkout_url: string;
+  external_reference: string;
+  plan_name: string;
+  amount: number;
   price_difference: number;
-  leads_added: number;
-  note: string;
 }
 
 export const useUpgradeManagement = () => {
@@ -51,13 +50,10 @@ export const useUpgradeManagement = () => {
         throw new Error(data.message || 'Erro ao fazer upgrade');
       }
 
-      if (data.success) {
-        toast({
-          title: "✅ Upgrade Realizado",
-          description: `Seu plano foi atualizado com sucesso! Você recebeu ${data.leads_added} leads adicionais.`,
-          variant: 'default',
-          className: 'toast-modern toast-success'
-        });
+      if (data.success && data.checkout_url) {
+        // Redirecionar para o checkout do Perfect Pay
+        window.location.href = data.checkout_url;
+        return data;
       }
 
       return data;

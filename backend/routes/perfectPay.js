@@ -472,53 +472,29 @@ router.post('/upgrade', async (req, res) => {
       });
     }
 
-    // Simular webhook de upgrade
-    const timestamp = Date.now();
-    const webhookPayload = {
-      token: "7378fa24f96b38a3b1805d7a6887bc82",
-      code: `PPCPMTB${timestamp}`,
-      subscription_amount: newPrice / 100,
-      currency_enum: 1,
-      payment_type_enum: 4,
-      sale_status_enum: 2,
-      sale_status_detail: "active",
-      start_date_recurrent: new Date().toISOString(),
-      next_date_recurrent: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      recurrent_type_enum: "Mensal",
-      installments: 1,
-      charges_made: 1,
-      product: {
-        name: newPlan.display_name,
-        external_reference: `upgrade_${userId}_${newPlanId}_${timestamp}`
-      },
-      plan: {
-        name: `${newPlan.display_name} - ${newPlan.leads_included} leads`
-      },
-      customer: {
-        email: "user@example.com", // Será preenchido pelo webhook real
-        full_name: "User"
-      },
-      webhook_owner: "PPAKIOL"
+    // Criar checkout real para upgrade (como primeira assinatura)
+    const checkoutData = {
+      plan_id: newPlanId,
+      plan_name: newPlan.display_name,
+      amount: newPrice / 100,
+      customer_email: "user@example.com", // Será preenchido pelo frontend
+      customer_name: "User" // Será preenchido pelo frontend
     };
 
-    // Processar webhook
-    const webhookResult = await perfectPayService.processWebhook(webhookPayload);
+    const externalReference = `upgrade_${userId}_${newPlanId}_${Date.now()}`;
     
-    if (webhookResult.processed) {
-      res.json({
-        success: true,
-        message: 'Upgrade realizado com sucesso',
-        subscription: webhookResult.subscription,
-        price_difference: (newPrice - currentPrice) / 100,
-        leads_added: webhookResult.leads_added,
-        note: `Upgrade de ${currentSubscription.payment_plans.display_name} para ${newPlan.display_name}`
-      });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: webhookResult.error || 'Erro ao processar upgrade'
-      });
-    }
+    // Criar link de checkout real
+    const checkoutUrl = await perfectPayService.createRealCheckoutLink(checkoutData, externalReference);
+    
+    res.json({
+      success: true,
+      message: 'Link de pagamento criado com sucesso',
+      checkout_url: checkoutUrl,
+      external_reference: externalReference,
+      plan_name: newPlan.display_name,
+      amount: newPrice / 100,
+      price_difference: (newPrice - currentPrice) / 100
+    });
 
   } catch (error) {
     console.error('❌ [PerfectPay] Erro no upgrade:', error.message);
