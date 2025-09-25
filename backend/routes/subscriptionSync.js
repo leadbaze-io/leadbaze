@@ -73,7 +73,7 @@ router.get('/status', async (req, res) => {
   try {
     // Buscar estatísticas das assinaturas
     const { data: subscriptions, error } = await syncService.supabase
-      .from('user_subscriptions')
+      .from('user_payment_subscriptions')
       .select('status')
       .in('status', ['active', 'cancelled', 'pending', 'trial']);
       

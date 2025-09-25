@@ -13,6 +13,22 @@ export const PlanCard: React.FC<PlanCardProps> = ({
   // Usar sempre o preço mensal
   const price = plan.price;
 
+  // Função para determinar hierarquia dos planos
+  const getPlanHierarchy = (planName: string): number => {
+    const hierarchy = {
+      'start': 1,
+      'scale': 2,
+      'enterprise': 3
+    };
+    return hierarchy[planName.toLowerCase() as keyof typeof hierarchy] || 0;
+  };
+
+  // Verificar se o plano é inferior ao atual
+  const isInferiorPlan = currentPlan && 
+    currentPlan.status === 'active' && 
+    !currentPlan.is_free_trial &&
+    getPlanHierarchy(plan.name) < getPlanHierarchy(currentPlan.plan_name || '');
+
   const formatPrice = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -118,6 +134,13 @@ export const PlanCard: React.FC<PlanCardProps> = ({
               className="w-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 py-3 px-6 rounded-lg font-semibold cursor-not-allowed"
             >
               Plano Atual
+            </button>
+          ) : isInferiorPlan ? (
+            <button
+              disabled
+              className="w-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 py-3 px-6 rounded-lg font-semibold cursor-not-allowed"
+            >
+              Plano Inferior
             </button>
           ) : (
             <RecurringSubscriptionButton

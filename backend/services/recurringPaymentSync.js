@@ -81,7 +81,7 @@ class RecurringPaymentSyncService {
       
       // Buscar assinatura no nosso banco
       const { data: localSub, error: subError } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .select('*')
         .eq('user_id', user.id)
         .single();
@@ -166,7 +166,7 @@ class RecurringPaymentSyncService {
       };
       
       const { error } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .update(updateData)
         .eq('id', localSub.id);
         
@@ -229,7 +229,7 @@ class RecurringPaymentSyncService {
       };
       
       const { error } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .update(updateData)
         .eq('id', localSub.id);
         
@@ -258,7 +258,7 @@ class RecurringPaymentSyncService {
       };
       
       const { error } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .update(updateData)
         .eq('id', localSub.id);
         

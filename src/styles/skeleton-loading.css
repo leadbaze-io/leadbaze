@@ -1,0 +1,38 @@
+/* Skeleton Loading Styles - Forçar cores específicas */
+
+/* Modo claro - cinza muito claro */
+.skeleton-loading-force {
+  background-color: #f9fafb !important; /* gray-50 - ainda mais claro */
+  opacity: 0.8;
+}
+
+/* Modo escuro - cinza escuro */
+html.dark .skeleton-loading-force {
+  background-color: #374151 !important; /* gray-700 */
+  opacity: 0.8;
+}
+
+/* Versão alternativa ainda mais clara */
+.skeleton-loading-ultra-light {
+  background-color: #fafafa !important; /* quase branco */
+  opacity: 0.6;
+}
+
+html.dark .skeleton-loading-ultra-light {
+  background-color: #374151 !important; /* gray-700 */
+  opacity: 0.8;
+}
+
+/* Animação de pulse personalizada */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

@@ -165,7 +165,7 @@ class SubscriptionSyncService {
       
       // Verificar se já existe assinatura no nosso banco
       const { data: existingSub, error: subError } = await this.supabase
-        .from('user_subscriptions')
+        .from('user_payment_subscriptions')
         .select('*')
         .eq('user_id', user.id)
         .single();
@@ -202,7 +202,7 @@ class SubscriptionSyncService {
         }
         
         const { error: updateError } = await this.supabase
-          .from('user_subscriptions')
+          .from('user_payment_subscriptions')
           .update(updateData)
           .eq('id', existingSub.id);
           
@@ -237,7 +237,7 @@ class SubscriptionSyncService {
         }
         
         const { error: createError } = await this.supabase
-          .from('user_subscriptions')
+          .from('user_payment_subscriptions')
           .insert(newSubscription);
           
         if (createError) {

@@ -38,8 +38,8 @@ router.get('/status', async (req, res) => {
   try {
     // Buscar estatísticas das assinaturas
     const { data: subscriptions, error } = await recurringService.supabase
-      .from('user_subscriptions')
-      .select('status, leads_remaining, charges_processed')
+      .from('user_payment_subscriptions')
+      .select('status, leads_balance')
       .in('status', ['active']);
       
     if (error) {

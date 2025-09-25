@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 // import { Loader2 } from 'lucide-react'
+import '../styles/skeleton-loading.css'
 
 interface LoadingScreenProps {
   message?: string
@@ -105,14 +106,14 @@ export function ListSkeleton() {
           <div className="animate-pulse">
             <div className="flex items-start justify-between mb-4">
               <div className="space-y-2 flex-1">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                <div className="h-4 skeleton-loading-force rounded w-3/4"></div>
+                <div className="h-3 skeleton-loading-force rounded w-1/2"></div>
               </div>
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+              <div className="h-8 skeleton-loading-force rounded w-16"></div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+              <div className="h-3 skeleton-loading-force rounded w-full"></div>
+              <div className="h-3 skeleton-loading-force rounded w-2/3"></div>
             </div>
           </div>
         </motion.div>
@@ -135,16 +136,16 @@ export function LeadCardSkeleton() {
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
+              <div className="h-4 skeleton-loading-force rounded w-16"></div>
+              <div className="h-4 skeleton-loading-force rounded w-12"></div>
             </div>
             <div className="space-y-2 mb-3">
-              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div className="h-5 skeleton-loading-force rounded w-3/4"></div>
+              <div className="h-3 skeleton-loading-force rounded w-full"></div>
             </div>
             <div className="space-y-2">
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+              <div className="h-3 skeleton-loading-force rounded w-2/3"></div>
+              <div className="h-3 skeleton-loading-force rounded w-1/2"></div>
             </div>
           </div>
         </motion.div>
@@ -167,11 +168,11 @@ export function AnalyticsSkeleton() {
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-4">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div className="h-4 skeleton-loading-force rounded w-1/2"></div>
+              <div className="h-8 w-8 skeleton-loading-force rounded"></div>
             </div>
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div className="h-8 skeleton-loading-force rounded w-3/4 mb-2"></div>
+            <div className="h-3 skeleton-loading-force rounded w-1/3"></div>
           </div>
         </motion.div>
       ))}

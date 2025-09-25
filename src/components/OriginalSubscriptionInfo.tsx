@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 import { useOriginalSubscription } from '../hooks/useOriginalSubscription';
+import '../styles/skeleton-loading.css';
 
 interface OriginalSubscriptionInfoProps {
   userId: string;
@@ -13,8 +14,8 @@ export const OriginalSubscriptionInfo: React.FC<OriginalSubscriptionInfoProps> =
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
         <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-          <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+          <div className="h-4 skeleton-loading-force rounded w-3/4 mb-2"></div>
+          <div className="h-3 skeleton-loading-force rounded w-1/2"></div>
         </div>
       </div>
     );

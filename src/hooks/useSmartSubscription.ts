@@ -3,8 +3,7 @@ import { useSubscription } from './useSubscription';
 import { supabase } from '../lib/supabaseClient';
 
 interface SubscriptionCache {
-  leads_used: number;
-  leads_remaining: number;
+  leads_balance: number;
   lastUpdated: number;
 }
 
@@ -21,8 +20,7 @@ export const useSmartSubscription = () => {
     if (!cached || !newData) return true;
 
     return (
-      newData.leads_used !== cached.leads_used ||
-      newData.leads_remaining !== cached.leads_remaining
+      newData.leads_balance !== cached.leads_balance
     );
   }, []);
 
@@ -50,8 +48,8 @@ export const useSmartSubscription = () => {
       try {
         // Buscar apenas os dados essenciais
         const { data, error } = await supabase
-          .from('user_subscriptions')
-          .select('leads_used, leads_remaining, updated_at')
+          .from('user_payment_subscriptions')
+          .select('leads_balance, updated_at')
           .eq('id', subscription.id)
           .single();
 
@@ -64,8 +62,7 @@ export const useSmartSubscription = () => {
         if (hasSignificantChanges(data, cacheRef.current)) {
 
           cacheRef.current = {
-            leads_used: data.leads_used,
-            leads_remaining: data.leads_remaining,
+            leads_balance: data.leads_balance,
             lastUpdated: Date.now()
           };
           await updateWithAnimation();
@@ -96,7 +93,7 @@ export const useSmartSubscription = () => {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'user_subscriptions',
+          table: 'user_payment_subscriptions',
           filter: `id=eq.${subscription.id}`
         },
         async (payload) => {
@@ -105,8 +102,7 @@ export const useSmartSubscription = () => {
           const newData = payload.new;
           if (hasSignificantChanges(newData, cacheRef.current)) {
             cacheRef.current = {
-              leads_used: newData.leads_used,
-              leads_remaining: newData.leads_remaining,
+              leads_balance: newData.leads_balance,
               lastUpdated: Date.now()
             };
             await updateWithAnimation();
@@ -157,8 +153,7 @@ export const useSmartSubscription = () => {
   useEffect(() => {
     if (subscription) {
       cacheRef.current = {
-        leads_used: subscription.leads_used,
-        leads_remaining: subscription.leads_remaining,
+        leads_balance: subscription.leads_remaining, // Usar leads_remaining da subscription
         lastUpdated: Date.now()
       };
     }

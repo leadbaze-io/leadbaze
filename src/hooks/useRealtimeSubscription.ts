@@ -40,7 +40,7 @@ export const useRealtimeSubscription = () => {
 
           schema: 'public',
 
-          table: 'user_subscriptions',
+          table: 'user_payment_subscriptions',
 
           filter: `id=eq.${subscription.id}`
 
