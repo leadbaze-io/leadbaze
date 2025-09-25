@@ -86,7 +86,7 @@ class PollingService {
                 
                 const axios = require('axios');
                 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-                    ? 'https://leadbaze.io:3001' 
+                    ? 'http://leadbaze.io:3001' 
                     : 'http://localhost:3001';
                 
                 const response = await axios.post(`${API_BASE_URL}/api/campaign/check-timeouts`, {}, {
