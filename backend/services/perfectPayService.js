@@ -1,5 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
+const EmailService = require('./emailService');
 require('dotenv').config();
 
 class PerfectPayService {
@@ -197,6 +198,11 @@ class PerfectPayService {
 
     const status = statusMap[saleStatusEnum] || 'unknown';
     console.log(`📝 [PerfectPay] Processando sale_status_enum: ${saleStatusEnum} -> ${status}`);
+    
+    // Verificar também o status da subscription
+    const subscriptionStatus = webhookData.subscription?.status;
+    const subscriptionEvent = webhookData.subscription?.status_event;
+    console.log(`📝 [PerfectPay] Subscription Status: ${subscriptionStatus}, Event: ${subscriptionEvent}`);
 
     // Extrair informações do external_reference ou usar email como fallback
     let { operationType, userId, planId } = this.extractInfoFromReference(externalReference);
@@ -228,10 +234,23 @@ class PerfectPayService {
       console.log(`✅ [PerfectPay] Usuário encontrado por email: ${userId} (${customerEmail})`);
     }
 
+    // Determinar o tipo de operação baseado no status da subscription
+    if (subscriptionEvent === 'subscription_renewed' || subscriptionEvent === 'subscription_started') {
+      operationType = 'renewal';
+    } else if (subscriptionEvent === 'subscription_cancelled') {
+      operationType = 'cancellation';
+    } else if (subscriptionEvent === 'subscription_failed') {
+      operationType = 'payment_failed';
+    }
+
     switch (status) {
       case 'subscription_active':
       case 'subscription_completed':
-        return await this.processApprovedPayment(userId, planId, operationType, webhookData);
+        if (operationType === 'renewal') {
+          return await this.processSubscriptionRenewal(userId, planId, webhookData);
+        } else {
+          return await this.processApprovedPayment(userId, planId, operationType, webhookData);
+        }
       
       case 'subscription_pending':
         return await this.processPendingPayment(userId, planId, operationType, webhookData);
@@ -241,11 +260,156 @@ class PerfectPayService {
         return await this.processRejectedPayment(userId, planId, operationType, webhookData);
       
       case 'subscription_cancelled':
-        return await this.processCancellation(userId, planId, operationType, webhookData);
+        return await this.processSubscriptionCancellation(userId, planId, webhookData);
       
       default:
         console.log(`ℹ️ [PerfectPay] Status não processado: ${status} (${saleStatusEnum})`);
         return { processed: false, reason: `Status não suportado: ${status} (${saleStatusEnum})` };
+    }
+  }
+
+  /**
+   * Processar renovação de assinatura
+   */
+  async processSubscriptionRenewal(userId, planId, webhookData) {
+    try {
+      console.log(`🔄 [PerfectPay] Processando renovação de assinatura para usuário ${userId}`);
+
+      // Buscar assinatura existente
+      const { data: existingSubscription, error: subError } = await this.supabase
+        .from('user_payment_subscriptions')
+        .select(`
+          *,
+          payment_plans (
+            id,
+            name,
+            display_name,
+            price_cents,
+            leads_included
+          )
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (subError || !existingSubscription) {
+        console.log('⚠️ [PerfectPay] Assinatura ativa não encontrada para renovação');
+        return { processed: false, error: 'Assinatura ativa não encontrada' };
+      }
+
+      // Calcular novo período
+      const currentDate = new Date();
+      const nextMonth = new Date(currentDate);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+      // Atualizar assinatura existente
+      const { data: updatedSubscription, error: updateError } = await this.supabase
+        .from('user_payment_subscriptions')
+        .update({
+          current_period_start: currentDate.toISOString(),
+          current_period_end: nextMonth.toISOString(),
+          leads_balance: existingSubscription.payment_plans.leads_included, // Resetar leads
+          perfect_pay_transaction_id: webhookData.transaction_id || webhookData.id,
+          updated_at: currentDate.toISOString()
+        })
+        .eq('id', existingSubscription.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        throw new Error(`Erro ao renovar assinatura: ${updateError.message}`);
+      }
+
+      // Log da atividade
+      await this.logSubscriptionActivity(userId, 'renewal', {
+        plan_name: existingSubscription.payment_plans.display_name,
+        new_period_start: currentDate.toISOString(),
+        new_period_end: nextMonth.toISOString(),
+        leads_reset: existingSubscription.payment_plans.leads_included
+      });
+
+      console.log(`✅ [PerfectPay] Assinatura renovada! Novo período: ${currentDate.toLocaleDateString('pt-BR')} até ${nextMonth.toLocaleDateString('pt-BR')}`);
+      
+      return {
+        processed: true,
+        subscription: updatedSubscription,
+        leads_remaining: existingSubscription.payment_plans.leads_included,
+        access_until: nextMonth.toISOString(),
+        message: 'Assinatura renovada com sucesso'
+      };
+
+    } catch (error) {
+      console.error('❌ [PerfectPay] Erro ao processar renovação:', error.message);
+      return { processed: false, error: error.message };
+    }
+  }
+
+  /**
+   * Processar cancelamento de assinatura pelo Perfect Pay
+   */
+  async processSubscriptionCancellation(userId, planId, webhookData) {
+    try {
+      console.log(`🚫 [PerfectPay] Processando cancelamento de assinatura pelo Perfect Pay para usuário ${userId}`);
+
+      // Buscar assinatura existente
+      const { data: existingSubscription, error: subError } = await this.supabase
+        .from('user_payment_subscriptions')
+        .select(`
+          *,
+          payment_plans (
+            id,
+            name,
+            display_name,
+            price_cents,
+            leads_included
+          )
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (subError || !existingSubscription) {
+        console.log('⚠️ [PerfectPay] Assinatura ativa não encontrada para cancelamento');
+        return { processed: false, error: 'Assinatura ativa não encontrada' };
+      }
+
+      // Cancelar assinatura localmente
+      const { data: cancelledSubscription, error: cancelError } = await this.supabase
+        .from('user_payment_subscriptions')
+        .update({
+          status: 'cancelled',
+          cancelled_at: new Date().toISOString(),
+          cancellation_reason: 'perfect_pay_cancellation',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingSubscription.id)
+        .select()
+        .single();
+
+      if (cancelError) {
+        throw new Error(`Erro ao cancelar assinatura: ${cancelError.message}`);
+      }
+
+      // Log da atividade
+      await this.logSubscriptionActivity(userId, 'cancellation_by_perfect_pay', {
+        plan_name: existingSubscription.payment_plans.display_name,
+        reason: 'Cancelamento realizado pelo Perfect Pay',
+        access_until: existingSubscription.current_period_end
+      });
+
+      console.log(`✅ [PerfectPay] Assinatura cancelada pelo Perfect Pay! Acesso até: ${existingSubscription.current_period_end}`);
+      
+      return {
+        processed: true,
+        subscription: cancelledSubscription,
+        access_until: existingSubscription.current_period_end,
+        leads_remaining: existingSubscription.leads_balance,
+        message: 'Assinatura cancelada pelo Perfect Pay'
+      };
+
+    } catch (error) {
+      console.error('❌ [PerfectPay] Erro ao processar cancelamento:', error.message);
+      return { processed: false, error: error.message };
     }
   }
 
@@ -310,6 +474,7 @@ class PerfectPayService {
       plan_id: plan.id,
       status: 'active',
       perfect_pay_transaction_id: webhookData.transaction_id || webhookData.id,
+      perfect_pay_subscription_id: webhookData.subscription?.code || webhookData.subscription_id,
       leads_balance: plan.leads_included,
       current_period_start: currentDate.toISOString(),
       current_period_end: nextMonth.toISOString(),
@@ -577,14 +742,31 @@ class PerfectPayService {
         return { success: false, error: 'Nenhuma assinatura ativa encontrada' };
       }
 
-      // REGRA 4: Manter ativa até expirar
+      // Processar cancelamento local (Perfect Pay não possui API de cancelamento)
+      const perfectPayResult = await this.cancelPerfectPaySubscription(existingSubscription);
+      
+      if (!perfectPayResult.success) {
+        console.error('❌ [PerfectPay] Erro ao processar cancelamento:', perfectPayResult.error);
+        // Continuar com cancelamento local mesmo se falhar
+      } else {
+        console.log('✅ [PerfectPay] Cancelamento local processado:', perfectPayResult.message);
+        
+        if (perfectPayResult.requires_manual_cancellation) {
+          console.log('⚠️ [PerfectPay] ATENÇÃO: Cancelamento no Perfect Pay deve ser feito manualmente');
+          console.log(`📋 [PerfectPay] ID da assinatura: ${perfectPayResult.perfect_pay_subscription_id}`);
+        }
+      }
+
+      // REGRA 4: Manter ativa até expirar (cancelamento local)
       const { data: subscription, error } = await this.supabase
         .from('user_payment_subscriptions')
         .update({
           status: 'cancelled',
           cancelled_at: new Date().toISOString(),
           cancellation_reason: reason,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          perfect_pay_cancelled: perfectPayResult.success,
+          requires_manual_cancellation: perfectPayResult.requires_manual_cancellation || false
           // current_period_end permanece o mesmo - acesso até expirar
         })
         .eq('id', existingSubscription.id)
@@ -607,7 +789,11 @@ class PerfectPayService {
         success: true,
         subscription,
         access_until: existingSubscription.current_period_end,
-        leads_remaining: existingSubscription.leads_balance
+        leads_remaining: existingSubscription.leads_balance,
+        warning: 'IMPORTANTE: Você deve cancelar manualmente no Perfect Pay para evitar cobranças futuras!',
+        perfect_pay_subscription_id: existingSubscription.perfect_pay_subscription_id,
+        manual_cancellation_required: true,
+        instructions: 'ACESSO DIRETO: Faça login no Perfect Pay e cancele sua assinatura manualmente.'
       };
 
     } catch (error) {
@@ -939,6 +1125,91 @@ class PerfectPayService {
   async processRejectedPayment(userId, planId, operationType, webhookData) {
     console.log(`❌ [PerfectPay] Pagamento rejeitado - Usuário: ${userId}, Plano: ${planId}, Tipo: ${operationType}`);
     return { processed: true, status: 'rejected', operation: operationType };
+  }
+
+  /**
+   * Cancelar assinatura no Perfect Pay
+   * NOTA: Perfect Pay não possui API de cancelamento
+   * O cancelamento deve ser feito manualmente no portal Perfect Pay
+   * Este método apenas registra o cancelamento local e aguarda webhook de confirmação
+   */
+  async cancelPerfectPaySubscription(subscription) {
+    try {
+      console.log('🔄 [PerfectPay] Processando cancelamento local...');
+      
+      // Verificar se temos os dados necessários
+      if (!subscription.perfect_pay_subscription_id) {
+        console.log('⚠️ [PerfectPay] ID da assinatura Perfect Pay não encontrado');
+        return { success: false, error: 'ID da assinatura Perfect Pay não encontrado' };
+      }
+
+      // Criar ticket de cancelamento na tabela
+      const ticketId = `CANCEL-${Date.now()}-${subscription.user_id.substring(0, 8)}`;
+      
+      // Buscar email do usuário
+      const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(subscription.user_id);
+      const userEmail = userData?.user?.email || 'email_nao_encontrado@leadbaze.io';
+
+      // Inserir ticket na tabela
+      const { data: ticketData, error: ticketError } = await this.supabase
+        .from('support_tickets')
+        .insert({
+          ticket_id: ticketId,
+          user_id: subscription.user_id,
+          type: 'cancellation',
+          priority: 'HIGH',
+          status: 'OPEN',
+          subject: 'Cancelamento de Assinatura - Requer Ação Manual',
+          description: `Usuário solicitou cancelamento de assinatura. Cancelamento local registrado, mas requer cancelamento manual no Perfect Pay.`,
+          perfect_pay_subscription_id: subscription.perfect_pay_subscription_id,
+          perfect_pay_transaction_id: subscription.perfect_pay_transaction_id,
+          metadata: {
+            requires_manual_cancellation: true,
+            access_until: subscription.current_period_end,
+            user_email: userEmail,
+            cancellation_reason: 'user_request'
+          }
+        })
+        .select()
+        .single();
+
+      if (ticketError) {
+        console.error('❌ [PerfectPay] Erro ao criar ticket:', ticketError.message);
+      } else {
+        console.log('✅ [PerfectPay] Ticket criado na tabela:', ticketData.ticket_id);
+      }
+
+      console.log('📋 [PerfectPay] Cancelamento local registrado:', {
+        subscription_id: subscription.perfect_pay_subscription_id,
+        user_id: subscription.user_id,
+        ticket_id: ticketId,
+        user_email: userEmail,
+        note: 'Ticket criado na tabela support_tickets'
+      });
+
+      // Retornar sucesso para cancelamento local
+      // O cancelamento real no Perfect Pay deve ser feito manualmente pelo suporte
+           return { 
+             success: true, 
+             message: 'Cancelamento local registrado. IMPORTANTE: Você deve cancelar manualmente no Perfect Pay para evitar cobranças futuras.',
+             requires_manual_cancellation: true,
+             perfect_pay_subscription_id: subscription.perfect_pay_subscription_id,
+             ticket_id: ticketId,
+             support_contact: 'suporte@leadbaze.io',
+             instructions: 'ACESSO DIRETO: Faça login no Perfect Pay e cancele sua assinatura manualmente. Nossa equipe também processará o cancelamento.',
+             estimated_time: '24 horas',
+             status: 'pending_manual_cancellation',
+             warning: 'ATENÇÃO: Se não cancelar no Perfect Pay, você continuará sendo cobrado!'
+           };
+
+    } catch (error) {
+      console.error('❌ [PerfectPay] Erro ao processar cancelamento:', error.message);
+      
+      return { 
+        success: false, 
+        error: `Erro ao processar cancelamento: ${error.message}`
+      };
+    }
   }
 
   validateWebhookSignature(webhookData, signature) {

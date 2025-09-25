@@ -86,7 +86,27 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         // Processar reembolso baseado em leads restantes
         const refundResult = await processRefund(data);
         
-        if (refundResult) {
+        // Verificar se requer cancelamento manual
+        if (data.manual_cancellation_required) {
+          toast({
+            title: "⚠️ Cancelamento Registrado",
+            description: `Cancelamento local registrado! IMPORTANTE: Você deve cancelar manualmente no Perfect Pay para evitar cobranças futuras.`,
+            variant: 'destructive',
+            className: 'toast-modern toast-warning',
+            duration: 10000
+          });
+          
+          // Mostrar toast adicional com instruções
+          setTimeout(() => {
+            toast({
+              title: "📋 Instruções Importantes",
+              description: `ID da assinatura: ${data.perfect_pay_subscription_id}. Acesse o Perfect Pay e cancele manualmente.`,
+              variant: 'default',
+              className: 'toast-modern toast-info',
+              duration: 15000
+            });
+          }, 2000);
+        } else if (refundResult) {
           toast({
             title: "✅ Assinatura Cancelada",
             description: `Reembolso de R$ ${refundResult.amount} processado com sucesso! (${refundResult.refundPercentage}% dos leads restantes)`,
@@ -152,83 +172,9 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
     }
   }, [toast]);
 
-  // Fazer downgrade
-  const downgradeSubscription = useCallback(async (newPlanId: string, reason: string = 'Solicitado pelo usuário'): Promise<DowngradeSubscriptionResponse | null> => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      // Buscar usuário atual
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw new Error('Usuário não autenticado');
-      }
-
-      console.log('🔄 [Downgrade] Iniciando downgrade:', {
-        userId: user.id,
-        newPlanId,
-        reason
-      });
-
-      // Chamar API de downgrade
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/downgrade`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          newPlanId,
-          reason
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Erro ao fazer downgrade');
-      }
-
-      const result = await response.json();
-      
-      if (result.success) {
-        console.log('✅ [Downgrade] Downgrade realizado com sucesso:', result);
-        
-        toast({
-          title: "✅ Downgrade Realizado",
-          description: `Seu plano foi alterado com sucesso!`,
-          variant: 'default',
-          className: 'toast-modern toast-success'
-        });
-
-        return {
-          success: true,
-          message: result.message,
-          subscription: result.subscription,
-          note: result.note || 'Downgrade realizado com sucesso',
-          old_plan: result.old_plan || 'Plano anterior',
-          new_plan: result.new_plan || 'Novo plano',
-          leads_remaining: result.leads_remaining || 0
-        };
-      } else {
-        throw new Error(result.message || 'Falha ao fazer downgrade');
-      }
-
-    } catch (err: any) {
-      console.error('❌ [Downgrade] Erro ao fazer downgrade:', err);
-      setError(err.message);
-      
-      toast({
-        title: "❌ Erro no Downgrade",
-        description: err.message || 'Não foi possível fazer o downgrade',
-        variant: 'destructive',
-        className: 'toast-modern toast-error'
-      });
-
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast]);
+  // Função de downgrade REMOVIDA
+  // Downgrade não é possível via API do Perfect Pay
+  // Usuário deve cancelar assinatura atual e assinar novo plano
 
   // Buscar planos disponíveis
   const getAvailablePlans = useCallback(async (): Promise<SubscriptionPlan[]> => {
@@ -283,7 +229,6 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
     error,
     cancelSubscription,
     reactivateSubscription,
-    downgradeSubscription,
     getAvailablePlans,
     getDowngradePlans
   };
