@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabaseClient';
 import type { 
   CancelSubscriptionResponse,
   ReactivateSubscriptionResponse,
-  DowngradeSubscriptionResponse,
   SubscriptionPlan
 } from '../types/subscription';
 
@@ -16,7 +15,6 @@ interface UseSubscriptionManagementReturn {
   // Operações
   cancelSubscription: (reason?: string) => Promise<CancelSubscriptionResponse | null>;
   reactivateSubscription: () => Promise<ReactivateSubscriptionResponse | null>;
-  downgradeSubscription: (newPlanId: string, reason?: string) => Promise<DowngradeSubscriptionResponse | null>;
   getAvailablePlans: () => Promise<SubscriptionPlan[]>;
   getDowngradePlans: () => Promise<SubscriptionPlan[]>;
 }
