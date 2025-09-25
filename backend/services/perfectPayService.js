@@ -380,11 +380,27 @@ class PerfectPayService {
         }
       }
 
+      // Calcular novos leads preservando extras do plano anterior
+      let newLeadsBalance = existingSubscription.leads_balance; // Manter leads atuais
+      
+      if (newPlanData) {
+        // Se mudou de plano, adicionar leads do novo plano aos existentes
+        const currentLeads = existingSubscription.leads_balance;
+        const newPlanLeads = newPlanData.leads_included;
+        newLeadsBalance = currentLeads + newPlanLeads;
+        
+        console.log(`🔄 [PerfectPay] Cálculo de leads: ${currentLeads} (atuais) + ${newPlanLeads} (novo plano) = ${newLeadsBalance} leads`);
+      } else {
+        // Se não mudou plano, apenas resetar para o valor padrão do plano
+        newLeadsBalance = existingSubscription.payment_plans.leads_included;
+        console.log(`🔄 [PerfectPay] Renovação sem mudança de plano: resetando para ${newLeadsBalance} leads`);
+      }
+
       // Preparar dados de atualização
       const updateData = {
         current_period_start: currentDate.toISOString(),
         current_period_end: nextMonth.toISOString(),
-        leads_balance: newPlanData ? newPlanData.leads_included : existingSubscription.payment_plans.leads_included,
+        leads_balance: newLeadsBalance,
         perfect_pay_transaction_id: webhookData.transaction_id || webhookData.code,
         updated_at: currentDate.toISOString()
       };
@@ -412,7 +428,9 @@ class PerfectPayService {
         plan_name: finalPlanData.display_name,
         new_period_start: currentDate.toISOString(),
         new_period_end: nextMonth.toISOString(),
-        leads_reset: finalPlanData.leads_included
+        leads_added: newPlanData ? newPlanData.leads_included : 0,
+        leads_total: newLeadsBalance,
+        leads_preserved: existingSubscription.leads_balance
       });
 
       const renewalMessage = newPlanData 
@@ -424,7 +442,7 @@ class PerfectPayService {
       return {
         processed: true,
         subscription: updatedSubscription,
-        leads_remaining: finalPlanData.leads_included,
+        leads_remaining: newLeadsBalance,
         access_until: nextMonth.toISOString(),
         message: renewalMessage
       };

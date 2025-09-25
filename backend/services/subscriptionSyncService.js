@@ -164,9 +164,7 @@ class SubscriptionSyncService {
           'Accept': 'application/json',
           'Authorization': `Bearer ${this.perfectPayToken}`
         },
-        body: JSON.stringify({
-          subscription_status_enum: [2] // Apenas assinaturas ativas
-        })
+        body: JSON.stringify({}) // Sem filtros - busca todas as assinaturas
       });
 
       if (!response.ok) {
@@ -288,13 +286,16 @@ class SubscriptionSyncService {
         };
         
         if (newStatus === 'cancelled' && perfectPaySub.canceled_date) {
-          updateData.cancelled_at = perfectPaySub.canceled_date;
-          updateData.cancel_reason = 'Sincronizado com Perfect Pay';
+          // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+          const dateParts = perfectPaySub.canceled_date.split('/');
+          if (dateParts.length === 3) {
+            const formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+            updateData.cancelled_at = formattedDate;
+          }
         }
         
         if (newStatus === 'active' && existingSub.cancelled_at) {
           updateData.cancelled_at = null;
-          updateData.cancel_reason = null;
         }
         
         const { error: updateError } = await this.supabase
@@ -328,8 +329,12 @@ class SubscriptionSyncService {
         };
         
         if (newStatus === 'cancelled' && perfectPaySub.canceled_date) {
-          newSubscription.cancelled_at = perfectPaySub.canceled_date;
-          newSubscription.cancel_reason = 'Sincronizado com Perfect Pay';
+          // Converter data do formato DD/MM/YYYY para YYYY-MM-DD
+          const dateParts = perfectPaySub.canceled_date.split('/');
+          if (dateParts.length === 3) {
+            const formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
+            newSubscription.cancelled_at = formattedDate;
+          }
         }
         
         const { error: createError } = await this.supabase
