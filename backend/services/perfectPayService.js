@@ -573,11 +573,39 @@ class PerfectPayService {
       refund_deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
     };
 
-    const { data: subscription, error: subscriptionError } = await this.supabase
-      .from('user_payment_subscriptions')
-      .insert(subscriptionData)
-      .select()
-      .single();
+    // Tentar inserir com retry para resolver problemas de cache do Supabase
+    let subscription = null;
+    let subscriptionError = null;
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    while (retryCount < maxRetries && !subscription) {
+      try {
+        const result = await this.supabase
+          .from('user_payment_subscriptions')
+          .insert(subscriptionData)
+          .select()
+          .single();
+        
+        subscription = result.data;
+        subscriptionError = result.error;
+        
+        if (subscription) {
+          break; // Sucesso
+        }
+        
+        if (subscriptionError && subscriptionError.message.includes('schema cache')) {
+          console.log(`🔄 [PerfectPay] Tentativa ${retryCount + 1}: Problema de cache do Supabase, tentando novamente...`);
+          retryCount++;
+          await new Promise(resolve => setTimeout(resolve, 500 * retryCount)); // Delay progressivo
+        } else {
+          break; // Erro não relacionado ao cache
+        }
+      } catch (err) {
+        subscriptionError = err;
+        break;
+      }
+    }
 
     if (subscriptionError) {
       throw new Error(`Erro ao criar assinatura: ${subscriptionError.message}`);
