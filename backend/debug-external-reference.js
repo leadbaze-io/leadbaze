@@ -33,3 +33,4 @@ if (!result.userId || !result.planId) {
 } else {
   console.log('\n✅ TUDO OK: external_reference está sendo extraído corretamente!');
 }
+

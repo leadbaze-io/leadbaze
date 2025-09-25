@@ -112,3 +112,4 @@ SELECT
     leads_included
 FROM payment_plans
 WHERE id = '1';
+

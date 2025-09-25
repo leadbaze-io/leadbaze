@@ -39,7 +39,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
         return;
       }
 
-      console.log('📊 [useSubscription] Dados da API carregados:', data.data);
       setSubscription(data.data);
     } catch (err) {
       console.error('Erro inesperado ao buscar assinatura:', err);
@@ -73,21 +72,9 @@ export const useSubscription = (): UseSubscriptionReturn => {
         const now = new Date();
         const isAccessExpired = now > accessUntil;
         
-        console.log('🔍 [useSubscription] Verificando acesso:', {
-          access_until: data.data.access_until,
-          now: now.toISOString(),
-          isAccessExpired,
-          leads_remaining: data.data.leads_remaining,
-          leadsToGenerate
-        });
         
         // Se o acesso não expirou e tem leads suficientes
         if (!isAccessExpired && data.data.leads_remaining >= leadsToGenerate) {
-          console.log('✅ [useSubscription] Assinatura com leads suficientes:', {
-            leads_remaining: data.data.leads_remaining,
-            leadsToGenerate,
-            can_generate: true
-          });
           return {
             can_generate: true,
             reason: 'sufficient_subscription_leads',
@@ -99,7 +86,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
         
         // Se o acesso expirou, não usar leads da assinatura
         if (isAccessExpired) {
-          console.log('⚠️ [useSubscription] Acesso expirado, verificando apenas leads bônus');
         }
       }
 
@@ -123,20 +109,8 @@ export const useSubscription = (): UseSubscriptionReturn => {
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
       
-      console.log('🔍 [useSubscription] Verificando leads bônus:', {
-        bonus_leads: profile.bonus_leads,
-        bonus_leads_used: profile.bonus_leads_used,
-        bonusLeadsRemaining,
-        leadsToGenerate,
-        subscription: subscription ? 'existe' : 'não existe'
-      });
       
       if (bonusLeadsRemaining >= leadsToGenerate) {
-        console.log('✅ [useSubscription] Leads bônus suficientes:', {
-          bonusLeadsRemaining,
-          leadsToGenerate,
-          can_generate: true
-        });
         return {
           can_generate: true,
           reason: 'sufficient_bonus_leads',
@@ -146,11 +120,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
         };
       }
 
-      console.log('❌ [useSubscription] Leads insuficientes:', {
-        bonusLeadsRemaining,
-        leadsToGenerate,
-        can_generate: false
-      });
       
       return {
         can_generate: false,
@@ -198,10 +167,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
         
         // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
         if (!isAccessExpired && subscriptionData.leads_remaining >= leadsToConsume) {
-          console.log('🔄 [useSubscription] Consumindo leads da assinatura:', {
-            leads_remaining: subscriptionData.leads_remaining,
-            leadsToConsume
-          });
 
           // Atualizar leads_balance diretamente
           const { data: updateResult, error: updateError } = await supabase
@@ -237,7 +202,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       // Se não conseguiu consumir da assinatura, tentar consumir bonus leads
-      console.log('🔄 [useSubscription] Tentando consumir bonus leads...');
 
       const { data: profile, error: profileError } = await supabase
         .from('user_profiles')
@@ -284,11 +248,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
         };
       }
 
-      console.log('✅ [useSubscription] Bonus leads consumidos com sucesso:', {
-        leads_consumed: leadsToConsume,
-        bonus_leads_remaining: bonusLeadsRemaining - leadsToConsume,
-        bonus_leads_total: profile.bonus_leads
-      });
 
       return {
         success: true,

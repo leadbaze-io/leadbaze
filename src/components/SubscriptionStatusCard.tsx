@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Calendar, Zap, TrendingUp, Settings } from 'lucide-react';
 import type { SubscriptionStatusCardProps } from '../types/subscription';
 import { SubscriptionManagement } from './SubscriptionManagement';
-import { CancelledSubscriptionWarning } from './CancelledSubscriptionWarning';
 import '../styles/subscription-card.css';
 
 interface SubscriptionStatusCardPropsExtended extends SubscriptionStatusCardProps {
@@ -93,14 +92,6 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
 
   return (
     <div>
-      {/* Aviso para assinatura cancelada */}
-      {subscription.status === 'cancelled' && 
-       new Date(subscription.current_period_end) > new Date() && (
-        <CancelledSubscriptionWarning 
-          leadsRemaining={subscription.leads_remaining}
-          accessUntil={subscription.current_period_end}
-        />
-      )}
       
       <div className={`subscription-card rounded-2xl p-6 ${subscription.is_free_trial ? 'subscription-card-free-trial' : ''}`}>
       {/* Header */}
@@ -294,20 +285,23 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
           </div>
         </div>
         
-        <div className="subscription-card-info-card rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="subscription-card-info-icon w-4 h-4" />
-            <span className="subscription-card-info-label text-xs">
-              {subscription.is_free_trial ? 'Leads disponíveis' : 'Novos leads em'}
-            </span>
+        {/* Não exibir "Novos leads em" quando assinatura estiver cancelada */}
+        {subscription.status !== 'cancelled' && (
+          <div className="subscription-card-info-card rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <TrendingUp className="subscription-card-info-icon w-4 h-4" />
+              <span className="subscription-card-info-label text-xs">
+                {subscription.is_free_trial ? 'Leads disponíveis' : 'Novos leads em'}
+              </span>
+            </div>
+            <div className="subscription-card-info-value text-sm font-semibold">
+              {subscription.is_free_trial 
+                ? `${subscription.leads_remaining} leads`
+                : `${daysRemaining} dias`
+              }
+            </div>
           </div>
-          <div className="subscription-card-info-value text-sm font-semibold">
-            {subscription.is_free_trial 
-              ? `${subscription.leads_remaining} leads`
-              : `${daysRemaining} dias`
-            }
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Ações */}

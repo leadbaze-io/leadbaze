@@ -132,3 +132,4 @@ if (data.manual_cancellation_required) {
 **Última atualização:** 25/09/2025  
 **Versão:** 1.0  
 **Status:** Implementado e Funcional
+

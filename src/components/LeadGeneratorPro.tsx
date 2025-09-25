@@ -664,15 +664,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             <CardContent className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
               {/* Alerta simples para leads bônus - só aparece se NÃO tem assinatura ativa */}
               {(() => {
-                console.log('🔍 [LeadGeneratorPro] showQuantityAdjustment:', showQuantityAdjustment);
-                console.log('🔍 [LeadGeneratorPro] subscription:', subscription);
-                console.log('🔍 [LeadGeneratorPro] bonus_leads:', (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0));
-                
                 const hasActiveSubscription = subscription && subscription.status === 'active'
+                const hasCancelledSubscription = subscription && subscription.status === 'cancelled'
                 const hasBonusLeads = (profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0) > 0
                 
-                // Só mostra se: não tem assinatura ativa E tem leads bônus E não está ajustando quantidade
-                return !showQuantityAdjustment && !hasActiveSubscription && hasBonusLeads
+                // Só mostra se: não tem assinatura ativa E não tem assinatura cancelada E tem leads bônus E não está ajustando quantidade
+                return !showQuantityAdjustment && !hasActiveSubscription && !hasCancelledSubscription && hasBonusLeads
               })() && (
                 <SimpleBonusLeadsAlert 
                   leadsRemaining={(profile?.bonus_leads || 0) - (profile?.bonus_leads_used || 0)}
@@ -844,10 +841,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         )}
                       </Label>
                       <Select onValueChange={(value) => {
-                        console.log('🔄 [Select Standalone] Valor alterado para:', value)
                         setQuantity(value)
                         urlForm.setValue('quantity', value) // Sincronizar com o formulário
-                        console.log('📝 [Select Standalone] Formulário sincronizado:', urlForm.getValues())
                         setShowQuantityAdjustment(false) // Reset highlight when user changes
                       }} defaultValue={quantity} disabled={isGenerating}>
                         <SelectTrigger className={`h-10 sm:h-12 border-2 text-sm sm:text-base transition-all duration-300 ${

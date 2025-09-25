@@ -50,3 +50,4 @@ SELECT
     (up.bonus_leads - up.bonus_leads_used) as leads_disponiveis
 FROM user_profiles up
 WHERE up.user_id = '084b6a9c-49d4-420d-9315-3c01d9620c9d';
+

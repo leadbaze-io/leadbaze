@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, ArrowLeft, CreditCard } from 'lucide-react';
 import { PlanCard } from '../components/PlanCard';
-import { CancelledSubscriptionWarning } from '../components/CancelledSubscriptionWarning';
 import { usePlans } from '../hooks/usePlans';
 import { useSubscription } from '../hooks/useSubscription';
 import { supabase } from '../lib/supabaseClient';
@@ -108,16 +107,6 @@ const PlansPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Aviso para assinatura cancelada */}
-      {subscription && subscription.status === 'cancelled' && 
-       new Date(subscription.current_period_end) > new Date() && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <CancelledSubscriptionWarning 
-            leadsRemaining={subscription.leads_remaining}
-            accessUntil={subscription.current_period_end}
-          />
-        </div>
-      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Seção de Assinatura Atual */}

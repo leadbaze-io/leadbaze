@@ -50,3 +50,4 @@ SELECT
     END as codigo_perfect_pay
 FROM payment_plans 
 ORDER BY price_cents;
+

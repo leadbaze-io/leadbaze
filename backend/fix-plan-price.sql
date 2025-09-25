@@ -17,3 +17,4 @@ SELECT
     updated_at
 FROM payment_plans 
 WHERE name = 'start';
+

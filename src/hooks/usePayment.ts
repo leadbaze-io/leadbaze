@@ -26,7 +26,6 @@ export const usePayment = (): UsePaymentReturn => {
       });
 
       const data = await response.json();
-      console.log('🔍 [usePayment] Resposta completa:', data);
 
       if (!response.ok) {
         console.error('❌ [usePayment] Erro na resposta:', data);
@@ -43,7 +42,6 @@ export const usePayment = (): UsePaymentReturn => {
         throw new Error('Dados de pagamento ausentes na resposta');
       }
 
-      console.log('✅ [usePayment] Dados válidos:', data.data);
       return data.data;
 
     } catch (err: any) {

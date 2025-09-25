@@ -27,6 +27,9 @@ const smtpTestRoutes = require('./routes/smtpTest');
 // PERFECT PAY SYSTEM
 const perfectPayRoutes = require('./routes/perfectPay');
 const webhookMonitorRoutes = require('./routes/webhook-monitor');
+const subscriptionSyncRoutes = require('./routes/subscriptionSync');
+const recurringPaymentsRoutes = require('./routes/recurringPayments');
+const DailySyncJob = require('./jobs/dailySyncJob');
 
 // Middleware para capturar webhooks (importado do webhook-monitor)
 const captureWebhook = (req, res, next) => {
@@ -1093,6 +1096,9 @@ app.use('/api/perfect-pay', captureWebhook);
 app.use('/api/perfect-pay', perfectPayRoutes);
 console.log('✅ [Server] Perfect Pay system registrado com sucesso');
 app.use('/api/webhook-monitor', webhookMonitorRoutes);
+app.use('/api/subscription-sync', subscriptionSyncRoutes);
+app.use('/api/recurring-payments', recurringPaymentsRoutes);
+console.log('✅ [Server] Subscription Sync system registrado com sucesso');
 console.log('✅ [Server] Rotas do blog registradas com sucesso');
 
 // Rotas de status de campanhas
@@ -1362,6 +1368,12 @@ app.listen(PORT, () => {
     
     console.log('🤖 Blog Automation Service iniciado');
     console.log('📧 Admin autorizado: creaty12345@gmail.com');
+    
+    // Iniciar job de sincronização diária com Perfect Pay
+    const dailySyncJob = new DailySyncJob();
+    dailySyncJob.start();
+    console.log('🔄 Daily Sync Job iniciado (execução diária às 6:00 AM)');
+    
   } catch (error) {
     console.error('❌ Erro ao iniciar Blog Automation Service:', error);
   }

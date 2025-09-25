@@ -11,7 +11,6 @@ import {
 import { useSubscriptionManagement } from '../hooks/useSubscriptionManagement';
 import { useRecurringSubscription } from '../hooks/useRecurringSubscription';
 import { useSubscription } from '../hooks/useSubscription';
-import { CancelledSubscriptionWarning } from './CancelledSubscriptionWarning';
 import type { SubscriptionManagementProps, SubscriptionPlan } from '../types/subscription-management';
 import '../styles/subscription-management.css';
 
@@ -54,17 +53,13 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   };
 
   const handleCancel = async () => {
-    console.log('🔄 Iniciando cancelamento...', { cancelReason, isLoading });
     const result = await cancelSubscription(cancelReason);
-    console.log('📋 Resultado do cancelamento:', result);
     if (result?.success) {
-      console.log('✅ Cancelamento bem-sucedido');
       setShowCancelModal(false);
       setCancelReason('');
       refetch();
       onSuccess?.();
     } else {
-      console.log('❌ Falha no cancelamento:', result);
     }
   };
 
@@ -117,13 +112,6 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Aviso para assinatura cancelada */}
-      {subscription.status === 'cancelled' && isCancelledInPeriod && (
-        <CancelledSubscriptionWarning 
-          leadsRemaining={subscription.leads_remaining}
-          accessUntil={subscription.current_period_end}
-        />
-      )}
       
       {/* Status da Assinatura */}
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">

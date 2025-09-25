@@ -19,9 +19,9 @@ interface RecurringSubscriptionButtonProps {
 
 const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = ({
   planId,
-  planName,
+  planName: _planName,
   amount,
-  leadsLimit,
+  leadsLimit: _leadsLimit,
   userId: _userId,
   userEmail: _userEmail,
   onSuccess,
@@ -42,26 +42,13 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
         subscription.status === 'active' && 
         !subscription.is_free_trial;
 
-      console.log('🔍 [RecurringSubscription] Verificando tipo de operação:', {
-        hasSubscription: !!subscription,
-        status: subscription?.status,
-        isFreeTrial: subscription?.is_free_trial,
-        hasActivePaidPlan
-      });
 
       if (hasActivePaidPlan) {
         // Se já tem plano pago, fazer upgrade
-        console.log('🔄 [RecurringSubscription] Fazendo upgrade para:', {
-          planId,
-          planName,
-          amount,
-          leadsLimit
-        });
 
         const upgradeResult = await upgradeSubscription(planId, 'Upgrade solicitado pelo usuário');
         
         if (upgradeResult) {
-          console.log('✅ [RecurringSubscription] Upgrade realizado:', upgradeResult);
           onSuccess?.(upgradeResult);
         } else {
           throw new Error('Falha ao realizar upgrade');
@@ -70,12 +57,6 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
       }
 
       // Nova assinatura com Perfect Pay
-      console.log('🆕 [RecurringSubscription] Criando assinatura Perfect Pay:', {
-        planId,
-        planName,
-        amount,
-        leadsLimit
-      });
 
       // Obter usuário atual
       const { data: { user } } = await supabase.auth.getUser();
@@ -83,7 +64,6 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
         throw new Error('Usuário não autenticado');
       }
 
-      console.log('👤 [RecurringSubscription] Usuário autenticado:', user.id);
 
       // Chamar backend Perfect Pay
       const response = await fetch('/api/perfect-pay/create-checkout', {
@@ -103,14 +83,12 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
       }
 
       const result = await response.json();
-      console.log('✅ [RecurringSubscription] Resposta do backend:', result);
 
       if (!result.success || !result.data?.checkoutUrl) {
         throw new Error(result.message || 'Erro ao criar checkout');
       }
 
       // Redirecionar para Perfect Pay
-      console.log('🔄 [RecurringSubscription] Redirecionando para:', result.data.checkoutUrl);
       window.location.href = result.data.checkoutUrl;
 
     } catch (error: any) {

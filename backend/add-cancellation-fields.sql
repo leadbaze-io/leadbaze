@@ -17,3 +17,4 @@ WHERE table_name = 'user_payment_subscriptions'
   AND column_name IN ('cancellation_reason', 'cancelled_at')
 ORDER BY column_name;
 
+

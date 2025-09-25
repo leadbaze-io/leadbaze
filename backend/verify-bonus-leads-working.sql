@@ -30,3 +30,4 @@ FROM user_payment_subscriptions ups
 LEFT JOIN payment_plans pp ON ups.plan_id = pp.id
 WHERE ups.user_id = '084b6a9c-49d4-420d-9315-3c01d9620c9d'
 ORDER BY ups.created_at DESC;
+

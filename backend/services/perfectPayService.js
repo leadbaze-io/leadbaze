@@ -21,32 +21,31 @@ class PerfectPayService {
     this.baseUrl = 'https://app.perfectpay.com.br/api/v1';
     
     // Mapeamento dos planos internos com códigos Perfect Pay
-    // UM PRODUTO com 3 PLANOS DE ASSINATURA
+    // PLANOS DE TESTE com valores menores
     this.planMapping = {
       '1': { // Start
-        perfectPayPlanCode: 'PPLQQNGCO',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OT',
+        perfectPayPlanCode: 'PPLQQNGCL',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OO',
         name: 'start',
         price: 5.00,
         leads: 1000
       },
       '2': { // Scale  
-        perfectPayPlanCode: 'PPLQQNGCM',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OP',
+        perfectPayPlanCode: 'PPLQQNGGM',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ18H5',
         name: 'scale',
-        price: 497.00,
+        price: 5.00,
         leads: 4000
       },
       '3': { // Enterprise
-        perfectPayPlanCode: 'PPLQQNGCN',
-        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ17OS',
+        perfectPayPlanCode: 'PPLQQNGGN',
+        perfectPayLink: 'https://go.perfectpay.com.br/PPU38CQ18H6',
         name: 'enterprise',
-        price: 997.00,
+        price: 5.00,
         leads: 10000
       }
     };
     
-    console.log('🚀 [PerfectPay] Service inicializado - VERSÃO COMPLETA');
   }
 
   /**
@@ -54,7 +53,6 @@ class PerfectPayService {
    */
   async createCheckoutLink(userId, planId, operationType = 'new') {
     try {
-      console.log(`🆕 [PerfectPay] Criando checkout para usuário ${userId}, plano ${planId}, tipo: ${operationType}`);
 
       // 1. Buscar dados do usuário
       const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(userId);
@@ -73,7 +71,6 @@ class PerfectPayService {
         throw new Error(`Plano não encontrado: ${planError?.message}`);
       }
 
-      console.log(`✅ [PerfectPay] Plano encontrado: ${plan.name} - R$ ${plan.price_cents / 100}`);
 
       // 3. Gerar external_reference com tipo de operação
       const externalReference = `${operationType}_${userId}_${planId}_${Date.now()}`;
@@ -94,17 +91,10 @@ class PerfectPayService {
         plan_name: plan.name
       };
 
-      console.log('🔧 [PerfectPay] Dados do checkout:', {
-        email: checkoutData.customer_email,
-        amount: checkoutData.amount,
-        external_reference: externalReference,
-        operation: operationType
-      });
 
       // 5. Criar link real via API Perfect Pay
       const checkoutUrl = await this.createRealCheckoutLink(checkoutData, externalReference);
 
-      console.log(`✅ [PerfectPay] Link de checkout criado: ${checkoutUrl}`);
 
       return {
         success: true,
@@ -846,12 +836,12 @@ class PerfectPayService {
 
       // Mapear UUID do plano para código Perfect Pay correto
       const planUuidMap = {
-        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCO', // Start
-        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGCM', // Scale
-        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGCN'  // Enterprise
+        '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCL', // Start
+        'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGGM', // Scale
+        'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGGN'  // Enterprise
       };
       
-      const perfectPayPlanCode = planUuidMap[checkoutData.plan_id] || 'PPLQQNGCO';
+      const perfectPayPlanCode = planUuidMap[checkoutData.plan_id] || 'PPLQQNGCL';
       
       // Preparar dados para API Perfect Pay (conforme documentação oficial)
       const apiData = {

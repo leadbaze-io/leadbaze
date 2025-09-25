@@ -43,3 +43,4 @@ WHERE up.user_id = '084b6a9c-49d4-420d-9315-3c01d9620c9d';
 
 -- 4. Testar a função de verificação de leads
 SELECT check_leads_availability_simple('084b6a9c-49d4-420d-9315-3c01d9620c9d', 1) as disponibilidade;
+

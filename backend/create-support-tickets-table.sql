@@ -58,3 +58,4 @@ INSERT INTO support_tickets (
   'PPSUB1O91FP1I',
   '{"requires_manual_cancellation": true, "access_until": "2025-10-25T00:00:00Z"}'
 ) ON CONFLICT (ticket_id) DO NOTHING;
+

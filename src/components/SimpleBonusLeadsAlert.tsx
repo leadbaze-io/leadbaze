@@ -11,15 +11,12 @@ export const SimpleBonusLeadsAlert: React.FC<SimpleBonusLeadsAlertProps> = ({
   leadsRemaining,
   onAdjustQuantity
 }) => {
-  console.log('🚀 [SimpleBonusLeadsAlert] Componente renderizado!');
-  
   // Se não há leads restantes, não renderizar o componente
   if (leadsRemaining <= 0) {
     return null;
   }
   
   const handleAdjustQuantity = () => {
-    console.log('🔧 [SimpleBonusLeadsAlert] Botão clicado!');
     onAdjustQuantity();
   };
 

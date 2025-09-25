@@ -32,14 +32,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
   const checkAvailability = async () => {
     try {
       setIsChecking(true);
-      console.log('🔍 [LeadsControlGuard] Verificando disponibilidade:', {
-        leadsToGenerate,
-        subscription: subscription ? 'existe' : 'não existe',
-        subscriptionLeads: subscription?.leads_remaining
-      });
-      
       const result = await checkLeadsAvailability(leadsToGenerate);
-      console.log('📊 [LeadsControlGuard] Resultado da verificação:', result);
       setAvailability(result);
       
       // Se não pode gerar leads, mostrar toast de erro
@@ -131,11 +124,6 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
   // Se não pode gerar leads E não está forçando a exibição do formulário, mostrar mensagem
   if (availability && !availability.can_generate && !forceShowForm) {
     const isInsufficient = availability.reason === 'insufficient_leads';
-    console.log('🚨 [LeadsControlGuard] Mostrando mensagem de erro:', {
-      can_generate: availability.can_generate,
-      forceShowForm,
-      isInsufficient
-    });
     
     
     return (
@@ -245,11 +233,5 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
     </div>
   );
   
-  // Log final para confirmar que está mostrando o formulário
-  console.log('✅ [LeadsControlGuard] Mostrando formulário:', {
-    can_generate: availability?.can_generate,
-    forceShowForm,
-    hasChildren: !!children
-  });
   
 };

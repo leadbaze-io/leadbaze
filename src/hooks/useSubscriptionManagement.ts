@@ -28,8 +28,6 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
   const processRefund = useCallback(async (_subscriptionData: any) => {
     try {
       // Refund automático desabilitado - usando Perfect Pay
-      console.log('ℹ️ [Cancelamento] Refund automático desabilitado - usando Perfect Pay');
-      console.log('ℹ️ [Cancelamento] Para reembolsos, entre em contato com o suporte');
       
       // Simular resposta de sucesso para não quebrar o fluxo
       const refundData = { 

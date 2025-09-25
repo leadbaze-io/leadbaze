@@ -28,7 +28,6 @@ import { SubscriptionStatusCard } from '../components/SubscriptionStatusCard'
 import { LeadsUsageTracker } from '../components/LeadsUsageTracker'
 import { ConnectionStatus } from '../components/ConnectionStatus'
 import { SubscriptionHistory } from '../components/SubscriptionHistory'
-import { WebhookMonitor } from '../components/WebhookMonitor'
 import { OriginalSubscriptionInfo } from '../components/OriginalSubscriptionInfo'
 import { useSmartSubscription } from '../hooks/useSmartSubscription'
 import { usePlans } from '../hooks/usePlans'
@@ -351,7 +350,7 @@ export default function UserProfile() {
 
           {/* Main Content */}
           <div className="lg:col-span-2">
-              <div className="profile-tabs-list p-1 grid w-full grid-cols-4 gap-1 mb-4 sm:mb-6">
+              <div className="profile-tabs-list p-1 grid w-full grid-cols-3 gap-1 mb-4 sm:mb-6">
                 <button
                   className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
                     activeTab === 'subscription' ? 'profile-tab-active' : ''
@@ -379,15 +378,6 @@ export default function UserProfile() {
                   <span className="hidden sm:inline">Dados Pessoais</span>
                   <span className="sm:hidden">Dados</span>
                 </button>
-                <button
-                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
-                    activeTab === 'webhooks' ? 'profile-tab-active' : ''
-                  }`}
-                  onClick={() => setActiveTab('webhooks')}
-                >
-                  <span className="hidden sm:inline">Webhooks</span>
-                  <span className="sm:hidden">Logs</span>
-                </button>
               </div>
 
               {activeTab === 'subscription' && (
@@ -400,13 +390,44 @@ export default function UserProfile() {
                         <p className="profile-text-muted">Carregando dados da assinatura...</p>
                       </div>
                     ) : subscription ? (
-                      <SubscriptionStatusCard
-                        subscription={subscription}
-                        onUpgrade={() => navigate('/plans')}
-                        onManage={() => setActiveTab('overview')}
-                        isUpdating={isUpdating}
-                        isConnected={isConnected}
-                      />
+                      <>
+                        <SubscriptionStatusCard
+                          subscription={subscription}
+                          onUpgrade={() => navigate('/plans')}
+                          onManage={() => setActiveTab('overview')}
+                          isUpdating={isUpdating}
+                          isConnected={isConnected}
+                        />
+                        
+                        {/* Aviso de Cancelamento - Visível quando assinatura está cancelada */}
+                        {subscription.status === 'cancelled' && (
+                          <div className="space-y-4 mt-6">
+                            {/* Aviso Principal */}
+                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                              <p className="text-sm text-red-800 dark:text-red-200">
+                                <strong>🚨 ASSINATURA CANCELADA - AÇÃO MANUAL NECESSÁRIA</strong><br/>
+                                Sua assinatura foi cancelada no LeadBaze, mas você DEVE cancelar manualmente no Perfect Pay para evitar cobranças futuras!
+                              </p>
+                            </div>
+
+                            {/* Instruções para Cancelamento Manual */}
+                            <div className="flex items-start gap-2">
+                              <div className="text-blue-600 mt-0.5">📋</div>
+                              <div>
+                                <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Instruções para Cancelamento Manual</p>
+                                <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">Para evitar cobranças futuras, você deve cancelar no Perfect Pay:</p>
+                                <ol className="text-xs text-blue-700 dark:text-blue-300 list-decimal list-inside space-y-1">
+                                  <li>Acesse: <strong>https://app.perfectpay.com.br</strong></li>
+                                  <li>Faça login com suas credenciais</li>
+                                  <li>Vá para "Minhas Assinaturas"</li>
+                                  <li>Cancele a assinatura do LeadBaze</li>
+                                  <li>Confirme o cancelamento</li>
+                                </ol>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <div className="profile-card p-6 text-center">
                         <div className="text-4xl mb-4">💳</div>
@@ -930,11 +951,6 @@ export default function UserProfile() {
                 </div>
               )}
 
-              {activeTab === 'webhooks' && (
-                <div className="mt-4 sm:mt-6 animate-fade-in">
-                  <WebhookMonitor />
-                </div>
-              )}
 
             </div>
           </div>
