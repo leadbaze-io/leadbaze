@@ -43,11 +43,11 @@ router.post('/create-checkout', async (req, res) => {
 
 /**
  * POST /api/perfect-pay/webhook
- * Processar webhooks do Perfect Pay
+ * Processar webhooks do Perfect Pay (método preferido)
  */
 router.post('/webhook', async (req, res) => {
   try {
-    console.log('🔔 [PerfectPay] ===== WEBHOOK RECEBIDO =====');
+    console.log('🔔 [PerfectPay] ===== WEBHOOK RECEBIDO (POST) =====');
     console.log('🔔 [PerfectPay] Timestamp:', new Date().toISOString());
     console.log('🔔 [PerfectPay] Headers:', JSON.stringify(req.headers, null, 2));
     console.log('🔔 [PerfectPay] Body:', JSON.stringify(req.body, null, 2));
@@ -68,6 +68,54 @@ router.post('/webhook', async (req, res) => {
 
   } catch (error) {
     console.error('❌ [PerfectPay] Erro no webhook:', error.message);
+    
+    // Mesmo com erro, responder 200 para não reenviar
+    res.status(200).json({
+      success: false,
+      message: 'Erro no processamento',
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/perfect-pay/webhook
+ * Processar webhooks do Perfect Pay (fallback para GET)
+ */
+router.get('/webhook', async (req, res) => {
+  try {
+    console.log('🔔 [PerfectPay] ===== WEBHOOK RECEBIDO (GET) =====');
+    console.log('🔔 [PerfectPay] Timestamp:', new Date().toISOString());
+    console.log('🔔 [PerfectPay] Headers:', JSON.stringify(req.headers, null, 2));
+    console.log('🔔 [PerfectPay] Query:', JSON.stringify(req.query, null, 2));
+    console.log('🔔 [PerfectPay] ================================');
+
+    // Para GET, os dados podem vir nos query parameters
+    const webhookData = req.query;
+    const signature = req.headers['x-signature'] || req.headers['x-perfect-pay-signature'];
+
+    // Se não há dados nos query params, tentar extrair do body se possível
+    if (!webhookData || Object.keys(webhookData).length === 0) {
+      console.log('⚠️ [PerfectPay] Nenhum dado recebido via GET');
+      return res.status(200).json({
+        success: true,
+        message: 'Webhook GET recebido mas sem dados',
+        note: 'Perfect Pay deve enviar dados via POST'
+      });
+    }
+
+    // Processar webhook
+    const result = await perfectPayService.processWebhook(webhookData, signature);
+
+    // Responder sempre com 200 para Perfect Pay não reenviar
+    res.status(200).json({
+      success: true,
+      message: 'Webhook processado',
+      result
+    });
+
+  } catch (error) {
+    console.error('❌ [PerfectPay] Erro no webhook GET:', error.message);
     
     // Mesmo com erro, responder 200 para não reenviar
     res.status(200).json({
