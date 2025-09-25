@@ -54,13 +54,13 @@ export const useUpgradeManagement = () => {
       if (data.success) {
         toast({
           title: "✅ Upgrade Realizado",
-          description: `Seu plano foi atualizado com sucesso! Você recebeu ${data.data.leads_added} leads adicionais.`,
+          description: `Seu plano foi atualizado com sucesso! Você recebeu ${data.leads_added} leads adicionais.`,
           variant: 'default',
           className: 'toast-modern toast-success'
         });
       }
 
-      return data.data;
+      return data;
     } catch (err: any) {
       console.error('Erro ao fazer upgrade:', err);
       setError(err.message);

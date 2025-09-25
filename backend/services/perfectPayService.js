@@ -166,6 +166,12 @@ class PerfectPayService {
    * Processar webhook baseado no status
    */
   async processWebhookByStatus(webhookData) {
+    // VALIDAÇÃO CRÍTICA: Verificar se é um pagamento real
+    if (!this.validateRealPayment(webhookData)) {
+      console.log('⚠️ [PerfectPay] Webhook não é um pagamento real - ignorando');
+      return { processed: false, reason: 'Not a real payment' };
+    }
+
     // Usar campos corretos da documentação Perfect Pay
     const saleStatusEnum = webhookData.sale_status_enum;
     const externalReference = webhookData.product?.external_reference;
@@ -1210,6 +1216,58 @@ class PerfectPayService {
         success: false, 
         error: `Erro ao processar cancelamento: ${error.message}`
       };
+    }
+  }
+
+  /**
+   * VALIDAÇÃO CRÍTICA: Verificar se é um pagamento real
+   */
+  validateRealPayment(webhookData) {
+    try {
+      // 1. Verificar se tem transaction_id válido
+      if (!webhookData.transaction_id || webhookData.transaction_id.startsWith('TEST_') || webhookData.transaction_id.startsWith('RESET_')) {
+        console.log('⚠️ [PerfectPay] Transaction ID inválido ou de teste:', webhookData.transaction_id);
+        return false;
+      }
+
+      // 2. Verificar se tem valor válido (maior que 0)
+      const amount = webhookData.amount || webhookData.value;
+      if (!amount || amount <= 0) {
+        console.log('⚠️ [PerfectPay] Valor inválido:', amount);
+        return false;
+      }
+
+      // 3. Verificar se tem status de pagamento aprovado
+      const saleStatusEnum = webhookData.sale_status_enum;
+      if (saleStatusEnum !== 2) { // 2 = aprovado
+        console.log('⚠️ [PerfectPay] Status não é aprovado:', saleStatusEnum);
+        return false;
+      }
+
+      // 4. Verificar se tem dados de produto válidos
+      if (!webhookData.product || !webhookData.product.external_reference) {
+        console.log('⚠️ [PerfectPay] Dados de produto inválidos');
+        return false;
+      }
+
+      // 5. Verificar se não é um webhook de teste
+      if (webhookData.test_mode === true || webhookData.sandbox === true) {
+        console.log('⚠️ [PerfectPay] Webhook de teste/sandbox detectado');
+        return false;
+      }
+
+      console.log('✅ [PerfectPay] Pagamento real validado:', {
+        transaction_id: webhookData.transaction_id,
+        amount: amount,
+        status: saleStatusEnum,
+        product: webhookData.product?.external_reference
+      });
+
+      return true;
+
+    } catch (error) {
+      console.error('❌ [PerfectPay] Erro na validação de pagamento real:', error.message);
+      return false;
     }
   }
 
