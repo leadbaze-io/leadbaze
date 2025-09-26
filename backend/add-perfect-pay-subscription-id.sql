@@ -15,3 +15,5 @@ FROM information_schema.columns
 WHERE table_name = 'user_payment_subscriptions' 
   AND column_name = 'perfect_pay_subscription_id';
 
+
+

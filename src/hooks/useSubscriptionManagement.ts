@@ -62,7 +62,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         throw new Error('Usuário não autenticado');
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/cancel/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/perfect-pay/cancel/${user.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         return [];
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/plans`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/perfect-pay/plans`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -205,7 +205,7 @@ export const useSubscriptionManagement = (): UseSubscriptionManagementReturn => 
         return [];
       }
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/plans`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/perfect-pay/plans`);
       const data = await response.json();
 
       if (!response.ok) {

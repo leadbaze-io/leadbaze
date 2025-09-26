@@ -45,3 +45,5 @@ SELECT
     END as codigo_perfect_pay_novo
 FROM payment_plans 
 ORDER BY price_cents;
+
+

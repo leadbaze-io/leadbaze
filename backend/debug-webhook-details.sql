@@ -35,3 +35,5 @@ LEFT JOIN user_profiles up ON u.id = up.user_id
 WHERE u.id = '39dc6c62-6dea-4222-adb5-7075fd704189';
 
 
+
+

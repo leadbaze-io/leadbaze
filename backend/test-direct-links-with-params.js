@@ -93,3 +93,5 @@ function generateDirectLinkWithParams(checkoutData, externalReference) {
 testDirectLinksWithParams().catch(console.error);
 
 
+
+

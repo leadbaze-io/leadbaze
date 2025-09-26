@@ -60,3 +60,5 @@ INSERT INTO support_tickets (
 ) ON CONFLICT (ticket_id) DO NOTHING;
 
 
+
+

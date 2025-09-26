@@ -44,3 +44,5 @@ $$;
 
 -- 3. Testar a função
 SELECT * FROM get_original_subscription_info('f20ceb6a-0e59-477c-9a85-afc39ea90afe'::UUID);
+
+

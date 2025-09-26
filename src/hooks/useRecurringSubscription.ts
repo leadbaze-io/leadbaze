@@ -61,7 +61,7 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:3001/api/recurring-subscription/create', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/recurring-subscription/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/recurring-subscription/${subscriptionId}`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/recurring-subscription/${subscriptionId}`);
 
       const result = await response.json();
 
@@ -115,7 +115,7 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/recurring-subscription/${subscriptionId}/cancel`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/recurring-subscription/${subscriptionId}/cancel`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ export const useRecurringSubscription = (): UseRecurringSubscriptionReturn => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3001/api/recurring-subscription/${subscriptionId}/reactivate`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/recurring-subscription/${subscriptionId}/reactivate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

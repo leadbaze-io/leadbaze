@@ -21,3 +21,5 @@ WHERE table_name = 'user_payment_subscriptions'
   AND column_name IN ('perfect_pay_cancelled', 'requires_manual_cancellation')
 ORDER BY column_name;
 
+
+

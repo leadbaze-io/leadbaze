@@ -32,7 +32,7 @@ export const useUpgradeManagement = () => {
         throw new Error('Usuário não autenticado');
       }
 
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/perfect-pay/upgrade`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/perfect-pay/upgrade`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

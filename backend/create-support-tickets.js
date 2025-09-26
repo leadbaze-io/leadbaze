@@ -106,3 +106,5 @@ async function createSupportTicketsTable() {
 createSupportTicketsTable().catch(console.error);
 
 
+
+

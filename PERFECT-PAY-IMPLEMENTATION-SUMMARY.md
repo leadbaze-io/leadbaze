@@ -207,3 +207,5 @@ Implementar integração completa com Perfect Pay para processamento de pagament
 **Próxima sessão:** Testes em produção e monitoramento
 
 
+
+

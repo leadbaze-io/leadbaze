@@ -17,7 +17,7 @@ export const usePayment = (): UsePaymentReturn => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/payments/create', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/payments/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const usePayment = (): UsePaymentReturn => {
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/payments/status?paymentId=${paymentId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/payments/status?paymentId=${paymentId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

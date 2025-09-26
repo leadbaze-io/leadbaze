@@ -20,7 +20,7 @@ export const usePlans = (): UsePlansReturn => {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/api/subscription/plans?userId=${user.id}`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/subscription/plans?userId=${user.id}`);
       const data = await response.json();
 
       if (!response.ok) {
