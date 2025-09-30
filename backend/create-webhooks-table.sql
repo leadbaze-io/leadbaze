@@ -24,3 +24,4 @@ COMMENT ON COLUMN perfect_pay_webhooks.status IS 'Status do processamento (succe
 COMMENT ON COLUMN perfect_pay_webhooks.error_message IS 'Mensagem de erro se houver falha no processamento';
 
 
+

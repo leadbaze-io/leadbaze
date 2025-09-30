@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Star, Phone, Globe, MapPin, Filter, Search, Download, Clock, DollarSign } from 'lucide-react'
 import type { Lead } from '../types'
+import { exportToCSV, formatLeadsForCSV } from '../utils/csvExport'
 
 interface LeadTableProps {
   leads: Lead[]
@@ -65,31 +66,13 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
       setSortOrder('asc')
     }
   }
-  const exportToCSV = () => {
-    const headers = ['Nome', 'Endereço', 'Telefone', 'Avaliação', 'Website', 'Tipo de Negócio']
-    const csvData = [
-      headers.join(','),
-      ...filteredAndSortedLeads.map(lead => [
-        `"${lead.name}"`,
-        `"${lead.address}"`,
-        `"${lead.phone || ''}"`,
-        lead.rating || '',
-        `"${lead.website || ''}"`,
-        `"${lead.business_type || ''}"`
-      ].join(','))
-    ].join('\n')
-
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `${title.replace(/\s+/g, '_').toLowerCase()}_leads.csv`)
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
+  const exportToCSVHandler = () => {
+    const { headers, data } = formatLeadsForCSV(filteredAndSortedLeads)
+    exportToCSV({
+      filename: `${title.replace(/\s+/g, '_').toLowerCase()}_leads.csv`,
+      headers,
+      data
+    })
   }
 
   return (
@@ -105,7 +88,7 @@ export default function LeadTable({ leads, title = "Lista de Leads" }: LeadTable
           </div>
 
           <button
-            onClick={exportToCSV}
+            onClick={exportToCSVHandler}
             className="inline-flex items-center space-x-2 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             <Download className="w-4 h-4" />

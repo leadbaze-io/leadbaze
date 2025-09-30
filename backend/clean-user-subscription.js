@@ -89,3 +89,4 @@ async function cleanUserSubscription() {
 // Executar a função
 cleanUserSubscription();
 
+

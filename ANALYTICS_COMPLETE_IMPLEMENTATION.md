@@ -201,3 +201,4 @@ CompleteRegistration → Login → CampaignCreated → Lead
 **Sistemas**: 5 (GA4, Google Ads, GTM, Clarity, Meta Pixel)
 
 
+

@@ -129,3 +129,4 @@ COMMENT ON COLUMN lead_packages.perfect_pay_code IS 'Código do produto no Perfe
 COMMENT ON COLUMN lead_packages.checkout_url IS 'URL direta do checkout no Perfect Pay';
 
 
+

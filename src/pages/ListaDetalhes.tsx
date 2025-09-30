@@ -114,16 +114,34 @@ export default function ListaDetalhes() {
       ].join(','))
     ].join('\n')
 
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `${leadList.name.replace(/\s+/g, '_').toLowerCase()}_leads.csv`)
-      link.style.visibility = 'hidden'
+    // Detectar se é iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
+    if (isIOS) {
+      // Para iOS, usar data URL em vez de blob
+      const dataUrl = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData)
+      const link = document.createElement('a')
+      link.href = dataUrl
+      link.download = `${leadList.name.replace(/\s+/g, '_').toLowerCase()}_leads.csv`
+      link.target = '_blank'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+    } else {
+      // Para outros dispositivos, usar blob (método original)
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob)
+        link.setAttribute('href', url)
+        link.setAttribute('download', `${leadList.name.replace(/\s+/g, '_').toLowerCase()}_leads.csv`)
+        link.style.visibility = 'hidden'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url) // Limpar URL para liberar memória
+      }
     }
   }
 
