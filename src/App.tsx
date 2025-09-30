@@ -11,6 +11,7 @@ import { Toaster } from './components/ui/toaster'
 import { ActiveCampaignManager } from './components/ActiveCampaignManager'
 import { ActiveCampaignProvider } from './contexts/ActiveCampaignContext'
 import MetaPixelProvider from './components/MetaPixelProvider'
+import { setupExtensionErrorHandler } from './utils/extensionErrorHandler'
 
 // Lazy loading das páginas para code splitting
 const LandingPage = lazy(() => import('./pages/LandingPage'))
@@ -39,24 +40,38 @@ function AppContent() {
   const location = useLocation()
   const { theme, isDark } = useTheme()
   
+  // Configurar handler de erros de extensões
+  useEffect(() => {
+    setupExtensionErrorHandler()
+  }, [])
+  
   useEffect(() => {
     const isLandingPage = location.pathname === '/'
     const isBlogPage = location.pathname.startsWith('/blog')
     
-    console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage, 'isBlogPage:', isBlogPage)
+    // Apenas log em desenvolvimento
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage, 'isBlogPage:', isBlogPage)
+    }
     
     if (isLandingPage || isBlogPage) {
       // Landing Page e Blog - sempre claros, forçar remoção da classe dark
       document.documentElement.classList.remove('dark')
-      console.log('✅ Landing Page/Blog - classe dark forçadamente removida')
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Landing Page/Blog - classe dark forçadamente removida')
+      }
     } else {
       // Para outras páginas, restaurar o tema escolhido pelo usuário
       if (isDark) {
         document.documentElement.classList.add('dark')
-        console.log('✅ Restaurando tema escuro escolhido pelo usuário')
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Restaurando tema escuro escolhido pelo usuário')
+        }
       } else {
         document.documentElement.classList.remove('dark')
-        console.log('✅ Restaurando tema claro escolhido pelo usuário')
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Restaurando tema claro escolhido pelo usuário')
+        }
       }
     }
   }, [location.pathname, theme, isDark])

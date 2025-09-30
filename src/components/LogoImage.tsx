@@ -8,13 +8,16 @@ interface LogoImageProps {
 export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
   return (
     <img
-
       src={logoImage}
       alt="LeadBaze"
       className={className}
-      onLoad={() => console.log('✅ Logo LeadBaze carregada com sucesso')}
+      onLoad={() => {
+        // Apenas log em desenvolvimento
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Logo LeadBaze carregada com sucesso')
+        }
+      }}
       onError={(e) => {
-
         // Fallback se a imagem não carregar
         const target = e.target as HTMLImageElement
         target.style.display = 'none'

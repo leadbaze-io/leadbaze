@@ -290,13 +290,15 @@ export default function NewDisparadorMassa() {
       ]
 
       // Log detalhado dos números normalizados
-      campaignLeads.forEach((lead, index) => {
-        const originalPhone = lead.phone
-        const normalizedPhone = normalizePhoneNumber(lead.phone)
-        console.log(`Lead ${index + 1}: ${originalPhone} → ${normalizedPhone}`)
-      })
-
-      console.log('🌐 [CAMPAIGN-SEND] Enviando via backend (sistema antigo)...')
+      // Normalizar números de telefone para debug (apenas em desenvolvimento)
+      if (process.env.NODE_ENV === 'development') {
+        campaignLeads.forEach((lead, index) => {
+          const originalPhone = lead.phone
+          const normalizedPhone = normalizePhoneNumber(lead.phone)
+          console.log(`Lead ${index + 1}: ${originalPhone} → ${normalizedPhone}`)
+        })
+        console.log('🌐 [CAMPAIGN-SEND] Enviando via backend (sistema antigo)...')
+      }
 
       // Usar o mesmo fluxo do sistema antigo: Frontend → Backend → N8N
       const backendResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/dispatch-campaign`, {

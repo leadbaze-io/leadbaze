@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { ANALYTICS_CONFIG, shouldRunAnalytics, getDefaultEventParameters } from '../config/analytics';
 
 // Declarações globais para TypeScript
 declare global {
@@ -47,107 +48,173 @@ export const useAnalytics = () => {
     return typeof window !== 'undefined' && typeof window.fbq === 'function';
   }, []);
 
+  // Verificar se analytics deve ser executado
+  const canRunAnalytics = useCallback(() => {
+    return shouldRunAnalytics() && !isAnalyticsBlocked();
+  }, []);
+
+  // Verificar se analytics está sendo bloqueado
+  const isAnalyticsBlocked = useCallback(() => {
+    if (!ANALYTICS_CONFIG.DETECT_AD_BLOCKER) return false;
+    
+    return typeof window !== 'undefined' && 
+           (window.navigator.userAgent.includes('AdBlock') || 
+            window.navigator.userAgent.includes('uBlock') ||
+            document.querySelector('script[src*="googletagmanager"]') === null);
+  }, []);
+
   // Rastrear visualização de página
   const trackPageView = useCallback((path?: string) => {
+    if (!canRunAnalytics()) return;
+    
     const currentPath = path || window.location.pathname;
     
     try {
       // Google Analytics
       if (isGALoaded()) {
-        window.gtag('config', 'G-9CN9TF7GHG', {
+        window.gtag('config', ANALYTICS_CONFIG.GOOGLE_ANALYTICS_ID, {
           page_path: currentPath,
+          page_title: document.title,
+          ...getDefaultEventParameters()
         });
-        console.log(`📊 [Google Analytics] PageView: ${currentPath}`);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Google Analytics] PageView: ${currentPath}`);
+        }
       }
 
       // Google Ads
       if (isGALoaded()) {
-        window.gtag('config', 'AW-17598053351', {
+        window.gtag('config', ANALYTICS_CONFIG.GOOGLE_ADS_ID, {
           page_path: currentPath,
+          page_title: document.title
         });
-        console.log(`📊 [Google Ads] PageView: ${currentPath}`);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Google Ads] PageView: ${currentPath}`);
+        }
       }
 
       // Meta Pixel
       if (isPixelLoaded()) {
         window.fbq('track', 'PageView');
-        console.log(`📊 [Meta Pixel] PageView: ${currentPath}`);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Meta Pixel] PageView: ${currentPath}`);
+        }
       }
 
       // Microsoft Clarity
       if (isClarityLoaded()) {
         window.clarity('set', 'page', currentPath);
-        console.log(`📊 [Clarity] PageView: ${currentPath}`);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Clarity] PageView: ${currentPath}`);
+        }
       }
 
     } catch (error) {
-      console.error('❌ [Analytics] Erro ao rastrear PageView:', error);
+      if (ANALYTICS_CONFIG.DEBUG_ANALYTICS) {
+        console.error('❌ [Analytics] Erro ao rastrear PageView:', error);
+      }
     }
-  }, [isGALoaded, isPixelLoaded, isClarityLoaded]);
+  }, [isGALoaded, isPixelLoaded, isClarityLoaded, canRunAnalytics]);
 
   // Rastrear evento personalizado
   const trackEvent = useCallback((eventName: string, parameters?: any) => {
+    if (!canRunAnalytics()) return;
+    
+    const eventData = {
+      ...getDefaultEventParameters(),
+      ...parameters
+    };
+    
     try {
       // Google Analytics
       if (isGALoaded()) {
-        window.gtag('event', eventName, parameters);
-        console.log(`📊 [Google Analytics] Event: ${eventName}`, parameters);
+        window.gtag('event', eventName, eventData);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Google Analytics] Event: ${eventName}`, eventData);
+        }
       }
 
       // Meta Pixel
       if (isPixelLoaded()) {
-        window.fbq('track', eventName, parameters);
-        console.log(`📊 [Meta Pixel] Event: ${eventName}`, parameters);
+        window.fbq('track', eventName, eventData);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Meta Pixel] Event: ${eventName}`, eventData);
+        }
       }
 
       // Microsoft Clarity
       if (isClarityLoaded()) {
         window.clarity('event', eventName);
-        console.log(`📊 [Clarity] Event: ${eventName}`);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Clarity] Event: ${eventName}`);
+        }
       }
 
     } catch (error) {
-      console.error('❌ [Analytics] Erro ao rastrear evento:', error);
+      if (ANALYTICS_CONFIG.DEBUG_ANALYTICS) {
+        console.error('❌ [Analytics] Erro ao rastrear evento:', error);
+      }
     }
-  }, [isGALoaded, isPixelLoaded, isClarityLoaded]);
+  }, [isGALoaded, isPixelLoaded, isClarityLoaded, canRunAnalytics]);
 
   // Rastrear compra
   const trackPurchase = useCallback((value: number, currency: string = 'BRL', transactionId?: string, items?: any[]) => {
+    if (!canRunAnalytics()) return;
+    
     const purchaseData = {
       transaction_id: transactionId || `txn_${Date.now()}`,
       value,
       currency,
-      items: items || []
+      items: items || [],
+      ...getDefaultEventParameters()
     };
 
     try {
       // Google Analytics
       if (isGALoaded()) {
         window.gtag('event', 'purchase', purchaseData);
-        console.log(`📊 [Google Analytics] Purchase:`, purchaseData);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Google Analytics] Purchase:`, purchaseData);
+        }
       }
 
       // Google Ads
       if (isGALoaded()) {
         window.gtag('event', 'conversion', {
-          send_to: 'AW-17598053351',
+          send_to: ANALYTICS_CONFIG.GOOGLE_ADS_ID,
           value: value,
           currency: currency,
           transaction_id: purchaseData.transaction_id
         });
-        console.log(`📊 [Google Ads] Conversion:`, purchaseData);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Google Ads] Conversion:`, purchaseData);
+        }
       }
 
       // Meta Pixel
       if (isPixelLoaded()) {
         window.fbq('track', 'Purchase', purchaseData);
-        console.log(`📊 [Meta Pixel] Purchase:`, purchaseData);
+        
+        if (ANALYTICS_CONFIG.VERBOSE_LOGGING) {
+          console.log(`📊 [Meta Pixel] Purchase:`, purchaseData);
+        }
       }
 
     } catch (error) {
-      console.error('❌ [Analytics] Erro ao rastrear compra:', error);
+      if (ANALYTICS_CONFIG.DEBUG_ANALYTICS) {
+        console.error('❌ [Analytics] Erro ao rastrear compra:', error);
+      }
     }
-  }, [isGALoaded, isPixelLoaded]);
+  }, [isGALoaded, isPixelLoaded, canRunAnalytics]);
 
   // Rastrear início de checkout
   const trackInitiateCheckout = useCallback((value: number, currency: string = 'BRL', items?: any[]) => {
@@ -375,11 +442,14 @@ export const useAnalytics = () => {
     // Verificações de carregamento
     isGALoaded,
     isClarityLoaded,
-    isPixelLoaded
+    isPixelLoaded,
+    isAnalyticsBlocked,
+    canRunAnalytics
   };
 };
 
 export default useAnalytics;
+
 
 
 

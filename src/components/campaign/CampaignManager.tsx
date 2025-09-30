@@ -40,20 +40,22 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
 
   const loadCampaigns = async () => {
     try {
-      console.log('🚀 CampaignManager.loadCampaigns() - Iniciando...')
+      // Apenas log em desenvolvimento
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 CampaignManager.loadCampaigns() - Iniciando...')
+        console.log('📞 Chamando CampaignService.getUserCampaigns()...')
+      }
+      
       setLoading(true)
       setError(null)
 
-      console.log('📞 Chamando CampaignService.getUserCampaigns()...')
       const data = await CampaignService.getUserCampaigns()
       setCampaigns(data)
 
     } catch (err) {
-
       setError(err instanceof Error ? err.message : 'Erro ao carregar campanhas')
     } finally {
       setLoading(false)
-
     }
   }
 
