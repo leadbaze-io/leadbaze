@@ -1095,10 +1095,7 @@ app.use('/api/subscription-sync', subscriptionSyncRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
 app.use('/api/lead-packages', leadPackagesRoutes);
 
-// Rota genérica DEVE vir ANTES das rotas específicas
-app.use('/api/subscription', subscriptionOriginalRoutes);
-
-// Rota específica DEVE vir DEPOIS da rota genérica
+// Rota específica DEVE vir ANTES da rota genérica
 app.get('/api/subscription/plans', async (req, res) => {
   try {
     const perfectPayService = require('./services/perfectPayService');
@@ -1140,6 +1137,9 @@ app.get('/api/subscription/plans', async (req, res) => {
     });
   }
 });
+
+// Rota genérica DEVE vir DEPOIS da rota específica
+app.use('/api/subscription', subscriptionOriginalRoutes);
 console.log('✅ [Server] Subscription Sync system registrado com sucesso');
 console.log('✅ [Server] Subscription Original system registrado com sucesso');
 console.log('✅ [Server] Lead Packages system registrado com sucesso');
