@@ -9,55 +9,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="LeadBaze - A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps" />
     
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PRP8DKW9');</script>
-    <!-- End Google Tag Manager -->
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9CN9TF7GHG"></script>
+    <!-- Analytics Scripts - Carregamento Condicional -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-9CN9TF7GHG');
-    </script>
-    
-    <!-- Google Ads -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17598053351"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'AW-17598053351');
-    </script>
-    
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
+      // Verificar se analytics deve ser carregado
+      function shouldLoadAnalytics() {
+        // Verificar se está em modo de desenvolvimento
+        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        
+        // Verificar se há bloqueador de anúncios
+        const testElement = document.createElement('div');
+        testElement.className = 'adsbox';
+        testElement.style.display = 'none';
+        document.body.appendChild(testElement);
+        const isBlocked = testElement.offsetHeight === 0;
+        document.body.removeChild(testElement);
+        
+        // Verificar Do Not Track
+        const dnt = navigator.doNotTrack === '1';
+        
+        return !isDev && !isBlocked && !dnt;
+      }
+      
+      // Carregar analytics apenas se necessário
+      if (shouldLoadAnalytics()) {
+        // Google Tag Manager
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PRP8DKW9');
+        
+        // Google Analytics
+        const gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-9CN9TF7GHG';
+        document.head.appendChild(gaScript);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9CN9TF7GHG');
+        
+        // Google Ads
+        const adsScript = document.createElement('script');
+        adsScript.async = true;
+        adsScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17598053351';
+        document.head.appendChild(adsScript);
+        
+        gtag('config', 'AW-17598053351');
+        
+        // Microsoft Clarity
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "thhq3efjo4");
+        
+        // Meta Pixel
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1494096711901020');
+        fbq('track', 'PageView');
+        
+        console.log('📊 Analytics carregado com sucesso');
+      } else {
+        console.log('🚫 Analytics não carregado (bloqueado ou modo desenvolvimento)');
+      }
     </script>
-    
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1494096711901020');
-    fbq('track', 'PageView');
-    </script>
-    <!-- End Meta Pixel Code -->
     
     <!-- Facebook Domain Verification -->
     <meta name="facebook-domain-verification" content="ygh647h1b3kkq9jvwquqfda8j96umb" />

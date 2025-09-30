@@ -14,16 +14,16 @@ export const ANALYTICS_CONFIG = {
   MICROSOFT_CLARITY_ID: 'thhq3efjo4',
   
   // Configurações de ambiente
-  ENVIRONMENT: process.env.NODE_ENV || 'development',
-  IS_PRODUCTION: process.env.NODE_ENV === 'production',
-  IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
+  ENVIRONMENT: import.meta.env.VITE_APP_ENV || 'development',
+  IS_PRODUCTION: import.meta.env.VITE_APP_ENV === 'production',
+  IS_DEVELOPMENT: import.meta.env.VITE_APP_ENV !== 'production',
   
   // Configurações de debug
-  DEBUG_ANALYTICS: process.env.NODE_ENV === 'development',
-  VERBOSE_LOGGING: process.env.NODE_ENV === 'development',
+  DEBUG_ANALYTICS: import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production',
+  VERBOSE_LOGGING: import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production',
   
   // Configurações de performance
-  SAMPLE_RATE: process.env.NODE_ENV === 'production' ? 0.1 : 1.0, // 10% em produção
+  SAMPLE_RATE: import.meta.env.VITE_APP_ENV === 'production' ? 0.1 : 1.0, // 10% em produção
   SESSION_TIMEOUT: 30 * 60 * 1000, // 30 minutos
   
   // Configurações de privacidade

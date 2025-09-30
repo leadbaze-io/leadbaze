@@ -13,7 +13,7 @@ export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
       className={className}
       onLoad={() => {
         // Apenas log em desenvolvimento
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
           console.log('✅ Logo LeadBaze carregada com sucesso')
         }
       }}

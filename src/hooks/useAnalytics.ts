@@ -57,10 +57,40 @@ export const useAnalytics = () => {
   const isAnalyticsBlocked = useCallback(() => {
     if (!ANALYTICS_CONFIG.DETECT_AD_BLOCKER) return false;
     
-    return typeof window !== 'undefined' && 
-           (window.navigator.userAgent.includes('AdBlock') || 
-            window.navigator.userAgent.includes('uBlock') ||
-            document.querySelector('script[src*="googletagmanager"]') === null);
+    try {
+      // Verificar se os scripts do Google Analytics foram bloqueados
+      const gaScript = document.querySelector('script[src*="googletagmanager"]');
+      const gaConfig = document.querySelector('script[src*="gtag"]');
+      
+      // Se não há scripts do GA carregados, provavelmente está bloqueado
+      if (!gaScript && !gaConfig) {
+        return true;
+      }
+      
+      // Verificar se o objeto gtag existe mas não funciona
+      if (typeof window.gtag === 'function') {
+        try {
+          // Tentar fazer uma chamada de teste
+          window.gtag('config', 'test');
+        } catch (error) {
+          return true;
+        }
+      }
+      
+      // Verificar se há elementos de teste de bloqueador
+      const testElement = document.createElement('div');
+      testElement.className = 'adsbox';
+      testElement.style.display = 'none';
+      document.body.appendChild(testElement);
+      
+      const isBlocked = testElement.offsetHeight === 0;
+      document.body.removeChild(testElement);
+      
+      return isBlocked;
+    } catch (error) {
+      // Se houver erro na verificação, assumir que está bloqueado
+      return true;
+    }
   }, []);
 
   // Rastrear visualização de página

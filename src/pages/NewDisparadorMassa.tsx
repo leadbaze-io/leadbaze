@@ -291,7 +291,7 @@ export default function NewDisparadorMassa() {
 
       // Log detalhado dos números normalizados
       // Normalizar números de telefone para debug (apenas em desenvolvimento)
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
         campaignLeads.forEach((lead, index) => {
           const originalPhone = lead.phone
           const normalizedPhone = normalizePhoneNumber(lead.phone)

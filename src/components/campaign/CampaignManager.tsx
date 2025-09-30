@@ -41,7 +41,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
   const loadCampaigns = async () => {
     try {
       // Apenas log em desenvolvimento
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
         console.log('🚀 CampaignManager.loadCampaigns() - Iniciando...')
         console.log('📞 Chamando CampaignService.getUserCampaigns()...')
       }
