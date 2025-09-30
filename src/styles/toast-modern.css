@@ -1,0 +1,1101 @@
+/* ==============================================
+   TOAST MODERN - DESIGN MELHORADO
+   ============================================== */
+
+/* Base Toast Styles */
+.toast-modern {
+  border-radius: 1rem !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s ease-in-out !important;
+  max-width: 400px !important;
+  min-width: 320px !important;
+}
+
+.toast-modern:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Toast Success - Modo Claro */
+html:not(.dark) .toast-modern.toast-success {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2) !important;
+}
+
+html:not(.dark) .toast-modern.toast-success:hover {
+  box-shadow: 0 25px 50px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Toast Success - Modo Escuro */
+html.dark .toast-modern.toast-success {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(5, 150, 105, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(5, 150, 105, 0.3) !important;
+}
+
+html.dark .toast-modern.toast-success:hover {
+  box-shadow: 0 25px 50px rgba(5, 150, 105, 0.4) !important;
+}
+
+/* Toast Error - Modo Claro */
+html:not(.dark) .toast-modern.toast-error {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.2) !important;
+}
+
+html:not(.dark) .toast-modern.toast-error:hover {
+  box-shadow: 0 25px 50px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Toast Error - Modo Escuro */
+html.dark .toast-modern.toast-error {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3) !important;
+}
+
+html.dark .toast-modern.toast-error:hover {
+  box-shadow: 0 25px 50px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Toast Warning - Modo Claro */
+html:not(.dark) .toast-modern.toast-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2) !important;
+}
+
+html:not(.dark) .toast-modern.toast-warning:hover {
+  box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Toast Warning - Modo Escuro */
+html.dark .toast-modern.toast-warning {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(217, 119, 6, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(217, 119, 6, 0.3) !important;
+}
+
+html.dark .toast-modern.toast-warning:hover {
+  box-shadow: 0 25px 50px rgba(217, 119, 6, 0.4) !important;
+}
+
+/* Toast Info - Modo Claro */
+html:not(.dark) .toast-modern.toast-info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2) !important;
+}
+
+html:not(.dark) .toast-modern.toast-info:hover {
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Toast Info - Modo Escuro */
+html.dark .toast-modern.toast-info {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(37, 99, 235, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3) !important;
+}
+
+html.dark .toast-modern.toast-info:hover {
+  box-shadow: 0 25px 50px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Toast Default - Modo Claro */
+html:not(.dark) .toast-modern.toast-default {
+  background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(107, 114, 128, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(107, 114, 128, 0.2) !important;
+}
+
+html:not(.dark) .toast-modern.toast-default:hover {
+  box-shadow: 0 25px 50px rgba(107, 114, 128, 0.3) !important;
+}
+
+/* Toast Default - Modo Escuro */
+html.dark .toast-modern.toast-default {
+  background: linear-gradient(135deg, #4b5563, #374151) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(75, 85, 99, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(75, 85, 99, 0.3) !important;
+}
+
+html.dark .toast-modern.toast-default:hover {
+  box-shadow: 0 25px 50px rgba(75, 85, 99, 0.4) !important;
+}
+
+/* Toast Content */
+.toast-modern .toast-content {
+  padding: 1rem 1.25rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+}
+
+/* ==============================================
+   OVERRIDE RADIX UI TEXT COLORS - MODO CLARO
+   ============================================== */
+
+/* Toast Error Validation - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-validation [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-validation [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Error CPF - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cpf [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-cpf [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Error CNPJ - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cnpj [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-cnpj [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Error Email - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-email .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-email [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-email [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Error Network - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-network .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-network [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-network [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Error Geral - Modo Claro */
+html:not(.dark) .toast-modern.toast-error .text-gray-900,
+html:not(.dark) .toast-modern.toast-error .text-gray-800,
+html:not(.dark) .toast-modern.toast-error .text-gray-700,
+html:not(.dark) .toast-modern.toast-error .text-gray-600,
+html:not(.dark) .toast-modern.toast-error .text-gray-500,
+html:not(.dark) .toast-modern.toast-error .text-gray-400,
+html:not(.dark) .toast-modern.toast-error .text-gray-300,
+html:not(.dark) .toast-modern.toast-error .text-gray-200,
+html:not(.dark) .toast-modern.toast-error .text-gray-100,
+html:not(.dark) .toast-modern.toast-error [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error [data-radix-toast-description],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-900"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-800"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-700"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-600"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-500"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-400"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-300"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-200"],
+html:not(.dark) .toast-modern.toast-error div[class*="text-gray-100"] {
+  color: #ffffff !important;
+}
+
+/* Toast Success - Modo Claro - FORÇA BRUTA */
+html:not(.dark) .toast-modern.toast-success * {
+  color: #ffffff !important;
+}
+
+/* Força específica para elementos com classes de texto */
+html:not(.dark) .toast-modern.toast-success [class*="text-"] {
+  color: #ffffff !important;
+}
+
+/* Força para elementos específicos do Radix UI */
+html:not(.dark) .toast-modern.toast-success [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-success [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Força para divs com classes específicas */
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-900"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-800"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-700"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-600"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-500"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-400"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-300"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-200"],
+html:not(.dark) .toast-modern.toast-success div[class*="text-gray-100"] {
+  color: #ffffff !important;
+}
+
+/* Toast Warning - Modo Claro */
+html:not(.dark) .toast-modern.toast-warning .text-gray-900,
+html:not(.dark) .toast-modern.toast-warning .text-gray-800,
+html:not(.dark) .toast-modern.toast-warning .text-gray-700,
+html:not(.dark) .toast-modern.toast-warning .text-gray-600,
+html:not(.dark) .toast-modern.toast-warning .text-gray-500,
+html:not(.dark) .toast-modern.toast-warning .text-gray-400,
+html:not(.dark) .toast-modern.toast-warning .text-gray-300,
+html:not(.dark) .toast-modern.toast-warning .text-gray-200,
+html:not(.dark) .toast-modern.toast-warning .text-gray-100,
+html:not(.dark) .toast-modern.toast-warning [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-warning [data-radix-toast-description],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-900"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-800"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-700"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-600"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-500"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-400"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-300"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-200"],
+html:not(.dark) .toast-modern.toast-warning div[class*="text-gray-100"] {
+  color: #ffffff !important;
+}
+
+/* Toast Info - Modo Claro */
+html:not(.dark) .toast-modern.toast-info .text-gray-900,
+html:not(.dark) .toast-modern.toast-info .text-gray-800,
+html:not(.dark) .toast-modern.toast-info .text-gray-700,
+html:not(.dark) .toast-modern.toast-info .text-gray-600,
+html:not(.dark) .toast-modern.toast-info .text-gray-500,
+html:not(.dark) .toast-modern.toast-info .text-gray-400,
+html:not(.dark) .toast-modern.toast-info .text-gray-300,
+html:not(.dark) .toast-modern.toast-info .text-gray-200,
+html:not(.dark) .toast-modern.toast-info .text-gray-100,
+html:not(.dark) .toast-modern.toast-info [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-info [data-radix-toast-description],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-900"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-800"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-700"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-600"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-500"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-400"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-300"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-200"],
+html:not(.dark) .toast-modern.toast-info div[class*="text-gray-100"] {
+  color: #ffffff !important;
+}
+
+/* Toast Default - Modo Claro */
+html:not(.dark) .toast-modern.toast-default .text-gray-900,
+html:not(.dark) .toast-modern.toast-default .text-gray-800,
+html:not(.dark) .toast-modern.toast-default .text-gray-700,
+html:not(.dark) .toast-modern.toast-default .text-gray-600,
+html:not(.dark) .toast-modern.toast-default .text-gray-500,
+html:not(.dark) .toast-modern.toast-default .text-gray-400,
+html:not(.dark) .toast-modern.toast-default .text-gray-300,
+html:not(.dark) .toast-modern.toast-default .text-gray-200,
+html:not(.dark) .toast-modern.toast-default .text-gray-100,
+html:not(.dark) .toast-modern.toast-default [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-default [data-radix-toast-description],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-900"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-800"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-700"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-600"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-500"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-400"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-300"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-200"],
+html:not(.dark) .toast-modern.toast-default div[class*="text-gray-100"] {
+  color: #ffffff !important;
+}
+
+/* ==============================================
+   OVERRIDE RADIX UI TEXT COLORS - MODO ESCURO
+   ============================================== */
+
+/* Toast Error Validation - Modo Escuro */
+html.dark .toast-modern.toast-error-validation .text-gray-900,
+html.dark .toast-modern.toast-error-validation .text-gray-800,
+html.dark .toast-modern.toast-error-validation .text-gray-700,
+html.dark .toast-modern.toast-error-validation .text-gray-600,
+html.dark .toast-modern.toast-error-validation .text-gray-500,
+html.dark .toast-modern.toast-error-validation .text-gray-400,
+html.dark .toast-modern.toast-error-validation .text-gray-300,
+html.dark .toast-modern.toast-error-validation .text-gray-200,
+html.dark .toast-modern.toast-error-validation .text-gray-100,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error-validation .dark\\:text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Toast Error CPF - Modo Escuro */
+html.dark .toast-modern.toast-error-cpf .text-gray-900,
+html.dark .toast-modern.toast-error-cpf .text-gray-800,
+html.dark .toast-modern.toast-error-cpf .text-gray-700,
+html.dark .toast-modern.toast-error-cpf .text-gray-600,
+html.dark .toast-modern.toast-error-cpf .text-gray-500,
+html.dark .toast-modern.toast-error-cpf .text-gray-400,
+html.dark .toast-modern.toast-error-cpf .text-gray-300,
+html.dark .toast-modern.toast-error-cpf .text-gray-200,
+html.dark .toast-modern.toast-error-cpf .text-gray-100,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error-cpf .dark\\:text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Toast Error CNPJ - Modo Escuro */
+html.dark .toast-modern.toast-error-cnpj .text-gray-900,
+html.dark .toast-modern.toast-error-cnpj .text-gray-800,
+html.dark .toast-modern.toast-error-cnpj .text-gray-700,
+html.dark .toast-modern.toast-error-cnpj .text-gray-600,
+html.dark .toast-modern.toast-error-cnpj .text-gray-500,
+html.dark .toast-modern.toast-error-cnpj .text-gray-400,
+html.dark .toast-modern.toast-error-cnpj .text-gray-300,
+html.dark .toast-modern.toast-error-cnpj .text-gray-200,
+html.dark .toast-modern.toast-error-cnpj .text-gray-100,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error-cnpj .dark\\:text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Toast Error Email - Modo Escuro */
+html.dark .toast-modern.toast-error-email .text-gray-900,
+html.dark .toast-modern.toast-error-email .text-gray-800,
+html.dark .toast-modern.toast-error-email .text-gray-700,
+html.dark .toast-modern.toast-error-email .text-gray-600,
+html.dark .toast-modern.toast-error-email .text-gray-500,
+html.dark .toast-modern.toast-error-email .text-gray-400,
+html.dark .toast-modern.toast-error-email .text-gray-300,
+html.dark .toast-modern.toast-error-email .text-gray-200,
+html.dark .toast-modern.toast-error-email .text-gray-100,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error-email .dark\\:text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Toast Error Network - Modo Escuro */
+html.dark .toast-modern.toast-error-network .text-gray-900,
+html.dark .toast-modern.toast-error-network .text-gray-800,
+html.dark .toast-modern.toast-error-network .text-gray-700,
+html.dark .toast-modern.toast-error-network .text-gray-600,
+html.dark .toast-modern.toast-error-network .text-gray-500,
+html.dark .toast-modern.toast-error-network .text-gray-400,
+html.dark .toast-modern.toast-error-network .text-gray-300,
+html.dark .toast-modern.toast-error-network .text-gray-200,
+html.dark .toast-modern.toast-error-network .text-gray-100,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error-network .dark\\:text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Toast Error Geral - Modo Escuro */
+html.dark .toast-modern.toast-error .text-gray-900,
+html.dark .toast-modern.toast-error .text-gray-800,
+html.dark .toast-modern.toast-error .text-gray-700,
+html.dark .toast-modern.toast-error .text-gray-600,
+html.dark .toast-modern.toast-error .text-gray-500,
+html.dark .toast-modern.toast-error .text-gray-400,
+html.dark .toast-modern.toast-error .text-gray-300,
+html.dark .toast-modern.toast-error .text-gray-200,
+html.dark .toast-modern.toast-error .text-gray-100,
+html.dark .toast-modern.toast-error .dark\\:text-gray-100,
+html.dark .toast-modern.toast-error .dark\\:text-gray-200,
+html.dark .toast-modern.toast-error .dark\\:text-gray-300,
+html.dark .toast-modern.toast-error .dark\\:text-gray-400,
+html.dark .toast-modern.toast-error .dark\\:text-gray-500,
+html.dark .toast-modern.toast-error .dark\\:text-gray-600,
+html.dark .toast-modern.toast-error .dark\\:text-gray-700,
+html.dark .toast-modern.toast-error .dark\\:text-gray-800,
+html.dark .toast-modern.toast-error .dark\\:text-gray-900,
+html.dark .toast-modern.toast-error [data-radix-toast-title],
+html.dark .toast-modern.toast-error [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Success - Modo Escuro */
+html.dark .toast-modern.toast-success .text-gray-900,
+html.dark .toast-modern.toast-success .text-gray-800,
+html.dark .toast-modern.toast-success .text-gray-700,
+html.dark .toast-modern.toast-success .text-gray-600,
+html.dark .toast-modern.toast-success .text-gray-500,
+html.dark .toast-modern.toast-success .text-gray-400,
+html.dark .toast-modern.toast-success .text-gray-300,
+html.dark .toast-modern.toast-success .text-gray-200,
+html.dark .toast-modern.toast-success .text-gray-100,
+html.dark .toast-modern.toast-success .dark\\:text-gray-100,
+html.dark .toast-modern.toast-success .dark\\:text-gray-200,
+html.dark .toast-modern.toast-success .dark\\:text-gray-300,
+html.dark .toast-modern.toast-success .dark\\:text-gray-400,
+html.dark .toast-modern.toast-success .dark\\:text-gray-500,
+html.dark .toast-modern.toast-success .dark\\:text-gray-600,
+html.dark .toast-modern.toast-success .dark\\:text-gray-700,
+html.dark .toast-modern.toast-success .dark\\:text-gray-800,
+html.dark .toast-modern.toast-success .dark\\:text-gray-900,
+html.dark .toast-modern.toast-success [data-radix-toast-title],
+html.dark .toast-modern.toast-success [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Warning - Modo Escuro */
+html.dark .toast-modern.toast-warning .text-gray-900,
+html.dark .toast-modern.toast-warning .text-gray-800,
+html.dark .toast-modern.toast-warning .text-gray-700,
+html.dark .toast-modern.toast-warning .text-gray-600,
+html.dark .toast-modern.toast-warning .text-gray-500,
+html.dark .toast-modern.toast-warning .text-gray-400,
+html.dark .toast-modern.toast-warning .text-gray-300,
+html.dark .toast-modern.toast-warning .text-gray-200,
+html.dark .toast-modern.toast-warning .text-gray-100,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-100,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-200,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-300,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-400,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-500,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-600,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-700,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-800,
+html.dark .toast-modern.toast-warning .dark\\:text-gray-900,
+html.dark .toast-modern.toast-warning [data-radix-toast-title],
+html.dark .toast-modern.toast-warning [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Info - Modo Escuro */
+html.dark .toast-modern.toast-info .text-gray-900,
+html.dark .toast-modern.toast-info .text-gray-800,
+html.dark .toast-modern.toast-info .text-gray-700,
+html.dark .toast-modern.toast-info .text-gray-600,
+html.dark .toast-modern.toast-info .text-gray-500,
+html.dark .toast-modern.toast-info .text-gray-400,
+html.dark .toast-modern.toast-info .text-gray-300,
+html.dark .toast-modern.toast-info .text-gray-200,
+html.dark .toast-modern.toast-info .text-gray-100,
+html.dark .toast-modern.toast-info .dark\\:text-gray-100,
+html.dark .toast-modern.toast-info .dark\\:text-gray-200,
+html.dark .toast-modern.toast-info .dark\\:text-gray-300,
+html.dark .toast-modern.toast-info .dark\\:text-gray-400,
+html.dark .toast-modern.toast-info .dark\\:text-gray-500,
+html.dark .toast-modern.toast-info .dark\\:text-gray-600,
+html.dark .toast-modern.toast-info .dark\\:text-gray-700,
+html.dark .toast-modern.toast-info .dark\\:text-gray-800,
+html.dark .toast-modern.toast-info .dark\\:text-gray-900,
+html.dark .toast-modern.toast-info [data-radix-toast-title],
+html.dark .toast-modern.toast-info [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Default - Modo Escuro */
+html.dark .toast-modern.toast-default .text-gray-900,
+html.dark .toast-modern.toast-default .text-gray-800,
+html.dark .toast-modern.toast-default .text-gray-700,
+html.dark .toast-modern.toast-default .text-gray-600,
+html.dark .toast-modern.toast-default .text-gray-500,
+html.dark .toast-modern.toast-default .text-gray-400,
+html.dark .toast-modern.toast-default .text-gray-300,
+html.dark .toast-modern.toast-default .text-gray-200,
+html.dark .toast-modern.toast-default .text-gray-100,
+html.dark .toast-modern.toast-default .dark\\:text-gray-100,
+html.dark .toast-modern.toast-default .dark\\:text-gray-200,
+html.dark .toast-modern.toast-default .dark\\:text-gray-300,
+html.dark .toast-modern.toast-default .dark\\:text-gray-400,
+html.dark .toast-modern.toast-default .dark\\:text-gray-500,
+html.dark .toast-modern.toast-default .dark\\:text-gray-600,
+html.dark .toast-modern.toast-default .dark\\:text-gray-700,
+html.dark .toast-modern.toast-default .dark\\:text-gray-800,
+html.dark .toast-modern.toast-default .dark\\:text-gray-900,
+html.dark .toast-modern.toast-default [data-radix-toast-title],
+html.dark .toast-modern.toast-default [data-radix-toast-description] {
+  color: #ffffff !important;
+}
+
+/* Toast Icon */
+.toast-modern .toast-icon {
+  flex-shrink: 0 !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  margin-top: 0.125rem !important;
+}
+
+/* Toast Text */
+.toast-modern .toast-text {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+/* Toast Title */
+.toast-modern .toast-title {
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  margin-bottom: 0.25rem !important;
+  color: inherit !important;
+}
+
+/* Toast Description */
+.toast-modern .toast-description {
+  font-size: 0.8125rem !important;
+  line-height: 1.25rem !important;
+  opacity: 0.9 !important;
+  color: inherit !important;
+  word-wrap: break-word !important;
+}
+
+/* Toast Close Button */
+.toast-modern .toast-close {
+  position: absolute !important;
+  top: 0.75rem !important;
+  right: 0.75rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-radius: 0.375rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+  color: inherit !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+  opacity: 0.7 !important;
+}
+
+.toast-modern .toast-close:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  opacity: 1 !important;
+  transform: scale(1.05) !important;
+}
+
+.toast-modern .toast-close:active {
+  transform: scale(0.95) !important;
+}
+
+/* Toast Progress Bar */
+.toast-modern .toast-progress {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: 3px !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 0 0 1rem 1rem !important;
+  transition: width 0.1s linear !important;
+}
+
+/* Toast Animation */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.toast-modern[data-state="open"] {
+  animation: toastSlideIn 0.3s ease-out !important;
+}
+
+.toast-modern[data-state="closed"] {
+  animation: toastSlideOut 0.2s ease-in !important;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .toast-modern {
+    max-width: calc(100vw - 2rem) !important;
+    min-width: 280px !important;
+    margin: 0 1rem !important;
+  }
+  
+  .toast-modern .toast-content {
+    padding: 0.875rem 1rem !important;
+  }
+  
+  .toast-modern .toast-title {
+    font-size: 0.8125rem !important;
+  }
+  
+  .toast-modern .toast-description {
+    font-size: 0.75rem !important;
+  }
+}
+
+/* Dark Mode Toggle Animation */
+html.dark .toast-modern,
+html:not(.dark) .toast-modern {
+  transition: all 0.3s ease-in-out !important;
+}
+
+/* Special Error Types - Modo Claro */
+html:not(.dark) .toast-modern.toast-error-cpf {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(251, 191, 36, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2) !important;
+  border-left: 4px solid #d97706 !important;
+}
+
+html:not(.dark) .toast-modern.toast-error-cnpj {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2) !important;
+  border-left: 4px solid #b45309 !important;
+}
+
+html:not(.dark) .toast-modern.toast-error-email {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2) !important;
+  border-left: 4px solid #1d4ed8 !important;
+}
+
+html:not(.dark) .toast-modern.toast-error-network {
+  background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(107, 114, 128, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(107, 114, 128, 0.2) !important;
+  border-left: 4px solid #374151 !important;
+}
+
+html:not(.dark) .toast-modern.toast-error-validation {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2) !important;
+  border-left: 4px solid #6d28d9 !important;
+}
+
+/* Special Error Types - Modo Escuro */
+html.dark .toast-modern.toast-error-cpf {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(217, 119, 6, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(217, 119, 6, 0.3) !important;
+  border-left: 4px solid #92400e !important;
+}
+
+html.dark .toast-modern.toast-error-cnpj {
+  background: linear-gradient(135deg, #b45309, #92400e) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(180, 83, 9, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(180, 83, 9, 0.3) !important;
+  border-left: 4px solid #78350f !important;
+}
+
+html.dark .toast-modern.toast-error-email {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(37, 99, 235, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3) !important;
+  border-left: 4px solid #1e40af !important;
+}
+
+html.dark .toast-modern.toast-error-network {
+  background: linear-gradient(135deg, #4b5563, #374151) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(75, 85, 99, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(75, 85, 99, 0.3) !important;
+  border-left: 4px solid #1f2937 !important;
+}
+
+html.dark .toast-modern.toast-error-validation {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(124, 58, 237, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3) !important;
+  border-left: 4px solid #5b21b6 !important;
+}
+
+/* Hover Effects for Special Error Types */
+html:not(.dark) .toast-modern.toast-error-cpf:hover,
+html:not(.dark) .toast-modern.toast-error-cnpj:hover,
+html:not(.dark) .toast-modern.toast-error-email:hover,
+html:not(.dark) .toast-modern.toast-error-network:hover,
+html:not(.dark) .toast-modern.toast-error-validation:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+html.dark .toast-modern.toast-error-cpf:hover,
+html.dark .toast-modern.toast-error-cnpj:hover,
+html.dark .toast-modern.toast-error-email:hover,
+html.dark .toast-modern.toast-error-network:hover,
+html.dark .toast-modern.toast-error-validation:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==============================================
+   CORREÇÃO ESPECÍFICA PARA TEXTO BRANCO - MODO CLARO
+   ============================================== */
+
+/* Toast Success - Modo Claro - SOBRESCREVER INDEX.CSS */
+/* Regras específicas para sobrescrever as regras do index.css que forçam text-gray para preto */
+html:not(.dark) .toast-modern.toast-success .text-gray-900,
+html:not(.dark) .toast-modern.toast-success .text-gray-800,
+html:not(.dark) .toast-modern.toast-success .text-gray-700,
+html:not(.dark) .toast-modern.toast-success .text-gray-600,
+html:not(.dark) .toast-modern.toast-success .text-gray-500,
+html:not(.dark) .toast-modern.toast-success .text-gray-400,
+html:not(.dark) .toast-modern.toast-success .text-gray-300,
+html:not(.dark) .toast-modern.toast-success .text-gray-200,
+html:not(.dark) .toast-modern.toast-success .text-gray-100,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-success .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-success [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-success [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-error .text-gray-900,
+html:not(.dark) .toast-modern.toast-error .text-gray-800,
+html:not(.dark) .toast-modern.toast-error .text-gray-700,
+html:not(.dark) .toast-modern.toast-error .text-gray-600,
+html:not(.dark) .toast-modern.toast-error .text-gray-500,
+html:not(.dark) .toast-modern.toast-error .text-gray-400,
+html:not(.dark) .toast-modern.toast-error .text-gray-300,
+html:not(.dark) .toast-modern.toast-error .text-gray-200,
+html:not(.dark) .toast-modern.toast-error .text-gray-100,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Warning - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-warning .text-gray-900,
+html:not(.dark) .toast-modern.toast-warning .text-gray-800,
+html:not(.dark) .toast-modern.toast-warning .text-gray-700,
+html:not(.dark) .toast-modern.toast-warning .text-gray-600,
+html:not(.dark) .toast-modern.toast-warning .text-gray-500,
+html:not(.dark) .toast-modern.toast-warning .text-gray-400,
+html:not(.dark) .toast-modern.toast-warning .text-gray-300,
+html:not(.dark) .toast-modern.toast-warning .text-gray-200,
+html:not(.dark) .toast-modern.toast-warning .text-gray-100,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-warning .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-warning [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-warning [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Info - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-info .text-gray-900,
+html:not(.dark) .toast-modern.toast-info .text-gray-800,
+html:not(.dark) .toast-modern.toast-info .text-gray-700,
+html:not(.dark) .toast-modern.toast-info .text-gray-600,
+html:not(.dark) .toast-modern.toast-info .text-gray-500,
+html:not(.dark) .toast-modern.toast-info .text-gray-400,
+html:not(.dark) .toast-modern.toast-info .text-gray-300,
+html:not(.dark) .toast-modern.toast-info .text-gray-200,
+html:not(.dark) .toast-modern.toast-info .text-gray-100,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-info .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-info [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-info [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Default - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-default .text-gray-900,
+html:not(.dark) .toast-modern.toast-default .text-gray-800,
+html:not(.dark) .toast-modern.toast-default .text-gray-700,
+html:not(.dark) .toast-modern.toast-default .text-gray-600,
+html:not(.dark) .toast-modern.toast-default .text-gray-500,
+html:not(.dark) .toast-modern.toast-default .text-gray-400,
+html:not(.dark) .toast-modern.toast-default .text-gray-300,
+html:not(.dark) .toast-modern.toast-default .text-gray-200,
+html:not(.dark) .toast-modern.toast-default .text-gray-100,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-default .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-default [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-default [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error Validation - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-validation .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error-validation .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error-validation [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-validation [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error CPF - Modo Claro - SOBRESCREVER INDEX.CSS */
+/* Fundo unificado para CPF e CNPJ */
+html:not(.dark) .toast-modern.toast-error-cpf,
+html:not(.dark) .toast-modern.toast-error-cnpj {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+/* Fundo unificado para CPF e CNPJ - Modo Escuro */
+html.dark .toast-modern.toast-error-cpf,
+html.dark .toast-modern.toast-error-cnpj {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  border-color: #b91c1c !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cpf .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cpf .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cpf [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-cpf [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error CNPJ - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cnpj .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error-cnpj .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error-cnpj [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-cnpj [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error Email - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-error-email .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-email .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error-email .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error-email [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-email [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Toast Error Network - Modo Claro - SOBRESCREVER INDEX.CSS */
+html:not(.dark) .toast-modern.toast-error-network .text-gray-900,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-800,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-700,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-600,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-500,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-400,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-300,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-200,
+html:not(.dark) .toast-modern.toast-error-network .text-gray-100,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-100,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-200,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-300,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-400,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-500,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-600,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-700,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-800,
+html:not(.dark) .toast-modern.toast-error-network .dark\:text-gray-900,
+html:not(.dark) .toast-modern.toast-error-network [data-radix-toast-title],
+html:not(.dark) .toast-modern.toast-error-network [data-radix-toast-description] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}

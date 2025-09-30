@@ -1,0 +1,218 @@
+/* ==============================================
+   BONUS LEADS CARD - CSS ESPECÍFICO
+   ============================================== */
+
+.bonus-leads-card {
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid;
+  transition: all 0.3s ease-in-out;
+  
+  /* Modo Claro */
+  background: linear-gradient(to right, #f0fdf4, #eff6ff);
+  border-color: #bbf7d0;
+}
+
+/* Modo Escuro */
+.dark .bonus-leads-card {
+  background: linear-gradient(to right, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2));
+  border-color: rgba(34, 197, 94, 0.8);
+}
+
+@media (min-width: 640px) {
+  .bonus-leads-card {
+    padding: 1.5rem;
+  }
+}
+
+.bonus-leads-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bonus-leads-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bonus-leads-card-status-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #10b981;
+}
+
+.dark .bonus-leads-card-status-dot {
+  background-color: #34d399;
+}
+
+.bonus-leads-card-title-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #166534;
+}
+
+.dark .bonus-leads-card-title-text {
+  color: #ffffff;
+}
+
+.bonus-leads-card-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #059669;
+}
+
+.dark .bonus-leads-card-icon {
+  color: #6ee7b7;
+}
+
+.bonus-leads-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bonus-leads-card-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bonus-leads-card-label {
+  font-size: 0.75rem;
+  color: #15803d;
+}
+
+.dark .bonus-leads-card-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bonus-leads-card-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #166534;
+}
+
+.dark .bonus-leads-card-value {
+  color: #ffffff;
+}
+
+.bonus-leads-card-progress-container {
+  width: 100%;
+  border-radius: 9999px;
+  height: 0.5rem;
+  background-color: #bbf7d0;
+}
+
+.dark .bonus-leads-card-progress-container {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bonus-leads-card-progress-bar {
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: all 0.5s ease-out;
+}
+
+.bonus-leads-card-progress-green {
+  background-color: #10b981;
+}
+
+.bonus-leads-card-progress-yellow {
+  background-color: #eab308;
+}
+
+.bonus-leads-card-progress-red {
+  background-color: #ef4444;
+}
+
+.bonus-leads-card-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  gap: 1rem;
+  color: #15803d;
+}
+
+.dark .bonus-leads-card-status-row {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bonus-leads-card-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bonus-leads-card-status-dot-small {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: #10b981;
+}
+
+.dark .bonus-leads-card-status-dot-small {
+  background-color: #34d399;
+}
+
+/* ==============================================
+   RESPONSIVIDADE
+   ============================================== */
+
+@media (max-width: 640px) {
+  .bonus-leads-card {
+    padding: 1rem;
+  }
+  
+  .bonus-leads-card-title-text {
+    font-size: 0.75rem;
+  }
+  
+  .bonus-leads-card-value {
+    font-size: 0.75rem;
+  }
+}
+
+/* ==============================================
+   ANIMAÇÕES
+   ============================================== */
+
+.bonus-leads-card:hover {
+  transform: scale(1.02);
+}
+
+.bonus-leads-card-progress-bar {
+  transition: all 0.5s ease-out;
+}
+
+/* ==============================================
+   ESTADOS ESPECIAIS
+   ============================================== */
+
+.bonus-leads-card-empty {
+  opacity: 0.6;
+}
+
+.bonus-leads-card-warning {
+  border-color: #fbbf24;
+}
+
+.dark .bonus-leads-card-warning {
+  border-color: #d97706;
+}
+
+.bonus-leads-card-danger {
+  border-color: #f87171;
+}
+
+.dark .bonus-leads-card-danger {
+  border-color: #dc2626;
+}
+

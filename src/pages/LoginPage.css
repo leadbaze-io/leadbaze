@@ -1,0 +1,378 @@
+/* ==============================================
+   ESTILOS ESPECÍFICOS PARA PÁGINA DE LOGIN
+   Força modo claro - sem dark mode
+   ============================================== */
+
+/* Container principal - sempre modo claro */
+.login-page-container {
+  background: linear-gradient(135deg, #dbeafe 0%, #ffffff 50%, #f3e8ff 100%) !important;
+  min-height: 100vh !important;
+}
+
+/* Card do formulário - sempre modo claro */
+.login-form-card {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Títulos - sempre modo claro */
+.login-title {
+  color: #111827 !important; /* gray-900 */
+}
+
+.login-subtitle {
+  color: #6b7280 !important; /* gray-500 */
+}
+
+/* Labels - sempre modo claro */
+.login-label {
+  color: #374151 !important; /* gray-700 */
+  font-weight: 500 !important;
+}
+
+/* Inputs - sempre modo claro */
+.login-input {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important; /* gray-300 */
+  color: #111827 !important; /* gray-900 */
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.login-input:focus {
+  border-color: #3b82f6 !important; /* blue-500 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+.login-input::placeholder {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+/* Input com ícone - sempre modo claro */
+.login-input-with-icon {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+  padding-left: 2.5rem !important; /* pl-10 */
+  padding-right: 1rem !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.login-input-with-icon:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+.login-input-with-icon::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Input com ícone e botão (senha) - sempre modo claro */
+.login-input-with-icon-button {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+  padding-left: 2.5rem !important; /* pl-10 */
+  padding-right: 3rem !important; /* pr-12 */
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.login-input-with-icon-button:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+.login-input-with-icon-button::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Ícones - sempre modo claro */
+.login-icon {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+.login-icon-button {
+  color: #9ca3af !important;
+  transition: color 0.2s ease-in-out !important;
+}
+
+.login-icon-button:hover {
+  color: #6b7280 !important; /* gray-500 */
+}
+
+/* Botões - sempre modo claro */
+.login-button {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease-in-out !important;
+  transform: translateY(0) !important;
+}
+
+.login-button:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+.login-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Botão secundário - sempre modo claro */
+.login-button-secondary {
+  background-color: #ffffff !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.login-button-secondary:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+/* Links - sempre modo claro */
+.login-link {
+  color: #2563eb !important; /* blue-600 */
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  transition: color 0.2s ease-in-out !important;
+}
+
+.login-link:hover {
+  color: #1d4ed8 !important; /* blue-700 */
+}
+
+/* Mensagens - sempre modo claro */
+.login-message-success {
+  background-color: #f0fdf4 !important;
+  color: #166534 !important;
+  border: 1px solid #bbf7d0 !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.login-message-error {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Texto de ajuda - sempre modo claro */
+.login-help-text {
+  color: #6b7280 !important; /* gray-500 */
+}
+
+/* Card de opção avançada - sempre modo claro */
+.login-advanced-card {
+  background-color: #eff6ff !important; /* blue-50 */
+  border: 1px solid #bfdbfe !important; /* blue-200 */
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  margin-top: 1rem !important;
+}
+
+.login-advanced-text {
+  color: #1e40af !important; /* blue-800 */
+  font-size: 0.875rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.login-advanced-button {
+  background-color: #2563eb !important; /* blue-600 */
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease-in-out !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.login-advanced-button:hover {
+  background-color: #1d4ed8 !important; /* blue-700 */
+}
+
+/* Voltar para home - sempre modo claro */
+.login-back-link {
+  color: #6b7280 !important; /* gray-500 */
+  text-decoration: none !important;
+  transition: color 0.2s ease-in-out !important;
+}
+
+.login-back-link:hover {
+  color: #374151 !important; /* gray-700 */
+}
+
+/* Botões de navegação do formulário - sempre modo claro */
+.login-nav-button {
+  background-color: #ffffff !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease-in-out !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.login-nav-button:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+  color: #111827 !important;
+}
+
+.login-nav-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Botão primário - sempre modo claro */
+.login-primary-button {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease-in-out !important;
+  transform: translateY(0) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.login-primary-button:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+.login-primary-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* ==============================================
+   OVERRIDE PARA COMPONENTES ESPECÍFICOS
+   ============================================== */
+
+/* InputMask específico para login */
+.login-page-container .input-mask {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+}
+
+.login-page-container .input-mask:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.login-page-container .input-mask::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Select específico para login */
+.login-page-container .select {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+}
+
+.login-page-container .select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Checkbox específico para login */
+.login-page-container input[type="checkbox"] {
+  accent-color: #3b82f6 !important;
+}
+
+/* ==============================================
+   RESPONSIVIDADE
+   ============================================== */
+
+@media (max-width: 640px) {
+  .login-form-card {
+    margin: 1rem !important;
+    padding: 1.5rem !important;
+  }
+  
+  .login-input,
+  .login-input-with-icon,
+  .login-input-with-icon-button {
+    padding: 0.875rem 1rem !important;
+  }
+  
+  .login-button,
+  .login-button-secondary {
+    padding: 0.875rem 1rem !important;
+  }
+}
+
+/* ==============================================
+   ANIMAÇÕES
+   ============================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-form-card {
+  animation: fadeIn 0.5s ease-out !important;
+}
+
+/* ==============================================
+   FORÇA MODO CLARO - OVERRIDE GLOBAL
+   ============================================== */
+
+.login-page-container * {
+  color-scheme: light !important;
+}
+
+.login-page-container input,
+.login-page-container select,
+.login-page-container textarea {
+  color-scheme: light !important;
+  -webkit-color-scheme: light !important;
+}

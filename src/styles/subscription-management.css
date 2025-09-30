@@ -1,0 +1,618 @@
+/* =====================================================
+   SUBSCRIPTION MANAGEMENT BUTTONS
+   ===================================================== */
+
+/* Botão de Upgrade - Versão Claro */
+.subscription-upgrade-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #10b981;
+  background-color: #10b981;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer !important;
+  outline: none;
+  pointer-events: auto;
+}
+
+.subscription-upgrade-btn:hover {
+  background-color: #059669;
+  border-color: #047857;
+}
+
+.subscription-upgrade-btn:focus {
+  box-shadow: 0 0 0 2px #10b981, 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.subscription-upgrade-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Upgrade - Versão Escuro */
+.dark .subscription-upgrade-btn {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.dark .subscription-upgrade-btn:hover {
+  background-color: #059669;
+  border-color: #047857;
+}
+
+/* Botão de Downgrade - Versão Claro */
+.subscription-downgrade-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: transparent;
+  color: #374151;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer !important;
+  outline: none;
+  pointer-events: auto;
+}
+
+.subscription-downgrade-btn:hover {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #93c5fd;
+}
+
+.subscription-downgrade-btn:focus {
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.subscription-downgrade-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Downgrade - Versão Escuro */
+.dark .subscription-downgrade-btn {
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+.dark .subscription-downgrade-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+
+.dark .subscription-downgrade-btn:focus {
+  box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px rgba(96, 165, 250, 0.1);
+}
+
+/* Botão de Cancelamento - Versão Claro */
+.subscription-cancel-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #fca5a5;
+  background-color: transparent;
+  color: #b91c1c;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer !important;
+  outline: none;
+  pointer-events: auto;
+}
+
+.subscription-cancel-btn:hover {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #f87171;
+}
+
+.subscription-cancel-btn:focus {
+  box-shadow: 0 0 0 2px #ef4444, 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.subscription-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Cancelamento - Versão Escuro */
+.dark .subscription-cancel-btn {
+  color: #fca5a5;
+  border-color: #dc2626;
+}
+
+.dark .subscription-cancel-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border-color: #ef4444;
+}
+
+.dark .subscription-cancel-btn:focus {
+  box-shadow: 0 0 0 2px #f87171, 0 0 0 4px rgba(248, 113, 113, 0.1);
+}
+
+/* Botão de Reativação - Versão Claro */
+.subscription-reactivate-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #86efac;
+  background-color: transparent;
+  color: #166534;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.subscription-reactivate-btn:hover {
+  background-color: #f0fdf4;
+  color: #14532d;
+  border-color: #4ade80;
+}
+
+.subscription-reactivate-btn:focus {
+  box-shadow: 0 0 0 2px #22c55e, 0 0 0 4px rgba(34, 197, 94, 0.1);
+}
+
+.subscription-reactivate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Reativação - Versão Escuro */
+.dark .subscription-reactivate-btn {
+  color: #86efac;
+  border-color: #16a34a;
+}
+
+.dark .subscription-reactivate-btn:hover {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border-color: #22c55e;
+}
+
+.dark .subscription-reactivate-btn:focus {
+  box-shadow: 0 0 0 2px #4ade80, 0 0 0 4px rgba(74, 222, 128, 0.1);
+}
+
+/* Botão de Pausar - Versão Claro */
+.subscription-pause-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #fbbf24;
+  background-color: transparent;
+  color: #d97706;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.subscription-pause-btn:hover {
+  background-color: #fffbeb;
+  color: #b45309;
+  border-color: #f59e0b;
+}
+
+.subscription-pause-btn:focus {
+  box-shadow: 0 0 0 2px #f59e0b, 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+.subscription-pause-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Pausar - Versão Escuro */
+.dark .subscription-pause-btn {
+  color: #fbbf24;
+  border-color: #f59e0b;
+}
+
+.dark .subscription-pause-btn:hover {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: #fbbf24;
+}
+
+.dark .subscription-pause-btn:focus {
+  box-shadow: 0 0 0 2px #fbbf24, 0 0 0 4px rgba(251, 191, 36, 0.1);
+}
+
+/* Botão de Reembolso - Versão Claro */
+.subscription-refund-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid #10b981;
+  background-color: transparent;
+  color: #059669;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.subscription-refund-btn:hover {
+  background-color: #f0fdf4;
+  color: #047857;
+  border-color: #34d399;
+}
+
+.subscription-refund-btn:focus {
+  box-shadow: 0 0 0 2px #10b981, 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.subscription-refund-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão de Reembolso - Versão Escuro */
+.dark .subscription-refund-btn {
+  color: #10b981;
+  border-color: #059669;
+}
+
+.dark .subscription-refund-btn:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border-color: #10b981;
+}
+
+.dark .subscription-refund-btn:focus {
+  box-shadow: 0 0 0 2px #10b981, 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* =====================================================
+   MODAL BUTTONS
+   ===================================================== */
+
+/* Botões de Confirmação - Versão Claro */
+.modal-confirm-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-confirm-btn:hover {
+  background-color: #1d4ed8;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.modal-confirm-btn:focus {
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.modal-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botões de Confirmação - Versão Escuro */
+.dark .modal-confirm-btn {
+  background-color: #3b82f6;
+}
+
+.dark .modal-confirm-btn:hover {
+  background-color: #2563eb;
+}
+
+.dark .modal-confirm-btn:focus {
+  box-shadow: 0 0 0 2px #60a5fa, 0 0 0 4px rgba(96, 165, 250, 0.1);
+}
+
+/* Botões de Cancelamento - Versão Claro */
+.modal-cancel-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  color: #374151;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.modal-cancel-btn:focus {
+  box-shadow: 0 0 0 2px #6b7280, 0 0 0 4px rgba(107, 114, 128, 0.1);
+}
+
+.modal-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botões de Cancelamento - Versão Escuro */
+.dark .modal-cancel-btn {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .modal-cancel-btn:hover {
+  background-color: #4b5563;
+  color: #f3f4f6;
+}
+
+.dark .modal-cancel-btn:focus {
+  box-shadow: 0 0 0 2px #9ca3af, 0 0 0 4px rgba(156, 163, 175, 0.1);
+}
+
+/* Botões Destrutivos - Versão Claro */
+.modal-destructive-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-destructive-btn:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.modal-destructive-btn:focus {
+  box-shadow: 0 0 0 2px #ef4444, 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.modal-destructive-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botões Destrutivos - Versão Escuro */
+.dark .modal-destructive-btn {
+  background-color: #ef4444;
+}
+
+.dark .modal-destructive-btn:hover {
+  background-color: #dc2626;
+}
+
+.dark .modal-destructive-btn:focus {
+  box-shadow: 0 0 0 2px #f87171, 0 0 0 4px rgba(248, 113, 113, 0.1);
+}
+
+/* =====================================================
+   MODAL CONTENT
+   ===================================================== */
+
+/* Conteúdo do Modal - Versão Claro */
+.subscription-modal-content {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Conteúdo do Modal - Versão Escuro */
+.dark .subscription-modal-content {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+/* =====================================================
+   MODAL ICONS
+   ===================================================== */
+
+/* Ícones dos Modais - Versão Claro */
+.subscription-modal-content .lucide-trending-down {
+  color: #2563eb;
+}
+
+.subscription-modal-content .lucide-triangle-alert {
+  color: #dc2626;
+}
+
+.subscription-modal-content .lucide-check-circle {
+  color: #16a34a;
+}
+
+/* Ícones dos Modais - Versão Escuro */
+.dark .subscription-modal-content .lucide-trending-down {
+  color: #60a5fa;
+}
+
+.dark .subscription-modal-content .lucide-triangle-alert {
+  color: #f87171;
+}
+
+.dark .subscription-modal-content .lucide-check-circle {
+  color: #4ade80;
+}
+
+/* =====================================================
+   MODAL TITLES
+   ===================================================== */
+
+/* Títulos dos Modais - Versão Claro */
+.subscription-modal-content h3 {
+  color: #111827;
+}
+
+/* Títulos dos Modais - Versão Escuro */
+.dark .subscription-modal-content h3 {
+  color: #f9fafb;
+}
+
+/* =====================================================
+   MODAL DESCRIPTIONS
+   ===================================================== */
+
+/* Descrições dos Modais - Versão Claro */
+.subscription-modal-content p {
+  color: #6b7280;
+}
+
+/* Descrições dos Modais - Versão Escuro */
+.dark .subscription-modal-content p {
+  color: #9ca3af;
+}
+
+/* =====================================================
+   MODAL LABELS
+   ===================================================== */
+
+/* Labels dos Modais - Versão Claro */
+.subscription-modal-content label {
+  color: #374151;
+}
+
+/* Labels dos Modais - Versão Escuro */
+.dark .subscription-modal-content label {
+  color: #d1d5db;
+}
+
+/* =====================================================
+   MODAL INPUTS
+   ===================================================== */
+
+/* Inputs dos Modais - Versão Claro */
+.subscription-modal-content textarea {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.subscription-modal-content textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Inputs dos Modais - Versão Escuro */
+.dark .subscription-modal-content textarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .subscription-modal-content textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.1);
+}
+
+/* =====================================================
+   MODAL PLAN SELECTION
+   ===================================================== */
+
+/* Seleção de Planos - Versão Claro */
+.subscription-modal-content .plan-selection-btn {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.subscription-modal-content .plan-selection-btn:hover {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* Seleção de Planos - Versão Escuro */
+.dark .subscription-modal-content .plan-selection-btn {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .subscription-modal-content .plan-selection-btn:hover {
+  background-color: #4b5563;
+  border-color: #6b7280;
+}
+
+/* =====================================================
+   MODAL PLAN LIST ITEMS
+   ===================================================== */
+
+/* Itens da Lista de Planos - Versão Claro */
+.subscription-modal-content .plan-item {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.subscription-modal-content .plan-item:hover {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.subscription-modal-content .plan-item.selected {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+/* Itens da Lista de Planos - Versão Escuro */
+.dark .subscription-modal-content .plan-item {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .subscription-modal-content .plan-item:hover {
+  background-color: #4b5563;
+  border-color: #6b7280;
+}
+
+.dark .subscription-modal-content .plan-item.selected {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}

@@ -1,0 +1,131 @@
+name: 🚀 Deploy LeadBaze na Servla
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de deploy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        
+    - name: 🔧 Fix origin/HEAD
+      run: git remote set-head origin -a
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Type check
+      run: npm run type-check
+      
+    - name: 🏗️ Build application
+      run: npm run build
+      env:
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        VITE_N8N_WEBHOOK_URL: ${{ secrets.VITE_N8N_WEBHOOK_URL }}
+        VITE_APP_ENV: production
+        VITE_DEBUG_MODE: false
+        
+    - name: 📁 Create deployment package
+      run: |
+        tar -czf leadflow-deploy.tar.gz dist/ deploy-leadflow-servla.sh nginx-simple.conf env.example
+        
+    - name: 🔑 Setup SSH key
+      run: |
+        echo "🔍 Configurando chave SSH..."
+        mkdir -p ~/.ssh
+        echo "📝 Criando arquivo de chave..."
+        echo "${{ secrets.SERVLA_SSH_KEY }}" > ~/.ssh/servla_key
+        echo "🔐 Configurando permissões..."
+        chmod 600 ~/.ssh/servla_key
+        echo "🔍 Verificando arquivo..."
+        ls -la ~/.ssh/
+        echo "📋 Primeiras linhas da chave:"
+        head -3 ~/.ssh/servla_key
+        echo "🔗 Adicionando host key..."
+        ssh-keyscan -H ${{ secrets.SERVLA_HOST }} >> ~/.ssh/known_hosts
+        echo "✅ Setup SSH concluído!"
+        
+    - name: 🚀 Deploy to Servla
+      run: |
+        # Criar diretório temporário
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+          mkdir -p /tmp/leadflow-deploy
+          cd /tmp/leadflow-deploy
+        "
+        
+        # Enviar arquivo de deploy
+        scp -i ~/.ssh/servla_key -P ${{ secrets.SERVLA_PORT }} leadflow-deploy.tar.gz ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }}:/tmp/leadflow-deploy/
+        
+                 # Executar deploy
+         ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+           cd /tmp/leadflow-deploy
+           tar -xzf leadflow-deploy.tar.gz
+           chmod +x deploy-leadflow-servla.sh
+           
+           # Copiar arquivos do build diretamente para o diretório de deploy
+           echo '📋 Copiando arquivos do build...'
+           sudo mkdir -p /var/www/leadflow
+           sudo cp -r dist/* /var/www/leadflow/
+           sudo chown -R www-data:www-data /var/www/leadflow
+           sudo chmod -R 755 /var/www/leadflow
+           echo '✅ Arquivos copiados para /var/www/leadflow'
+           
+           # Configurar Nginx
+           echo '🌐 Configurando Nginx...'
+           sudo cp nginx-simple.conf /etc/nginx/sites-enabled/leadflow
+           if sudo nginx -t && sudo systemctl restart nginx; then
+             echo '✅ Nginx configurado e reiniciado'
+           else
+             echo '❌ Erro ao configurar Nginx'
+             exit 1
+           fi
+           
+                      # Verificar se a aplicação está funcionando
+           if [ -f '/var/www/leadflow/index.html' ]; then
+             echo '✅ Deploy executado com sucesso!'
+           else
+             echo '❌ Deploy falhou'
+             exit 1
+           fi
+          
+          cd /
+          rm -rf /tmp/leadflow-deploy
+        "
+          
+    - name: ✅ Deploy verification
+      run: |
+        # Verificar se a aplicação está rodando
+        ssh -i ~/.ssh/servla_key -p ${{ secrets.SERVLA_PORT }} ${{ secrets.SERVLA_USERNAME }}@${{ secrets.SERVLA_HOST }} "
+          if curl -s https://leadbaze.io/health | grep -q 'healthy'; then
+            echo '✅ Deploy successful!'
+            echo '🌐 Site disponível em: https://leadbaze.io'
+            exit 0
+          else
+            echo '❌ Deploy failed!'
+            exit 1
+          fi
+        "
+

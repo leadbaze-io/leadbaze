@@ -1,0 +1,1268 @@
+/* ==============================================
+   PÁGINA DE PERFIL - DESIGN MODERNO E SEPARADO
+   ============================================== */
+
+/* ==============================================
+   MODO CLARO - BACKGROUND E LAYOUT PRINCIPAL
+   ============================================== */
+
+html:not(.dark) .profile-page {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+  min-height: 100vh !important;
+}
+
+/* Header do Perfil - Modo Claro */
+html:not(.dark) .profile-header {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2) !important;
+  border-radius: 0 0 2rem 2rem !important;
+}
+
+/* Cards do Perfil - Modo Claro */
+html:not(.dark) .profile-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1rem !important;
+}
+
+/* Avatar Container - Modo Claro */
+html:not(.dark) .profile-avatar-container {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3) !important;
+  border: 4px solid #ffffff !important;
+}
+
+/* Botão Câmera - Modo Claro */
+html:not(.dark) .profile-camera-btn {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: 3px solid #ffffff !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+html:not(.dark) .profile-camera-btn:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Títulos - Modo Claro */
+html:not(.dark) .profile-title {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+html:not(.dark) .profile-subtitle {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* Textos - Modo Claro */
+html:not(.dark) .profile-text {
+  color: #374151 !important;
+}
+
+html:not(.dark) .profile-text-muted {
+  color: #6b7280 !important;
+}
+
+/* Labels - Modo Claro */
+html:not(.dark) .profile-label {
+  color: #374151 !important;
+  font-weight: 600 !important;
+}
+
+/* Inputs - Modo Claro */
+html:not(.dark) .profile-input {
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+  color: #1f2937 !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .profile-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+html:not(.dark) .profile-input::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Botões Primários - Modo Claro */
+html:not(.dark) .profile-btn-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .profile-btn-primary:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Botões Secundários - Modo Claro */
+html:not(.dark) .profile-btn-secondary {
+  background: #ffffff !important;
+  color: #6b7280 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .profile-btn-secondary:hover {
+  background: #f9fafb !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botões Outline - Modo Claro */
+html:not(.dark) .profile-btn-outline {
+  background: transparent !important;
+  color: #6b7280 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .profile-btn-outline:hover {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Botão Sair Especial - Modo Claro */
+html:not(.dark) .profile-btn-outline.logout-btn {
+  background: #ffffff !important;
+  color: #374151 !important;
+  border: 2px solid #e5e7eb !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .profile-btn-outline.logout-btn:hover {
+  background: #f3f4f6 !important;
+  color: #1f2937 !important;
+  border-color: #d1d5db !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Botão Sair Especial - Modo Escuro */
+html.dark .profile-btn-outline.logout-btn {
+  background: #374151 !important;
+  color: #f9fafb !important;
+  border: 2px solid #4b5563 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .profile-btn-outline.logout-btn:hover {
+  background: #4b5563 !important;
+  color: #ffffff !important;
+  border-color: #6b7280 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Tabs - Modo Claro */
+html:not(.dark) .profile-tabs-list {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
+}
+
+html:not(.dark) .profile-tab-trigger {
+  color: #6b7280 !important;
+  background: transparent !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .profile-tab-trigger:hover {
+  background: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+html:not(.dark) .profile-tab-trigger[data-state="active"],
+html:not(.dark) .profile-tab-active {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .profile-tab-trigger[data-state="active"]:hover,
+html:not(.dark) .profile-tab-active:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Badges - Modo Claro */
+html:not(.dark) .profile-badge {
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+}
+
+html:not(.dark) .profile-badge-success {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+}
+
+html:not(.dark) .profile-badge-warning {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+/* Separadores - Modo Claro */
+html:not(.dark) .profile-separator {
+  background: #e5e7eb !important;
+}
+
+/* ==============================================
+   MODO ESCURO - BACKGROUND E LAYOUT PRINCIPAL
+   ============================================== */
+
+html.dark .profile-page {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+  min-height: 100vh !important;
+}
+
+/* Header do Perfil - Modo Escuro */
+html.dark .profile-header {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3) !important;
+  border-radius: 0 0 2rem 2rem !important;
+}
+
+/* Cards do Perfil - Modo Escuro */
+html.dark .profile-card {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 1rem !important;
+}
+
+/* Avatar Container - Modo Escuro */
+html.dark .profile-avatar-container {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4) !important;
+  border: 4px solid #1e293b !important;
+}
+
+/* Botão Câmera - Modo Escuro */
+html.dark .profile-camera-btn {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: 3px solid #1e293b !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5) !important;
+}
+
+html.dark .profile-camera-btn:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Títulos - Modo Escuro */
+html.dark .profile-title {
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+}
+
+html.dark .profile-subtitle {
+  color: #cbd5e1 !important;
+  font-weight: 500 !important;
+}
+
+/* Textos - Modo Escuro */
+html.dark .profile-text {
+  color: #e2e8f0 !important;
+}
+
+html.dark .profile-text-muted {
+  color: #94a3b8 !important;
+}
+
+/* Labels - Modo Escuro */
+html.dark .profile-label {
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+/* Inputs - Modo Escuro */
+html.dark .profile-input {
+  background: #334155 !important;
+  border: 2px solid #475569 !important;
+  color: #f8fafc !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .profile-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+  outline: none !important;
+}
+
+html.dark .profile-input::placeholder {
+  color: #64748b !important;
+}
+
+/* Botões Primários - Modo Escuro */
+html.dark .profile-btn-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .profile-btn-primary:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Botões Secundários - Modo Escuro */
+html.dark .profile-btn-secondary {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .profile-btn-secondary:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+  border-color: #64748b !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botões Outline - Modo Escuro */
+html.dark .profile-btn-outline {
+  background: transparent !important;
+  color: #cbd5e1 !important;
+  border: 2px solid #475569 !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .profile-btn-outline:hover {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Tabs - Modo Escuro */
+html.dark .profile-tabs-list {
+  background: #334155 !important;
+  border: 1px solid #475569 !important;
+  border-radius: 0.75rem !important;
+}
+
+html.dark .profile-tab-trigger {
+  color: #94a3b8 !important;
+  background: transparent !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .profile-tab-trigger:hover {
+  background: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .profile-tab-trigger[data-state="active"],
+html.dark .profile-tab-active {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .profile-tab-trigger[data-state="active"]:hover,
+html.dark .profile-tab-active:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Badges - Modo Escuro */
+html.dark .profile-badge {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #93c5fd !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+}
+
+html.dark .profile-badge-success {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #6ee7b7 !important;
+}
+
+html.dark .profile-badge-warning {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+/* Separadores - Modo Escuro */
+html.dark .profile-separator {
+  background: #475569 !important;
+}
+
+/* ==============================================
+   ANIMAÇÕES E TRANSITIONS
+   ============================================== */
+
+.profile-page * {
+  transition: all 0.2s ease-in-out !important;
+}
+
+.profile-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.profile-card:hover {
+  transform: translateY(-2px) !important;
+}
+
+.profile-btn-primary,
+.profile-btn-secondary,
+.profile-btn-outline {
+  transition: all 0.2s ease !important;
+}
+
+.profile-tab-trigger {
+  transition: all 0.2s ease !important;
+}
+
+/* Animações de Transição entre Tabs */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out !important;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out !important;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out !important;
+}
+
+/* Transição suave para mudança de tabs */
+.tab-content-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.tab-content-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.tab-content-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tab-content-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+/* ==============================================
+   RESPONSIVIDADE
+   ============================================== */
+
+@media (max-width: 1024px) {
+  .profile-page {
+    padding: 0.5rem !important;
+  }
+  
+  .profile-card {
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 0.25rem !important;
+  }
+  
+  .profile-card {
+    margin-bottom: 0.75rem !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .profile-header {
+    border-radius: 0 0 1rem 1rem !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .profile-avatar-container {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .profile-tabs-list {
+    gap: 0.25rem !important;
+  }
+  
+  .profile-tab-trigger {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-page {
+    padding: 0.125rem !important;
+  }
+  
+  .profile-card {
+    border-radius: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .profile-header {
+    border-radius: 0 !important;
+    padding: 0.75rem 0 !important;
+  }
+  
+  .profile-avatar-container {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  
+  .profile-tab-trigger {
+    padding: 0.375rem 0.5rem !important;
+    font-size: 0.6875rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 0 !important;
+  }
+  
+  .profile-card {
+    border-radius: 0.375rem !important;
+    margin-bottom: 0.375rem !important;
+  }
+  
+  .profile-header {
+    padding: 0.5rem 0 !important;
+  }
+  
+  .profile-avatar-container {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .profile-tab-trigger {
+    padding: 0.25rem 0.375rem !important;
+    font-size: 0.625rem !important;
+  }
+}
+
+/* ==============================================
+   SEÇÕES ESPECÍFICAS - USO DE LEADS E TESTE
+   ============================================== */
+
+/* Seção de Uso de Leads - Modo Claro */
+html:not(.dark) .leads-usage-section {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .leads-usage-header {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-title {
+  color: #111827 !important;
+}
+
+html:not(.dark) .leads-usage-description {
+  color: #4b5563 !important;
+}
+
+html:not(.dark) .leads-usage-stat-card {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-stat-value {
+  color: #111827 !important;
+}
+
+html:not(.dark) .leads-usage-stat-label {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-progress-bg {
+  background: #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-progress-bar {
+  background: #3b82f6 !important;
+}
+
+html:not(.dark) .leads-usage-progress-text {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-week-card {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-week-title {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-week-dot-active {
+  background: #10b981 !important;
+}
+
+html:not(.dark) .leads-usage-week-dot-inactive {
+  background: #d1d5db !important;
+}
+
+html:not(.dark) .leads-usage-week-metric {
+  color: #111827 !important;
+}
+
+html:not(.dark) .leads-usage-week-label {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-pattern-card {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-pattern-title {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-pattern-value {
+  color: #111827 !important;
+}
+
+html:not(.dark) .leads-usage-pattern-description {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-activity-item {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .leads-usage-activity-item:hover {
+  background: #f3f4f6 !important;
+}
+
+html:not(.dark) .leads-usage-activity-text {
+  color: #374151 !important;
+}
+
+html:not(.dark) .leads-usage-activity-count {
+  color: #111827 !important;
+}
+
+html:not(.dark) .leads-usage-activity-date {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .leads-usage-warning {
+  background: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+}
+
+html:not(.dark) .leads-usage-warning-text {
+  color: #92400e !important;
+}
+
+/* Seção de Teste de Geração - Modo Claro */
+html:not(.dark) .test-generation-section {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .test-generation-header {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-title {
+  color: #111827 !important;
+}
+
+html:not(.dark) .test-generation-description {
+  color: #4b5563 !important;
+}
+
+html:not(.dark) .test-generation-available-card {
+  background: #eff6ff !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+html:not(.dark) .test-generation-available-text {
+  color: #1e40af !important;
+}
+
+html:not(.dark) .test-generation-button {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .test-generation-button:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+}
+
+html:not(.dark) .test-generation-button:disabled {
+  background: #9ca3af !important;
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .test-generation-limit-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-limit-title {
+  color: #111827 !important;
+}
+
+html:not(.dark) .test-generation-limit-description {
+  color: #4b5563 !important;
+}
+
+html:not(.dark) .test-generation-limit-progress-bg {
+  background: #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-limit-progress-bar {
+  background: #ef4444 !important;
+}
+
+html:not(.dark) .test-generation-limit-progress-text {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .test-generation-limit-button-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .test-generation-limit-button-secondary {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html:not(.dark) .test-generation-limit-button-secondary:hover {
+  background: #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-info {
+  background: #eff6ff !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+html:not(.dark) .test-generation-info-title {
+  color: #111827 !important;
+}
+
+html:not(.dark) .test-generation-info-text {
+  color: #4b5563 !important;
+}
+
+/* MODO ESCURO - SEÇÕES ESPECÍFICAS */
+
+/* Seção de Uso de Leads - Modo Escuro */
+html.dark .leads-usage-section {
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .leads-usage-header {
+  background: #111827 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+html.dark .leads-usage-title {
+  color: #ffffff !important;
+}
+
+html.dark .leads-usage-description {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-stat-card {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .leads-usage-stat-value {
+  color: #ffffff !important;
+}
+
+html.dark .leads-usage-stat-label {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-progress-bg {
+  background: #4b5563 !important;
+}
+
+html.dark .leads-usage-progress-bar {
+  background: #3b82f6 !important;
+}
+
+html.dark .leads-usage-progress-text {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-week-card {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .leads-usage-week-title {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-week-dot-active {
+  background: #10b981 !important;
+}
+
+html.dark .leads-usage-week-dot-inactive {
+  background: #6b7280 !important;
+}
+
+html.dark .leads-usage-week-metric {
+  color: #ffffff !important;
+}
+
+html.dark .leads-usage-week-label {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-pattern-card {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .leads-usage-pattern-title {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-pattern-value {
+  color: #ffffff !important;
+}
+
+html.dark .leads-usage-pattern-description {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-activity-item {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .leads-usage-activity-item:hover {
+  background: #4b5563 !important;
+}
+
+html.dark .leads-usage-activity-text {
+  color: #d1d5db !important;
+}
+
+html.dark .leads-usage-activity-count {
+  color: #ffffff !important;
+}
+
+html.dark .leads-usage-activity-date {
+  color: #9ca3af !important;
+}
+
+html.dark .leads-usage-warning {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid #f59e0b !important;
+}
+
+html.dark .leads-usage-warning-text {
+  color: #fbbf24 !important;
+}
+
+/* Seção de Teste de Geração - Modo Escuro */
+html.dark .test-generation-section {
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .test-generation-header {
+  background: #111827 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+html.dark .test-generation-title {
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-description {
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-available-card {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+html.dark .test-generation-available-text {
+  color: #60a5fa !important;
+}
+
+html.dark .test-generation-button {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-button:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+}
+
+html.dark .test-generation-button:disabled {
+  background: #6b7280 !important;
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-limit-card {
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+}
+
+html.dark .test-generation-limit-title {
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-limit-description {
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-limit-progress-bg {
+  background: #4b5563 !important;
+}
+
+html.dark .test-generation-limit-progress-bar {
+  background: #ef4444 !important;
+}
+
+html.dark .test-generation-limit-progress-text {
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-limit-button-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-limit-button-secondary {
+  background: #374151 !important;
+  color: #d1d5db !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .test-generation-limit-button-secondary:hover {
+  background: #4b5563 !important;
+}
+
+html.dark .test-generation-info {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+html.dark .test-generation-info-title {
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-info-text {
+  color: #9ca3af !important;
+}
+
+/* Card de Limite Atingido - Modo Claro */
+html:not(.dark) .test-generation-limit-reached-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-title {
+  color: #111827 !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-description {
+  color: #4b5563 !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-progress-card {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-progress-label {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-progress-value {
+  color: #111827 !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-progress-bg {
+  background: #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-progress-bar {
+  background: #ef4444 !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-primary:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-secondary {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-secondary:hover {
+  background: #e5e7eb !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-adjust {
+  background: #f97316 !important;
+  color: #ffffff !important;
+  border: 1px solid #ea580c !important;
+}
+
+html:not(.dark) .test-generation-limit-reached-button-adjust:hover {
+  background: #ea580c !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Card de Limite Atingido - Modo Escuro */
+html.dark .test-generation-limit-reached-card {
+  background: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .test-generation-limit-reached-title {
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-limit-reached-description {
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-limit-reached-progress-card {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .test-generation-limit-reached-progress-label {
+  color: #9ca3af !important;
+}
+
+html.dark .test-generation-limit-reached-progress-value {
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-limit-reached-progress-bg {
+  background: #4b5563 !important;
+}
+
+html.dark .test-generation-limit-reached-progress-bar {
+  background: #ef4444 !important;
+}
+
+html.dark .test-generation-limit-reached-button-primary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+}
+
+html.dark .test-generation-limit-reached-button-primary:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+}
+
+html.dark .test-generation-limit-reached-button-secondary {
+  background: #374151 !important;
+  color: #d1d5db !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .test-generation-limit-reached-button-secondary:hover {
+  background: #4b5563 !important;
+}
+
+html.dark .test-generation-limit-reached-button-adjust {
+  background: #f97316 !important;
+  color: #ffffff !important;
+  border: 1px solid #ea580c !important;
+}
+
+html.dark .test-generation-limit-reached-button-adjust:hover {
+  background: #ea580c !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3) !important;
+}
+
+/* ===================================================== */
+/* ESTILOS PARA AJUSTE DE QUANTIDADE - GERADOR DE LEADS */
+/* ===================================================== */
+
+/* Aviso de Ajuste - Modo Claro */
+html:not(.dark) .gerador-adjustment-warning-claro {
+  background: #fff7ed !important;
+  border: 2px solid #fb923c !important;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.15) !important;
+}
+
+html:not(.dark) .gerador-adjustment-dot-claro {
+  background: #f97316 !important;
+}
+
+html:not(.dark) .gerador-adjustment-title-claro {
+  color: #9a3412 !important;
+}
+
+html:not(.dark) .gerador-adjustment-text-claro {
+  color: #c2410c !important;
+}
+
+html:not(.dark) .gerador-adjustment-badge-claro {
+  background: #fed7aa !important;
+  color: #9a3412 !important;
+  border: 1px solid #fb923c !important;
+}
+
+html:not(.dark) .gerador-adjustment-select-claro {
+  border: 2px solid #f97316 !important;
+  background: #fff7ed !important;
+  color: #9a3412 !important;
+}
+
+html:not(.dark) .gerador-adjustment-select-claro:focus {
+  border: 2px solid #ea580c !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1) !important;
+}
+
+/* Aviso de Ajuste - Modo Escuro */
+html.dark .gerador-adjustment-warning-escuro {
+  background: rgba(251, 146, 60, 0.1) !important;
+  border: 2px solid #fb923c !important;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.2) !important;
+}
+
+html.dark .gerador-adjustment-dot-escuro {
+  background: #fb923c !important;
+}
+
+html.dark .gerador-adjustment-title-escuro {
+  color: #fed7aa !important;
+}
+
+html.dark .gerador-adjustment-text-escuro {
+  color: #fdba74 !important;
+}
+
+html.dark .gerador-adjustment-badge-escuro {
+  background: rgba(251, 146, 60, 0.2) !important;
+  color: #fed7aa !important;
+  border: 1px solid #fb923c !important;
+}
+
+html.dark .gerador-adjustment-select-escuro {
+  border: 2px solid #fb923c !important;
+  background: rgba(251, 146, 60, 0.1) !important;
+  color: #fed7aa !important;
+}
+
+html.dark .gerador-adjustment-select-escuro:focus {
+  border: 2px solid #f97316 !important;
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.2) !important;
+}
+

@@ -1,0 +1,137 @@
+{
+  "timestamp": "2025-09-23T21:57:26.489Z",
+  "subscriptions": [
+    {
+      "id": "7f6123fe-e9ab-44a5-b401-1f5a3c5e1653",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "87326662c4174af59b279af7506595e7",
+      "created_at": "2025-09-22T22:33:15.105037+00:00"
+    },
+    {
+      "id": "9f821c39-030f-4c66-89ce-c0c3a8d5ab24",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "32a11b374d57484192b24594443b0af5",
+      "created_at": "2025-09-22T22:39:52.448625+00:00"
+    },
+    {
+      "id": "68c84a51-b136-4233-b64b-9c29ffd24587",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "e01221f90ce64d0686009c6941e18d08",
+      "created_at": "2025-09-22T22:41:13.863149+00:00"
+    },
+    {
+      "id": "cdf96222-e017-4ad4-9281-8266acf5f368",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "5e527523900f42629e7b94905814182c",
+      "created_at": "2025-09-22T22:41:29.360207+00:00"
+    },
+    {
+      "id": "a5bf11bd-c564-42fd-ad58-7424ab8ef6b2",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "7ddce86ccd8343538b8aef2fc3be6d79",
+      "created_at": "2025-09-22T22:46:31.741635+00:00"
+    },
+    {
+      "id": "adc6441f-39d7-499d-8b5d-9aeb551256f7",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "5dc2ce84eb404b57b09c381331e4fba7",
+      "created_at": "2025-09-22T22:50:33.49197+00:00"
+    },
+    {
+      "id": "b33a442f-2cd5-47d6-ba15-a4c722982c8d",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "3ab17c8cbb10416c8454f583f163e315",
+      "created_at": "2025-09-22T22:51:54.712261+00:00"
+    },
+    {
+      "id": "46c4debe-f039-4245-830b-ad07b41acdff",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "de5b8bc6589544c3875388a9151dd505",
+      "created_at": "2025-09-22T22:59:59.749174+00:00"
+    },
+    {
+      "id": "773c226d-c32a-4e81-8195-2415c70768d4",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "fe62817569f647ce83b368c82c0ccf9b",
+      "created_at": "2025-09-22T23:04:54.862421+00:00"
+    },
+    {
+      "id": "e50c805e-a7d4-402f-8a54-0004c54fcb25",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "da5da765e1ec4637991b052fb45487f1",
+      "created_at": "2025-09-22T23:05:51.391536+00:00"
+    },
+    {
+      "id": "d507634a-5671-45df-8289-c9f1cd8f123a",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "73b09fbebff5490fa591bcbd9364abcc",
+      "created_at": "2025-09-22T23:06:13.085364+00:00"
+    },
+    {
+      "id": "905eeeac-913c-4df6-883f-793a20fb812d",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "0b219c8183764378bdfc2d599403dcd5",
+      "created_at": "2025-09-22T23:09:37.063926+00:00"
+    },
+    {
+      "id": "5045cadb-0c87-4e7b-9547-6dc1e386973b",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "88f2ff50e8af40e7852a02ae65a86c06",
+      "created_at": "2025-09-22T23:11:26.915875+00:00"
+    },
+    {
+      "id": "e3c48f96-dbad-4522-ac08-e83f00ebbb4c",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "8e42040b001847518059b64a4e8cc2d8",
+      "created_at": "2025-09-23T02:16:10.928381+00:00"
+    },
+    {
+      "id": "25ddf393-8608-47d3-9c4f-6d857bf62e2d",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "71ebb46914ad4e40929bc3687d5907f3",
+      "created_at": "2025-09-23T02:34:57.609312+00:00"
+    },
+    {
+      "id": "cef3b9dd-b246-4786-b8bf-b46ffd2e1b5e",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "3c1cc6639e984c8ca44951f9abcb98d2",
+      "created_at": "2025-09-23T02:36:37.763838+00:00"
+    },
+    {
+      "id": "6e98b415-7b59-4514-8856-2184acc6bb48",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "pending",
+      "mercadopago_preapproval_id": "ef0074a116764281b6a154d86fd0b2c5",
+      "created_at": "2025-09-23T02:41:44.587808+00:00"
+    },
+    {
+      "id": "8dcc8fc2-6c3a-49d7-beac-a6d9235afe35",
+      "user_id": "685bb3c6-c1a7-41a0-8e0a-a125549a1665",
+      "status": "active",
+      "mercadopago_preapproval_id": "18d66135c0674a7c8c9b36d4e086a776",
+      "created_at": "2025-09-23T03:14:45.22872+00:00"
+    }
+  ],
+  "stats": {
+    "total": 18,
+    "active": 1,
+    "inactive": 17,
+    "withMercadoPago": 18
+  }
+}

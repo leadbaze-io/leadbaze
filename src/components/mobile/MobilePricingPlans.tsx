@@ -1,0 +1,283 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { Check, Zap, TrendingUp, Crown } from 'lucide-react'
+import { getCurrentUser } from '../../lib/supabaseClient'
+
+export default function MobilePricingPlans() {
+  const [isVisible, setIsVisible] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<'start' | 'scale' | 'enterprise'>('scale')
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleStartNow = async () => {
+    try {
+      const user = await getCurrentUser()
+      if (user) {
+        navigate('/dashboard')
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
+      } else {
+        navigate('/login')
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
+      }
+    } catch (error) {
+
+      navigate('/login')
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 100)
+    }
+  }
+
+  const plans = [
+    {
+      id: 'start',
+      name: 'Plano Start',
+      price: 'R$200',
+      period: '/mês',
+      popular: false,
+      leads: '1.000',
+      pricePerLead: 'R$0,20',
+      features: [
+        '1.000 leads/mês',
+        'R$0,20 centavos por lead',
+        'Exportação dos leads via CSV',
+        'Suporte por email'
+      ],
+      color: 'from-blue-500 to-cyan-500',
+      icon: Zap
+    },
+    {
+      id: 'scale',
+      name: 'Plano Scale',
+      price: 'R$497',
+      period: '/mês',
+      popular: true,
+      leads: '4.000',
+      pricePerLead: 'R$0,12',
+      features: [
+        '4.000 leads/mês',
+        'R$0,12 centavos por lead',
+        'Exportação dos leads via CSV',
+        'Integração com CRM de Vendas',
+        'Suporte prioritário'
+      ],
+      color: 'from-purple-500 to-pink-500',
+      icon: TrendingUp
+    },
+    {
+      id: 'enterprise',
+      name: 'Plano Enterprise',
+      price: 'R$997',
+      period: '/mês',
+      popular: false,
+      leads: '10.000',
+      pricePerLead: 'R$0,09',
+      features: [
+        '10.000 leads/mês',
+        'R$0,09 centavos por lead',
+        'Exportação dos leads via CSV',
+        'Integração com CRM de Vendas',
+        'Onboarding com nossos especialistas',
+        'Suporte VIP 24/7'
+      ],
+      color: 'from-orange-500 to-red-500',
+      icon: Crown
+    }
+  ]
+
+  return (
+    <section id="pricing-plans-section" className="md:hidden relative py-16 bg-gradient-to-br from-gray-50 via-white to-blue-50 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-48 h-48 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-gradient-to-br from-green-100/40 to-cyan-100/40 rounded-full blur-2xl"></div>
+      </div>
+
+      <div className="relative max-w-md mx-auto px-4">
+        <div className="text-center mb-12">
+          {/* Main Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-6"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Escolha o <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Plano</span>
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+                Perfeito para Você
+              </span>
+            </h2>
+          </motion.div>
+
+          {/* Subheadline */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8"
+          >
+            <p className="text-lg text-gray-600 leading-relaxed">
+              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.<span className="font-semibold text-green-600"> Teste agora mesmo com 30 Leads Gratuitos!</span>
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Pricing Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="space-y-6 mb-12"
+        >
+          {plans.map((plan, index) => (
+            <motion.div
+              key={plan.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isVisible ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+              whileHover={{
+
+                y: -5,
+                transition: { duration: 0.3 }
+              }}
+              className={`relative group cursor-pointer ${
+                selectedPlan === plan.id ? 'ring-4 ring-purple-500 ring-opacity-50' : ''
+              }`}
+              onClick={() => setSelectedPlan(plan.id as 'start' | 'scale' | 'enterprise')}
+            >
+              {/* Popular Badge */}
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
+                  🏆 Mais Vendido
+                </div>
+              )}
+
+              {/* Best Value Badge for Start Plan */}
+              {plan.id === 'start' && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
+                  💎 Custo-Benefício
+                </div>
+              )}
+
+              {/* Premium Badge for Enterprise Plan */}
+              {plan.id === 'enterprise' && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
+                  👑 Premium
+                </div>
+              )}
+
+              <div className={`relative bg-white rounded-2xl p-6 shadow-xl border-2 transition-all duration-500 overflow-hidden ${
+                selectedPlan === plan.id
+
+                  ? 'border-purple-500 shadow-2xl'
+
+                  : 'border-gray-100 hover:border-gray-200'
+              }`}>
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+
+                {/* Header */}
+                <div className="relative text-center mb-6">
+                  <div className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br ${plan.color} rounded-2xl text-white mb-4`}>
+                    <plan.icon className="w-7 h-7" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <div className="flex items-baseline justify-center">
+                    <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
+                    <span className="text-base text-gray-600 ml-1">{plan.period}</span>
+                  </div>
+                </div>
+
+                {/* Price per Lead */}
+                <div className="text-center mb-6">
+                  <div className="text-sm text-gray-600 mb-1">Preço por Lead</div>
+                  <div className="text-xl font-bold text-gray-900">{plan.pricePerLead}</div>
+
+                  {/* Urgency Badge - Only for Scale Plan */}
+                  {plan.id === 'scale' && (
+                    <div className="mt-3 space-y-2">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                        ⚡ Oferta Limitada
+                      </span>
+                      <div className="text-xs text-gray-500">
+                        Apenas <span className="font-bold text-red-600">23 vagas</span> restantes
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Limited spots for other plans */}
+                  {plan.id === 'start' && (
+                    <div className="mt-3">
+                      <div className="text-xs text-gray-500">
+                        Apenas <span className="font-bold text-blue-600">67 vagas</span> restantes
+                      </div>
+                    </div>
+                  )}
+
+                  {plan.id === 'enterprise' && (
+                    <div className="mt-3">
+                      <div className="text-xs text-gray-500">
+                        Apenas <span className="font-bold text-purple-600">12 vagas</span> restantes
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+
+                {/* Features */}
+                <div className="space-y-3 mb-6">
+                  {plan.features.map((feature, featureIndex) => (
+                    <div key={featureIndex} className="flex items-start gap-3">
+                      <Check className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA Button */}
+                <button className={`w-full py-3 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-105 ${
+                  selectedPlan === plan.id
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                }`}>
+                  {selectedPlan === plan.id ? '✅ Plano Selecionado' : '🚀 Começar Agora'}
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center"
+        >
+          <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Pronto para começar?</h3>
+            <p className="text-sm text-gray-600 mb-4">Teste agora mesmo nossa plataforma com 30 Leads Gratuitos!</p>
+            <button
+
+              onClick={handleStartNow}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
+            >
+              Testar Agora
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,10 @@
+CAMPAIGN_SYSTEM_IMPLEMENTATION.md
+LEAD_GENERATOR_DUPLICATE_CHECK.md
+N8N_TROUBLESHOOTING.md
+src/components/LeadGeneratorPro.tsx
+src/lib/campaignService.ts
+src/lib/leadService.ts
+src/pages/DisparadorMassa.tsx
+supabase-campaigns-setup.sql
+test-n8n-simple.js
+test-n8n-webhook.js

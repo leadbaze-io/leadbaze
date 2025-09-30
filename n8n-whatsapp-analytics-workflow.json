@@ -1,0 +1,636 @@
+{
+  "name": "WhatsApp Analytics - LeadBaze",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook - Resposta WhatsApp",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "whatsapp-response-webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-delivery",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-delivery",
+      "name": "Webhook - Status Entrega",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "whatsapp-delivery-webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-conversion",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-conversion",
+      "name": "Webhook - Conversão Venda",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        700
+      ],
+      "webhookId": "whatsapp-conversion-webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/whatsapp/webhook/response",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaign_id",
+              "value": "={{ $json.campaign_id }}"
+            },
+            {
+              "name": "lead_phone",
+              "value": "={{ $json.lead_phone }}"
+            },
+            {
+              "name": "response_type",
+              "value": "={{ $json.response_type }}"
+            },
+            {
+              "name": "response_content",
+              "value": "={{ $json.response_content }}"
+            },
+            {
+              "name": "response_timestamp",
+              "value": "={{ $json.response_timestamp }}"
+            },
+            {
+              "name": "lead_name",
+              "value": "={{ $json.lead_name }}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $json.message_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-response-analytics",
+      "name": "Enviar Resposta para Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-analytics-auth",
+          "name": "WhatsApp Analytics Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/whatsapp/webhook/delivery-status",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaign_id",
+              "value": "={{ $json.campaign_id }}"
+            },
+            {
+              "name": "lead_phone",
+              "value": "={{ $json.lead_phone }}"
+            },
+            {
+              "name": "delivery_status",
+              "value": "={{ $json.delivery_status }}"
+            },
+            {
+              "name": "status_timestamp",
+              "value": "={{ $json.status_timestamp }}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $json.message_id }}"
+            },
+            {
+              "name": "error_message",
+              "value": "={{ $json.error_message }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-delivery-analytics",
+      "name": "Enviar Status para Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        460,
+        500
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-analytics-auth",
+          "name": "WhatsApp Analytics Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/whatsapp/webhook/conversion",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaign_id",
+              "value": "={{ $json.campaign_id }}"
+            },
+            {
+              "name": "lead_phone",
+              "value": "={{ $json.lead_phone }}"
+            },
+            {
+              "name": "conversion_type",
+              "value": "={{ $json.conversion_type }}"
+            },
+            {
+              "name": "conversion_value",
+              "value": "={{ $json.conversion_value }}"
+            },
+            {
+              "name": "conversion_date",
+              "value": "={{ $json.conversion_date }}"
+            },
+            {
+              "name": "lead_name",
+              "value": "={{ $json.lead_name }}"
+            },
+            {
+              "name": "notes",
+              "value": "={{ $json.notes }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-conversion-analytics",
+      "name": "Enviar Conversão para Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        460,
+        700
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-analytics-auth",
+          "name": "WhatsApp Analytics Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"status\": \"success\",\n  \"message\": \"Resposta do WhatsApp registrada com sucesso\",\n  \"timestamp\": $now,\n  \"data\": $json\n} }}"
+      },
+      "id": "response-success-response",
+      "name": "Resposta - Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"status\": \"success\",\n  \"message\": \"Status de entrega registrado com sucesso\",\n  \"timestamp\": $now,\n  \"data\": $json\n} }}"
+      },
+      "id": "response-success-delivery",
+      "name": "Resposta - Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"status\": \"success\",\n  \"message\": \"Conversão registrada com sucesso\",\n  \"timestamp\": $now,\n  \"data\": $json\n} }}"
+      },
+      "id": "response-success-conversion",
+      "name": "Resposta - Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 500,
+        "responseBody": "={{ {\n  \"status\": \"error\",\n  \"message\": \"Erro ao processar dados do WhatsApp\",\n  \"timestamp\": $now,\n  \"error\": $json.error || \"Erro desconhecido\"\n} }}"
+      },
+      "id": "response-error-response",
+      "name": "Resposta - Erro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 500,
+        "responseBody": "={{ {\n  \"status\": \"error\",\n  \"message\": \"Erro ao processar status de entrega\",\n  \"timestamp\": $now,\n  \"error\": $json.error || \"Erro desconhecido\"\n} }}"
+      },
+      "id": "response-error-delivery",
+      "name": "Resposta - Erro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 500,
+        "responseBody": "={{ {\n  \"status\": \"error\",\n  \"message\": \"Erro ao processar conversão\",\n  \"timestamp\": $now,\n  \"error\": $json.error || \"Erro desconhecido\"\n} }}"
+      },
+      "id": "response-error-conversion",
+      "name": "Resposta - Erro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        680,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "success-condition",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-success-response",
+      "name": "Se Sucesso",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        580,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "success-condition",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-success-delivery",
+      "name": "Se Sucesso",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        580,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "success-condition",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-success-conversion",
+      "name": "Se Sucesso",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        580,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validação e formatação dos dados de resposta\nconst data = $input.first().json;\n\n// Validar campos obrigatórios\nconst requiredFields = ['campaign_id', 'lead_phone', 'response_type', 'response_content'];\nconst missingFields = requiredFields.filter(field => !data[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Campos obrigatórios ausentes: ${missingFields.join(', ')}`);\n}\n\n// Formatar timestamp se não fornecido\nif (!data.response_timestamp) {\n  data.response_timestamp = new Date().toISOString();\n}\n\n// Validar formato do telefone\nconst phoneRegex = /^\\+?[1-9]\\d{1,14}$/;\nif (!phoneRegex.test(data.lead_phone.replace(/\\s/g, ''))) {\n  throw new Error('Formato de telefone inválido');\n}\n\n// Validar tipo de resposta\nconst validResponseTypes = ['text', 'image', 'audio', 'video', 'document', 'sticker'];\nif (!validResponseTypes.includes(data.response_type)) {\n  throw new Error(`Tipo de resposta inválido. Use: ${validResponseTypes.join(', ')}`);\n}\n\n// Limitar tamanho do conteúdo\nif (data.response_content && data.response_content.length > 1000) {\n  data.response_content = data.response_content.substring(0, 1000) + '...';\n}\n\nreturn { json: data };"
+      },
+      "id": "validate-response-data",
+      "name": "Validar Dados Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        350,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validação e formatação dos dados de status de entrega\nconst data = $input.first().json;\n\n// Validar campos obrigatórios\nconst requiredFields = ['campaign_id', 'lead_phone', 'delivery_status', 'message_id'];\nconst missingFields = requiredFields.filter(field => !data[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Campos obrigatórios ausentes: ${missingFields.join(', ')}`);\n}\n\n// Formatar timestamp se não fornecido\nif (!data.status_timestamp) {\n  data.status_timestamp = new Date().toISOString();\n}\n\n// Validar formato do telefone\nconst phoneRegex = /^\\+?[1-9]\\d{1,14}$/;\nif (!phoneRegex.test(data.lead_phone.replace(/\\s/g, ''))) {\n  throw new Error('Formato de telefone inválido');\n}\n\n// Validar status de entrega\nconst validStatuses = ['sent', 'delivered', 'read', 'failed'];\nif (!validStatuses.includes(data.delivery_status)) {\n  throw new Error(`Status de entrega inválido. Use: ${validStatuses.join(', ')}`);\n}\n\nreturn { json: data };"
+      },
+      "id": "validate-delivery-data",
+      "name": "Validar Dados Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        350,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validação e formatação dos dados de conversão\nconst data = $input.first().json;\n\n// Validar campos obrigatórios\nconst requiredFields = ['campaign_id', 'lead_phone', 'conversion_type', 'conversion_date'];\nconst missingFields = requiredFields.filter(field => !data[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Campos obrigatórios ausentes: ${missingFields.join(', ')}`);\n}\n\n// Formatar timestamp se não fornecido\nif (!data.conversion_date) {\n  data.conversion_date = new Date().toISOString();\n}\n\n// Validar formato do telefone\nconst phoneRegex = /^\\+?[1-9]\\d{1,14}$/;\nif (!phoneRegex.test(data.lead_phone.replace(/\\s/g, ''))) {\n  throw new Error('Formato de telefone inválido');\n}\n\n// Validar tipo de conversão\nconst validConversionTypes = ['sale', 'meeting', 'demo', 'proposal', 'follow_up'];\nif (!validConversionTypes.includes(data.conversion_type)) {\n  throw new Error(`Tipo de conversão inválido. Use: ${validConversionTypes.join(', ')}`);\n}\n\n// Validar valor da conversão se fornecido\nif (data.conversion_value && (isNaN(data.conversion_value) || data.conversion_value < 0)) {\n  throw new Error('Valor da conversão deve ser um número positivo');\n}\n\n// Converter valor para número se for string\nif (data.conversion_value && typeof data.conversion_value === 'string') {\n  data.conversion_value = parseFloat(data.conversion_value);\n}\n\nreturn { json: data };"
+      },
+      "id": "validate-conversion-data",
+      "name": "Validar Dados Conversão",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        350,
+        700
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook - Resposta WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Validar Dados Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Status Entrega": {
+      "main": [
+        [
+          {
+            "node": "Validar Dados Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Conversão Venda": {
+      "main": [
+        [
+          {
+            "node": "Validar Dados Conversão",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Dados Resposta": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resposta para Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Dados Status": {
+      "main": [
+        [
+          {
+            "node": "Enviar Status para Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Dados Conversão": {
+      "main": [
+        [
+          {
+            "node": "Enviar Conversão para Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Resposta para Analytics": {
+      "main": [
+        [
+          {
+            "node": "Se Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Status para Analytics": {
+      "main": [
+        [
+          {
+            "node": "Se Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Conversão para Analytics": {
+      "main": [
+        [
+          {
+            "node": "Se Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Sucesso": {
+      "main": [
+        [
+          {
+            "node": "Resposta - Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resposta - Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z",
+      "id": "whatsapp-analytics",
+      "name": "WhatsApp Analytics"
+    }
+  ],
+  "triggerCount": 3,
+  "updatedAt": "2024-01-15T10:30:00.000Z",
+  "versionId": "1"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

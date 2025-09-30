@@ -1,0 +1,739 @@
+{
+  "name": "BDR - interface com Status em Tempo Real",
+  "nodes": [
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "nwua9Gu5YrADL7ZDj",
+          "mode": "list",
+          "cachedResultName": "Google Maps Scraper (compass/crawler-google-places)",
+          "cachedResultUrl": "https://console.apify.com/actors/nwua9Gu5YrADL7ZDj/input"
+        },
+        "customBody": "={\n    \"includeWebResults\": false,\n    \"language\": \"pt-BR\",\n    \"maxCrawledPlacesPerSearch\": {{ $json.body.limit }},\n    \"maxImages\": 0,\n    \"maximumLeadsEnrichmentRecords\": 0,\n    \"scrapeContacts\": false,\n    \"scrapeDirectories\": false,\n    \"scrapeImageAuthors\": false,\n    \"scrapePlaceDetailPage\": false,\n    \"scrapeReviewsPersonalData\": true,\n    \"scrapeTableReservationProvider\": false,\n    \"skipClosedPlaces\": false,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json.body.google_maps_url }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -160
+      ],
+      "id": "2319f3a2-bb99-4d09-8342-50a06f2d7528",
+      "name": "Run an Actor",
+      "credentials": {
+        "apifyApi": {
+          "id": "zlzotspZfIjRznI8",
+          "name": "Apify account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.defaultDatasetId }}"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -160
+      ],
+      "id": "bddb516d-a861-4e50-8506-52877ef50e70",
+      "name": "Get dataset items",
+      "credentials": {
+        "apifyApi": {
+          "id": "zlzotspZfIjRznI8",
+          "name": "Apify account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d9777f4-babe-45a0-a1c6-0ada76bf5da8",
+              "name": "defaultDatasetId",
+              "value": "={{ $json.defaultDatasetId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        -160
+      ],
+      "id": "0986bb7d-d02d-4e92-9d11-072fc89b8828",
+      "name": "Dataset Id"
+    },
+    {
+      "parameters": {
+        "content": "## Gera lista de leads",
+        "height": 308,
+        "width": 1480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "9bf3e23c-e299-483c-b4a6-87f899da4be5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "842e7854-35df-4b20-9a6e-994fd934505e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        -160
+      ],
+      "id": "ecd6625a-bd79-450f-ac73-03fc3e0bb9a9",
+      "name": "Webhook",
+      "webhookId": "842e7854-35df-4b20-9a6e-994fd934505e"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        800,
+        -160
+      ],
+      "id": "9d9fcca3-8089-4c8d-bca0-1383047bb9e4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Percorre todos os items recebidos pelo node\nreturn items.map(item => {\n  if (item.json.phoneUnformatted && typeof item.json.phoneUnformatted === 'string') {\n    item.json.phoneUnformatted = item.json.phoneUnformatted.replace('+', '');\n  }\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        -160
+      ],
+      "id": "e09f28f5-a93a-40d6-aee0-26b385134b76",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "title",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "phoneUnformatted, website, totalScore, reviewsCount, city",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -160
+      ],
+      "id": "bce055cb-8223-445b-a30e-f9efa7488a4d",
+      "name": "Split Out3"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body[0].itens",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        64,
+        416
+      ],
+      "id": "dfdfa01a-f492-4600-8032-5ee83abdf003",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        128
+      ],
+      "id": "fc5ff3d1-28d6-430a-81ff-a4752b21e825",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        336,
+        416
+      ],
+      "id": "bcf55e03-f14a-473c-8472-f3f6719d9cf7",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "const mensagemPadrao = $('Body').first().json.body[0].mensagem\nconst nome = $input.first().json.nome\n\nconst mensagemPersonalizada = mensagemPadrao.replace(\"{nome}\", nome);\n\nreturn [\n  {\n    json: {\n      mensagem: mensagemPersonalizada\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        416
+      ],
+      "id": "2092cb15-de4a-4162-9864-67287e9d58c5",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13496bc8-1096-4782-9ef7-e29c47c03799",
+              "name": "mensagem",
+              "value": "={{ $json.mensagem }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        416
+      ],
+      "id": "053cef48-e1a2-4c43-825f-83a418077467",
+      "name": "Mensagem Personalizada"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25e1a20b-6316-42ac-a75d-69e8ba23a218",
+              "name": "body",
+              "value": "={{ $json.body }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        416
+      ],
+      "id": "3db0c3f6-4ee2-4599-9e64-b84f32e1255b",
+      "name": "Body"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('Body').item.json.body[0].instance_name }}",
+        "remoteJid": "={{ $('Loop Over Items').item.json.telefone }}",
+        "messageText": "={{ $json.mensagem }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        976,
+        416
+      ],
+      "id": "5344af4e-9f87-4f1e-a55c-c5370c0e0f7c",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "HbaP1kRuxgbPd8T9",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        416
+      ],
+      "id": "7d1b712e-24b6-47dc-8f4c-2ff2c9674d1e",
+      "name": "Webhook1",
+      "webhookId": "b1b11d27-2dfa-42a6-bbaf-b0fa456c0bae"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        416
+      ],
+      "id": "c9895bed-622b-4c35-900a-de8868418b47",
+      "name": "Wait",
+      "webhookId": "994a6744-fbbb-48cc-8644-6444e3c19704"
+    },
+    {
+      "parameters": {
+        "content": "## Dispara as mensagens",
+        "height": 384,
+        "width": 2192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -752,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "7aa0de1e-1bd1-4ed3-afab-6ac9639b77e4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1024,
+        -432
+      ],
+      "id": "5558db3c-f622-466a-9589-448566822c80",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"items\": [\n    {\n      \"title\": \"Clínica Marina Ceruti\",\n      \"phoneUnformatted\": \"+5531983323121\",\n      \"website\": \"https://clinicamarinaceruti.com.br/\",\n      \"totalScore\": 5,\n      \"reviewsCount\": 270,\n      \"city\": \"Belo Horizonte\"\n    },\n    {\n      \"title\": \"Clinica Estetica BH\",\n      \"phoneUnformatted\": \"+5531999766846\",\n      \"website\": \"http://clinicaesteticabh.com.br/\",\n      \"totalScore\": 5,\n      \"reviewsCount\": 70,\n      \"city\": \"Belo Horizonte\"\n    },\n    {\n      \"title\": \"Verônica Leal Estética e Saúde | Furo de Orelha Humanizado em BH\",\n      \"phoneUnformatted\": \"+5531999779118\",\n      \"website\": \"https://www.veronicaleal.com.br/\",\n      \"totalScore\": 5,\n      \"reviewsCount\": 491,\n      \"city\": \"Belo Horizonte\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1200,
+        -432
+      ],
+      "id": "7b336fa0-6bd3-4363-a3ac-a7cd6a000afc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://leadbaze.io/api/campaign/status/start",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaignId",
+              "value": "={{ $json.body[0].campaign_id }}"
+            },
+            {
+              "name": "totalLeads",
+              "value": "={{ $json.body[0].itens.length }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -224,
+        320
+      ],
+      "id": "start-tracking-node",
+      "name": "Iniciar Rastreamento"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Contadores para rastreamento de status\nconst currentIndex = $('Loop Over Items').item.json.currentIndex || 0;\nconst totalLeads = $('Body').item.json.body[0].itens.length;\nconst successCount = $('Loop Over Items').item.json.successCount || 0;\nconst failedCount = $('Loop Over Items').item.json.failedCount || 0;\n\n// Dados do lead atual\nconst currentLead = $('Loop Over Items').item.json;\nconst leadPhone = currentLead.telefone || '';\nconst leadName = currentLead.nome || 'Lead sem nome';\n\n// Verificar se o envio foi bem-sucedido (assumindo que se chegou até aqui, foi sucesso)\nconst sendSuccess = true; // Você pode modificar esta lógica baseada na resposta da Evolution API\n\nreturn [{\n  json: {\n    campaign_id: $('Body').item.json.body[0].campaign_id,\n    current_index: currentIndex + 1,\n    total_leads: totalLeads,\n    success_count: sendSuccess ? successCount + 1 : successCount,\n    failed_count: sendSuccess ? failedCount : failedCount + 1,\n    send_success: sendSuccess,\n    lead_phone: leadPhone,\n    lead_name: leadName,\n    backend_url: 'https://leadbaze.io'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        416
+      ],
+      "id": "track-progress-code",
+      "name": "Preparar Dados Progresso"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://leadbaze.io/api/campaign/status/progress",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaignId",
+              "value": "={{ $json.campaign_id }}"
+            },
+            {
+              "name": "leadIndex",
+              "value": "={{ $json.current_index }}"
+            },
+            {
+              "name": "totalLeads",
+              "value": "={{ $json.total_leads }}"
+            },
+            {
+              "name": "success",
+              "value": "={{ $json.send_success }}"
+            },
+            {
+              "name": "leadPhone",
+              "value": "={{ $json.lead_phone }}"
+            },
+            {
+              "name": "leadName",
+              "value": "={{ $json.lead_name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        416
+      ],
+      "id": "update-progress-node",
+      "name": "Atualizar Progresso"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dados finais da campanha\nconst totalLeads = $('Body').item.json.body[0].itens.length;\nconst successCount = $('Loop Over Items').item.json.successCount || totalLeads; // Assumindo que todos foram enviados com sucesso\nconst failedCount = $('Loop Over Items').item.json.failedCount || 0;\n\nreturn [{\n  json: {\n    campaign_id: $('Body').item.json.body[0].campaign_id,\n    success_count: successCount,\n    failed_count: failedCount,\n    total_processed: totalLeads,\n    backend_url: 'https://leadbaze.io'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        416
+      ],
+      "id": "prepare-completion-code",
+      "name": "Preparar Dados Conclusão"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://leadbaze.io/api/campaign/status/complete",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "campaignId",
+              "value": "={{ $json.campaign_id }}"
+            },
+            {
+              "name": "successCount",
+              "value": "={{ $json.success_count }}"
+            },
+            {
+              "name": "failedCount",
+              "value": "={{ $json.failed_count }}"
+            },
+            {
+              "name": "totalProcessed",
+              "value": "={{ $json.total_processed }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        416
+      ],
+      "id": "complete-campaign-node",
+      "name": "Finalizar Campanha"
+    },
+    {
+      "parameters": {
+        "content": "## Status em Tempo Real",
+        "height": 200,
+        "width": 400,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "status-note",
+      "name": "Sticky Note Status"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run an Actor": {
+      "main": [
+        [
+          {
+            "node": "Dataset Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get dataset items": {
+      "main": [
+        [
+          {
+            "node": "Split Out3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dataset Id": {
+      "main": [
+        [
+          {
+            "node": "Get dataset items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Run an Actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out3": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        []
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Preparar Dados Conclusão",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Mensagem Personalizada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem Personalizada": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Body": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Iniciar Rastreamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Preparar Dados Progresso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Iniciar Rastreamento": {
+      "main": [
+        []
+      ]
+    },
+    "Preparar Dados Progresso": {
+      "main": [
+        [
+          {
+            "node": "Atualizar Progresso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizar Progresso": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Dados Conclusão": {
+      "main": [
+        [
+          {
+            "node": "Finalizar Campanha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalizar Campanha": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d47b8698-02b9-4dc0-bc17-2dee9218bb09",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "98a7f76cbff973591af08e09b5be2fed14b55b37d878782c0638229a94477203"
+  },
+  "id": "cdb2lDqMW941b6jF",
+  "tags": []
+}

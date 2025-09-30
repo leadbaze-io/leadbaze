@@ -1,0 +1,203 @@
+/**
+ * =====================================================
+ * BLOG QUEUE ROUTES - LeadFlow
+ * Rotas para gerenciamento da fila de posts do blog
+ * =====================================================
+ */
+
+const express = require('express');
+const router = express.Router();
+const { createClient } = require('@supabase/supabase-js');
+
+// Função para obter cliente Supabase
+function getSupabaseClient() {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+        throw new Error('❌ Variáveis SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY são obrigatórias');
+    }
+    
+    return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+/**
+ * POST /api/blog/queue/add
+ * Adicionar post manualmente à fila
+ */
+router.post('/add', async (req, res) => {
+    try {
+        const { title, content, category, date, imageurl, autor } = req.body;
+
+        // Validação
+        if (!title || !content || !category || !date) {
+            return res.status(400).json({
+                success: false,
+                error: 'Campos obrigatórios: title, content, category, date'
+            });
+        }
+
+        console.log('�� Adicionando post à fila:', { title, category, date });
+
+        const supabase = getSupabaseClient();
+        
+        // Inserir na fila
+        const { data, error } = await supabase
+            .from('n8n_blog_queue')
+            .insert([{
+                title,
+                content,
+                category,
+                date,
+                imageurl: imageurl || null,
+                autor: autor || 'LeadBaze Team',
+                processed: false,
+                created_at: new Date().toISOString()
+            }])
+            .select();
+
+        if (error) {
+            console.error('❌ Erro ao adicionar post à fila:', error);
+            return res.status(500).json({
+                success: false,
+                error: 'Erro ao adicionar post à fila',
+                details: error.message
+            });
+        }
+
+        console.log('✅ Post adicionado à fila com sucesso:', data[0]);
+
+        res.json({
+            success: true,
+            message: 'Post adicionado à fila com sucesso',
+            data: data[0]
+        });
+
+    } catch (error) {
+        console.error('❌ Erro ao adicionar post à fila:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erro ao adicionar post à fila',
+            details: error.message
+        });
+    }
+});
+
+/**
+ * GET /api/blog/queue/list
+ * Listar posts na fila
+ */
+router.get('/list', async (req, res) => {
+    try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase
+            .from('n8n_blog_queue')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('❌ Erro ao listar posts da fila:', error);
+            return res.status(500).json({
+                success: false,
+                error: 'Erro ao listar posts da fila',
+                details: error.message
+            });
+        }
+
+        console.log('📋 Posts na fila:', data.length);
+
+        res.json({
+            success: true,
+            data: data
+        });
+
+    } catch (error) {
+        console.error('❌ Erro ao listar posts da fila:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erro ao listar posts da fila',
+            details: error.message
+        });
+    }
+});
+
+/**
+ * POST /api/blog/queue/process
+ * Processar fila manualmente
+ */
+router.post('/process', async (req, res) => {
+    try {
+        // Importar o serviço de automação com solução robusta
+        let BlogAutomationService;
+        try {
+            BlogAutomationService = require('../services/blogAutomationService').default;
+        } catch (e) {
+            BlogAutomationService = require('../services/blogAutomationService');
+        }
+        
+        const automationService = new BlogAutomationService();
+        
+        console.log('🔄 Iniciando processamento manual da fila...');
+        
+        // Processar a fila
+        const result = await automationService.processQueue();
+        
+        console.log('✅ Processamento manual concluído:', result);
+        
+        res.json({
+            success: true,
+            message: 'Fila processada com sucesso',
+            result: result
+        });
+        
+    } catch (error) {
+        console.error('❌ Erro ao processar fila:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erro ao processar fila',
+            details: error.message
+        });
+    }
+});
+
+/**
+ * DELETE /api/blog/queue/clear
+ * Limpar fila (apenas posts não processados)
+ */
+router.delete('/clear', async (req, res) => {
+    try {
+        const supabase = getSupabaseClient();
+        
+        // Deletar apenas posts não processados
+        const { data, error } = await supabase
+            .from('n8n_blog_queue')
+            .delete()
+            .eq('processed', false);
+
+        if (error) {
+            console.error('❌ Erro ao limpar fila:', error);
+            return res.status(500).json({
+                success: false,
+                error: 'Erro ao limpar fila',
+                details: error.message
+            });
+        }
+
+        console.log('🧹 Fila limpa com sucesso');
+
+        res.json({
+            success: true,
+            message: 'Fila limpa com sucesso'
+        });
+
+    } catch (error) {
+        console.error('❌ Erro ao limpar fila:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Erro ao limpar fila',
+            details: error.message
+        });
+    }
+});
+
+module.exports = router;

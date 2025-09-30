@@ -1,0 +1,5393 @@
+@import "tailwindcss";
+
+/* Import blog styles */
+@import './styles/blog.css';
+
+/* Import profile styles */
+@import './styles/profile-modern.css';
+
+/* FORCE ICON COLORS */
+.list-card-icon-selected {
+  color: white !important;
+  stroke: white !important;
+}
+
+.list-card-icon-unselected {
+  color: #6b7280 !important;
+  stroke: #6b7280 !important;
+}
+
+.dark .list-card-icon-unselected {
+  color: #d1d5db !important;
+  stroke: #d1d5db !important;
+}
+
+/* Force icon colors with higher specificity */
+div .list-card-icon-unselected {
+  color: #6b7280 !important;
+  stroke: #6b7280 !important;
+}
+
+.dark div .list-card-icon-unselected {
+  color: #d1d5db !important;
+  stroke: #d1d5db !important;
+}
+
+/* Force SVG fill and stroke */
+.list-card-icon-unselected svg,
+.list-card-icon-unselected path,
+.list-card-icon-unselected circle {
+  color: #6b7280 !important;
+  stroke: #6b7280 !important;
+  fill: none !important;
+}
+
+.dark .list-card-icon-unselected svg,
+.dark .list-card-icon-unselected path,
+.dark .list-card-icon-unselected circle {
+  color: #d1d5db !important;
+  stroke: #d1d5db !important;
+  fill: none !important;
+}
+
+/* Import landing page styles */
+
+/* Estilos base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  font-variation-settings: normal;
+}
+
+/* Variáveis CSS personalizadas */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 94.1%;
+}
+
+/* Teste de tema - cores básicas */
+.test-light {
+  background-color: white;
+  color: black;
+}
+
+.test-dark {
+  background-color: #1f2937;
+  color: white;
+}
+
+/* Dark Mode Customizado para Tailwind v4 */
+html.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+html.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* Classes dark: customizadas */
+html.dark .dark\:bg-gray-900 {
+  background-color: #111827 !important;
+}
+
+html.dark .dark\:bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+html.dark .dark\:text-white {
+  color: #ffffff !important;
+}
+
+html.dark .dark\:text-gray-100 {
+  color: #f3f4f6 !important;
+}
+
+html.dark .dark\:text-gray-300 {
+  color: #d1d5db !important;
+}
+
+html.dark .dark\:border-gray-700 {
+  border-color: #374151 !important;
+}
+
+html.dark .dark\:hover\:bg-gray-800:hover {
+  background-color: #1f2937 !important;
+}
+
+html.dark .dark\:hover\:bg-gray-700:hover {
+  background-color: #374151 !important;
+}
+
+/* Gradientes e cores específicas para modo escuro - NOVAS CORES MAIS ELEGANTES */
+html.dark .from-blue-50 {
+  background: linear-gradient(to right, #2d3748, #4a5568) !important;
+}
+
+html.dark .to-purple-50 {
+  background: linear-gradient(to right, #2d3748, #553c9a) !important;
+}
+
+html.dark .to-indigo-50 {
+  background: linear-gradient(to right, #2d3748, #434190) !important;
+}
+
+html.dark .from-blue-50.to-purple-50 {
+  background: linear-gradient(to right, #2d3748, #553c9a) !important;
+}
+
+html.dark .from-blue-50.to-indigo-50 {
+  background: linear-gradient(to right, #2d3748, #434190) !important;
+}
+
+/* Cores de fundo específicas para modo escuro - NOVAS CORES MAIS ELEGANTES */
+html.dark .bg-blue-50 {
+  background-color: #2d3748 !important;
+}
+
+html.dark .bg-purple-50 {
+  background-color: #553c9a !important;
+}
+
+html.dark .bg-indigo-50 {
+  background-color: #434190 !important;
+}
+
+/* Bordas específicas para modo escuro - CONTORNOS MAIS BRANCOS PARA DESTAQUE */
+html.dark .border-blue-100 {
+  border-color: #718096 !important;
+}
+
+html.dark .border-blue-200 {
+  border-color: #a0aec0 !important;
+}
+
+html.dark .border-blue-800 {
+  border-color: #2d3748 !important;
+}
+
+/* CORREÇÃO PARA OS CARDS SELECIONADOS - CORES DE TEXTO NO DARK MODE */
+html.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+html.dark .text-blue-500 {
+  color: #3b82f6 !important;
+}
+
+html.dark .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+html.dark .text-blue-300 {
+  color: #93c5fd !important;
+}
+
+/* CORREÇÃO PARA O BOTÃO "SELECIONAR TODOS" - TEXTO BRANCO NO DARK MODE */
+html.dark .text-blue-700 {
+  color: #ffffff !important;
+}
+
+html.dark .border-blue-300 {
+  border-color: #a0aec0 !important;
+}
+
+html.dark .hover\:bg-blue-100:hover {
+  background-color: #4a5568 !important;
+}
+
+/* CORREÇÃO PARA CONTORNOS DOS CARDS - MAIS BRANCOS NO DARK MODE */
+html.dark .border-border {
+  border-color: #718096 !important;
+}
+
+html.dark .border-input {
+  border-color: #718096 !important;
+}
+
+/* Aplicação das variáveis CSS customizadas */
+.bg-background {
+  background-color: hsl(var(--background));
+}
+
+/* Garantir que o body tenha fundo branco no modo claro */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Garantir que o html tenha fundo branco no modo claro */
+html {
+  background-color: hsl(var(--background));
+}
+
+/* SOLUÇÃO DEFINITIVA PARA TEXTO NO MODO CLARO - MÁXIMA PRIORIDADE */
+/* Forçar texto preto no modo claro usando seletores específicos */
+html:not(.dark) .disparador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Sobrescrever qualquer outra regra CSS para texto no modo claro */
+html:not(.dark) p.disparador-texto-claro,
+html:not(.dark) h1.disparador-texto-claro,
+html:not(.dark) h2.disparador-texto-claro,
+html:not(.dark) h3.disparador-texto-claro,
+html:not(.dark) h4.disparador-texto-claro,
+html:not(.dark) h5.disparador-texto-claro,
+html:not(.dark) h6.disparador-texto-claro,
+html:not(.dark) span.disparador-texto-claro,
+html:not(.dark) div.disparador-texto-claro,
+html:not(.dark) label.disparador-texto-claro,
+html:not(.dark) textarea.disparador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+
+/* SOLUÇÃO PARA FUNDO BRANCO NO MODO CLARO - MÁXIMA PRIORIDADE */
+/* Forçar fundo branco no modo claro */
+html:not(.dark) .disparador-fundo-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Sobrescrever qualquer outra regra para fundo branco no modo claro */
+html:not(.dark) textarea.disparador-fundo-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* SOLUÇÃO PARA TEXTO BRANCO NO HOVER E SELEÇÃO - MODO CLARO */
+/* Forçar texto branco no hover e seleção para melhor legibilidade */
+html:not(.dark) .disparador-texto-hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Sobrescrever qualquer outra regra para texto branco no hover e seleção */
+html:not(.dark) h4.disparador-texto-hover,
+html:not(.dark) p.disparador-texto-hover {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* SOLUÇÃO ROBUSTA PARA HOVER NO MODO CLARO */
+/* Aplicar texto branco quando o container pai tem hover:bg-blue-500 */
+html:not(.dark) .hover\:bg-blue-500:hover h4,
+html:not(.dark) .hover\:bg-blue-500:hover p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Aplicar texto branco quando o container pai tem bg-blue-500 (selecionado) */
+html:not(.dark) .bg-blue-500 h4,
+html:not(.dark) .bg-blue-500 p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Garantir que o hover funcione mesmo com classes dinâmicas */
+html:not(.dark) [class*="hover:bg-blue-500"]:hover h4,
+html:not(.dark) [class*="hover:bg-blue-500"]:hover p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Garantir que o modo escuro mantenha suas cores */
+html.dark .disparador-texto-escuro {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  text-fill-color: inherit !important;
+}
+
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+
+.bg-card {
+  background-color: hsl(var(--card));
+}
+
+.text-card-foreground {
+  color: hsl(var(--card-foreground));
+}
+
+.bg-popover {
+  background-color: hsl(var(--popover));
+}
+
+.text-popover-foreground {
+  color: hsl(var(--popover-foreground));
+}
+
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+
+.bg-secondary {
+  background-color: hsl(var(--secondary));
+}
+
+.text-secondary-foreground {
+  color: hsl(var(--secondary-foreground));
+}
+
+.bg-muted {
+  background-color: hsl(var(--muted));
+}
+
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+
+.bg-accent {
+  background-color: hsl(var(--accent));
+}
+
+.text-accent-foreground {
+  color: hsl(var(--accent-foreground));
+}
+
+.bg-destructive {
+  background-color: hsl(var(--destructive));
+}
+
+.text-destructive-foreground {
+  color: hsl(var(--destructive-foreground));
+}
+
+.border-border {
+  border-color: hsl(var(--border));
+}
+
+.border-input {
+  border-color: hsl(var(--input));
+}
+
+.ring-ring {
+  --tw-ring-color: hsl(var(--ring));
+}
+
+/* Animações personalizadas */
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes marquee-vertical {
+  from { transform: translateY(0%); }
+  to { transform: translateY(-100%); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+}
+
+/* Utilitários de texto */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Código inline personalizado para modo escuro */
+html.dark code {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+/* SOLUÇÃO DEFINITIVA PARA CARDS SELECIONADOS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Card Selecionado */
+html:not(.dark) .card-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Modo Claro - Header do Card Selecionado */
+html:not(.dark) .card-header-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* Modo Escuro - Card Selecionado */
+html.dark .card-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(30, 58, 138, 0.3) !important;
+}
+
+/* Modo Escuro - Header do Card Selecionado */
+html.dark .card-header-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  background: rgba(30, 58, 138, 0.4) !important;
+}
+
+/* SOLUÇÃO PARA LISTA DETALHES - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Header de Estatísticas */
+html:not(.dark) .lista-detalhes-header-claro {
+  background: linear-gradient(to right, #eff6ff, #e0e7ff) !important;
+  border-color: #dbeafe !important;
+}
+
+
+/* Modo Escuro - Header de Estatísticas */
+html.dark .lista-detalhes-header-escuro {
+  background: linear-gradient(to right, #1e3a8a, #1e1b4b) !important;
+  border-color: #1e40af !important;
+}
+
+
+/* SOLUÇÃO PARA CONTROLES E DICAS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Área de Controles */
+html:not(.dark) .lista-controles-claro {
+  background: linear-gradient(to right, #eff6ff, #e0e7ff) !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Modo Claro - Área de Dicas */
+html:not(.dark) .lista-dicas-claro {
+  background: linear-gradient(to right, #eff6ff, #f3e8ff) !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Modo Claro - Textos das Dicas */
+html:not(.dark) .lista-dicas-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Escuro - Área de Controles */
+html.dark .lista-controles-escuro {
+  background: linear-gradient(to right, #1e3a8a, #1e1b4b) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Área de Dicas */
+html.dark .lista-dicas-escuro {
+  background: linear-gradient(to right, #1e3a8a, #581c87) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Textos das Dicas */
+html.dark .lista-dicas-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* ============================================== */
+/* TOAST MESSAGES - FORÇAR CORES COM TAILWIND */
+/* ============================================== */
+
+/* Forçar cores dos toasts para funcionar em ambos os modos */
+.bg-green-50 {
+  background-color: #f0fdf4 !important;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+.border-green-200 {
+  border-color: #bbf7d0 !important;
+}
+
+.border-red-200 {
+  border-color: #fecaca !important;
+}
+
+.text-black {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* ============================================== */
+/* ANIMAÇÕES SUAVES PARA TOAST */
+/* ============================================== */
+
+/* Melhorar as animações padrão do Radix */
+[data-state="open"] {
+  animation: slideIn 0.3s ease-out;
+}
+
+[data-state="closed"] {
+  animation: slideOut 0.2s ease-in;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+/* ============================================== */
+/* BOTÃO SALVAR MENSAGEM - SEPARAÇÃO DE MODO CLARO/ESCURO */
+/* ============================================== */
+
+/* Modo Claro - Botão Salvando */
+html:not(.dark) .btn-salvando-claro {
+  background-color: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .btn-salvando-claro * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Escuro - Botão Salvando */
+html.dark .btn-salvando-escuro {
+  background-color: rgba(20, 83, 45, 0.2) !important;
+  border-color: #166534 !important;
+  color: #bbf7d0 !important;
+}
+
+html.dark .btn-salvando-escuro * {
+  color: #bbf7d0 !important;
+  -webkit-text-fill-color: #bbf7d0 !important;
+  text-fill-color: #bbf7d0 !important;
+}
+
+/* ============================================== */
+/* WHATSAPP CONNECTION - FORÇAR CORES CORRETAS */
+/* ============================================== */
+
+/* Modo Claro - Texto do WhatsApp */
+html:not(.dark) .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .text-gray-800 {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html:not(.dark) .text-gray-700 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Botão Desconectar */
+html:not(.dark) .text-red-700 {
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+html:not(.dark) .border-red-300 {
+  border-color: #fca5a5 !important;
+}
+
+html:not(.dark) .hover\:text-red-800:hover {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+
+/* Modo Escuro - Manter cores verdes */
+html.dark .text-green-200 {
+  color: #bbf7d0 !important;
+  -webkit-text-fill-color: #bbf7d0 !important;
+  text-fill-color: #bbf7d0 !important;
+}
+
+html.dark .text-green-300 {
+  color: #86efac !important;
+  -webkit-text-fill-color: #86efac !important;
+  text-fill-color: #86efac !important;
+}
+
+html.dark .text-green-400 {
+  color: #4ade80 !important;
+  -webkit-text-fill-color: #4ade80 !important;
+  text-fill-color: #4ade80 !important;
+}
+
+/* ============================================== */
+/* TOAST MESSAGES - WHATSAPP - MELHOR CONTRASTE */
+/* ============================================== */
+
+/* Modo Claro - Toast de Sucesso (Verde) */
+html:not(.dark) .bg-green-50 {
+  background-color: #f0fdf4 !important;
+}
+
+html:not(.dark) .border-green-200 {
+  border-color: #bbf7d0 !important;
+}
+
+html:not(.dark) .text-green-800 {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+html:not(.dark) .text-green-700 {
+  color: #15803d !important;
+  -webkit-text-fill-color: #15803d !important;
+  text-fill-color: #15803d !important;
+}
+
+/* Modo Claro - Toast de Informação (Azul) */
+html:not(.dark) .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) .border-blue-200 {
+  border-color: #bfdbfe !important;
+}
+
+html:not(.dark) .text-blue-800 {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html:not(.dark) .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Toast de Aviso (Âmbar) */
+html:not(.dark) .bg-amber-50 {
+  background-color: #fffbeb !important;
+}
+
+html:not(.dark) .border-amber-200 {
+  border-color: #fed7aa !important;
+}
+
+html:not(.dark) .text-amber-800 {
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  text-fill-color: #92400e !important;
+}
+
+html:not(.dark) .text-amber-700 {
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+  text-fill-color: #b45309 !important;
+}
+
+/* Modo Claro - Toast de Erro (Vermelho) */
+html:not(.dark) .bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+html:not(.dark) .border-red-200 {
+  border-color: #fecaca !important;
+}
+
+html:not(.dark) .text-red-800 {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+
+html:not(.dark) .text-red-700 {
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-green-50 {
+  background-color: #052e16 !important;
+}
+
+html.dark .bg-blue-50 {
+  background-color: #1e3a8a !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: #451a03 !important;
+}
+
+html.dark .bg-red-50 {
+  background-color: #450a0a !important;
+}
+
+html.dark .border-green-200 {
+  border-color: #166534 !important;
+}
+
+html.dark .border-blue-200 {
+  border-color: #1e40af !important;
+}
+
+html.dark .border-amber-200 {
+  border-color: #92400e !important;
+}
+
+html.dark .border-red-200 {
+  border-color: #991b1b !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - THEME SELECTOR - MODO CLARO */
+/* ============================================== */
+
+/* Modo Claro - Dropdown Menu */
+html:not(.dark) .bg-popover {
+  background-color: #ffffff !important;
+}
+
+html:not(.dark) .text-popover-foreground {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Dropdown Menu Items */
+html:not(.dark) .hover\:bg-gray-100:hover {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) .focus\:bg-gray-100:focus {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+html:not(.dark) .text-blue-300 {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-popover {
+  background-color: #1f2937 !important;
+}
+
+html.dark .text-popover-foreground {
+  color: #f9fafb !important;
+  -webkit-text-fill-color: #f9fafb !important;
+  text-fill-color: #f9fafb !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - FORÇAR CORES ESPECÍFICAS */
+/* ============================================== */
+
+/* Modo Claro - Forçar fundo branco no dropdown */
+html:not(.dark) [data-radix-menu-content] {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Forçar texto preto nos itens */
+html:not(.dark) [data-radix-menu-content] .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Forçar hover cinza claro */
+html:not(.dark) [data-radix-menu-content] .hover\:bg-gray-100:hover {
+  background-color: #f3f4f6 !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .hover\:bg-gray-50:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Modo Claro - Forçar item selecionado azul claro */
+html:not(.dark) [data-radix-menu-content] .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-blue-700 {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Forçar ícones com cores corretas */
+html:not(.dark) [data-radix-menu-content] .text-yellow-500 {
+  color: #eab308 !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+html:not(.dark) [data-radix-menu-content] .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Modo Claro - Forçar indicador azul */
+html:not(.dark) [data-radix-menu-content] .bg-blue-600 {
+  background-color: #2563eb !important;
+}
+
+/* ============================================== */
+/* DROPDOWN MENU - SELETORES MAIS ESPECÍFICOS */
+/* ============================================== */
+
+/* Modo Claro - Forçar todas as cores do dropdown */
+html:not(.dark) div[data-radix-menu-content] {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #000000 !important;
+}
+
+/* Modo Claro - Forçar cores dos itens do menu */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"] {
+  color: #000000 !important;
+}
+
+/* Modo Claro - Forçar hover dos itens */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"]:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Modo Claro - Forçar item selecionado */
+html:not(.dark) div[data-radix-menu-content] div[role="menuitem"].bg-blue-50 {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+}
+
+/* Modo Claro - Forçar texto dos spans */
+html:not(.dark) div[data-radix-menu-content] span {
+  color: inherit !important;
+}
+
+/* Modo Claro - Forçar ícones específicos */
+html:not(.dark) div[data-radix-menu-content] .lucide-sun {
+  color: #eab308 !important;
+}
+
+html:not(.dark) div[data-radix-menu-content] .lucide-moon {
+  color: #60a5fa !important;
+}
+
+html:not(.dark) div[data-radix-menu-content] .lucide-monitor {
+  color: #4b5563 !important;
+}
+
+/* ============================================== */
+/* SUCCESS MODAL - MELHOR CONTRASTE */
+/* ============================================== */
+
+/* Modo Claro - Success Modal */
+html:not(.dark) .bg-white {
+  background-color: #ffffff !important;
+}
+
+html:not(.dark) .text-gray-900 {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .text-gray-600 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .text-gray-700 {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .text-gray-300 {
+  color: #d1d5db !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* Modo Claro - Success Modal Stats */
+html:not(.dark) .text-blue-600 {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-fill-color: #2563eb !important;
+}
+
+html:not(.dark) .text-blue-400 {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+html:not(.dark) .text-blue-300 {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+html:not(.dark) .text-purple-600 {
+  color: #9333ea !important;
+  -webkit-text-fill-color: #9333ea !important;
+  text-fill-color: #9333ea !important;
+}
+
+html:not(.dark) .text-purple-400 {
+  color: #a855f7 !important;
+  -webkit-text-fill-color: #a855f7 !important;
+  text-fill-color: #a855f7 !important;
+}
+
+html:not(.dark) .text-purple-300 {
+  color: #c084fc !important;
+  -webkit-text-fill-color: #c084fc !important;
+  text-fill-color: #c084fc !important;
+}
+
+html:not(.dark) .text-green-700 {
+  color: #15803d !important;
+  -webkit-text-fill-color: #15803d !important;
+  text-fill-color: #15803d !important;
+}
+
+html:not(.dark) .text-green-300 {
+  color: #86efac !important;
+  -webkit-text-fill-color: #86efac !important;
+  text-fill-color: #86efac !important;
+}
+
+/* Modo Escuro - Manter cores existentes */
+html.dark .bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+html.dark .text-gray-100 {
+  color: #f3f4f6 !important;
+  -webkit-text-fill-color: #f3f4f6 !important;
+  text-fill-color: #f3f4f6 !important;
+}
+
+html.dark .text-gray-300 {
+  color: #d1d5db !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA GERADOR DE LEADS - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA GERADOR DE LEADS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .gerador-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Cards Principais */
+html:not(.dark) .gerador-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .gerador-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Títulos */
+html:not(.dark) .gerador-titulo-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Modo Claro - Descrições */
+html:not(.dark) .gerador-descricao-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Inputs e Selects */
+html:not(.dark) .gerador-input-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .gerador-input-claro:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Claro - Botões */
+html:not(.dark) .gerador-botao-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html:not(.dark) .gerador-botao-claro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Botões desabilitados - sem hover */
+html:not(.dark) .gerador-botao-claro:disabled,
+html:not(.dark) .gerador-botao-claro:disabled:hover {
+  background: #d1d5db !important;
+  color: #6b7280 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Modo Claro - Cards de Leads */
+html:not(.dark) .gerador-lead-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-lead-card-claro:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Cards Selecionados */
+html:not(.dark) .gerador-lead-selecionado-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Header dos Cards de Leads */
+html:not(.dark) .gerador-lead-header-claro {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-lead-header-selecionado-claro {
+  background-color: #eff6ff !important;
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Modo Claro - Filtros */
+html:not(.dark) .gerador-filtros-claro {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Filtros Pro */
+html:not(.dark) .gerador-filtros-pro-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+html:not(.dark) .gerador-filtros-pro-claro .gerador-texto-claro {
+  color: #374151 !important;
+}
+
+html:not(.dark) .gerador-filtros-pro-claro .gerador-texto-muted-claro {
+  color: #6b7280 !important;
+}
+
+/* Modo Claro - Paginação */
+html:not(.dark) .gerador-paginacao-claro {
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .gerador-paginacao-claro .bg-muted\/50 {
+  background-color: #f1f5f9 !important;
+  background: #f1f5f9 !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .gerador-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Cards Principais */
+html.dark .gerador-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .gerador-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Títulos */
+html.dark .gerador-titulo-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Descrições */
+html.dark .gerador-descricao-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Modo Escuro - Inputs e Selects */
+html.dark .gerador-input-escuro {
+  background-color: hsl(var(--input)) !important;
+  background: hsl(var(--input)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .gerador-input-escuro:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Modo Escuro - Botões */
+html.dark .gerador-botao-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html.dark .gerador-botao-escuro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+html.dark .gerador-botao-escuro:disabled,
+html.dark .gerador-botao-escuro:disabled:hover {
+  background: #374151 !important;
+  color: #9ca3af !important;
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Modo Escuro - Cards de Leads */
+html.dark .gerador-lead-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .gerador-lead-card-escuro:hover {
+  border-color: #475569 !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Cards Selecionados */
+html.dark .gerador-lead-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(30, 58, 138, 0.3) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+/* Modo Escuro - Header dos Cards de Leads */
+html.dark .gerador-lead-header-escuro {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+html.dark .gerador-lead-header-selecionado-escuro {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  background: rgba(30, 58, 138, 0.4) !important;
+  border-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Filtros */
+html.dark .gerador-filtros-escuro {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Modo Escuro - Filtros Pro */
+html.dark .gerador-filtros-pro-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .gerador-filtros-pro-escuro .gerador-texto-claro {
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .gerador-filtros-pro-escuro .gerador-texto-muted-claro {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Claro - Filtros Avançados */
+html:not(.dark) .gerador-filtros-avancados-claro {
+  background-color: #f9fafb !important;
+  background: #f9fafb !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Modo Escuro - Filtros Avançados */
+html.dark .gerador-filtros-avancados-escuro {
+  background-color: #111827 !important;
+  background: #111827 !important;
+  border-color: #374151 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Modo Claro - Divisor */
+html:not(.dark) .gerador-divisor-claro {
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Escuro - Divisor */
+html.dark .gerador-divisor-escuro {
+  border-color: #374151 !important;
+}
+
+/* Modo Claro - Aviso de Duplicados */
+html:not(.dark) .gerador-aviso-duplicados-claro {
+  background-color: #fef3c7 !important;
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 1px 3px 0 rgba(245, 158, 11, 0.1), 0 1px 2px 0 rgba(245, 158, 11, 0.06) !important;
+}
+
+html:not(.dark) .gerador-aviso-titulo-claro {
+  color: #92400e !important;
+}
+
+html:not(.dark) .gerador-aviso-texto-claro {
+  color: #b45309 !important;
+}
+
+html:not(.dark) .gerador-aviso-phone-claro {
+  color: #d97706 !important;
+}
+
+/* Modo Escuro - Aviso de Duplicados */
+html.dark .gerador-aviso-duplicados-escuro {
+  background-color: #451a03 !important;
+  background: #451a03 !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 1px 3px 0 rgba(217, 119, 6, 0.3), 0 1px 2px 0 rgba(217, 119, 6, 0.2) !important;
+}
+
+html.dark .gerador-aviso-titulo-escuro {
+  color: #fbbf24 !important;
+}
+
+html.dark .gerador-aviso-texto-escuro {
+  color: #f59e0b !important;
+}
+
+html.dark .gerador-aviso-phone-escuro {
+  color: #fbbf24 !important;
+}
+
+/* Modo Claro - Botão Selecionar Todos */
+html:not(.dark) .gerador-botao-selecionar-todos-claro {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .gerador-botao-selecionar-todos-claro:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
+  border-color: #1e40af !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Modo Escuro - Botão Selecionar Todos */
+html.dark .gerador-botao-selecionar-todos-escuro {
+  background: linear-gradient(to right, #60a5fa, #3b82f6) !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3) !important;
+}
+
+html.dark .gerador-botao-selecionar-todos-escuro:hover {
+  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 6px 16px rgba(96, 165, 250, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Modo Claro - Seleção de Listas */
+html:not(.dark) .gerador-lista-select-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not(.dark) .gerador-lista-item-claro {
+  background-color: #ffffff !important;
+  color: #374151 !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+
+html:not(.dark) .gerador-lista-item-hover-claro {
+  background-color: #f8fafc !important;
+  color: #1f2937 !important;
+}
+
+/* Modo Escuro - Seleção de Listas */
+html.dark .gerador-lista-select-escuro {
+  background-color: #1f2937 !important;
+  background: #1f2937 !important;
+  border-color: #374151 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+html.dark .gerador-lista-item-escuro {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+html.dark .gerador-lista-item-hover-escuro {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+/* Modo Escuro - Paginação */
+html.dark .gerador-paginacao-escuro {
+  border-color: hsl(var(--border)) !important;
+}
+
+html.dark .gerador-paginacao-escuro .bg-muted\/50 {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA MODAL DE SUCESSO - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA MODAL DE SUCESSO - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Modal Background */
+html:not(.dark) .modal-sucesso-bg-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Modo Claro - Background Decoration */
+html:not(.dark) .modal-sucesso-decoration-claro {
+  background: linear-gradient(to bottom right, #f0fdf4, #eff6ff, #faf5ff) !important;
+}
+
+/* Modo Claro - Glow Effect */
+html:not(.dark) .modal-sucesso-glow-claro {
+  background: linear-gradient(to bottom right, #22c55e, #3b82f6) !important;
+  opacity: 0.15 !important;
+}
+
+/* Modo Claro - Success Icon */
+html:not(.dark) .modal-sucesso-icon-claro {
+  background: linear-gradient(to bottom right, #22c55e, #10b981) !important;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3) !important;
+}
+
+/* Modo Claro - Title */
+html:not(.dark) .modal-sucesso-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Description */
+html:not(.dark) .modal-sucesso-descricao-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Stats Container */
+html:not(.dark) .modal-sucesso-stats-claro {
+  background: linear-gradient(to right, #eff6ff, #faf5ff) !important;
+  border-color: #dbeafe !important;
+}
+
+/* Modo Claro - Stats Icons */
+html:not(.dark) .modal-sucesso-stats-icon-claro {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-icon-purple-claro {
+  background-color: #e9d5ff !important;
+  background: #e9d5ff !important;
+}
+
+/* Modo Claro - Stats Numbers */
+html:not(.dark) .modal-sucesso-stats-numero-claro {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-numero-purple-claro {
+  color: #7c3aed !important;
+  -webkit-text-fill-color: #7c3aed !important;
+  text-fill-color: #7c3aed !important;
+}
+
+/* Modo Claro - Stats Labels */
+html:not(.dark) .modal-sucesso-stats-label-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html:not(.dark) .modal-sucesso-stats-label-purple-claro {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  text-fill-color: #6b21a8 !important;
+}
+
+/* Modo Claro - Primary Button */
+html:not(.dark) .modal-sucesso-botao-principal-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .modal-sucesso-botao-principal-claro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Claro - Secondary Button */
+html:not(.dark) .modal-sucesso-botao-secundario-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+}
+
+html:not(.dark) .modal-sucesso-botao-secundario-claro:hover {
+  background-color: #f9fafb !important;
+  background: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+/* Modo Claro - Success Message */
+html:not(.dark) .modal-sucesso-mensagem-claro {
+  background-color: #f0fdf4 !important;
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+}
+
+html:not(.dark) .modal-sucesso-mensagem-texto-claro {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+/* Modo Escuro - Modal Background */
+html.dark .modal-sucesso-bg-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Modo Escuro - Background Decoration */
+html.dark .modal-sucesso-decoration-escuro {
+  background: linear-gradient(to bottom right, #064e3b, #1e3a8a, #581c87) !important;
+}
+
+/* Modo Escuro - Glow Effect */
+html.dark .modal-sucesso-glow-escuro {
+  background: linear-gradient(to bottom right, #22c55e, #3b82f6) !important;
+  opacity: 0.2 !important;
+}
+
+/* Modo Escuro - Success Icon */
+html.dark .modal-sucesso-icon-escuro {
+  background: linear-gradient(to bottom right, #22c55e, #10b981) !important;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4) !important;
+}
+
+/* Modo Escuro - Title */
+html.dark .modal-sucesso-titulo-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Description */
+html.dark .modal-sucesso-descricao-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Stats Container */
+html.dark .modal-sucesso-stats-escuro {
+  background: linear-gradient(to right, #1e3a8a, #581c87) !important;
+  border-color: #1e40af !important;
+}
+
+/* Modo Escuro - Stats Icons */
+html.dark .modal-sucesso-stats-icon-escuro {
+  background-color: #1e40af !important;
+  background: #1e40af !important;
+}
+
+html.dark .modal-sucesso-stats-icon-purple-escuro {
+  background-color: #7c3aed !important;
+  background: #7c3aed !important;
+}
+
+/* Modo Escuro - Stats Numbers */
+html.dark .modal-sucesso-stats-numero-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+html.dark .modal-sucesso-stats-numero-purple-escuro {
+  color: #a78bfa !important;
+  -webkit-text-fill-color: #a78bfa !important;
+  text-fill-color: #a78bfa !important;
+}
+
+/* Modo Escuro - Stats Labels */
+html.dark .modal-sucesso-stats-label-escuro {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+html.dark .modal-sucesso-stats-label-purple-escuro {
+  color: #c4b5fd !important;
+  -webkit-text-fill-color: #c4b5fd !important;
+  text-fill-color: #c4b5fd !important;
+}
+
+/* Modo Escuro - Primary Button */
+html.dark .modal-sucesso-botao-principal-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .modal-sucesso-botao-principal-escuro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Secondary Button */
+html.dark .modal-sucesso-botao-secundario-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .modal-sucesso-botao-secundario-escuro:hover {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  border-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Success Message */
+html.dark .modal-sucesso-mensagem-escuro {
+  background-color: #064e3b !important;
+  background: #064e3b !important;
+  border-color: #059669 !important;
+}
+
+html.dark .modal-sucesso-mensagem-texto-escuro {
+  color: #6ee7b7 !important;
+  -webkit-text-fill-color: #6ee7b7 !important;
+  text-fill-color: #6ee7b7 !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA DASHBOARD - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA DASHBOARD - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .dashboard-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Header de Boas-vindas */
+html:not(.dark) .dashboard-header-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #1e40af) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Cards de Navegação */
+html:not(.dark) .dashboard-nav-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Botões de Navegação */
+html:not(.dark) .dashboard-nav-button-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .dashboard-nav-button-claro:hover {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+}
+
+html:not(.dark) .dashboard-nav-button-active-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Claro - Cards de Ação Rápida */
+html:not(.dark) .dashboard-action-card-claro {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html:not(.dark) .dashboard-action-card-purple-claro {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modo Claro - Cards de Informação */
+html:not(.dark) .dashboard-info-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Títulos dos Cards */
+html:not(.dark) .dashboard-card-title-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .dashboard-card-text-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .dashboard-card-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Badges e Indicadores */
+html:not(.dark) .dashboard-badge-claro {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .dashboard-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Header de Boas-vindas */
+html.dark .dashboard-header-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #1e40af) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Cards de Navegação */
+html.dark .dashboard-nav-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+}
+
+/* ===================================================== */
+/* HEADER DO DISPARADOR - CORES ÚNICAS (AZUL-ROXO) */
+/* ===================================================== */
+
+/* Modo Claro - Header do Disparador */
+html:not(.dark) .dispatcher-header-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Escuro - Header do Disparador */
+html.dark .dispatcher-header-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* ===================================================== */
+/* GRADIENTE DE TEXTO - CAMPAIGN WIZARD */
+/* ===================================================== */
+
+/* Gradiente de texto para títulos */
+.campaign-title-gradient {
+  background: linear-gradient(to right, #2563eb, #9333ea, #1d4ed8) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Modo escuro - texto branco */
+html.dark .campaign-title-gradient {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+  color: #ffffff !important;
+}
+
+/* ===================================================== */
+/* BADGE IGNORADOS - ESTILOS SEPARADOS */
+/* ===================================================== */
+
+/* Badge Ignorados - Modo Claro */
+.badge-ignorados {
+  color: #000000 !important;
+  background-color: #fef3c7 !important;
+  border-color: #f59e0b !important;
+}
+
+/* Badge Ignorados - Modo Escuro */
+html.dark .badge-ignorados {
+  color: #fdba74 !important;
+  background-color: rgba(154, 52, 18, 0.3) !important;
+  border-color: #9a3412 !important;
+}
+
+/* ===================================================== */
+/* LISTA SELECTION - ESTILOS MELHORADOS */
+/* ===================================================== */
+
+/* Títulos das seções - Modo Claro */
+.list-section-title {
+  background: linear-gradient(to right, #2563eb, #9333ea, #1d4ed8) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Títulos das seções - Modo Escuro */
+html.dark .list-section-title {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+  color: #ffffff !important;
+}
+
+/* Badges de contagem - Modo Claro */
+.list-count-badge {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Badges de contagem - Modo Escuro */
+html.dark .list-count-badge {
+  background: linear-gradient(to right, #1e40af, #7c3aed) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Cards de lista - Modo Claro */
+.list-card-improved {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Cards de lista - Modo Escuro */
+html.dark .list-card-improved {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border: 2px solid #334155 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Cards selecionados - Modo Claro */
+.list-card-selected-improved {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 2px solid #3b82f6 !important;
+  box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.3), 0 4px 6px -1px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Cards selecionados - Modo Escuro */
+html.dark .list-card-selected-improved {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%) !important;
+  border: 2px solid #60a5fa !important;
+  box-shadow: 0 8px 25px -5px rgba(96, 165, 250, 0.3), 0 4px 6px -1px rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Cards ignorados - Modo Claro */
+.list-card-ignored-improved {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2), 0 2px 4px -1px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Cards ignorados - Modo Escuro */
+html.dark .list-card-ignored-improved {
+  background: linear-gradient(135deg, #92400e 0%, #b45309 100%) !important;
+  border: 2px solid #fbbf24 !important;
+  box-shadow: 0 4px 6px -1px rgba(251, 191, 36, 0.2), 0 2px 4px -1px rgba(251, 191, 36, 0.1) !important;
+}
+
+/* Estados vazios - Modo Claro */
+.empty-state-improved {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  border: 2px dashed #cbd5e1 !important;
+}
+
+/* Estados vazios - Modo Escuro */
+html.dark .empty-state-improved {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important;
+  border: 2px dashed #475569 !important;
+}
+
+
+/* Modo Escuro - Botões de Navegação */
+html.dark .dashboard-nav-button-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+html.dark .dashboard-nav-button-escuro:hover {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+}
+
+html.dark .dashboard-nav-button-active-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Modo Escuro - Cards de Ação Rápida */
+html.dark .dashboard-action-card-escuro {
+  background: linear-gradient(to right, #10b981, #3b82f6) !important;
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .dashboard-action-card-purple-escuro {
+  background: linear-gradient(to right, #8b5cf6, #ec4899) !important;
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modo Escuro - Cards de Informação */
+html.dark .dashboard-info-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Modo Escuro - Títulos dos Cards */
+html.dark .dashboard-card-title-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .dashboard-card-text-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .dashboard-card-muted-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Badges e Indicadores */
+html.dark .dashboard-badge-escuro {
+  background-color: #1e40af !important;
+  background: #1e40af !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA PÁGINA DE LISTA - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA PÁGINA DE LISTA - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .lista-bg-claro {
+  background: linear-gradient(to bottom right, #f8fafc, #e0f2fe, #e0e7ff) !important;
+}
+
+/* Modo Claro - Header da Lista */
+html:not(.dark) .lista-header-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Título da Lista */
+html:not(.dark) .lista-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos da Lista */
+html:not(.dark) .lista-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .lista-texto-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Cards de Estatísticas */
+html:not(.dark) .lista-stats-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Botões de Ação */
+html:not(.dark) .lista-btn-export-claro {
+  background: linear-gradient(to right, #10b981, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+html:not(.dark) .lista-btn-export-claro:hover {
+  background: linear-gradient(to right, #059669, #047857) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+html:not(.dark) .lista-btn-share-claro {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+html:not(.dark) .lista-btn-share-claro:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+html:not(.dark) .lista-btn-secondary-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .lista-btn-secondary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Cards de Dicas */
+html:not(.dark) .lista-dicas-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .lista-dicas-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .lista-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Header da Lista */
+html.dark .lista-header-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Modo Escuro - Título da Lista */
+html.dark .lista-titulo-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Textos da Lista */
+html.dark .lista-texto-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .lista-texto-muted-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Cards de Estatísticas */
+html.dark .lista-stats-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Modo Escuro - Botões de Ação */
+html.dark .lista-btn-export-escuro {
+  background: linear-gradient(to right, #10b981, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+}
+
+html.dark .lista-btn-export-escuro:hover {
+  background: linear-gradient(to right, #059669, #047857) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+}
+
+html.dark .lista-btn-share-escuro {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+html.dark .lista-btn-share-escuro:hover {
+  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+html.dark .lista-btn-secondary-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+html.dark .lista-btn-secondary-escuro:hover {
+  background-color: hsl(var(--muted)) !important;
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Cards de Dicas */
+html.dark .lista-dicas-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .lista-dicas-texto-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA CARDS DE LISTAS - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA CARDS DE LISTAS - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Cards de Listas */
+html:not(.dark) .lista-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 2px solid #e5e7eb !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+html:not(.dark) .lista-card-claro:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  border-color: #d1d5db !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Claro - Título da Lista */
+html:not(.dark) .lista-card-titulo-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Textos da Lista */
+html:not(.dark) .lista-card-texto-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Textos Secundários */
+html:not(.dark) .lista-card-muted-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+/* Modo Claro - Botões da Lista */
+html:not(.dark) .lista-card-btn-primary-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .lista-card-btn-primary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+html:not(.dark) .lista-card-btn-secondary-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html:not(.dark) .lista-card-btn-secondary-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html:not(.dark) .lista-card-btn-danger-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #dc2626 !important;
+  -webkit-text-fill-color: #dc2626 !important;
+  text-fill-color: #dc2626 !important;
+}
+
+html:not(.dark) .lista-card-btn-danger-claro:hover {
+  background-color: #fef2f2 !important;
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  -webkit-text-fill-color: #b91c1c !important;
+  text-fill-color: #b91c1c !important;
+}
+
+/* Modo Escuro - Cards de Listas */
+html.dark .lista-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .lista-card-escuro:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+  border-color: #475569 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Título da Lista */
+html.dark .lista-card-titulo-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Modo Escuro - Textos da Lista */
+html.dark .lista-card-texto-escuro {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+/* Modo Escuro - Textos Secundários */
+html.dark .lista-card-muted-escuro {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  text-fill-color: #94a3b8 !important;
+}
+
+/* Modo Escuro - Botões da Lista */
+html.dark .lista-card-btn-primary-escuro {
+  background-color: #334155 !important;
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+html.dark .lista-card-btn-primary-escuro:hover {
+  background-color: #475569 !important;
+  background: #475569 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .lista-card-btn-secondary-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  text-fill-color: #94a3b8 !important;
+}
+
+html.dark .lista-card-btn-secondary-escuro:hover {
+  background-color: #334155 !important;
+  background: #334155 !important;
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+html.dark .lista-card-btn-danger-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #f87171 !important;
+  -webkit-text-fill-color: #f87171 !important;
+  text-fill-color: #f87171 !important;
+}
+
+html.dark .lista-card-btn-danger-escuro:hover {
+  background-color: #7f1d1d !important;
+  background: #7f1d1d !important;
+  color: #fca5a5 !important;
+  -webkit-text-fill-color: #fca5a5 !important;
+  text-fill-color: #fca5a5 !important;
+}
+
+/* CONTADOR DE CARACTERES - MELHOR CONTRASTE */
+html:not(.dark) .bg-green-100 {
+  background-color: #dcfce7 !important;
+}
+
+html:not(.dark) .text-green-800 {
+  color: #166534 !important;
+  -webkit-text-fill-color: #166534 !important;
+  text-fill-color: #166534 !important;
+}
+
+html:not(.dark) .bg-yellow-100 {
+  background-color: #fef3c7 !important;
+}
+
+html:not(.dark) .text-yellow-800 {
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  text-fill-color: #92400e !important;
+}
+
+html:not(.dark) .bg-red-100 {
+  background-color: #fee2e2 !important;
+}
+
+html:not(.dark) .text-red-800 {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  text-fill-color: #991b1b !important;
+}
+
+/* ===== CLASSES ESPECÍFICAS PARA CAMPAIGN WIZARD - SEPARAÇÃO COMPLETA DE MODOS ===== */
+
+/* SOLUÇÃO PARA CAMPAIGN WIZARD - SEPARAÇÃO COMPLETA DE MODOS */
+/* Modo Claro - Background Principal */
+html:not(.dark) .campaign-wizard-bg-claro {
+  background: #f8fafc !important;
+}
+
+/* Modo Claro - Header da Campanha */
+html:not(.dark) .campaign-wizard-header-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .campaign-wizard-header-claro .campaign-wizard-header-icon-claro {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+html:not(.dark) .campaign-wizard-header-claro .campaign-wizard-header-text-claro {
+  color: #ffffff !important;
+}
+
+html:not(.dark) .campaign-wizard-header-claro .campaign-wizard-header-badge-claro {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .campaign-wizard-header-claro .campaign-wizard-header-button-claro {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .campaign-wizard-header-claro .campaign-wizard-header-button-claro:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Modo Claro - Cards Principais */
+html:not(.dark) .campaign-wizard-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Textos dos Cards */
+html:not(.dark) .campaign-wizard-texto-claro {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  text-fill-color: #000000 !important;
+}
+
+/* Modo Claro - Títulos */
+html:not(.dark) .campaign-wizard-titulo-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Modo Claro - Descrições */
+html:not(.dark) .campaign-wizard-descricao-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+/* Modo Claro - Inputs e Selects */
+html:not(.dark) .campaign-wizard-input-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #000000 !important;
+}
+
+html:not(.dark) .campaign-wizard-input-claro:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Claro - Botões */
+html:not(.dark) .campaign-wizard-botao-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html:not(.dark) .campaign-wizard-botao-claro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Claro - Cards de Lista */
+html:not(.dark) .campaign-wizard-lista-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .campaign-wizard-lista-card-claro:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Cards Selecionados */
+html:not(.dark) .campaign-wizard-lista-selecionada-claro {
+  background-color: #eff6ff !important;
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Header dos Cards */
+html:not(.dark) .campaign-wizard-header-claro {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Step Indicator */
+html:not(.dark) .campaign-wizard-step-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Step Ativo */
+html:not(.dark) .campaign-wizard-step-ativo-claro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Claro - Step Completo */
+html:not(.dark) .campaign-wizard-step-completo-claro {
+  background-color: #10b981 !important;
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Modo Claro - Preview de Leads */
+html:not(.dark) .campaign-wizard-preview-claro {
+  background-color: #f9fafb !important;
+  background: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modo Claro - Mensagem de Sucesso */
+html:not(.dark) .campaign-wizard-sucesso-claro {
+  background-color: #f0fdf4 !important;
+  background: #f0fdf4 !important;
+  border-color: #10b981 !important;
+}
+
+/* Modo Claro - Mensagem de Aviso */
+html:not(.dark) .campaign-wizard-aviso-claro {
+  background-color: #fef3c7 !important;
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+}
+
+/* Modo Claro - Mensagem de Erro */
+html:not(.dark) .campaign-wizard-erro-claro {
+  background-color: #fee2e2 !important;
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+}
+
+/* Modo Escuro - Background Principal */
+html.dark .campaign-wizard-bg-escuro {
+  background: linear-gradient(to bottom right, #0f172a, #1e293b, #1e1b4b) !important;
+}
+
+/* Modo Escuro - Header da Campanha */
+html.dark .campaign-wizard-header-escuro {
+  background: linear-gradient(to right, #1e293b, #334155) !important;
+  border-color: #475569 !important;
+}
+
+html.dark .campaign-wizard-header-escuro .campaign-wizard-header-icon-escuro {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+html.dark .campaign-wizard-header-escuro .campaign-wizard-header-text-escuro {
+  color: #ffffff !important;
+}
+
+html.dark .campaign-wizard-header-escuro .campaign-wizard-header-badge-escuro {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-wizard-header-escuro .campaign-wizard-header-button-escuro {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-wizard-header-escuro .campaign-wizard-header-button-escuro:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Modo Escuro - Cards Principais */
+html.dark .campaign-wizard-card-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Textos dos Cards */
+html.dark .campaign-wizard-texto-escuro {
+  color: hsl(var(--foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  text-fill-color: hsl(var(--foreground)) !important;
+}
+
+/* Modo Escuro - Títulos */
+html.dark .campaign-wizard-titulo-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+/* Modo Escuro - Descrições */
+html.dark .campaign-wizard-descricao-escuro {
+  color: hsl(var(--muted-foreground)) !important;
+  -webkit-text-fill-color: hsl(var(--muted-foreground)) !important;
+  text-fill-color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Modo Escuro - Inputs e Selects */
+html.dark .campaign-wizard-input-escuro {
+  background-color: hsl(var(--input)) !important;
+  background: hsl(var(--input)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+html.dark .campaign-wizard-input-escuro:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Modo Escuro - Botões */
+html.dark .campaign-wizard-botao-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+html.dark .campaign-wizard-botao-escuro:hover {
+  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Cards de Lista */
+html.dark .campaign-wizard-lista-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 2px solid #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark .campaign-wizard-lista-card-escuro:hover {
+  border-color: #475569 !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Escuro - Cards Selecionados */
+html.dark .campaign-wizard-lista-selecionada-escuro {
+  background-color: rgba(30, 58, 138, 0.3) !important;
+  background: rgba(30, 58, 138, 0.3) !important;
+  border-color: #60a5fa !important;
+}
+
+/* =====================================================
+   CAMPAIGN MANAGER - CARDS DE CAMPANHA
+   ===================================================== */
+
+/* Modo Claro - Cards de Campanha */
+html:not(.dark) .campaign-manager-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+html:not(.dark) .campaign-manager-card-claro:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Modo Claro - Título da Campanha */
+html:not(.dark) .campaign-manager-title-claro {
+  color: #111827 !important;
+}
+
+html:not(.dark) .campaign-manager-title-claro:hover {
+  color: #3b82f6 !important;
+}
+
+/* Modo Claro - Status Badge */
+html:not(.dark) .campaign-manager-status-claro {
+  color: #374151 !important;
+  background-color: #f3f4f6 !important;
+}
+
+/* Modo Claro - Estatísticas */
+html:not(.dark) .campaign-manager-stats-claro {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+html:not(.dark) .campaign-manager-stats-number-claro {
+  color: #111827 !important;
+}
+
+html:not(.dark) .campaign-manager-stats-label-claro {
+  color: #6b7280 !important;
+}
+
+/* Modo Claro - Data */
+html:not(.dark) .campaign-manager-date-claro {
+  color: #374151 !important;
+}
+
+html:not(.dark) .campaign-manager-date-claro svg {
+  color: #374151 !important;
+}
+
+/* Modo Escuro - Cards de Campanha */
+html.dark .campaign-manager-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+html.dark .campaign-manager-card-escuro:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-2px) !important;
+  border-color: #475569 !important;
+}
+
+/* Modo Escuro - Título da Campanha */
+html.dark .campaign-manager-title-escuro {
+  color: #f8fafc !important;
+}
+
+html.dark .campaign-manager-title-escuro:hover {
+  color: #60a5fa !important;
+}
+
+/* Modo Escuro - Status Badge */
+html.dark .campaign-manager-status-escuro {
+  color: #9ca3af !important;
+  background-color: #334155 !important;
+}
+
+/* Modo Escuro - Estatísticas */
+html.dark .campaign-manager-stats-escuro {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+html.dark .campaign-manager-stats-number-escuro {
+  color: #f8fafc !important;
+}
+
+html.dark .campaign-manager-stats-label-escuro {
+  color: #94a3b8 !important;
+}
+
+/* Modo Escuro - Data */
+html.dark .campaign-manager-date-escuro {
+  color: #9ca3af !important;
+}
+
+html.dark .campaign-manager-date-escuro svg {
+  color: #9ca3af !important;
+}
+
+/* Modo Claro - Ícones dos Botões */
+html:not(.dark) .campaign-manager-button-icon-claro {
+  color: #374151 !important;
+}
+
+html:not(.dark) .campaign-manager-button-icon-claro:hover {
+  color: #1f2937 !important;
+}
+
+/* Modo Escuro - Ícones dos Botões */
+html.dark .campaign-manager-button-icon-escuro {
+  color: #9ca3af !important;
+  background-color: transparent !important;
+}
+
+html.dark .campaign-manager-button-icon-escuro:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* Sobrescrever classes Tailwind específicas do variant="ghost" */
+html.dark .campaign-manager-button-icon-escuro.text-gray-900 {
+  color: #9ca3af !important;
+}
+
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* Sobrescrever TODAS as classes Tailwind do variant="ghost" */
+html.dark button.campaign-manager-button-icon-escuro.text-gray-900 {
+  color: #9ca3af !important;
+}
+
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+html.dark button.campaign-manager-button-icon-escuro.bg-transparent {
+  background-color: transparent !important;
+}
+
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover.bg-transparent {
+  background-color: #374151 !important;
+}
+
+/* FORÇA FILL NONE NO HOVER - Evita ícones ficarem brancos */
+html.dark button.campaign-manager-button-icon-escuro:hover svg,
+html.dark button.campaign-manager-button-icon-escuro:hover path,
+html.dark button.campaign-manager-button-icon-escuro:hover circle,
+html.dark button.campaign-manager-button-icon-escuro:hover rect,
+html.dark button.campaign-manager-button-icon-escuro:hover line {
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Sobrescrever qualquer fill que possa estar sendo aplicado no hover */
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover path {
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* REGRAS DE MÁXIMA ESPECIFICIDADE PARA FILL NONE */
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover svg,
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover path,
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover * {
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Força fill none para todos os elementos SVG no hover */
+html.dark .campaign-manager-button-icon-escuro:hover *[fill],
+html.dark .campaign-manager-button-icon-escuro:hover *[stroke] {
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Força cor dos ícones SVG - sobrescrever classes Tailwind (apenas stroke) */
+html.dark button.campaign-manager-button-icon-escuro.text-gray-900 svg,
+html.dark button.campaign-manager-button-icon-escuro.text-gray-900 path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Força hover específico para botões de ícone - mantém cor original do ícone */
+html.dark .campaign-manager-button-icon-escuro:hover,
+html.dark .campaign-manager-button-icon-escuro:hover * {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+html.dark .campaign-manager-button-icon-escuro:hover svg,
+html.dark .campaign-manager-button-icon-escuro:hover path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Regras de máxima especificidade para botões de ícone */
+html.dark button.campaign-manager-button-icon-escuro:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* =====================================================
+   BOTÕES DE AÇÃO - CARDS DE CAMPANHA
+   ===================================================== */
+
+/* Modo Claro - Botão Editar */
+html:not(.dark) .campaign-action-edit-claro {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+html:not(.dark) .campaign-action-edit-claro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+html:not(.dark) .campaign-action-edit-claro:hover svg {
+  color: #ffffff !important;
+}
+
+/* Modo Claro - Botão Play/Pause */
+html:not(.dark) .campaign-action-play-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+html:not(.dark) .campaign-action-play-claro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+html:not(.dark) .campaign-action-play-claro:hover svg {
+  color: #ffffff !important;
+}
+
+html:not(.dark) .campaign-action-pause-claro {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+html:not(.dark) .campaign-action-pause-claro:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+html:not(.dark) .campaign-action-pause-claro:hover svg {
+  color: #ffffff !important;
+}
+
+/* Modo Escuro - Botão Editar */
+html.dark .campaign-action-edit-escuro {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+html.dark .campaign-action-edit-escuro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+html.dark .campaign-action-edit-escuro:hover svg {
+  color: #ffffff !important;
+}
+
+/* Força hover específico para botões de ação - mantém gradiente azul */
+html.dark .campaign-action-edit-escuro:hover,
+html.dark .campaign-action-edit-escuro:hover * {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-action-edit-escuro:hover svg,
+html.dark .campaign-action-edit-escuro:hover path {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Modo Escuro - Botão Play/Pause */
+html.dark .campaign-action-play-escuro {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(52, 211, 153, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+html.dark .campaign-action-play-escuro:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+html.dark .campaign-action-play-escuro:hover svg {
+  color: #ffffff !important;
+}
+
+/* Força hover específico para botão Play */
+html.dark .campaign-action-play-escuro:hover,
+html.dark .campaign-action-play-escuro:hover * {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html.dark .campaign-action-pause-escuro {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+html.dark .campaign-action-pause-escuro:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+html.dark .campaign-action-pause-escuro:hover svg {
+  color: #ffffff !important;
+}
+
+/* Força hover específico para botão Pause */
+html.dark .campaign-action-pause-escuro:hover,
+html.dark .campaign-action-pause-escuro:hover * {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Regras de força máxima para sobrescrever Tailwind */
+html.dark .campaign-action-edit-escuro:hover,
+html.dark .campaign-action-edit-escuro:hover *,
+html.dark .campaign-action-edit-escuro:hover svg,
+html.dark .campaign-action-edit-escuro:hover path {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html.dark .campaign-action-play-escuro:hover,
+html.dark .campaign-action-play-escuro:hover *,
+html.dark .campaign-action-play-escuro:hover svg,
+html.dark .campaign-action-play-escuro:hover path {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html.dark .campaign-action-pause-escuro:hover,
+html.dark .campaign-action-pause-escuro:hover *,
+html.dark .campaign-action-pause-escuro:hover svg,
+html.dark .campaign-action-pause-escuro:hover path {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Sobrescrever classes Tailwind específicas */
+html.dark .campaign-action-edit-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-action-play-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-action-pause-escuro.hover\:bg-gray-50:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  background-color: transparent !important;
+}
+
+html.dark .campaign-action-play-escuro.hover\:bg-gray-50:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  background-color: transparent !important;
+}
+
+html.dark .campaign-action-pause-escuro.hover\:bg-gray-50:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  background-color: transparent !important;
+}
+
+/* Regras de máxima especificidade para sobrescrever qualquer classe Tailwind */
+html.dark button.campaign-action-edit-escuro:hover,
+html.dark button.campaign-action-edit-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-action-edit-escuro.hover\:bg-transparent:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-action-edit-escuro:hover,
+html.dark button.campaign-action-edit-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-action-edit-escuro.hover\:bg-transparent:hover,
+html.dark button.campaign-action-edit-escuro:hover *,
+html.dark button.campaign-action-edit-escuro:hover svg,
+html.dark button.campaign-action-edit-escuro:hover path {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html.dark button.campaign-action-play-escuro:hover,
+html.dark button.campaign-action-play-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-action-play-escuro.hover\:bg-transparent:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-action-pause-escuro:hover,
+html.dark button.campaign-action-pause-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-action-pause-escuro.hover\:bg-transparent:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   CORREÇÃO FINAL - HOVER DOS BOTÕES DE ÍCONE NO DARK MODE
+   ===================================================== */
+
+/* Regras de máxima especificidade para todos os botões de ícone */
+html.dark button.campaign-manager-button-icon-escuro:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover,
+html.dark .campaign-manager-button-icon-escuro:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-transparent:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* Força cor dos ícones SVG - mantém cor original */
+html.dark button.campaign-manager-button-icon-escuro:hover svg,
+html.dark button.campaign-manager-button-icon-escuro:hover path,
+html.dark .campaign-manager-button-icon-escuro:hover svg,
+html.dark .campaign-manager-button-icon-escuro:hover path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Sobrescrever qualquer classe Tailwind que possa interferir */
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover,
+html.dark button[class*="campaign-manager-button-icon-escuro"].hover\:bg-gray-50:hover,
+html.dark button[class*="campaign-manager-button-icon-escuro"].hover\:bg-transparent:hover {
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* FORÇA MÁXIMA - Sobrescrever TODAS as classes Tailwind possíveis */
+html.dark button.campaign-manager-button-icon-escuro:hover svg,
+html.dark button.campaign-manager-button-icon-escuro:hover path,
+html.dark button.campaign-manager-button-icon-escuro:hover circle,
+html.dark button.campaign-manager-button-icon-escuro:hover rect,
+html.dark button.campaign-manager-button-icon-escuro:hover line,
+html.dark button.campaign-manager-button-icon-escuro:hover polyline,
+html.dark button.campaign-manager-button-icon-escuro:hover polygon,
+html.dark .campaign-manager-button-icon-escuro:hover svg,
+html.dark .campaign-manager-button-icon-escuro:hover path,
+html.dark .campaign-manager-button-icon-escuro:hover circle,
+html.dark .campaign-manager-button-icon-escuro:hover rect,
+html.dark .campaign-manager-button-icon-escuro:hover line,
+html.dark .campaign-manager-button-icon-escuro:hover polyline,
+html.dark .campaign-manager-button-icon-escuro:hover polygon {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* Sobrescrever classes Tailwind específicas com máxima especificidade */
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover path,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+/* REGRAS DE MÁXIMA ESPECIFICIDADE - Mesmo padrão que funcionou para hover */
+html.dark button.campaign-manager-button-icon-escuro:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover,
+html.dark .campaign-manager-button-icon-escuro:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-transparent:hover {
+  background: #374151 !important;
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+/* FORÇA MÁXIMA PARA BOTÕES DE ÍCONE - Mesmo padrão que funcionou */
+html.dark button.campaign-manager-button-icon-escuro:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover,
+html.dark .campaign-manager-button-icon-escuro:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-transparent:hover {
+  background: #374151 !important;
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+}
+
+html.dark button.campaign-manager-button-icon-escuro:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover,
+html.dark .campaign-manager-button-icon-escuro:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover,
+html.dark .campaign-manager-button-icon-escuro.hover\:bg-transparent:hover,
+html.dark button.campaign-manager-button-icon-escuro:hover *,
+html.dark button.campaign-manager-button-icon-escuro:hover svg,
+html.dark button.campaign-manager-button-icon-escuro:hover path,
+html.dark .campaign-manager-button-icon-escuro:hover *,
+html.dark .campaign-manager-button-icon-escuro:hover svg,
+html.dark .campaign-manager-button-icon-escuro:hover path {
+  background: #374151 !important;
+  background-color: #374151 !important;
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+/* REGRAS ADICIONAIS DE FORÇA MÁXIMA PARA ÍCONES */
+html.dark button.campaign-manager-button-icon-escuro:hover svg,
+html.dark button.campaign-manager-button-icon-escuro:hover path,
+html.dark button.campaign-manager-button-icon-escuro:hover circle,
+html.dark button.campaign-manager-button-icon-escuro:hover rect,
+html.dark button.campaign-manager-button-icon-escuro:hover line,
+html.dark .campaign-manager-button-icon-escuro:hover svg,
+html.dark .campaign-manager-button-icon-escuro:hover path,
+html.dark .campaign-manager-button-icon-escuro:hover circle,
+html.dark .campaign-manager-button-icon-escuro:hover rect,
+html.dark .campaign-manager-button-icon-escuro:hover line {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+  stroke-width: 2 !important;
+}
+
+/* FORÇA ABSOLUTA - Seletores de atributo para máxima especificidade */
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover svg[stroke="currentColor"],
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover path[stroke="currentColor"],
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover svg[fill="currentColor"],
+html.dark button[class*="campaign-manager-button-icon-escuro"]:hover path[fill="currentColor"] {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+/* Sobrescrever qualquer classe Tailwind que possa estar aplicando cor branca */
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover svg,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-gray-50:hover path,
+html.dark button.campaign-manager-button-icon-escuro.hover\:bg-transparent:hover path {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+/* Força cor para todos os elementos SVG com máxima especificidade */
+html.dark button.campaign-manager-button-icon-escuro:hover *[stroke],
+html.dark button.campaign-manager-button-icon-escuro:hover *[fill],
+html.dark .campaign-manager-button-icon-escuro:hover *[stroke],
+html.dark .campaign-manager-button-icon-escuro:hover *[fill] {
+  color: #9ca3af !important;
+  fill: none !important;
+  stroke: #9ca3af !important;
+}
+
+/* Modo Escuro - Header dos Cards */
+html.dark .campaign-wizard-header-escuro {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* Modo Escuro - Step Indicator */
+html.dark .campaign-wizard-step-escuro {
+  background-color: hsl(var(--card)) !important;
+  background: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Step Ativo */
+html.dark .campaign-wizard-step-ativo-escuro {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Step Completo */
+html.dark .campaign-wizard-step-completo-escuro {
+  background-color: #10b981 !important;
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Modo Escuro - Preview de Leads */
+html.dark .campaign-wizard-preview-escuro {
+  background-color: #111827 !important;
+  background: #111827 !important;
+  border-color: #374151 !important;
+}
+
+/* Modo Escuro - Mensagem de Sucesso */
+html.dark .campaign-wizard-sucesso-escuro {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: #10b981 !important;
+}
+
+/* Modo Escuro - Mensagem de Aviso */
+html.dark .campaign-wizard-aviso-escuro {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: #f59e0b !important;
+}
+
+/* Modo Escuro - Mensagem de Erro */
+html.dark .campaign-wizard-erro-escuro {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: #ef4444 !important;
+}
+
+/* =====================================================
+   CARDS DE ESTATÍSTICAS - CAMPAIGN STATS
+   ===================================================== */
+
+/* Modo Claro - Cards de Estatísticas */
+html:not(.dark) .stats-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Ícones Primary (Azul) */
+html:not(.dark) .stats-icon-primary-claro {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+}
+
+/* Modo Claro - Ícones Success (Verde) */
+html:not(.dark) .stats-icon-success-claro {
+  background-color: #dcfce7 !important;
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+/* Modo Claro - Ícones Warning (Amarelo) */
+html:not(.dark) .stats-icon-warning-claro {
+  background-color: #fef3c7 !important;
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+/* Modo Claro - Ícones Info (Roxo) */
+html:not(.dark) .stats-icon-info-claro {
+  background-color: #e9d5ff !important;
+  background: #e9d5ff !important;
+  color: #6b21a8 !important;
+}
+
+/* Modo Claro - Textos */
+html:not(.dark) .stats-text-claro {
+  color: #374151 !important;
+}
+
+html:not(.dark) .stats-value-claro {
+  color: #111827 !important;
+}
+
+/* Modo Escuro - Cards de Estatísticas */
+html.dark .stats-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Ícones Primary (Azul) */
+html.dark .stats-icon-primary-escuro {
+  background-color: rgba(30, 64, 175, 0.3) !important;
+  background: rgba(30, 64, 175, 0.3) !important;
+  color: #93c5fd !important;
+}
+
+/* Modo Escuro - Ícones Success (Verde) */
+html.dark .stats-icon-success-escuro {
+  background-color: rgba(22, 101, 52, 0.3) !important;
+  background: rgba(22, 101, 52, 0.3) !important;
+  color: #86efac !important;
+}
+
+/* Modo Escuro - Ícones Warning (Amarelo) */
+html.dark .stats-icon-warning-escuro {
+  background-color: rgba(146, 64, 14, 0.3) !important;
+  background: rgba(146, 64, 14, 0.3) !important;
+  color: #fde047 !important;
+}
+
+/* Modo Escuro - Ícones Info (Roxo) */
+html.dark .stats-icon-info-escuro {
+  background-color: rgba(107, 33, 168, 0.3) !important;
+  background: rgba(107, 33, 168, 0.3) !important;
+  color: #c4b5fd !important;
+}
+
+/* Modo Escuro - Textos */
+html.dark .stats-text-escuro {
+  color: #d1d5db !important;
+}
+
+html.dark .stats-value-escuro {
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   LIST CARD - CARDS DE LISTA
+   ===================================================== */
+
+/* Modo Claro - List Card Normal */
+html:not(.dark) .list-card-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - List Card Selecionado */
+html:not(.dark) .list-card-selected-claro {
+  background-color: #f0fdf4 !important;
+  background: #f0fdf4 !important;
+  border: 2px solid #22c55e !important;
+  box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1) !important;
+}
+
+/* Modo Claro - List Card Ignorado */
+html:not(.dark) .list-card-ignored-claro {
+  background-color: #fffbeb !important;
+  background: #fffbeb !important;
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Modo Claro - Textos List Card */
+html:not(.dark) .list-card-title-claro {
+  color: #111827 !important;
+}
+
+html:not(.dark) .list-card-text-claro {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .list-card-icon-claro {
+  color: #6b7280 !important;
+}
+
+/* Modo Escuro - List Card Normal */
+html.dark .list-card-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - List Card Selecionado */
+html.dark .list-card-selected-escuro {
+  background-color: rgba(34, 197, 94, 0.1) !important;
+  background: rgba(34, 197, 94, 0.1) !important;
+  border: 2px solid #22c55e !important;
+  box-shadow: 0 4px 6px rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Modo Escuro - List Card Ignorado */
+html.dark .list-card-ignored-escuro {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Modo Escuro - Textos List Card */
+html.dark .list-card-title-escuro {
+  color: #ffffff !important;
+}
+
+html.dark .list-card-text-escuro {
+  color: #d1d5db !important;
+}
+
+html.dark .list-card-icon-escuro {
+  color: #d1d5db !important;
+}
+
+/* =====================================================
+   CAMPAIGN SECTIONS - SEÇÕES DA CAMPANHA
+   ===================================================== */
+
+/* Modo Claro - Títulos de Seção */
+html:not(.dark) .campaign-section-title-claro {
+  color: #111827 !important;
+}
+
+html:not(.dark) .campaign-section-text-claro {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .campaign-section-count-claro {
+  color: #9ca3af !important;
+}
+
+/* Badge Elegante - Modo Claro */
+html:not(.dark) .campaign-badge-claro {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Escuro - Títulos de Seção */
+html.dark .campaign-section-title-escuro {
+  color: #ffffff !important;
+}
+
+html.dark .campaign-section-text-escuro {
+  color: #d1d5db !important;
+}
+
+html.dark .campaign-section-count-escuro {
+  color: #9ca3af !important;
+}
+
+/* Badge Elegante - Modo Escuro */
+html.dark .campaign-badge-escuro {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Botão Adicionar Todas - Modo Claro */
+html:not(.dark) .campaign-add-all-button-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .campaign-add-all-button-claro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botão Adicionar Todas - Modo Escuro */
+html.dark .campaign-add-all-button-escuro {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(52, 211, 153, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .campaign-add-all-button-escuro:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 4px 8px rgba(52, 211, 153, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botão Remover Todas - Modo Claro */
+html:not(.dark) .campaign-remove-all-button-claro {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2) !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .campaign-remove-all-button-claro:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Botão Remover Todas - Modo Escuro */
+html.dark .campaign-remove-all-button-escuro {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 2px 4px rgba(248, 113, 113, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .campaign-remove-all-button-escuro:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  box-shadow: 0 4px 8px rgba(248, 113, 113, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* =====================================================
+   EMPTY STATE - ESTADO VAZIO
+   ===================================================== */
+
+/* Modo Claro - Empty State */
+html:not(.dark) .empty-state-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .empty-state-icon-claro {
+  color: #9ca3af !important;
+}
+
+html:not(.dark) .empty-state-text-claro {
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .empty-state-subtext-claro {
+  color: #9ca3af !important;
+}
+
+/* Modo Escuro - Empty State */
+html.dark .empty-state-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+}
+
+html.dark .empty-state-icon-escuro {
+  color: #6b7280 !important;
+}
+
+html.dark .empty-state-text-escuro {
+  color: #d1d5db !important;
+}
+
+html.dark .empty-state-subtext-escuro {
+  color: #9ca3af !important;
+}
+
+/* =====================================================
+   CAMPAIGN INPUTS - INPUTS DA CAMPANHA
+   ===================================================== */
+
+/* Modo Claro - Input Container */
+html:not(.dark) .campaign-input-container-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo Claro - Input Field */
+html:not(.dark) .campaign-input-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+}
+
+html:not(.dark) .campaign-input-claro::placeholder {
+  color: #9ca3af !important;
+}
+
+html:not(.dark) .campaign-input-claro:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Claro - Input Label */
+html:not(.dark) .campaign-input-label-claro {
+  color: #111827 !important;
+}
+
+/* Modo Escuro - Input Container */
+html.dark .campaign-input-container-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modo Escuro - Input Field */
+html.dark .campaign-input-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-input-escuro::placeholder {
+  color: #9ca3af !important;
+}
+
+html.dark .campaign-input-escuro:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Escuro - Input Label */
+html.dark .campaign-input-label-escuro {
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   IGNORED LISTS SECTION - SEÇÃO DE LISTAS IGNORADAS
+   ===================================================== */
+
+/* Modo Claro - Ignored Lists Container */
+html:not(.dark) .ignored-lists-container-claro {
+  background-color: #fffbeb !important;
+  background: #fffbeb !important;
+  border: 1px solid #f59e0b !important;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Modo Claro - Ignored Lists Text */
+html:not(.dark) .ignored-lists-text-claro {
+  color: #92400e !important;
+}
+
+html:not(.dark) .ignored-lists-subtext-claro {
+  color: #b45309 !important;
+}
+
+/* Modo Escuro - Ignored Lists Container */
+html.dark .ignored-lists-container-escuro {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid #f59e0b !important;
+  box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Modo Escuro - Ignored Lists Text */
+html.dark .ignored-lists-text-escuro {
+  color: #fde047 !important;
+}
+
+html.dark .ignored-lists-subtext-escuro {
+  color: #fbbf24 !important;
+}
+
+/* =====================================================
+   CAMPAIGN BUTTONS - BOTÕES DA CAMPANHA
+   ===================================================== */
+
+/* Modo Claro - Botão Outline */
+html:not(.dark) .campaign-button-outline-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid #d1d5db !important;
+  color: #111827 !important;
+}
+
+html:not(.dark) .campaign-button-outline-claro:hover {
+  background-color: #f9fafb !important;
+  background: #f9fafb !important;
+}
+
+html:not(.dark) .campaign-button-outline-claro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Claro - Botão Default */
+html:not(.dark) .campaign-button-default-claro {
+  background-color: #3b82f6 !important;
+  background: #3b82f6 !important;
+  border: 1px solid #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .campaign-button-default-claro:hover {
+  background-color: #2563eb !important;
+  background: #2563eb !important;
+}
+
+html:not(.dark) .campaign-button-default-claro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Modo Claro - Botão Ghost */
+html:not(.dark) .campaign-button-ghost-claro {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #6b7280 !important;
+}
+
+html:not(.dark) .campaign-button-ghost-claro:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+}
+
+html:not(.dark) .campaign-button-ghost-claro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Modo Escuro - Botão Outline */
+html.dark .campaign-button-outline-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid #475569 !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-outline-escuro:hover {
+  background-color: #374151 !important;
+  background: #374151 !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-outline-escuro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-outline-escuro svg {
+  color: #ffffff !important;
+}
+
+/* Modo Escuro - Botão Default */
+html.dark .campaign-button-default-escuro {
+  background-color: #3b82f6 !important;
+  background: #3b82f6 !important;
+  border: 1px solid #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-default-escuro svg {
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-default-escuro:hover {
+  background-color: #2563eb !important;
+  background: #2563eb !important;
+}
+
+html.dark .campaign-button-default-escuro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Modo Escuro - Botão Ghost */
+html.dark .campaign-button-ghost-escuro {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-ghost-escuro:hover {
+  background-color: #374151 !important;
+  background: #374151 !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-ghost-escuro:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+  color: #ffffff !important;
+}
+
+html.dark .campaign-button-ghost-escuro svg {
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   CAMPAIGN NAVIGATION BUTTONS - BOTÕES DE NAVEGAÇÃO
+   ===================================================== */
+
+/* Botão Anterior - Modo Claro */
+html:not(.dark) .campaign-nav-prev-claro {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 2px solid #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html:not(.dark) .campaign-nav-prev-claro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+html:not(.dark) .campaign-nav-prev-claro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Botão Anterior - Modo Escuro */
+html.dark .campaign-nav-prev-escuro {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 2px solid #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dark .campaign-nav-prev-escuro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+html.dark .campaign-nav-prev-escuro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Botão Salvar - Modo Claro */
+html:not(.dark) .campaign-nav-save-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: 2px solid #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html:not(.dark) .campaign-nav-save-claro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border-color: #059669 !important;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+html:not(.dark) .campaign-nav-save-claro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Botão Salvar - Modo Escuro */
+html.dark .campaign-nav-save-escuro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: 2px solid #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dark .campaign-nav-save-escuro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border-color: #059669 !important;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+html.dark .campaign-nav-save-escuro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Botão Próximo - Modo Claro */
+html:not(.dark) .campaign-nav-next-claro {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 2px solid #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html:not(.dark) .campaign-nav-next-claro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+html:not(.dark) .campaign-nav-next-claro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+}
+
+html:not(.dark) .campaign-nav-next-claro:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%) !important;
+  border-color: #9ca3af !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Botão Próximo - Modo Escuro */
+html.dark .campaign-nav-next-escuro {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  border: 2px solid #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html.dark .campaign-nav-next-escuro:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+html.dark .campaign-nav-next-escuro:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.4) !important;
+}
+
+html.dark .campaign-nav-next-escuro:disabled {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%) !important;
+  border-color: #4b5563 !important;
+  color: #9ca3af !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* =====================================================
+   CAMPAIGN BUTTON TEXT COLORS - CORES DO TEXTO
+   ===================================================== */
+
+/* Botão Anterior - Texto Branco Forçado (Alta Especificidade) */
+html:not(.dark) button.campaign-nav-prev-claro,
+html:not(.dark) button.campaign-nav-prev-claro *,
+html:not(.dark) button.campaign-nav-prev-claro svg,
+html:not(.dark) .campaign-nav-prev-claro,
+html:not(.dark) .campaign-nav-prev-claro *,
+html:not(.dark) .campaign-nav-prev-claro svg {
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-nav-prev-escuro,
+html.dark button.campaign-nav-prev-escuro *,
+html.dark button.campaign-nav-prev-escuro svg,
+html.dark .campaign-nav-prev-escuro,
+html.dark .campaign-nav-prev-escuro *,
+html.dark .campaign-nav-prev-escuro svg {
+  color: #ffffff !important;
+}
+
+/* Botão Salvar - Texto Branco Forçado (Alta Especificidade) */
+html:not(.dark) button.campaign-nav-save-claro,
+html:not(.dark) button.campaign-nav-save-claro *,
+html:not(.dark) button.campaign-nav-save-claro svg,
+html:not(.dark) .campaign-nav-save-claro,
+html:not(.dark) .campaign-nav-save-claro *,
+html:not(.dark) .campaign-nav-save-claro svg {
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-nav-save-escuro,
+html.dark button.campaign-nav-save-escuro *,
+html.dark button.campaign-nav-save-escuro svg,
+html.dark .campaign-nav-save-escuro,
+html.dark .campaign-nav-save-escuro *,
+html.dark .campaign-nav-save-escuro svg {
+  color: #ffffff !important;
+}
+
+/* Botão Próximo - Texto Branco Forçado (Alta Especificidade) */
+html:not(.dark) button.campaign-nav-next-claro,
+html:not(.dark) button.campaign-nav-next-claro *,
+html:not(.dark) button.campaign-nav-next-claro svg,
+html:not(.dark) .campaign-nav-next-claro,
+html:not(.dark) .campaign-nav-next-claro *,
+html:not(.dark) .campaign-nav-next-claro svg {
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-nav-next-escuro,
+html.dark button.campaign-nav-next-escuro *,
+html.dark button.campaign-nav-next-escuro svg,
+html.dark .campaign-nav-next-escuro,
+html.dark .campaign-nav-next-escuro *,
+html.dark .campaign-nav-next-escuro svg {
+  color: #ffffff !important;
+}
+
+/* Estado Disabled - Texto Cinza */
+html:not(.dark) .campaign-nav-next-claro:disabled,
+html:not(.dark) .campaign-nav-next-claro:disabled *,
+html:not(.dark) .campaign-nav-next-claro:disabled svg {
+  color: #ffffff !important;
+}
+
+html.dark .campaign-nav-next-escuro:disabled,
+html.dark .campaign-nav-next-escuro:disabled *,
+html.dark .campaign-nav-next-escuro:disabled svg {
+  color: #9ca3af !important;
+}
+
+/* =====================================================
+   OVERRIDE TAILWIND - SOBRESCRITA FORÇADA
+   ===================================================== */
+
+/* Sobrescrever text-gray-900 do Tailwind */
+html:not(.dark) button.campaign-nav-prev-claro.text-gray-900,
+html:not(.dark) button.campaign-nav-save-claro.text-gray-900,
+html:not(.dark) button.campaign-nav-next-claro.text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Sobrescrever dark:text-gray-100 do Tailwind */
+html.dark button.campaign-nav-prev-escuro.dark\:text-gray-100,
+html.dark button.campaign-nav-save-escuro.dark\:text-gray-100,
+html.dark button.campaign-nav-next-escuro.dark\:text-gray-100 {
+  color: #ffffff !important;
+}
+
+/* Sobrescrever qualquer classe de cor do Tailwind */
+html:not(.dark) button.campaign-nav-prev-claro[class*="text-"],
+html:not(.dark) button.campaign-nav-save-claro[class*="text-"],
+html:not(.dark) button.campaign-nav-next-claro[class*="text-"] {
+  color: #ffffff !important;
+}
+
+html.dark button.campaign-nav-prev-escuro[class*="text-"],
+html.dark button.campaign-nav-save-escuro[class*="text-"],
+html.dark button.campaign-nav-next-escuro[class*="text-"] {
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   CAMPAIGN BUTTON TEXT CLASSES - CLASSES ESPECÍFICAS
+   ===================================================== */
+
+/* Botão Anterior - Texto Branco Forçado */
+html:not(.dark) .campaign-nav-prev-texto-claro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .campaign-nav-prev-texto-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Botão Salvar - Texto Branco Forçado */
+html:not(.dark) .campaign-nav-save-texto-claro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .campaign-nav-save-texto-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Botão Próximo - Texto Branco Forçado */
+html:not(.dark) .campaign-nav-next-texto-claro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .campaign-nav-next-texto-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* =====================================================
+   MESSAGE STEP - ÁREA DE MENSAGEM DA CAMPANHA
+   ===================================================== */
+
+/* Header da Área de Mensagem */
+html:not(.dark) .message-header-claro {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+html.dark .message-header-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Status WhatsApp - Conectado */
+html:not(.dark) .whatsapp-connected-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .whatsapp-connected-escuro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Status WhatsApp - Desconectado */
+html:not(.dark) .whatsapp-disconnected-claro {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .whatsapp-disconnected-escuro {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Textarea da Mensagem */
+html:not(.dark) .message-textarea-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html:not(.dark) .message-textarea-claro:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+html.dark .message-textarea-escuro {
+  background-color: #1f2937 !important;
+  background: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .message-textarea-escuro:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Botões de Variáveis */
+html:not(.dark) .variable-button-claro {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+  text-fill-color: #475569 !important;
+}
+
+html:not(.dark) .variable-button-claro:hover {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+  border-color: #94a3b8 !important;
+  color: #334155 !important;
+  -webkit-text-fill-color: #334155 !important;
+  text-fill-color: #334155 !important;
+}
+
+html.dark .variable-button-escuro {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  text-fill-color: #e2e8f0 !important;
+}
+
+html.dark .variable-button-escuro:hover {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%) !important;
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  text-fill-color: #f1f5f9 !important;
+}
+
+/* Botões de Template */
+html:not(.dark) .template-button-claro {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  border-color: #cbd5e1 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html:not(.dark) .template-button-claro:hover {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+  border-color: #94a3b8 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .template-button-escuro {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border-color: #475569 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .template-button-escuro:hover {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%) !important;
+  border-color: #64748b !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Cards de Estatísticas */
+html:not(.dark) .stats-card-claro {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border-color: #e2e8f0 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .stats-card-escuro {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Preview da Mensagem */
+html:not(.dark) .message-preview-claro {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  border-color: #cbd5e1 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .message-preview-escuro {
+  background: linear-gradient(135deg, #1e293b 0%, #111827 100%) !important;
+  border-color: #374151 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* =====================================================
+   CLASSES CSS ESPECÍFICAS PARA MODO DARK - MESSAGE STEP
+   ===================================================== */
+
+/* Título "Personalize Sua Mensagem" - Modo Claro */
+html:not(.dark) .message-personalize-title-claro {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+/* Título "Personalize Sua Mensagem" - Modo Escuro */
+html.dark .message-personalize-title-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Texto da dica - Modo Claro */
+html:not(.dark) .message-tip-text-claro {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Texto da dica - Modo Escuro */
+html.dark .message-tip-text-escuro {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+/* Código {nome} - Modo Claro */
+html:not(.dark) .message-code-claro {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+/* Código {nome} - Modo Escuro */
+html.dark .message-code-escuro {
+  background-color: #1e3a8a !important;
+  color: #dbeafe !important;
+  -webkit-text-fill-color: #dbeafe !important;
+  text-fill-color: #dbeafe !important;
+}
+
+/* Label "Exemplo:" - Modo Claro */
+html:not(.dark) .message-example-label-claro {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-fill-color: #2563eb !important;
+}
+
+/* Label "Exemplo:" - Modo Escuro */
+html.dark .message-example-label-escuro {
+  color: #60a5fa !important;
+  -webkit-text-fill-color: #60a5fa !important;
+  text-fill-color: #60a5fa !important;
+}
+
+/* Card de dica - Modo Claro */
+html:not(.dark) .message-tip-card-claro {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+/* Card de dica - Modo Escuro */
+html.dark .message-tip-card-escuro {
+  background-color: rgba(30, 58, 138, 0.2) !important;
+  border-color: #1e40af !important;
+}
+
+/* Títulos dos Cards - Modo Claro - FORÇA MÁXIMA */
+html:not(.dark) .message-card-title-claro,
+html:not(.dark) .message-card-title-claro *,
+html:not(.dark) .message-card-title-claro span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+/* Títulos dos Cards - Modo Escuro - FORÇA MÁXIMA */
+html.dark .message-card-title-escuro,
+html.dark .message-card-title-escuro *,
+html.dark .message-card-title-escuro span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Texto da Dica - Forçar Cor no Modo Claro */
+html:not(.dark) .message-tip-text-forced-claro {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+  text-fill-color: #1d4ed8 !important;
+}
+
+/* Texto da Dica - Forçar Cor no Modo Escuro */
+html.dark .message-tip-text-forced-escuro {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  text-fill-color: #93c5fd !important;
+}
+
+/* FORÇA ABSOLUTA - Títulos dos Cards */
+html:not(.dark) h3.message-card-title-claro,
+html:not(.dark) h3.message-card-title-claro span,
+html:not(.dark) .message-card-title-claro,
+html:not(.dark) .message-card-title-claro span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark h3.message-card-title-escuro,
+html.dark h3.message-card-title-escuro span,
+html.dark .message-card-title-escuro,
+html.dark .message-card-title-escuro span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* FORÇA ULTRA ESPECÍFICA - Para qualquer conflito */
+html:not(.dark) .message-card-title-claro,
+html:not(.dark) .message-card-title-claro *,
+html:not(.dark) .message-card-title-claro span,
+html:not(.dark) h3.message-card-title-claro,
+html:not(.dark) h3.message-card-title-claro *,
+html:not(.dark) h3.message-card-title-claro span,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro *,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .message-card-title-escuro,
+html.dark .message-card-title-escuro *,
+html.dark .message-card-title-escuro span,
+html.dark h3.message-card-title-escuro,
+html.dark h3.message-card-title-escuro *,
+html.dark h3.message-card-title-escuro span,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro *,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* FORÇA NUCLEAR - Sobrescreve TUDO */
+html:not(.dark) .message-card-title-claro,
+html:not(.dark) .message-card-title-claro *,
+html:not(.dark) .message-card-title-claro span,
+html:not(.dark) h3.message-card-title-claro,
+html:not(.dark) h3.message-card-title-claro *,
+html:not(.dark) h3.message-card-title-claro span,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro *,
+html:not(.dark) .flex.items-center.gap-3.text-xl.message-card-title-claro span,
+html:not(.dark) .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-claro,
+html:not(.dark) .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-claro *,
+html:not(.dark) .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-claro span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+}
+
+html.dark .message-card-title-escuro,
+html.dark .message-card-title-escuro *,
+html.dark .message-card-title-escuro span,
+html.dark h3.message-card-title-escuro,
+html.dark h3.message-card-title-escuro *,
+html.dark h3.message-card-title-escuro span,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro *,
+html.dark .flex.items-center.gap-3.text-xl.message-card-title-escuro span,
+html.dark .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-escuro,
+html.dark .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-escuro *,
+html.dark .font-semibold.tracking-tight.text-gray-900.flex.items-center.gap-3.text-xl.message-card-title-escuro span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+}
+
+/* SOBRESCREVER text-gray-900 DO TAILWIND */
+html:not(.dark) .text-gray-900.message-card-title-claro,
+html:not(.dark) .text-gray-900.message-card-title-claro *,
+html:not(.dark) .text-gray-900.message-card-title-claro span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .text-gray-900.message-card-title-escuro,
+html.dark .text-gray-900.message-card-title-escuro *,
+html.dark .text-gray-900.message-card-title-escuro span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* FORÇA ABSOLUTA - USANDO SELETORES MAIS ESPECÍFICOS */
+html:not(.dark) h3[class*="message-card-title-claro"],
+html:not(.dark) h3[class*="message-card-title-claro"] *,
+html:not(.dark) h3[class*="message-card-title-claro"] span,
+html:not(.dark) span[class*="message-card-title-claro"],
+html:not(.dark) span[class*="message-card-title-claro"] * {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+}
+
+html.dark h3[class*="message-card-title-escuro"],
+html.dark h3[class*="message-card-title-escuro"] *,
+html.dark h3[class*="message-card-title-escuro"] span,
+html.dark span[class*="message-card-title-escuro"],
+html.dark span[class*="message-card-title-escuro"] * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+}
+
+/* VARIÁVEIS CSS PARA FORÇAR CORES */
+:root {
+  --title-color: #111827;
+}
+
+html.dark {
+  --title-color: #ffffff;
+}
+
+/* FORÇAR VARIÁVEIS CSS */
+html:not(.dark) [style*="--title-color"] {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark [style*="--title-color"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* SOBRESCREVER REGRA GLOBAL text-gray-900 */
+html:not(.dark) .text-gray-900[style*="--title-color"],
+html:not(.dark) .text-gray-900[style*="--title-color"] *,
+html:not(.dark) .text-gray-900[style*="--title-color"] span {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-fill-color: #111827 !important;
+}
+
+html.dark .text-gray-900[style*="--title-color"],
+html.dark .text-gray-900[style*="--title-color"] *,
+html.dark .text-gray-900[style*="--title-color"] span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* CORRIGIR FUNDO BRANCO DOS CARDS NO MODO DARK */
+html.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+/* CORRIGIR BORDAS APENAS DOS CARDS, NÃO DOS INPUTS */
+html.dark .rounded-xl.bg-white.border-gray-200 {
+  border-color: #374151 !important;
+}
+
+/* RESTAURAR BORDAS DOS INPUTS DO GERAR LEADS */
+html.dark .gerador-input-escuro {
+  border-color: #6b7280 !important;
+}
+
+/* ===================================================== */
+/* REVIEW STEP - REVISÃO FINAL E ENVIO */
+/* ===================================================== */
+
+/* Header do Review Step */
+html:not(.dark) .review-header-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html.dark .review-header-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Subtítulo do Review Step */
+html:not(.dark) .review-subtitle-claro {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html.dark .review-subtitle-escuro {
+  color: #d1d5db !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* Cards do Review Step */
+html:not(.dark) .review-card-claro {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+html.dark .review-card-escuro {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+/* Títulos dos Cards do Review Step */
+html:not(.dark) .review-card-title-claro {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html.dark .review-card-title-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Labels do Review Step */
+html:not(.dark) .review-label-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html.dark .review-label-escuro {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  text-fill-color: #9ca3af !important;
+}
+
+/* Valores do Review Step */
+html:not(.dark) .review-value-claro {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html.dark .review-value-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Status do Review Step */
+html:not(.dark) .review-status-claro {
+  color: #059669 !important;
+  -webkit-text-fill-color: #059669 !important;
+  text-fill-color: #059669 !important;
+}
+
+html.dark .review-status-escuro {
+  color: #10b981 !important;
+  -webkit-text-fill-color: #10b981 !important;
+  text-fill-color: #10b981 !important;
+}
+
+/* Ícones do Review Step */
+html:not(.dark) .review-icon-claro {
+  color: #6b7280 !important;
+}
+
+html.dark .review-icon-escuro {
+  color: #9ca3af !important;
+}
+
+/* Botões do Review Step */
+html:not(.dark) .review-button-claro {
+  background-color: #ffffff !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .review-button-claro:hover {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+  border-color: #9ca3af !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.dark .review-button-escuro {
+  background-color: #1f2937 !important;
+  color: #d1d5db !important;
+  border-color: #4b5563 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .review-button-escuro:hover {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Preview da Mensagem */
+html:not(.dark) .review-message-preview-claro {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+html.dark .review-message-preview-escuro {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+html:not(.dark) .review-message-text-claro {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html.dark .review-message-text-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+/* Itens de Lead */
+html:not(.dark) .review-lead-item-claro {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+html.dark .review-lead-item-escuro {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+html:not(.dark) .review-lead-name-claro {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  text-fill-color: #1f2937 !important;
+}
+
+html.dark .review-lead-name-escuro {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html:not(.dark) .review-lead-phone-claro {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  text-fill-color: #6b7280 !important;
+}
+
+html.dark .review-lead-phone-escuro {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  text-fill-color: #9ca3af !important;
+}
+
+html:not(.dark) .review-lead-company-claro {
+  color: #374151 !important;
+  background-color: #e5e7eb !important;
+  -webkit-text-fill-color: #374151 !important;
+  text-fill-color: #374151 !important;
+}
+
+html.dark .review-lead-company-escuro {
+  color: #d1d5db !important;
+  background-color: #374151 !important;
+  -webkit-text-fill-color: #d1d5db !important;
+  text-fill-color: #d1d5db !important;
+}
+
+/* Card de Aviso */
+html:not(.dark) .review-warning-card-claro {
+  background-color: #fef3c7 !important;
+  border-color: #f59e0b !important;
+}
+
+html.dark .review-warning-card-escuro {
+  background-color: #451a03 !important;
+  border-color: #d97706 !important;
+}
+
+html:not(.dark) .review-warning-icon-claro {
+  color: #d97706 !important;
+}
+
+html.dark .review-warning-icon-escuro {
+  color: #fbbf24 !important;
+}
+
+html:not(.dark) .review-warning-title-claro {
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  text-fill-color: #92400e !important;
+}
+
+html.dark .review-warning-title-escuro {
+  color: #fef3c7 !important;
+  -webkit-text-fill-color: #fef3c7 !important;
+  text-fill-color: #fef3c7 !important;
+}
+
+html:not(.dark) .review-warning-text-claro {
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+  text-fill-color: #b45309 !important;
+}
+
+html.dark .review-warning-text-escuro {
+  color: #e5e7eb !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  text-fill-color: #e5e7eb !important;
+}
+
+/* Card de Sucesso */
+html:not(.dark) .review-success-card-claro {
+  background-color: #d1fae5 !important;
+  border-color: #10b981 !important;
+}
+
+html.dark .review-success-card-escuro {
+  background-color: #064e3b !important;
+  border-color: #059669 !important;
+}
+
+html:not(.dark) .review-success-icon-claro {
+  color: #059669 !important;
+}
+
+html.dark .review-success-icon-escuro {
+  color: #10b981 !important;
+}
+
+html:not(.dark) .review-success-title-claro {
+  color: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+  text-fill-color: #047857 !important;
+}
+
+html.dark .review-success-title-escuro {
+  color: #f0fdf4 !important;
+  -webkit-text-fill-color: #f0fdf4 !important;
+  text-fill-color: #f0fdf4 !important;
+}
+
+html:not(.dark) .review-success-text-claro {
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  text-fill-color: #065f46 !important;
+}
+
+html.dark .review-success-text-escuro {
+  color: #e5e7eb !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  text-fill-color: #e5e7eb !important;
+}
+
+/* Card de Informação */
+html:not(.dark) .review-info-card-claro {
+  background-color: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+html.dark .review-info-card-escuro {
+  background-color: #1e3a8a !important;
+  border-color: #2563eb !important;
+}
+
+html:not(.dark) .review-info-title-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html.dark .review-info-title-escuro {
+  color: #f0f9ff !important;
+  -webkit-text-fill-color: #f0f9ff !important;
+  text-fill-color: #f0f9ff !important;
+}
+
+html:not(.dark) .review-info-text-claro {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  text-fill-color: #1e40af !important;
+}
+
+html.dark .review-info-text-escuro {
+  color: #e5e7eb !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  text-fill-color: #e5e7eb !important;
+}
+
+/* Botão de Remover Lead */
+html:not(.dark) .review-remove-button-claro {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+  opacity: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .review-remove-button-claro:hover {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #fca5a5 !important;
+  opacity: 1 !important;
+}
+
+html:not(.dark) .group:hover .review-remove-button-claro {
+  opacity: 1 !important;
+}
+
+html.dark .review-remove-button-escuro {
+  background-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+  border: 1px solid #991b1b !important;
+  opacity: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .review-remove-button-escuro:hover {
+  background-color: #991b1b !important;
+  color: #f87171 !important;
+  border-color: #dc2626 !important;
+  opacity: 1 !important;
+}
+
+html.dark .group:hover .review-remove-button-escuro {
+  opacity: 1 !important;
+}
+
+/* Versão alternativa - botão sempre visível para debug */
+html:not(.dark) .review-remove-button-always-visible {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fecaca !important;
+  opacity: 1 !important;
+  transition: all 0.2s ease !important;
+}
+
+html:not(.dark) .review-remove-button-always-visible:hover {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #fca5a5 !important;
+}
+
+html.dark .review-remove-button-always-visible {
+  background-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+  border: 1px solid #991b1b !important;
+  opacity: 1 !important;
+  transition: all 0.2s ease !important;
+}
+
+html.dark .review-remove-button-always-visible:hover {
+  background-color: #991b1b !important;
+  color: #f87171 !important;
+  border-color: #dc2626 !important;
+}
+
+/* =====================================================
+   CAMPANHA COMPLETION OVERLAY - ESTILOS ESPECÍFICOS
+   ===================================================== */
+
+/* Cards de estatísticas - textos dos labels */
+html:not(.dark) .campaign-stats-label-claro {
+  color: #111827 !important;
+}
+
+html.dark .campaign-stats-label-escuro {
+  color: #d1d5db !important;
+}
+
+/* =====================================================
+   CAMPANHA PROGRESS MODAL - ESTILOS ESPECÍFICOS
+   ===================================================== */
+
+/* Footer do modal de progresso */
+html:not(.dark) .campaign-progress-footer-text-claro {
+  color: #111827 !important;
+}
+
+html.dark .campaign-progress-footer-text-escuro {
+  color: #f9fafb !important;
+}
+
+/* =====================================================
+   CAMPANHA PROGRESS MODAL - MELHORIAS DE CONTRASTE
+   ===================================================== */
+
+/* Header do modal - textos e ícones */
+html:not(.dark) .campaign-modal-header-text-claro {
+  color: #111827 !important;
+}
+
+html.dark .campaign-modal-header-text-escuro {
+  color: #f9fafb !important;
+}
+
+html:not(.dark) .campaign-modal-subtitle-claro {
+  color: #1d4ed8 !important;
+}
+
+html.dark .campaign-modal-subtitle-escuro {
+  color: #60a5fa !important;
+}
+
+/* Botão de fechar/minimizar */
+html:not(.dark) .campaign-modal-close-button-claro {
+  color: #374151 !important;
+  background-color: transparent !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html:not(.dark) .campaign-modal-close-button-claro:hover {
+  color: #111827 !important;
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+html.dark .campaign-modal-close-button-escuro {
+  color: #d1d5db !important;
+  background-color: transparent !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .campaign-modal-close-button-escuro:hover {
+  color: #f9fafb !important;
+  background-color: #374151 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Botão minimizar no footer */
+html:not(.dark) .campaign-modal-minimize-button-claro {
+  color: #374151 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html:not(.dark) .campaign-modal-minimize-button-claro:hover {
+  color: #111827 !important;
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+html.dark .campaign-modal-minimize-button-escuro {
+  color: #f9fafb !important;
+  background-color: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+html.dark .campaign-modal-minimize-button-escuro:hover {
+  color: #f9fafb !important;
+  background-color: #374151 !important;
+  border-color: #6b7280 !important;
+}
+
+/* Footer do modal - fundo branco no modo claro */
+html:not(.dark) .campaign-modal-footer-claro {
+  background-color: #ffffff !important;
+}
+
+html.dark .campaign-modal-footer-escuro {
+  background-color: #1f2937 !important;
+}
+
+/* Botão de detalhes - hover correto */
+html:not(.dark) .campaign-details-button-claro {
+  background-color: transparent !important;
+  color: #111827 !important;
+  border: 2px solid #d1d5db !important;
+}
+
+html:not(.dark) .campaign-details-button-claro:hover {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border-color: #9ca3af !important;
+}
+
+html.dark .campaign-details-button-escuro {
+  background-color: transparent !important;
+  color: #f9fafb !important;
+  border: 2px solid #4b5563 !important;
+}
+
+html.dark .campaign-details-button-escuro:hover {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+}
+
+/* Área de detalhes da campanha - fundo branco no modo claro */
+html:not(.dark) .campaign-details-area-claro {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+html.dark .campaign-details-area-escuro {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+}
+
+/* Cards de estatísticas - contornos no modo escuro */
+html.dark .campaign-stats-card-escuro {
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+/* Status minimizado - textos brancos no modo escuro */
+html.dark .campaign-minimized-text-escuro {
+  color: #f9fafb !important;
+}
+
+html.dark .campaign-minimized-label-escuro {
+  color: #d1d5db !important;
+}
+
+/* Footer da campanha - texto e ícones com contraste */
+html:not(.dark) .campaign-footer-text-claro {
+  color: #111827 !important;
+}
+
+html.dark .campaign-footer-text-escuro {
+  color: #f9fafb !important;
+}
+
+html:not(.dark) .campaign-footer-icon-claro {
+  color: #3b82f6 !important;
+}
+
+html.dark .campaign-footer-icon-escuro {
+  color: #60a5fa !important;
+}
+
+/* Botão Fechar - hover correto */
+html:not(.dark) .campaign-close-button-claro {
+  background-color: transparent !important;
+  color: #111827 !important;
+  border: 2px solid #d1d5db !important;
+}
+
+html:not(.dark) .campaign-close-button-claro:hover {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border-color: #9ca3af !important;
+}
+
+html.dark .campaign-close-button-escuro {
+  background-color: transparent !important;
+  color: #f9fafb !important;
+  border: 2px solid #4b5563 !important;
+}
+
+html.dark .campaign-close-button-escuro:hover {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+}
+
+/* Cards de estatísticas - contornos no modo claro */
+html:not(.dark) .campaign-stats-card-claro {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}

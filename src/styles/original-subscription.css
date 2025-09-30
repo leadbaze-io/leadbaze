@@ -1,0 +1,464 @@
+/* =====================================================
+   ORIGINAL SUBSCRIPTION INFO - MODO CLARO
+   ===================================================== */
+
+.original-subscription-info {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.original-subscription-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.original-subscription-header-icon {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.original-subscription-shield-icon {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.original-subscription-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.original-subscription-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 4px 0 0 0;
+}
+
+.original-subscription-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.original-subscription-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.original-subscription-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.original-subscription-card-icon {
+  width: 20px;
+  height: 20px;
+  color: #3b82f6;
+}
+
+.original-subscription-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.original-subscription-card-content {
+  margin-left: 32px;
+}
+
+.original-subscription-date {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.original-subscription-date-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.original-subscription-plan-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.original-subscription-plan-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.original-subscription-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.original-subscription-stat {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+}
+
+.original-subscription-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.original-subscription-stat-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.original-subscription-stat-icon.upgrade {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.original-subscription-stat-icon.downgrade {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.original-subscription-stat-icon.total {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.original-subscription-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.original-subscription-stat-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.original-subscription-refund {
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid;
+}
+
+.original-subscription-refund.eligible {
+  background: #f0fdf4;
+  border-color: #22c55e;
+}
+
+.original-subscription-refund.not-eligible {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.original-subscription-refund-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.original-subscription-refund-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.original-subscription-refund.eligible .original-subscription-refund-icon {
+  color: #22c55e;
+}
+
+.original-subscription-refund.not-eligible .original-subscription-refund-icon {
+  color: #ef4444;
+}
+
+.original-subscription-refund-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.original-subscription-refund-status {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.original-subscription-refund-status.eligible {
+  color: #16a34a;
+}
+
+.original-subscription-refund-status.not-eligible {
+  color: #dc2626;
+}
+
+.original-subscription-refund-days {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.original-subscription-refund.eligible .original-subscription-refund-days {
+  color: #059669;
+}
+
+.original-subscription-refund.not-eligible .original-subscription-refund-days {
+  color: #b91c1c;
+}
+
+.original-subscription-refund-note {
+  font-size: 12px;
+  color: #64748b;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+/* Loading States */
+.original-subscription-loading {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+}
+
+.original-subscription-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.original-subscription-skeleton-line {
+  height: 20px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+.original-subscription-skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Error States */
+.original-subscription-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+}
+
+.original-subscription-error-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.original-subscription-error-icon {
+  width: 24px;
+  height: 24px;
+  color: #dc2626;
+}
+
+.original-subscription-error-text {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* =====================================================
+   ORIGINAL SUBSCRIPTION INFO - MODO ESCURO
+   ===================================================== */
+
+.dark .original-subscription-info {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #334155;
+}
+
+.dark .original-subscription-header {
+  border-bottom-color: #334155;
+}
+
+.dark .original-subscription-title {
+  color: #f1f5f9;
+}
+
+.dark .original-subscription-subtitle {
+  color: #94a3b8;
+}
+
+.dark .original-subscription-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark .original-subscription-card:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.dark .original-subscription-card-title {
+  color: #e2e8f0;
+}
+
+.dark .original-subscription-date {
+  color: #f1f5f9;
+}
+
+.dark .original-subscription-date-label {
+  color: #94a3b8;
+}
+
+.dark .original-subscription-plan-name {
+  color: #f1f5f9;
+}
+
+.dark .original-subscription-plan-price {
+  color: #10b981;
+}
+
+.dark .original-subscription-stat {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark .original-subscription-stat:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.dark .original-subscription-stat-value {
+  color: #f1f5f9;
+}
+
+.dark .original-subscription-stat-label {
+  color: #94a3b8;
+}
+
+.dark .original-subscription-refund.eligible {
+  background: #064e3b;
+  border-color: #10b981;
+}
+
+.dark .original-subscription-refund.not-eligible {
+  background: #7f1d1d;
+  border-color: #ef4444;
+}
+
+.dark .original-subscription-refund-title {
+  color: #e2e8f0;
+}
+
+.dark .original-subscription-refund-status.eligible {
+  color: #10b981;
+}
+
+.dark .original-subscription-refund-status.not-eligible {
+  color: #f87171;
+}
+
+.dark .original-subscription-refund.eligible .original-subscription-refund-days {
+  color: #10b981;
+}
+
+.dark .original-subscription-refund.not-eligible .original-subscription-refund-days {
+  color: #f87171;
+}
+
+.dark .original-subscription-refund-note {
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark .original-subscription-loading {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.dark .original-subscription-skeleton-line {
+  background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+  background-size: 200% 100%;
+}
+
+.dark .original-subscription-error {
+  background: #7f1d1d;
+  border-color: #dc2626;
+}
+
+.dark .original-subscription-error-text {
+  color: #f87171;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .original-subscription-info {
+    padding: 16px;
+    margin: 16px 0;
+  }
+
+  .original-subscription-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .original-subscription-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .original-subscription-stat {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .original-subscription-card-content {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}
+

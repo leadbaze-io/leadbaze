@@ -1,0 +1,383 @@
+/* =====================================================
+   MODAL DE CAMPANHA - FORÇAR MODO CLARO
+   ===================================================== */
+
+/* Classe principal para forçar modo claro no modal */
+.campaign-modal-light {
+  /* Variáveis CSS para modo claro forçado */
+  --modal-bg: #ffffff;
+  --modal-text: #1e293b;
+  --card-bg: #f8fafc;
+  --card-text: #475569;
+  --border-color: #e2e8f0;
+  --text-muted: #64748b;
+}
+
+/* Container principal do modal */
+.campaign-modal-light .modal-container {
+  background-color: var(--modal-bg) !important;
+  color: var(--modal-text) !important;
+}
+
+/* Header do modal */
+.campaign-modal-light .modal-header {
+  background: linear-gradient(to right, #10b981, #059669, #047857) !important;
+}
+
+/* Cards de estatísticas */
+.campaign-modal-light .stats-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--card-text) !important;
+}
+
+/* Seção de lead atual */
+.campaign-modal-light .lead-section {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Seção de detalhes */
+.campaign-modal-light .details-section {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Seção de performance */
+.campaign-modal-light .performance-section {
+  background-color: var(--modal-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Barra de progresso */
+.campaign-modal-light .progress-bar-bg {
+  background-color: #e2e8f0 !important;
+}
+
+/* Títulos e textos */
+.campaign-modal-light .modal-title {
+  color: var(--modal-text) !important;
+}
+
+.campaign-modal-light .modal-subtitle {
+  color: var(--card-text) !important;
+}
+
+/* =====================================================
+   FORÇAR CORES ESPECÍFICAS NO MODO CLARO
+   ===================================================== */
+
+/* Textos pretos no modo claro para melhor legibilidade */
+.campaign-modal-light .text-gray-600,
+.campaign-modal-light .text-slate-600 {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+}
+
+.campaign-modal-light .text-gray-400,
+.campaign-modal-light .text-slate-400 {
+  color: #374151 !important; /* gray-700 - cinza escuro */
+}
+
+.campaign-modal-light .text-gray-300,
+.campaign-modal-light .text-slate-300 {
+  color: #4b5563 !important; /* gray-600 - cinza médio */
+}
+
+.campaign-modal-light .text-gray-700,
+.campaign-modal-light .text-slate-700 {
+  color: #111827 !important; /* gray-900 - preto */
+}
+
+.campaign-modal-light .text-gray-800,
+.campaign-modal-light .text-slate-800 {
+  color: #0f172a !important; /* slate-900 - preto */
+}
+
+.campaign-modal-light .text-gray-900,
+.campaign-modal-light .text-slate-900 {
+  color: #0f172a !important; /* slate-900 - preto */
+}
+
+/* Melhorar cores dos cards no modo claro */
+.campaign-modal-light .bg-green-50 {
+  background-color: #f0fdf4 !important; /* green-50 mais claro */
+}
+
+.campaign-modal-light .bg-red-50 {
+  background-color: #fef2f2 !important; /* red-50 mais claro */
+}
+
+.campaign-modal-light .bg-blue-50 {
+  background-color: #eff6ff !important; /* blue-50 mais claro */
+}
+
+.campaign-modal-light .bg-purple-50 {
+  background-color: #faf5ff !important; /* purple-50 mais claro */
+}
+
+/* Bordas mais escuras nos cards para melhor contraste */
+.campaign-modal-light .border-green-200 {
+  border-color: #bbf7d0 !important; /* green-200 mais escuro */
+}
+
+.campaign-modal-light .border-red-200 {
+  border-color: #fecaca !important; /* red-200 mais escuro */
+}
+
+.campaign-modal-light .border-blue-200 {
+  border-color: #bfdbfe !important; /* blue-200 mais escuro */
+}
+
+.campaign-modal-light .border-purple-200 {
+  border-color: #e9d5ff !important; /* purple-200 mais escuro */
+}
+
+/* =====================================================
+   FORÇAR CORES ESPECÍFICAS NO MODO ESCURO
+   ===================================================== */
+
+/* Quando o modal está em modo escuro, forçar cores claras */
+.dark .campaign-modal-light .text-gray-600,
+.dark .campaign-modal-light .text-slate-600 {
+  color: #ffffff !important;
+}
+
+.dark .campaign-modal-light .text-gray-400,
+.dark .campaign-modal-light .text-slate-400 {
+  color: #e5e7eb !important;
+}
+
+.dark .campaign-modal-light .text-gray-300,
+.dark .campaign-modal-light .text-slate-300 {
+  color: #d1d5db !important;
+}
+
+.dark .campaign-modal-light .text-gray-700,
+.dark .campaign-modal-light .text-slate-700 {
+  color: #f3f4f6 !important;
+}
+
+.dark .campaign-modal-light .text-gray-800,
+.dark .campaign-modal-light .text-slate-800 {
+  color: #f9fafb !important;
+}
+
+.dark .campaign-modal-light .text-gray-900,
+.dark .campaign-modal-light .text-slate-900 {
+  color: #ffffff !important;
+}
+
+/* Fundos no modo escuro */
+.dark .campaign-modal-light .bg-gray-50,
+.dark .campaign-modal-light .bg-slate-50 {
+  background-color: #1f2937 !important;
+}
+
+.dark .campaign-modal-light .bg-gray-100,
+.dark .campaign-modal-light .bg-slate-100 {
+  background-color: #374151 !important;
+}
+
+/* Bordas no modo escuro */
+.dark .campaign-modal-light .border-gray-200,
+.dark .campaign-modal-light .border-slate-200 {
+  border-color: #4b5563 !important;
+}
+
+.dark .campaign-modal-light .border-gray-300,
+.dark .campaign-modal-light .border-slate-300 {
+  border-color: #6b7280 !important;
+}
+
+/* =====================================================
+   ANIMAÇÕES DE LOADING - DOTS PULSANTES
+   ===================================================== */
+
+/* Animação de dots pulsantes */
+@keyframes dot-1 {
+  0%, 20% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  80%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-2 {
+  0%, 20% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  80%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-3 {
+  0%, 20% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  80%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Classes de animação com delays escalonados */
+.animate-dot-1 {
+  animation: dot-1 1.4s ease-in-out infinite;
+}
+
+.animate-dot-2 {
+  animation: dot-2 1.4s ease-in-out infinite 0.2s;
+}
+
+.animate-dot-3 {
+  animation: dot-3 1.4s ease-in-out infinite 0.4s;
+}
+
+/* =====================================================
+   BOTÕES DO MODAL - CLASSES ESPECÍFICAS
+   ===================================================== */
+
+/* Botão "Ver Detalhes" - Modo Claro */
+.campaign-modal-light .modal-details-button {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+  border-color: #d1d5db !important; /* gray-300 - borda mais escura */
+  background-color: transparent !important;
+}
+
+.campaign-modal-light .modal-details-button:hover {
+  background-color: #f3f4f6 !important; /* gray-100 - fundo hover mais escuro */
+  color: #111827 !important; /* gray-900 - texto mais escuro no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover mais escura */
+}
+
+.campaign-modal-light .modal-details-button svg {
+  color: #1f2937 !important; /* gray-800 - ícone escuro */
+}
+
+.campaign-modal-light .modal-details-button:hover svg {
+  color: #111827 !important; /* gray-900 - ícone mais escuro no hover */
+}
+
+/* Botão "Ver Detalhes" - Modo Escuro */
+.dark .campaign-modal-light .modal-details-button {
+  color: #f3f4f6 !important; /* gray-100 - texto claro */
+  border-color: #6b7280 !important; /* gray-500 - borda clara */
+  background-color: transparent !important;
+}
+
+.dark .campaign-modal-light .modal-details-button:hover {
+  background-color: #374151 !important; /* gray-700 - fundo hover escuro */
+  color: #ffffff !important; /* white - texto branco no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover clara */
+}
+
+.dark .campaign-modal-light .modal-details-button svg {
+  color: #f3f4f6 !important; /* gray-100 - ícone claro */
+}
+
+.dark .campaign-modal-light .modal-details-button:hover svg {
+  color: #ffffff !important; /* white - ícone branco no hover */
+}
+
+/* Botão "Fechar" - Modo Claro */
+.campaign-modal-light .modal-close-button {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+  border-color: #d1d5db !important; /* gray-300 - borda mais escura */
+  background-color: transparent !important;
+}
+
+.campaign-modal-light .modal-close-button:hover {
+  background-color: #f3f4f6 !important; /* gray-100 - fundo hover mais escuro */
+  color: #111827 !important; /* gray-900 - texto mais escuro no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover mais escura */
+}
+
+.campaign-modal-light .modal-close-button svg {
+  color: #1f2937 !important; /* gray-800 - ícone escuro */
+}
+
+.campaign-modal-light .modal-close-button:hover svg {
+  color: #111827 !important; /* gray-900 - ícone mais escuro no hover */
+}
+
+/* Botão "Fechar" - Modo Escuro */
+.dark .campaign-modal-light .modal-close-button {
+  color: #f3f4f6 !important; /* gray-100 - texto claro */
+  border-color: #6b7280 !important; /* gray-500 - borda clara */
+  background-color: transparent !important;
+}
+
+.dark .campaign-modal-light .modal-close-button:hover {
+  background-color: #374151 !important; /* gray-700 - fundo hover escuro */
+  color: #ffffff !important; /* white - texto branco no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover clara */
+}
+
+.dark .campaign-modal-light .modal-close-button svg {
+  color: #f3f4f6 !important; /* gray-100 - ícone claro */
+}
+
+.dark .campaign-modal-light .modal-close-button:hover svg {
+  color: #ffffff !important; /* white - ícone branco no hover */
+}
+
+/* Botão "Cancelar" - Modo Claro */
+.campaign-modal-light .modal-cancel-button {
+  color: #1f2937 !important; /* gray-800 - preto suave */
+  border-color: #d1d5db !important; /* gray-300 - borda mais escura */
+  background-color: transparent !important;
+}
+
+.campaign-modal-light .modal-cancel-button:hover {
+  background-color: #f3f4f6 !important; /* gray-100 - fundo hover mais escuro */
+  color: #111827 !important; /* gray-900 - texto mais escuro no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover mais escura */
+}
+
+.campaign-modal-light .modal-cancel-button svg {
+  color: #1f2937 !important; /* gray-800 - ícone escuro */
+}
+
+.campaign-modal-light .modal-cancel-button:hover svg {
+  color: #111827 !important; /* gray-900 - ícone mais escuro no hover */
+}
+
+/* Botão "Cancelar" - Modo Escuro */
+.dark .campaign-modal-light .modal-cancel-button {
+  color: #f3f4f6 !important; /* gray-100 - texto claro */
+  border-color: #6b7280 !important; /* gray-500 - borda clara */
+  background-color: transparent !important;
+}
+
+.dark .campaign-modal-light .modal-cancel-button:hover {
+  background-color: #374151 !important; /* gray-700 - fundo hover escuro */
+  color: #ffffff !important; /* white - texto branco no hover */
+  border-color: #9ca3af !important; /* gray-400 - borda hover clara */
+}
+
+.dark .campaign-modal-light .modal-cancel-button svg {
+  color: #f3f4f6 !important; /* gray-100 - ícone claro */
+}
+
+.dark .campaign-modal-light .modal-cancel-button:hover svg {
+  color: #ffffff !important; /* white - ícone branco no hover */
+}
