@@ -130,3 +130,4 @@ COMMENT ON COLUMN lead_packages.checkout_url IS 'URL direta do checkout no Perfe
 
 
 
+

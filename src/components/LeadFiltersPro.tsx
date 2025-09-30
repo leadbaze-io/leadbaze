@@ -22,7 +22,8 @@ import {
   SlidersHorizontal,
   TrendingUp,
   TrendingDown,
-  Award
+  Award,
+  Phone
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -37,6 +38,8 @@ interface LeadFiltersProProps {
   setReviewsFilter: (value: string) => void
   websiteFilter: string
   setWebsiteFilter: (value: string) => void
+  phoneFilter: string
+  setPhoneFilter: (value: string) => void
   leadsPerPage: string
   setLeadsPerPage: (value: string) => void
   sortBy: string
@@ -68,6 +71,8 @@ export function LeadFiltersPro({
   setReviewsFilter,
   websiteFilter,
   setWebsiteFilter,
+  phoneFilter,
+  setPhoneFilter,
   leadsPerPage,
   setLeadsPerPage,
   sortBy,
@@ -101,6 +106,7 @@ export function LeadFiltersPro({
     setRatingFilter("all")
     setReviewsFilter("all")
     setWebsiteFilter("all")
+    setPhoneFilter("all")
     setSortBy("relevance")
     setSortOrder("desc")
     setMaxReviews("none")
@@ -117,6 +123,7 @@ export function LeadFiltersPro({
     if (ratingFilter !== "all") count++
     if (reviewsFilter !== "all") count++
     if (websiteFilter !== "all") count++
+    if (phoneFilter !== "all") count++
     if (sortBy !== "relevance") count++
     if (sortOrder !== "desc") count++
     if (maxReviews && maxReviews !== "none") count++
@@ -378,6 +385,27 @@ export function LeadFiltersPro({
                     <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
                       <SelectItem value="desc">Maior para Menor</SelectItem>
                       <SelectItem value="asc">Menor para Maior</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Tipo de Telefone */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center">
+                    <Phone className="w-4 h-4 mr-2 text-teal-600 dark:text-teal-400" />
+                    Tipo de Telefone
+                  </Label>
+                  <Select 
+                    value={phoneFilter} 
+                    onValueChange={(value) => handleFilterChange(setPhoneFilter, value)}
+                  >
+                    <SelectTrigger className="h-11 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-teal-400 dark:hover:border-teal-500 transition-all duration-200">
+                      <SelectValue placeholder="Todos os telefones" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl">
+                      <SelectItem value="all">Todos os telefones</SelectItem>
+                      <SelectItem value="mobile">Apenas celulares</SelectItem>
+                      <SelectItem value="landline">Apenas fixos</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

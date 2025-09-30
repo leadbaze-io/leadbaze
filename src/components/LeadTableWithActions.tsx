@@ -18,12 +18,37 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
   const [isDeleting, setIsDeleting] = useState(false)
 
+  // Função para detectar se um telefone é celular ou fixo
+  const isMobilePhone = (phone: string): boolean => {
+    if (!phone) return false
+    
+    // Remove todos os caracteres não numéricos
+    const cleanPhone = phone.replace(/\D/g, '')
+    
+    // Telefones celulares brasileiros geralmente começam com 9 (após o DDD)
+    // Padrão: (XX) 9XXXX-XXXX ou (XX) 9XXXXXXXX
+    if (cleanPhone.length === 11) {
+      // Verifica se o 3º dígito (após DDD) é 9
+      return cleanPhone.charAt(2) === '9'
+    }
+    
+    // Telefones fixos brasileiros geralmente começam com 2, 3, 4 ou 5 (após o DDD)
+    // Padrão: (XX) 2XXX-XXXX ou (XX) 3XXX-XXXX, etc.
+    if (cleanPhone.length === 10) {
+      const thirdDigit = cleanPhone.charAt(2)
+      return ['2', '3', '4', '5'].includes(thirdDigit)
+    }
+    
+    return false
+  }
+
   // Filtros
   const [searchTerm, setSearchTerm] = useState("")
   const [cityFilter, setCityFilter] = useState("")
   const [ratingFilter, setRatingFilter] = useState("all")
   const [reviewsFilter, setReviewsFilter] = useState("all")
   const [websiteFilter, setWebsiteFilter] = useState("all")
+  const [phoneFilter, setPhoneFilter] = useState("all")
   const [leadsPerPage, setLeadsPerPage] = useState("20")
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -64,9 +89,13 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         (websiteFilter === "with" && lead.website) ||
         (websiteFilter === "without" && !lead.website)
 
-      return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite
+      const matchesPhone = phoneFilter === "all" || 
+        (phoneFilter === "mobile" && lead.phone && isMobilePhone(lead.phone)) ||
+        (phoneFilter === "landline" && lead.phone && !isMobilePhone(lead.phone))
+
+      return matchesSearch && matchesCity && matchesRating && matchesReviews && matchesMaxReviews && matchesWebsite && matchesPhone
     })
-  }, [leads, searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter])
+  }, [leads, searchTerm, cityFilter, ratingFilter, reviewsFilter, maxReviews, websiteFilter, phoneFilter])
 
   // Desmarcar automaticamente leads que não estão mais visíveis quando filtros mudam
   useEffect(() => {
@@ -260,6 +289,8 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
             setReviewsFilter={setReviewsFilter}
             websiteFilter={websiteFilter}
             setWebsiteFilter={setWebsiteFilter}
+            phoneFilter={phoneFilter}
+            setPhoneFilter={setPhoneFilter}
             leadsPerPage={leadsPerPage}
             setLeadsPerPage={setLeadsPerPage}
             sortBy={sortBy}
@@ -275,6 +306,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
               setRatingFilter("all")
               setReviewsFilter("all")
               setWebsiteFilter("all")
+              setPhoneFilter("all")
               setSortBy("relevance")
               setSortOrder("desc")
               setMaxReviews("none")
