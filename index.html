@@ -13,21 +13,29 @@
     <script>
       // Verificar se analytics deve ser carregado
       function shouldLoadAnalytics() {
-        // Verificar se está em modo de desenvolvimento
-        const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        
-        // Verificar se há bloqueador de anúncios
-        const testElement = document.createElement('div');
-        testElement.className = 'adsbox';
-        testElement.style.display = 'none';
-        document.body.appendChild(testElement);
-        const isBlocked = testElement.offsetHeight === 0;
-        document.body.removeChild(testElement);
-        
-        // Verificar Do Not Track
-        const dnt = navigator.doNotTrack === '1';
-        
-        return !isDev && !isBlocked && !dnt;
+        try {
+          // Verificar se está em modo de desenvolvimento
+          const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          
+          // Verificar se há bloqueador de anúncios
+          let isBlocked = false;
+          if (document.body) {
+            const testElement = document.createElement('div');
+            testElement.className = 'adsbox';
+            testElement.style.display = 'none';
+            document.body.appendChild(testElement);
+            isBlocked = testElement.offsetHeight === 0;
+            document.body.removeChild(testElement);
+          }
+          
+          // Verificar Do Not Track
+          const dnt = navigator.doNotTrack === '1';
+          
+          return !isDev && !isBlocked && !dnt;
+        } catch (error) {
+          // Se houver erro, assumir que deve carregar analytics
+          return true;
+        }
       }
       
       // Carregar analytics apenas se necessário

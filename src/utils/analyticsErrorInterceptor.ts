@@ -53,20 +53,24 @@ function isAnalyticsUrl(url: string): boolean {
   return analyticsDomains.some(domain => url.includes(domain));
 }
 
-// Interceptar erros de console relacionados a analytics
+// Interceptar erros de console relacionados a analytics e extensões
 const originalConsoleError = console.error;
 console.error = function(...args) {
   const message = args[0];
   
-  // Verificar se é um erro de analytics bloqueado
+  // Verificar se é um erro de analytics bloqueado ou extensão
   if (typeof message === 'string' && (
     message.includes('ERR_BLOCKED_BY_CLIENT') ||
     message.includes('net::ERR_BLOCKED_BY_CLIENT') ||
     message.includes('google-analytics') ||
     message.includes('googleadservices') ||
-    message.includes('doubleclick')
+    message.includes('doubleclick') ||
+    message.includes('UltraWide') ||
+    message.includes('runtime.lastError') ||
+    message.includes('message port closed') ||
+    message.includes('chrome-extension://')
   )) {
-    // Silenciosamente ignorar erros de analytics bloqueados
+    // Silenciosamente ignorar erros de analytics bloqueados e extensões
     return;
   }
   
@@ -74,20 +78,24 @@ console.error = function(...args) {
   return originalConsoleError.apply(console, args);
 };
 
-// Interceptar warnings de console relacionados a analytics
+// Interceptar warnings de console relacionados a analytics e extensões
 const originalConsoleWarn = console.warn;
 console.warn = function(...args) {
   const message = args[0];
   
-  // Verificar se é um warning de analytics bloqueado
+  // Verificar se é um warning de analytics bloqueado ou extensão
   if (typeof message === 'string' && (
     message.includes('ERR_BLOCKED_BY_CLIENT') ||
     message.includes('net::ERR_BLOCKED_BY_CLIENT') ||
     message.includes('google-analytics') ||
     message.includes('googleadservices') ||
-    message.includes('doubleclick')
+    message.includes('doubleclick') ||
+    message.includes('UltraWide') ||
+    message.includes('runtime.lastError') ||
+    message.includes('message port closed') ||
+    message.includes('chrome-extension://')
   )) {
-    // Silenciosamente ignorar warnings de analytics bloqueados
+    // Silenciosamente ignorar warnings de analytics bloqueados e extensões
     return;
   }
   
@@ -95,18 +103,23 @@ console.warn = function(...args) {
   return originalConsoleWarn.apply(console, args);
 };
 
-// Interceptar erros não capturados relacionados a analytics
+// Interceptar erros não capturados relacionados a analytics e extensões
 window.addEventListener('error', (event) => {
   const message = event.message || '';
   const source = event.filename || '';
   
-  // Verificar se é um erro de analytics bloqueado
+  // Verificar se é um erro de analytics bloqueado ou extensão
   if (
     message.includes('ERR_BLOCKED_BY_CLIENT') ||
     message.includes('net::ERR_BLOCKED_BY_CLIENT') ||
     source.includes('google-analytics') ||
     source.includes('googleadservices') ||
-    source.includes('doubleclick')
+    source.includes('doubleclick') ||
+    source.includes('UltraWide') ||
+    source.includes('chrome-extension://') ||
+    message.includes('runtime.lastError') ||
+    message.includes('message port closed') ||
+    message.includes('Cannot read properties of null')
   ) {
     // Prevenir que o erro apareça no console
     event.preventDefault();
@@ -115,16 +128,20 @@ window.addEventListener('error', (event) => {
   }
 });
 
-// Interceptar promises rejeitadas relacionadas a analytics
+// Interceptar promises rejeitadas relacionadas a analytics e extensões
 window.addEventListener('unhandledrejection', (event) => {
   const reason = event.reason;
   const message = reason?.message || '';
   
-  // Verificar se é um erro de analytics bloqueado
+  // Verificar se é um erro de analytics bloqueado ou extensão
   if (
     message.includes('ERR_BLOCKED_BY_CLIENT') ||
     message.includes('net::ERR_BLOCKED_BY_CLIENT') ||
-    message.includes('Analytics blocked by ad blocker')
+    message.includes('Analytics blocked by ad blocker') ||
+    message.includes('UltraWide') ||
+    message.includes('runtime.lastError') ||
+    message.includes('message port closed') ||
+    message.includes('chrome-extension://')
   ) {
     // Prevenir que o erro apareça no console
     event.preventDefault();

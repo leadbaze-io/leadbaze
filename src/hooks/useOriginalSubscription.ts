@@ -50,11 +50,23 @@ export const useOriginalSubscription = (userId: string) => {
         }
 
         // Buscar elegibilidade para reembolso
-        const refundResponse = await fetch(`/api/subscription/original/${userId}/refund-eligibility`);
-        const refundResult = await refundResponse.json();
-
-        if (refundResult.success) {
-          setRefundEligibility(refundResult.data);
+        try {
+          const refundResponse = await fetch(`/api/subscription/original/${userId}/refund-eligibility`);
+          
+          if (refundResponse.ok) {
+            const refundResult = await refundResponse.json();
+            if (refundResult.success) {
+              setRefundEligibility(refundResult.data);
+            }
+          } else if (refundResponse.status === 404) {
+            // Endpoint não existe ou usuário não tem dados de reembolso
+            console.log('Endpoint de elegibilidade para reembolso não disponível');
+          } else {
+            console.warn('Erro ao buscar elegibilidade para reembolso:', refundResponse.status);
+          }
+        } catch (refundError) {
+          // Falhar silenciosamente para reembolso - não é crítico
+          console.log('Endpoint de elegibilidade para reembolso não disponível');
         }
 
       } catch (err) {
