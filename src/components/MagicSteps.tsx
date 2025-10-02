@@ -29,7 +29,7 @@ export default function MagicSteps() {
     {
       icon: Link2,
       title: "1º) Mapeamento",
-      description: "Escolha o segmento dos clientes que deseja prospectar no Google Maps e cole o link do resultado de busca no Lead Baze.",
+      description: "Digite o tipo de estabelecimento e localização desejada. Nossa IA encontrará automaticamente os melhores leads para você.",
       color: "blue"
     },
     {

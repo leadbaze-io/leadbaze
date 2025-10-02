@@ -565,7 +565,7 @@ export default function UserProfile() {
                                     Como usar seus leads bônus
                                   </h4>
                                   <p className="text-xs text-blue-700 dark:text-blue-300">
-                                    Vá para o <strong>Gerador de Leads</strong> e cole uma URL do Google Maps. 
+                                    Vá para o <strong>Gerador de Leads</strong> e digite o tipo de estabelecimento e localização desejada. 
                                     Cada busca consome 1 lead. Quando acabar, você pode assinar um plano para continuar!
                                   </p>
                                 </div>

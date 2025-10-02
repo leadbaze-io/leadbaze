@@ -473,7 +473,7 @@ export class LeadService {
       } else if (errorResponse?.status && errorResponse.status >= 500) {
         finalErrorMessage = 'Erro no servidor de extração. Tente novamente em alguns minutos.'
       } else if (errorMessage.includes('URL do Google Maps inválida')) {
-        finalErrorMessage = 'URL inválida. Cole uma URL de busca ou lugar do Google Maps (ex: https://www.google.com/maps/search/restaurantes+sp)'
+        finalErrorMessage = 'Erro na busca. Verifique se os campos de tipo de estabelecimento e localização estão preenchidos corretamente.'
       } else if (errorMessage.includes('resposta vazia')) {
         finalErrorMessage = 'N8N não está respondendo corretamente. Verifique se o webhook está ativo e configurado.'
       } else if (errorMessage.includes('Nenhum lead encontrado')) {

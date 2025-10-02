@@ -492,7 +492,7 @@ export default function ListaDetalhes() {
                 <div className="space-y-2 sm:space-y-3 dashboard-card-muted-claro dark:text-muted-foreground">
                   <div className="flex items-start space-x-2 sm:space-x-3">
                     <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-xs sm:text-sm">Mencione que encontrou no Google Maps</p>
+                    <p className="text-xs sm:text-sm">Mencione que gerou o lead através do LeadBaze</p>
                   </div>
                   <div className="flex items-start space-x-2 sm:space-x-3">
                     <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mt-0.5 flex-shrink-0" />

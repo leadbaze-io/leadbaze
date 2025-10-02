@@ -398,7 +398,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
             <p className="lista-texto-muted-claro dark:text-muted-foreground mb-8 max-w-md mx-auto">
               {lists.length === 0
 
-                ? 'Comece criando sua primeira lista de leads usando links do Google Maps'
+                ? 'Comece criando sua primeira lista de leads usando nossa busca inteligente'
                 : 'Tente ajustar os filtros para encontrar suas listas'
               }
             </p>
