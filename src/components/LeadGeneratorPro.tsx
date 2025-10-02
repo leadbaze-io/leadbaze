@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import "../styles/lead-generator-buttons.css"
+import "../styles/lead-generator-tooltip.css"
 import { useSubscription } from "../hooks/useSubscription"
 import {
   Form,
@@ -32,7 +33,7 @@ import { Button } from "./ui/button"
 import { useToast } from "../hooks/use-toast"
 import { LeadService } from "../lib/leadService"
 import '../styles/toast-modern.css'
-import { Loader2, Search, MapPin, Save, Zap, Target, Users, CheckCircle } from "lucide-react"
+import { Loader2, Search, MapPin, Save, Zap, Target, Users, CheckCircle, Info } from "lucide-react"
 import { Label } from "./ui/label"
 import type { Lead, LeadList } from "../types"
 import { motion, AnimatePresence } from "framer-motion"
@@ -45,11 +46,13 @@ import { SimpleBonusLeadsAlert } from './SimpleBonusLeadsAlert'
 import { useProfileCheck } from '../hooks/useProfileCheck'
 import { supabase } from '../lib/supabaseClient'
 
-const urlFormSchema = z.object({
-  searchUrl: z
+const searchFormSchema = z.object({
+  businessType: z
     .string()
-    .url({ message: "Por favor, insira um link de pesquisa válido." })
-    .min(1, { message: "O campo não pode estar vazio." }),
+    .min(1, { message: "Por favor, insira o tipo de estabelecimento." }),
+  location: z
+    .string()
+    .min(1, { message: "Por favor, insira a localidade." }),
   quantity: z.string().min(1, { message: "Selecione uma quantidade." }),
 })
 
@@ -96,6 +99,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [newListName, setNewListName] = useState("")
   const [isSaving, setIsSaving] = useState(false)
   const [showQuantityAdjustment, setShowQuantityAdjustment] = useState(false)
+  const [showBusinessTypeTooltip, setShowBusinessTypeTooltip] = useState(false)
   const [user, setUser] = useState<any>(null)
   
   // Buscar usuário atual
@@ -139,16 +143,19 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   
   const { toast } = useToast()
 
-  const urlForm = useForm<z.infer<typeof urlFormSchema>>({
-    resolver: zodResolver(urlFormSchema),
+  const searchForm = useForm<z.infer<typeof searchFormSchema>>({
+    resolver: zodResolver(searchFormSchema),
     defaultValues: {
-      searchUrl: "",
+      businessType: "",
+      location: "",
       quantity: "10",
     },
   })
 
   // Verificar se o formulário está preenchido para ativar o botão
-  const isFormValid = urlForm.watch("searchUrl") && urlForm.watch("quantity")
+  const isFormValid = searchForm.watch("businessType") && 
+                     searchForm.watch("location") && 
+                     searchForm.watch("quantity")
 
   // Filtrar leads
   const filteredLeads = generatedLeads.filter(lead => {
@@ -279,7 +286,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     }
   }
 
-  const handleLeadGeneration = async (searchUrl: string, limit: number) => {
+  const handleLeadGeneration = async (businessType: string, location: string, limit: number) => {
     setIsGenerating(true)
     setExtractionStatus('generating')
     setGeneratedLeads([])
@@ -287,8 +294,8 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     resetPagination()
     
     try {
-      console.log('🚀 Iniciando geração de leads para:', searchUrl)
-      const result = await LeadService.generateLeads(searchUrl, limit)
+      console.log('🚀 Iniciando geração de leads para:', `${businessType} em ${location}`)
+      const result = await LeadService.generateLeadsFromSearch(businessType, location, limit)
 
       // Verificar se está em modo demo
       if (result.demo_mode) {
@@ -575,9 +582,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
     }
   }
 
-  const onUrlSubmit = (values: z.infer<typeof urlFormSchema>) => {
+  const onSearchSubmit = (values: z.infer<typeof searchFormSchema>) => {
     setExtractionStatus('ready') // Reset status before starting
-    handleLeadGeneration(values.searchUrl, parseInt(values.quantity))
+    handleLeadGeneration(values.businessType, values.location, parseInt(values.quantity))
   }
 
   const handleCloseSuccessModal = () => {
@@ -639,11 +646,11 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
               <Target className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-              Gerador de Leads
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight">
+              Busca Inteligente de Leads
             </h1>
-            <p className="text-xl gerador-descricao-claro dark:text-muted-foreground max-w-2xl mx-auto">
-              Extraia leads qualificados do Google Maps de forma rápida e eficiente
+            <p className="text-lg sm:text-xl gerador-descricao-claro dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Defina o tipo de negócio e localização desejada. <strong>Seja específico</strong> para obter leads de maior qualidade e relevância!
             </p>
           </motion.div>
         </div>
@@ -661,10 +668,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                 <div>
                   <h4 className="font-semibold text-sm text-white">
-                    Ajuste a quantidade de leads
+                    Ajuste necessário na quantidade
                   </h4>
                   <p className="text-xs mt-1 text-white">
-                    Selecione uma quantidade menor que seus leads restantes e tente novamente.
+                    Reduza a quantidade de leads solicitados para continuar com a busca.
                   </p>
                 </div>
               </div>
@@ -685,10 +692,10 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-white text-center">Extrair Leads do Google Maps</CardTitle>
+                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-white text-center">Configuração da Busca</CardTitle>
               </div>
               <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-white text-center px-2">
-                Cole o link de pesquisa do Google Maps e configure a quantidade de leads desejada
+                Especifique o segmento de mercado e região de interesse. Nossa plataforma localizará estabelecimentos relevantes em segundos.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
@@ -710,42 +717,87 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
               {showQuantityAdjustment ? (
                 // Mostrar formulário diretamente quando ajustando quantidade
                 <div>
-                  <Form {...urlForm}>
+                  <Form {...searchForm}>
                     <form
-                      onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                      onSubmit={searchForm.handleSubmit(onSearchSubmit)}
                       className="space-y-6"
                       data-lead-form
                     >
-                    <FormField
-                      control={urlForm.control}
-                      name="searchUrl"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                            <MapPin className="w-4 h-4 text-blue-500" />
-                            Link de Pesquisa do Google Maps
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="https://www.google.com/maps/search/..."
-                              {...field}
-                              className="gerador-input-claro gerador-input-escuro text-base py-3 px-4"
-                              disabled={isGenerating}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-500 text-sm" />
-                        </FormItem>
-                      )}
-                    />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField
+                          control={searchForm.control}
+                          name="businessType"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                            <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                              <Search className="w-4 h-4 text-blue-500" />
+                              Tipo de Estabelecimento
+                              <div className="relative">
+                                <Info 
+                                  className="w-4 h-4 gerador-info-icon cursor-help transition-colors"
+                                  onMouseEnter={() => setShowBusinessTypeTooltip(true)}
+                                  onMouseLeave={() => setShowBusinessTypeTooltip(false)}
+                                />
+                                {showBusinessTypeTooltip && (
+                                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 gerador-tooltip text-xs rounded-lg p-3 shadow-lg z-50 border">
+                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent gerador-tooltip-arrow"></div>
+                                    <div className="font-semibold mb-2 gerador-tooltip-title">💡 Dicas para Busca Eficaz:</div>
+                                    <div className="space-y-1">
+                                      <div><strong>Seja específico:</strong> "restaurantes italianos" em vez de "restaurantes"</div>
+                                      <div><strong>Use termos comerciais:</strong> "farmácias 24h", "academias de musculação"</div>
+                                      <div><strong>Inclua especialidades:</strong> "clínicas odontológicas", "consultórios médicos"</div>
+                                      <div><strong>Adicione serviços:</strong> "padarias artesanais", "lojas de eletrônicos"</div>
+                                    </div>
+                                    <div className="mt-2 gerador-tooltip-highlight text-xs">
+                                      Quanto mais específico, melhores serão os leads encontrados!
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Ex: restaurantes, farmácias, academias, clínicas..."
+                                {...field}
+                                className="gerador-input-claro gerador-input-escuro text-base py-3 px-4"
+                                disabled={isGenerating}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-500 text-sm" />
+                            </FormItem>
+                          )}
+                        />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField
+                          control={searchForm.control}
+                          name="location"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                            <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-green-500" />
+                              Localidade
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Ex: São Paulo, Rio de Janeiro, Belo Horizonte, Brasília..."
+                                {...field}
+                                className="gerador-input-claro gerador-input-escuro text-base py-3 px-4"
+                                disabled={isGenerating}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-500 text-sm" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
                       <FormField
-                        control={urlForm.control}
+                        control={searchForm.control}
                         name="quantity"
                         render={({ field }) => (
                           <FormItem className="space-y-3">
                             <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                              <Target className="w-4 h-4 text-green-500" />
+                              <Target className="w-4 h-4 text-purple-500" />
                               Quantidade de Leads
                             </FormLabel>
                             <Select onValueChange={(value) => {
@@ -796,68 +848,113 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           </FormItem>
                         )}
                       />
-                    </div>
 
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
-                      className="pt-2"
-                    >
-                      <Button
-                        type="submit"
-                        disabled={isGenerating || !urlForm.formState.isValid}
-                        className="w-full gerador-button-claro gerador-button-escuro text-lg font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:scale-100"
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        className="pt-2"
                       >
-                        {isGenerating ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Extraindo leads...
-                          </>
-                        ) : (
-                          <>
-                            <Search className="mr-2 h-5 w-5" />
-                            Extrair Leads
-                          </>
-                        )}
-                      </Button>
-                    </motion.div>
-                  </form>
-                </Form>
+                        <Button
+                          type="submit"
+                          disabled={isGenerating || !searchForm.formState.isValid}
+                          className="w-full gerador-button-claro gerador-button-escuro text-lg font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:scale-100"
+                        >
+                          {isGenerating ? (
+                            <>
+                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              Buscando estabelecimentos...
+                            </>
+                          ) : (
+                            <>
+                              <Search className="mr-2 h-5 w-5" />
+                              Localizar Estabelecimentos
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    </form>
+                  </Form>
                 </div>
               ) : (
                 <LeadsControlGuard 
-                  leadsToGenerate={parseInt(urlForm.watch("quantity") || "10")}
+                  leadsToGenerate={parseInt(searchForm.watch("quantity") || "10")}
                   onAdjustQuantity={handleAdjustQuantity}
                   forceShowForm={showQuantityAdjustment}
                 >
-                  <Form {...urlForm}>
+                  <Form {...searchForm}>
                   <form
-                    onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                    onSubmit={searchForm.handleSubmit(onSearchSubmit)}
                     className="space-y-6"
                     data-lead-form
                   >
-                  <FormField
-                    control={urlForm.control}
-                    name="searchUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
-                          <MapPin className="w-4 h-4" />
-                          <span>URL de Pesquisa do Google Maps</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://www.google.com/maps/search/..."
-                            {...field}
-                            disabled={isGenerating}
-                            className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField
+                      control={searchForm.control}
+                      name="businessType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
+                            <Search className="w-4 h-4" />
+                            <span>Tipo de Estabelecimento</span>
+                            <div className="relative">
+                              <Info 
+                                className="w-4 h-4 gerador-info-icon cursor-help transition-colors"
+                                onMouseEnter={() => setShowBusinessTypeTooltip(true)}
+                                onMouseLeave={() => setShowBusinessTypeTooltip(false)}
+                              />
+                              {showBusinessTypeTooltip && (
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 gerador-tooltip text-xs rounded-lg p-3 shadow-lg z-50 border">
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent gerador-tooltip-arrow"></div>
+                                  <div className="font-semibold mb-2 gerador-tooltip-title">💡 Dicas para Busca Eficaz:</div>
+                                  <div className="space-y-1">
+                                    <div><strong>Seja específico:</strong> "restaurantes italianos" em vez de "restaurantes"</div>
+                                    <div><strong>Use termos comerciais:</strong> "farmácias 24h", "academias de musculação"</div>
+                                    <div><strong>Inclua especialidades:</strong> "clínicas odontológicas", "consultórios médicos"</div>
+                                    <div><strong>Adicione serviços:</strong> "padarias artesanais", "lojas de eletrônicos"</div>
+                                  </div>
+                                  <div className="mt-2 gerador-tooltip-highlight text-xs">
+                                    Quanto mais específico, melhores serão os leads encontrados!
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Ex: restaurantes, farmácias, academias, clínicas..."
+                              {...field}
+                              disabled={isGenerating}
+                              className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={searchForm.control}
+                      name="location"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
+                            <MapPin className="w-4 h-4" />
+                            <span>Localidade</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Ex: São Paulo, Rio de Janeiro, Belo Horizonte, Brasília..."
+                              {...field}
+                              disabled={isGenerating}
+                              className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-2 sm:space-y-3">
@@ -872,7 +969,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       </Label>
                       <Select onValueChange={(value) => {
                         setQuantity(value)
-                        urlForm.setValue('quantity', value) // Sincronizar com o formulário
+                        searchForm.setValue('quantity', value) // Sincronizar com o formulário
                         setShowQuantityAdjustment(false) // Reset highlight when user changes
                       }} defaultValue={quantity} disabled={isGenerating}>
                         <SelectTrigger className={`h-10 sm:h-12 border-2 text-sm sm:text-base transition-all duration-300 ${
@@ -936,7 +1033,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           className="flex items-center"
                         >
                           <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                          Extraindo leads...
+                            Processando busca...
                         </motion.div>
                       ) : (
                         <motion.div
@@ -945,13 +1042,13 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           className="flex items-center"
                         >
                           <Search className="mr-3 h-5 w-5" />
-                          {isFormValid ? '🚀 Iniciar Extração' : 'Preencha os campos acima'}
+                          {isFormValid ? '🚀 Iniciar Busca' : 'Complete os campos obrigatórios'}
                         </motion.div>
                       )}
                     </Button>
                   </motion.div>
-                </form>
-                  </Form>
+                  </form>
+                </Form>
                 </LeadsControlGuard>
               )}
             </CardContent>

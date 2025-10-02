@@ -46,8 +46,9 @@ export interface LeadGenerationResponse {
   leads: Lead[]
   total_found: number
   search_url: string
-  location?: string
-  search_term?: string
+  search_query?: string // Nova propriedade para a query de busca
+  business_type?: string // Tipo de estabelecimento
+  location?: string // Localidade
   processing_time?: number
   error?: string
   demo_mode?: boolean // Indica se está usando dados de demonstração

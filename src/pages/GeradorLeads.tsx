@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, MapPin, Brain } from 'lucide-react'
+import { ArrowLeft, Search, Brain } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
 import { LeadService } from '../lib/leadService'
 import { LeadGeneratorPro } from '../components/LeadGeneratorPro'
@@ -99,11 +99,11 @@ export default function GeradorLeads() {
                     className="flex items-center space-x-3"
                   >
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                      <MapPin className="w-6 h-6 text-yellow-300" />
+                      <Search className="w-6 h-6 text-yellow-300" />
                     </div>
                     <div>
                       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                        Leads do Google Maps
+                        Gerador de Leads Inteligente
                       </h1>
                       <p className="text-blue-100 text-sm sm:text-base">
                         {user?.user_metadata?.name || user?.email}
@@ -117,7 +117,7 @@ export default function GeradorLeads() {
                     transition={{ delay: 0.3 }}
                     className="text-blue-50 text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed"
                   >
-                    Extraia dados precisos e selecione exatamente quais leads deseja salvar com nossa IA avançada!
+                    Encontre estabelecimentos específicos em qualquer localidade. Simplesmente digite o que procura e onde, nossa tecnologia fará o resto!
                   </motion.p>
                 </div>
 
@@ -132,8 +132,8 @@ export default function GeradorLeads() {
                       <Brain className="w-4 h-4 text-yellow-300" />
                       <div className="text-xs sm:text-sm text-blue-200">Modo</div>
                     </div>
-                    <div className="text-base sm:text-lg font-semibold">Extração Inteligente</div>
-                    <div className="text-xs text-blue-300 mt-1">IA + Seleção Manual</div>
+                    <div className="text-base sm:text-lg font-semibold">Busca Direcionada</div>
+                    <div className="text-xs text-blue-300 mt-1">IA + Geolocalização</div>
                   </div>
                 </motion.div>
               </div>

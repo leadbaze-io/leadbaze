@@ -419,11 +419,9 @@ export const generateDemoLeads = (searchUrl: string, limit: number = 10): LeadGe
     total_found: limitedLeads.length,
 
     search_url: searchUrl,
-
+    search_query: `${businessType}s em ${locationName}`,
+    business_type: businessType,
     location: locationName,
-
-    search_term: `${businessType}s em ${locationName}`,
-
     processing_time: 1.2
 
   }

@@ -8,8 +8,258 @@ const N8N_WEBHOOK_URL = 'https://n8n-n8n-start.kof6cn.easypanel.host/webhook/842
 
 export class LeadService {
   /**
+   * Gera leads a partir de tipo de estabelecimento e localidade
+   * Constrói automaticamente a URL do Google Maps
+   */
+  static async generateLeadsFromSearch(
+    businessType: string, 
+    location: string, 
+    limit: number = 10
+  ): Promise<LeadGenerationResponse> {
+    try {
+      const user = await getCurrentUser()
+      if (!user) {
+        throw new Error('Usuário não autenticado')
+      }
+
+      // Construir URL do Google Maps automaticamente
+      const searchQuery = `${businessType} em ${location}`
+      const googleMapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`
+
+      console.log(`🔍 Buscando: ${searchQuery}`)
+      console.log(`🔗 URL gerada: ${googleMapsUrl}`)
+
+      // Verificar se o usuário pode gerar leads
+      const availability = await LeadsControlService.checkLeadsAvailability(limit)
+      if (!availability.can_generate) {
+        throw new Error(availability.message)
+      }
+
+      console.log(`🎯 Verificação de leads: ${availability.leads_remaining} disponíveis de ${availability.leads_limit}`)
+
+      const response = await axios.post(
+        N8N_WEBHOOK_URL,
+        {
+          google_maps_url: googleMapsUrl,
+          limit,
+          user_id: user.id,
+          timestamp: new Date().toISOString(),
+          search_query: searchQuery,
+          business_type: businessType,
+          location: location
+        },
+        {
+          timeout: 120000, // 2 minutos timeout
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      // Processar resposta do N8N
+      const data = response.data
+      
+      // Log para debug - ajuda a entender o formato da resposta
+      console.log('🔍 Resposta completa do N8N:', data)
+      console.log('🔍 Tipo da resposta:', typeof data)
+      console.log('🔍 Status da resposta:', response.status)
+      console.log('🔍 Headers da resposta:', response.headers)
+      
+      // Verificar se a resposta está vazia ou é uma string vazia
+      if (!data || data === "" || data === null) {
+        console.error('❌ Resposta vazia do N8N')
+        throw new Error('N8N retornou resposta vazia. Verifique se o webhook está configurado corretamente.')
+      }
+      
+      // Parser flexível - tenta extrair leads de diferentes estruturas
+      let leads: unknown[] = []
+      
+      if (Array.isArray(data)) {
+        // Caso 1: Resposta é diretamente um array de leads
+        leads = data
+        console.log('✅ Parser: Array direto detectado')
+      } else if (data && Array.isArray(data.leads)) {
+        // Caso 2: Resposta tem propriedade 'leads' com array
+        leads = data.leads
+        console.log('✅ Parser: data.leads detectado')
+      } else if (data && Array.isArray(data.data)) {
+        // Caso 3: Resposta tem propriedade 'data' com array
+        leads = data.data
+        console.log('✅ Parser: data.data detectado')
+      } else if (data && Array.isArray(data.results)) {
+        // Caso 4: Resposta tem propriedade 'results' com array
+        leads = data.results
+        console.log('✅ Parser: data.results detectado')
+      } else if (data && Array.isArray(data.items)) {
+        // Caso 5: Resposta tem propriedade 'items' com array
+        leads = data.items
+        console.log('✅ Parser: data.items detectado')
+      } else if (data && Array.isArray(data.businesses)) {
+        // Caso 6: Resposta tem propriedade 'businesses' com array
+        leads = data.businesses
+        console.log('✅ Parser: data.businesses detectado')
+      } else if (data && Array.isArray(data.places)) {
+        // Caso 7: Resposta tem propriedade 'places' com array
+        leads = data.places
+        console.log('✅ Parser: data.places detectado')
+      } else if (data && typeof data === 'object') {
+        // Caso 8: Busca automática por arrays em propriedades do objeto
+        const possibleArrays = ['leads', 'data', 'results', 'items', 'businesses', 'places', 'establishments', 'locations']
+        for (const prop of possibleArrays) {
+          if (Array.isArray(data[prop])) {
+            leads = data[prop]
+            console.log(`✅ Parser: data.${prop} detectado automaticamente`)
+            break
+          }
+        }
+      }
+      
+      // Validar se encontrou leads
+      if (!Array.isArray(leads) || leads.length === 0) {
+        console.error('❌ Nenhum lead encontrado na resposta')
+        console.error('📄 Estrutura da resposta:', JSON.stringify(data, null, 2))
+        throw new Error(`Nenhum lead encontrado. Formato recebido: ${typeof data}. Verifique se o webhook N8N está retornando dados no formato correto ou tente uma busca diferente.`)
+      }
+
+      console.log(`✅ ${leads.length} leads encontrados`)
+
+      // Normalizar dados dos leads vindos do N8N
+      const normalizedLeads: Lead[] = leads.map((lead, index: number) => {
+        const leadData = lead as Record<string, unknown>
+        return {
+          id: (leadData.id as string) || `temp_${Date.now()}_${index}`,
+          name: (leadData.title as string) || (leadData.name as string) || 'Nome não disponível',
+          address: (leadData.city as string) || (leadData.address as string) || 'Cidade não disponível',
+          phone: LeadService.formatPhoneFromN8N((leadData.phoneUnformatted as string) || (leadData.phone as string)),
+          rating: this.normalizeRating((leadData.totalScore as number) || (leadData.rating as number)),
+          totalScore: (leadData.totalScore as number) || (leadData.rating as number) || 0,
+          website: (leadData.website as string) || (leadData.url as string),
+          business_type: (leadData.business_type as string) || (leadData.category as string) || businessType,
+          google_maps_url: (leadData.google_maps_url as string) || (leadData.url as string),
+          place_id: (leadData.place_id as string) || (leadData.placeId as string),
+          reviews_count: (leadData.reviewsCount as number) || (leadData.reviews_count as number) || (leadData.review_count as number),
+          price_level: (leadData.price_level as number) || (leadData.priceLevel as number),
+          opening_hours: Array.isArray(leadData.opening_hours) ? (leadData.opening_hours as string[]) : 
+                         Array.isArray(leadData.openingHours) ? (leadData.openingHours as string[]) : 
+                         Array.isArray(leadData.hours) ? (leadData.hours as string[]) : [],
+          photos: (leadData.photos as string[]) || (leadData.images as string[]) || [],
+          selected: false
+        }
+      })
+
+      console.log(`✅ ${normalizedLeads.length} leads normalizados com sucesso`)
+
+      // Consumir leads do saldo do usuário após sucesso da geração
+      const actualLeadsGenerated = normalizedLeads.length
+      const consumeResult = await LeadsControlService.consumeLeads(
+        actualLeadsGenerated, 
+        `lead_generation_from_search: ${searchQuery}`
+      )
+
+      if (!consumeResult.success) {
+        console.warn('⚠️ Leads gerados mas não foram consumidos do saldo:', consumeResult.message)
+        // Ainda retorna os leads, mas com aviso
+      } else {
+        console.log(`✅ ${actualLeadsGenerated} leads consumidos do saldo. Restantes: ${consumeResult.leads_remaining}`)
+      }
+
+      return {
+        success: true,
+        leads: normalizedLeads,
+        total_found: normalizedLeads.length,
+        search_url: googleMapsUrl,
+        search_query: searchQuery,
+        business_type: businessType,
+        location: location,
+        processing_time: data?.processing_time || 2.0,
+        leads_consumed: actualLeadsGenerated,
+        leads_remaining: consumeResult.leads_remaining || 0,
+        consumption_success: consumeResult.success
+      }
+
+    } catch (error: unknown) {
+      console.error('❌ Erro ao conectar com N8N:', error)
+      
+      // Se houver erro de conectividade, usar dados demo
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorCode = (error as { code?: string })?.code
+      const errorResponse = (error as { response?: { status?: number } })?.response
+      
+      if (errorCode === 'ERR_NETWORK' || 
+          errorMessage.includes('Network Error') || 
+          errorMessage.includes('CORS') || 
+          errorCode === 'ERR_CORS' ||
+          errorCode === 'ECONNABORTED' ||
+          errorResponse?.status === 404 ||
+          errorMessage.includes('resposta vazia') ||
+          errorMessage.includes('N8N não está respondendo')) {
+        
+        console.log('🎭 N8N indisponível, usando dados de demonstração')
+        
+        // Retornar dados demo em vez de erro
+        const searchQuery = `${businessType} em ${location}`
+        const googleMapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`
+        const demoResult = generateDemoLeads(googleMapsUrl, limit)
+        
+        // Consumir leads mesmo em modo demo
+        const actualLeadsGenerated = demoResult.leads.length
+        const consumeResult = await LeadsControlService.consumeLeads(
+          actualLeadsGenerated, 
+          `lead_generation_from_search_demo: ${searchQuery}`
+        )
+
+        if (!consumeResult.success) {
+          console.warn('⚠️ Leads demo gerados mas não foram consumidos do saldo:', consumeResult.message)
+        } else {
+          console.log(`✅ ${actualLeadsGenerated} leads demo consumidos do saldo. Restantes: ${consumeResult.leads_remaining}`)
+        }
+        
+        // Adicionar uma nota sobre ser dados demo
+        return {
+          ...demoResult,
+          search_query: searchQuery,
+          business_type: businessType,
+          location: location,
+          demo_mode: true,
+          error: 'Conectado com dados de demonstração. Configure o N8N para dados reais.',
+          leads_consumed: actualLeadsGenerated,
+          leads_remaining: consumeResult.leads_remaining || 0,
+          consumption_success: consumeResult.success
+        }
+      }
+      
+      // Para outros erros, retornar erro específico
+      let finalErrorMessage = 'Erro interno no serviço de extração'
+      
+      if (errorMessage.includes('timeout')) {
+        finalErrorMessage = 'Timeout: A extração está demorando mais que o esperado. Tente novamente com menos leads.'
+      } else if (errorResponse?.status && errorResponse.status >= 500) {
+        finalErrorMessage = 'Erro no servidor de extração. Tente novamente em alguns minutos.'
+      } else if (errorMessage.includes('Nenhum lead encontrado')) {
+        finalErrorMessage = 'Nenhum estabelecimento encontrado para esta busca. Tente com termos diferentes.'
+      } else if (errorMessage.includes('resposta vazia')) {
+        finalErrorMessage = 'N8N não está respondendo corretamente. Verifique se o webhook está ativo e configurado.'
+      } else if (errorMessage) {
+        finalErrorMessage = errorMessage
+      }
+
+      return {
+        success: false,
+        leads: [],
+        total_found: 0,
+        search_url: `https://www.google.com/maps/search/${encodeURIComponent(`${businessType} em ${location}`)}`,
+        search_query: `${businessType} em ${location}`,
+        business_type: businessType,
+        location: location,
+        error: finalErrorMessage
+      }
+    }
+  }
+
+  /**
    * Gera leads a partir de uma URL do Google Maps
    * Agora integrado com o sistema de controle de leads
+   * @deprecated Use generateLeadsFromSearch instead
    */
   static async generateLeads(searchUrl: string, limit: number = 10): Promise<LeadGenerationResponse> {
     try {
@@ -160,8 +410,9 @@ export class LeadService {
         leads: normalizedLeads,
         total_found: normalizedLeads.length,
         search_url: searchUrl,
+        search_query: data?.search_query || 'Busca realizada',
+        business_type: data?.business_type || 'Estabelecimento',
         location: data?.location || 'Localização detectada',
-        search_term: data?.search_term || 'Busca realizada',
         processing_time: data?.processing_time || 2.0,
         leads_consumed: actualLeadsGenerated,
         leads_remaining: consumeResult.leads_remaining || 0,
