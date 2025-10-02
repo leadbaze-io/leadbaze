@@ -100,6 +100,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [isSaving, setIsSaving] = useState(false)
   const [showQuantityAdjustment, setShowQuantityAdjustment] = useState(false)
   const [showBusinessTypeTooltip, setShowBusinessTypeTooltip] = useState(false)
+  const [showLocationTooltip, setShowLocationTooltip] = useState(false)
   const [user, setUser] = useState<any>(null)
   
   // Buscar usuário atual
@@ -776,10 +777,32 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             <FormLabel className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                               <MapPin className="w-4 h-4 text-green-500" />
                               Localidade
+                              <div className="relative">
+                                <Info 
+                                  className="w-4 h-4 gerador-info-icon cursor-help transition-colors"
+                                  onMouseEnter={() => setShowLocationTooltip(true)}
+                                  onMouseLeave={() => setShowLocationTooltip(false)}
+                                />
+                                {showLocationTooltip && (
+                                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 gerador-tooltip text-xs rounded-lg p-3 shadow-lg z-50 border">
+                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent gerador-tooltip-arrow"></div>
+                                    <div className="font-semibold mb-2 gerador-tooltip-title">📍 Dicas de Localização:</div>
+                                    <div className="space-y-1">
+                                      <div><strong>Cidade + Região:</strong> "Belo Horizonte, Nova Lima"</div>
+                                      <div><strong>Bairro específico:</strong> "Copacabana, Rio de Janeiro"</div>
+                                      <div><strong>Zona da cidade:</strong> "Zona Sul, São Paulo"</div>
+                                      <div><strong>Centro comercial:</strong> "Centro, Brasília"</div>
+                                    </div>
+                                    <div className="mt-2 gerador-tooltip-highlight text-xs">
+                                      Seja específico para encontrar estabelecimentos na região exata!
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="Ex: São Paulo, Rio de Janeiro, Belo Horizonte, Brasília..."
+                                placeholder="Ex: Belo Horizonte, Nova Lima / Copacabana, Rio de Janeiro..."
                                 {...field}
                                 className="gerador-input-claro gerador-input-escuro text-base py-3 px-4"
                                 disabled={isGenerating}
@@ -941,10 +964,32 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           <FormLabel className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
                             <MapPin className="w-4 h-4" />
                             <span>Localidade</span>
+                            <div className="relative">
+                              <Info 
+                                className="w-4 h-4 gerador-info-icon cursor-help transition-colors"
+                                onMouseEnter={() => setShowLocationTooltip(true)}
+                                onMouseLeave={() => setShowLocationTooltip(false)}
+                              />
+                              {showLocationTooltip && (
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 gerador-tooltip text-xs rounded-lg p-3 shadow-lg z-50 border">
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent gerador-tooltip-arrow"></div>
+                                  <div className="font-semibold mb-2 gerador-tooltip-title">📍 Dicas de Localização:</div>
+                                  <div className="space-y-1">
+                                    <div><strong>Cidade + Região:</strong> "Belo Horizonte, Nova Lima"</div>
+                                    <div><strong>Bairro específico:</strong> "Copacabana, Rio de Janeiro"</div>
+                                    <div><strong>Zona da cidade:</strong> "Zona Sul, São Paulo"</div>
+                                    <div><strong>Centro comercial:</strong> "Centro, Brasília"</div>
+                                  </div>
+                                  <div className="mt-2 gerador-tooltip-highlight text-xs">
+                                    Seja específico para encontrar estabelecimentos na região exata!
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Ex: São Paulo, Rio de Janeiro, Belo Horizonte, Brasília..."
+                              placeholder="Ex: Belo Horizonte, Nova Lima / Copacabana, Rio de Janeiro..."
                               {...field}
                               disabled={isGenerating}
                               className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
