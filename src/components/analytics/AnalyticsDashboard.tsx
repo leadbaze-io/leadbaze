@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../../contexts/ThemeContext';
 import {
 
   Users,
@@ -187,6 +188,7 @@ const ActivityItem = ({
 
 // Componente principal do Analytics Dashboard
 export const AnalyticsDashboard: React.FC = () => {
+  const { isDark } = useTheme();
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
