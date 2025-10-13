@@ -391,11 +391,22 @@ export const AnalyticsDashboard: React.FC = () => {
         <nav className="flex space-x-1 sm:space-x-2">
           <button
             onClick={() => setActiveTab('performance')}
-            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 ${
+            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${
               activeTab === 'performance'
-                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
-                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+                ? 'scale-105'
+                : 'hover:scale-102'
             }`}
+            style={{
+              background: activeTab === 'performance' 
+                ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                : 'transparent',
+              color: activeTab === 'performance' 
+                ? '#ffffff' 
+                : isDark ? '#9ca3af' : '#6b7280',
+              boxShadow: activeTab === 'performance' 
+                ? '0 4px 12px rgba(16, 185, 129, 0.3)' 
+                : 'none'
+            }}
           >
             <div className="flex items-center space-x-1 sm:space-x-2">
               <Activity className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -405,18 +416,32 @@ export const AnalyticsDashboard: React.FC = () => {
             {activeTab === 'performance' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-30 -z-10"
+                className="absolute inset-0 rounded-xl blur opacity-20 -z-10"
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                }}
               />
             )}
           </button>
 
           <button
             onClick={() => setActiveTab('activity')}
-            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 ${
+            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${
               activeTab === 'activity'
-                ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
-                : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+                ? 'scale-105'
+                : 'hover:scale-102'
             }`}
+            style={{
+              background: activeTab === 'activity' 
+                ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                : 'transparent',
+              color: activeTab === 'activity' 
+                ? '#ffffff' 
+                : isDark ? '#9ca3af' : '#6b7280',
+              boxShadow: activeTab === 'activity' 
+                ? '0 4px 12px rgba(16, 185, 129, 0.3)' 
+                : 'none'
+            }}
           >
             <div className="flex items-center space-x-1 sm:space-x-2">
               <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -426,7 +451,10 @@ export const AnalyticsDashboard: React.FC = () => {
             {activeTab === 'activity' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-30 -z-10"
+                className="absolute inset-0 rounded-xl blur opacity-20 -z-10"
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                }}
               />
             )}
           </button>

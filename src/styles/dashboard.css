@@ -30,9 +30,9 @@
 }
 
 .dashboard-nav-button-active-light {
-  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
-  color: #000000;
-  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 /* Action Cards - Modo Claro */
@@ -99,9 +99,9 @@
 }
 
 .dashboard-nav-button-active-dark {
-  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
-  color: #000000;
-  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.4);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 /* Action Cards - Modo Escuro */
