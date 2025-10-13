@@ -1,4 +1,5 @@
 import MagicHero from '../components/MagicHero'
+import MagicPlatformPreview from '../components/MagicPlatformPreview'
 import MagicSteps from '../components/MagicSteps'
 import MagicBenefits from '../components/MagicBenefits'
 import MagicPricing from '../components/MagicPricing'
@@ -20,6 +21,9 @@ export default function LandingPage() {
       <div className="hidden md:block">
         {/* Hero Section */}
         <MagicHero />
+
+        {/* Platform Preview - Interactive Demo */}
+        <MagicPlatformPreview />
 
         {/* Como Funciona */}
         <MagicSteps />

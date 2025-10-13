@@ -1,4 +1,4 @@
-## 🎉 **Perfeito! Agora vamos implementar o LeadFlow!**
+qua## 🎉 **Perfeito! Agora vamos implementar o LeadFlow!**
 
 ### ** Passo a Passo para Implementação**
 
@@ -24,7 +24,7 @@
 - ✅ Mostrar chave privada para GitHub Actions
 - ✅ Testar conexão SSH
 
-## **3. Copiar Chave SSH para GitHub**
+## **3. Copiar Chave SSH para GitHub**C
 
 ### **Após executar o script, você verá:**
 ```

@@ -30,22 +30,6 @@ export function AnimatedBeam({ children, className, delay = 0 }: AnimatedBeamPro
 
     >
 
-      <div className="absolute inset-0 -z-10">
-
-        <motion.div
-
-          initial={{ scale: 0, opacity: 0 }}
-
-          animate={{ scale: 1, opacity: 0.1 }}
-
-          transition={{ duration: 1, delay: delay + 0.2 }}
-
-          className="w-full h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-xl"
-
-        />
-
-      </div>
-
       {children}
 
     </motion.div>

@@ -107,8 +107,8 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
         onClick={handleSubscribe}
         disabled={isProcessing}
         className={`
-          bg-gradient-to-r from-blue-500 to-purple-600 
-          hover:from-blue-600 hover:to-purple-700 
+          bg-gradient-to-r from-green-500 to-emerald-600 
+          hover:from-green-600 hover:to-emerald-700 
           disabled:from-gray-400 disabled:to-gray-500
           text-white px-6 py-3 rounded-lg font-semibold 
           transition-all duration-200 

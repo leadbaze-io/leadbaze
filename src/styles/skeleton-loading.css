@@ -1,38 +1,55 @@
-/* Skeleton Loading Styles - Forçar cores específicas */
+/* Skeleton Loading Styles - Paleta LeadBaze */
 
-/* Modo claro - cinza muito claro */
+/* Modo claro - cinza-esverdeado claro */
 .skeleton-loading-force {
-  background-color: #f9fafb !important; /* gray-50 - ainda mais claro */
-  opacity: 0.8;
+  background-color: #b7c7c1 !important; /* BG da paleta LeadBaze */
+  opacity: 0.6;
 }
 
-/* Modo escuro - cinza escuro */
+/* Modo escuro - verde escuro */
 html.dark .skeleton-loading-force {
-  background-color: #374151 !important; /* gray-700 */
-  opacity: 0.8;
+  background-color: #2e4842 !important; /* TEXT da paleta LeadBaze */
+  opacity: 0.7;
 }
 
 /* Versão alternativa ainda mais clara */
 .skeleton-loading-ultra-light {
-  background-color: #fafafa !important; /* quase branco */
-  opacity: 0.6;
+  background-color: #b7c7c1 !important; /* BG da paleta LeadBaze */
+  opacity: 0.4;
 }
 
 html.dark .skeleton-loading-ultra-light {
-  background-color: #374151 !important; /* gray-700 */
-  opacity: 0.8;
+  background-color: #2e4842 !important; /* TEXT da paleta LeadBaze */
+  opacity: 0.6;
 }
 
-/* Animação de pulse personalizada */
+/* Animação de pulse personalizada com cores LeadBaze */
 @keyframes skeleton-pulse {
   0%, 100% {
-    opacity: 0.8;
+    opacity: 0.6;
+    background-color: #b7c7c1;
+  }
+  50% {
+    opacity: 0.3;
+    background-color: #00ff00;
+  }
+}
+
+@keyframes skeleton-pulse-dark {
+  0%, 100% {
+    opacity: 0.7;
+    background-color: #2e4842;
   }
   50% {
     opacity: 0.4;
+    background-color: #00ff00;
   }
 }
 
 .skeleton-pulse {
   animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+html.dark .skeleton-pulse {
+  animation: skeleton-pulse-dark 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

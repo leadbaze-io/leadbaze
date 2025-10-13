@@ -128,9 +128,40 @@ html.dark {
   color: #f9fafb;
 }
 
-html.dark body {
-  background-color: #111827;
-  color: #f9fafb;
+/* Garantir que Landing Page, Blog e Sobre sempre fiquem no modo claro */
+html.dark body[data-page="landing"],
+html.dark body[data-page="blog"],
+html.dark body[data-page="about"] {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Forçar modo claro para páginas específicas */
+html.dark [data-force-light="true"] {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+html.dark [data-force-light="true"] * {
+  color: inherit !important;
+}
+
+/* Sobrescrever qualquer estilo dark mode nas páginas forçadas para modo claro */
+html.dark [data-force-light="true"] .dark\:bg-gray-900,
+html.dark [data-force-light="true"] .dark\:bg-gray-800,
+html.dark [data-force-light="true"] .dark\:bg-gray-700 {
+  background-color: transparent !important;
+}
+
+html.dark [data-force-light="true"] .dark\:text-white,
+html.dark [data-force-light="true"] .dark\:text-gray-100,
+html.dark [data-force-light="true"] .dark\:text-gray-200 {
+  color: #111827 !important;
+}
+
+html.dark [data-force-light="true"] .dark\:border-gray-700,
+html.dark [data-force-light="true"] .dark\:border-gray-600 {
+  border-color: #e5e7eb !important;
 }
 
 /* Classes dark: customizadas */
@@ -1125,15 +1156,16 @@ html:not(.dark) .gerador-input-claro:focus {
 
 /* Modo Claro - Botões */
 html:not(.dark) .gerador-botao-claro {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
+  box-shadow: none !important;
 }
 
 html:not(.dark) .gerador-botao-claro:hover {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 /* Botões desabilitados - sem hover */
@@ -1261,15 +1293,16 @@ html.dark .gerador-input-escuro:focus {
 
 /* Modo Escuro - Botões */
 html.dark .gerador-botao-escuro {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
+  box-shadow: none !important;
 }
 
 html.dark .gerador-botao-escuro:hover {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
 }
 
 html.dark .gerador-botao-escuro:disabled,
@@ -1569,16 +1602,16 @@ html:not(.dark) .modal-sucesso-stats-label-purple-claro {
 
 /* Modo Claro - Primary Button */
 html:not(.dark) .modal-sucesso-botao-principal-claro {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 html:not(.dark) .modal-sucesso-botao-principal-claro:hover {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
-  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4) !important;
-  transform: translateY(-2px) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
 }
 
 /* Modo Claro - Secondary Button */
@@ -1691,16 +1724,16 @@ html.dark .modal-sucesso-stats-label-purple-escuro {
 
 /* Modo Escuro - Primary Button */
 html.dark .modal-sucesso-botao-principal-escuro {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
 }
 
 html.dark .modal-sucesso-botao-principal-escuro:hover {
-  background: linear-gradient(to right, #2563eb, #7c3aed) !important;
-  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5) !important;
-  transform: translateY(-2px) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5) !important;
 }
 
 /* Modo Escuro - Secondary Button */
@@ -1815,13 +1848,38 @@ html:not(.dark) .dashboard-card-muted-claro {
   text-fill-color: #6b7280 !important;
 }
 
-/* Modo Claro - Badges e Indicadores */
-html:not(.dark) .dashboard-badge-claro {
-  background-color: #dbeafe !important;
-  background: #dbeafe !important;
-  color: #1e40af !important;
-  -webkit-text-fill-color: #1e40af !important;
-  text-fill-color: #1e40af !important;
+/* Forçar cores das bolinhas de status no Dashboard */
+html:not(.dark) .dashboard-status-active,
+html.dark .dashboard-status-active {
+  background-color: #10b981 !important;
+  border: 2px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6) !important;
+}
+
+html:not(.dark) .dashboard-status-inactive,
+html.dark .dashboard-status-inactive {
+  background-color: #6b7280 !important;
+  border: 2px solid rgba(107, 114, 128, 0.3) !important;
+  box-shadow: 0 0 12px rgba(107, 114, 128, 0.5) !important;
+}
+
+html:not(.dark) .dashboard-status-warning,
+html.dark .dashboard-status-warning {
+  background-color: #f59e0b !important;
+  border: 2px solid rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.6) !important;
+}
+
+html:not(.dark) .dashboard-status-cancelled,
+html.dark .dashboard-status-cancelled {
+  background-color: #ef4444 !important;
+  border: 2px solid rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6) !important;
+}
+
+html:not(.dark) .dashboard-badge-claro svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 
 /* Modo Escuro - Background Principal */
@@ -2056,11 +2114,16 @@ html.dark .dashboard-card-muted-escuro {
 
 /* Modo Escuro - Badges e Indicadores */
 html.dark .dashboard-badge-escuro {
-  background-color: #1e40af !important;
-  background: #1e40af !important;
-  color: #93c5fd !important;
-  -webkit-text-fill-color: #93c5fd !important;
-  text-fill-color: #93c5fd !important;
+  background-color: #10b981 !important;
+  background: #10b981 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-fill-color: #ffffff !important;
+}
+
+html.dark .dashboard-badge-escuro svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 
 /* ===== CLASSES ESPECÍFICAS PARA PÁGINA DE LISTA - SEPARAÇÃO COMPLETA DE MODOS ===== */

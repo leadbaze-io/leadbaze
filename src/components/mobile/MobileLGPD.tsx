@@ -40,7 +40,7 @@ export default function MobileLGPD() {
             100% Conforme LGPD
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Totalmente legal</span>
+            <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">Totalmente legal</span>
           </h2>
           <p className="text-sm text-gray-600">
             Auditado por advogados especialistas

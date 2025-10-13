@@ -172,7 +172,9 @@ export default function LoginPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex justify-center mb-4">
-              <LogoImage className="h-8 w-auto" />
+              <div className="logo-container">
+                <LogoImage className="h-8 w-auto" />
+              </div>
             </Link>
             <h1 className="login-title text-3xl font-bold">
               Crie sua conta no LeadBaze
@@ -210,7 +212,9 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center">
           <Link to="/" className="inline-flex justify-center mb-8">
-            <LogoImage className="h-8 w-auto" />
+            <div className="logo-container">
+              <LogoImage className="h-8 w-auto" />
+            </div>
           </Link>
 
           <h2 className="login-title text-3xl font-bold">

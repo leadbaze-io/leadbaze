@@ -7,14 +7,14 @@ import { usePlans } from '../hooks/usePlans';
 import { useSubscription } from '../hooks/useSubscription';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { supabase } from '../lib/supabaseClient';
-import '../styles/toast-modern.css';
-import '../styles/plans-page.css';
+import { useTheme } from '../contexts/ThemeContext'
 
 const PlansPage: React.FC = () => {
   const navigate = useNavigate();
   const { plans, isLoading: plansLoading, error: plansError } = usePlans();
   const { subscription, isLoading: subscriptionLoading } = useSubscription();
   const { trackEvent } = useAnalytics();
+  const { isDark } = useTheme();
   
   const [userData, setUserData] = useState<{ id: string; email: string } | null>(null);
 
@@ -60,14 +60,14 @@ const PlansPage: React.FC = () => {
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="relative">
-            <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-200 dark:border-gray-700 mx-auto mb-4"></div>
-            <div className="animate-spin rounded-full h-12 w-12 border-2 border-transparent border-t-blue-500 absolute top-0 left-1/2 transform -translate-x-1/2"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-2 mx-auto mb-4" style={{borderColor: '#b7c7c1'}}></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-transparent absolute top-0 left-1/2 transform -translate-x-1/2" style={{borderTopColor: '#00ff00'}}></div>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 font-medium">Carregando planos...</p>
+          <p className="font-medium" style={{color: '#2e4842'}}>Carregando planos...</p>
           <div className="mt-2 flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 rounded-full animate-bounce" style={{backgroundColor: '#00ff00'}}></div>
+            <div className="w-2 h-2 rounded-full animate-bounce" style={{ animationDelay: '0.1s', backgroundColor: '#00ff00' }}></div>
+            <div className="w-2 h-2 rounded-full animate-bounce" style={{ animationDelay: '0.2s', backgroundColor: '#00ff00' }}></div>
           </div>
         </div>
       </div>
@@ -97,24 +97,49 @@ const PlansPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen plans-page">
+    <div 
+      className="min-h-screen"
+      style={{
+        background: isDark 
+          ? 'linear-gradient(135deg, #0a0f0e 0%, #0f1514 50%, #0a0f0e 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)'
+      }}
+    >
       {/* Header */}
-      <div className="plans-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Voltar
-            </button>
-            
-            <h1 className="text-2xl font-bold plans-title">
-              Escolha seu Plano
-            </h1>
-            
-            <div className="w-20" /> {/* Spacer */}
+      <div className="py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div 
+            className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl"
+            style={{
+              background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+            }}
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-white/5">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+                backgroundSize: '32px 32px',
+                opacity: 0.1
+              }}></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-2 text-white/90 hover:text-white transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Voltar
+                </button>
+                
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                  Escolha seu Plano
+                </h1>
+                
+                <div className="w-20" /> {/* Spacer */}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,27 +150,45 @@ const PlansPage: React.FC = () => {
         {subscription && (
           <div className="mb-12">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold plans-title mb-4">
+              <h2 
+                className="text-3xl font-bold mb-4"
+                style={{ color: isDark ? '#ffffff' : '#082721' }}
+              >
                 Sua Assinatura Atual
               </h2>
-              <p className="plans-text-muted">
+              <p style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
                 Gerencie sua assinatura ou atualize para um plano com mais recursos
               </p>
             </div>
             
             <div className="max-w-md mx-auto">
-              <div className="plans-card rounded-2xl p-6 shadow-lg">
+              <div 
+                className="rounded-2xl p-6 shadow-lg border"
+                style={{
+                  backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+                  borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+                }}
+              >
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold plans-text mb-2">
+                  <h3 
+                    className="text-xl font-bold mb-2"
+                    style={{ color: isDark ? '#ffffff' : '#082721' }}
+                  >
                     {subscription.plan_display_name || subscription.plan_name || 'Plano'}
                   </h3>
-                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                  <div 
+                    className="text-2xl font-bold mb-1"
+                    style={{ color: '#10b981' }}
+                  >
                     {new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
                       currency: 'BRL'
                     }).format(subscription.price_monthly || 0)}
                   </div>
-                  <div className="text-sm plans-text-muted">
+                  <div 
+                    className="text-sm"
+                    style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                  >
                     por mês
                   </div>
                 </div>
@@ -192,7 +235,7 @@ const PlansPage: React.FC = () => {
                 
                 <button
                   onClick={handleUpgrade}
-                  className="w-full plans-btn-primary py-3 px-6 rounded-lg font-semibold transition-all duration-200"
+                  className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl"
                 >
                   Atualizar Plano
                 </button>
@@ -204,16 +247,21 @@ const PlansPage: React.FC = () => {
         {/* Seção de Planos */}
         <div id="plans-section">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold plans-title mb-4">
+            <h2 
+              className="text-4xl font-bold mb-4"
+              style={{ color: isDark ? '#ffffff' : '#082721' }}
+            >
               {subscription ? 'Atualize seu Plano' : 'Escolha o Plano Ideal'}
             </h2>
-            <p className="text-xl plans-text-muted mb-8">
+            <p 
+              className="text-xl mb-8"
+              style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+            >
               {subscription 
                 ? 'Desbloqueie mais recursos e aumente sua capacidade de geração de leads'
                 : 'Comece a gerar leads de qualidade hoje mesmo'
               }
             </p>
-
           </div>
 
           {/* Cards dos Planos */}

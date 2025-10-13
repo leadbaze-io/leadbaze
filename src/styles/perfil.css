@@ -1,0 +1,366 @@
+/* ============================================
+   MEU PERFIL - MODO CLARO (Light Mode)
+   Paleta LeadBaze: #00ff00, #082721, #2e4842, #b7c7c1
+   ============================================ */
+
+/* Background Principal - Modo Claro */
+.perfil-bg-claro {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+}
+
+/* Header - Modo Claro */
+.perfil-header-claro {
+  background: linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%);
+}
+
+/* Cards - Modo Claro */
+.perfil-card-claro {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.perfil-card-hover-claro:hover {
+  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.1);
+  border-color: #00ff00;
+}
+
+/* Títulos e Textos - Modo Claro */
+.perfil-titulo-claro {
+  color: #082721;
+}
+
+.perfil-texto-claro {
+  color: #2e4842;
+}
+
+.perfil-texto-secundario-claro {
+  color: #6b7280;
+}
+
+/* Badges - Modo Claro */
+.perfil-badge-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+/* Inputs - Modo Claro */
+.perfil-input-claro {
+  background-color: #ffffff;
+  border-color: #b7c7c1;
+  color: #082721;
+}
+
+.perfil-input-claro:focus {
+  border-color: #00ff00;
+  box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.1);
+}
+
+/* Botões - Modo Claro */
+.perfil-btn-primary-claro {
+  background: linear-gradient(135deg, #00ff00 0%, #10b981 100%);
+  color: #082721;
+  border: none;
+  font-weight: 600;
+}
+
+.perfil-btn-primary-claro:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+}
+
+.perfil-btn-secondary-claro {
+  background: white;
+  color: #082721;
+  border: 2px solid #00ff00;
+}
+
+.perfil-btn-secondary-claro:hover {
+  background: #f0fdf4;
+  border-color: #10b981;
+}
+
+.perfil-btn-danger-claro {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.perfil-btn-danger-claro:hover {
+  background: #fecaca;
+  border-color: #ef4444;
+}
+
+/* Status Indicators - Modo Claro */
+.perfil-status-success-claro {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.perfil-status-warning-claro {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.perfil-status-error-claro {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.perfil-status-info-claro {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+/* Progress Bar - Modo Claro */
+.perfil-progress-bg-claro {
+  background-color: #e5e7eb;
+}
+
+.perfil-progress-fill-claro {
+  background: linear-gradient(90deg, #10b981 0%, #059669 50%, #047857 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+/* Avatar - Modo Claro */
+.perfil-avatar-claro {
+  border: 3px solid #00ff00;
+  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.2);
+}
+
+/* Tabs - Modo Claro */
+.perfil-tab-claro {
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+}
+
+.perfil-tab-active-claro {
+  color: #00ff00;
+  border-bottom: 2px solid #00ff00;
+}
+
+.perfil-tab-claro:hover {
+  color: #10b981;
+}
+
+/* ============================================
+   MEU PERFIL - MODO ESCURO (Dark Mode)
+   Cores escuras com acentos verdes LeadBaze
+   ============================================ */
+
+/* Background Principal - Modo Escuro */
+.perfil-bg-escuro {
+  background: linear-gradient(135deg, #0a0f0e 0%, #0f1514 50%, #0a0f0e 100%);
+}
+
+/* Header - Modo Escuro */
+.perfil-header-escuro {
+  background: linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%);
+}
+
+/* Cards - Modo Escuro */
+.perfil-card-escuro {
+  background-color: #1a1f1e;
+  border-color: rgba(0, 255, 0, 0.1);
+}
+
+.perfil-card-hover-escuro:hover {
+  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.2);
+  border-color: #00ff00;
+}
+
+/* Títulos e Textos - Modo Escuro */
+.perfil-titulo-escuro {
+  color: #ffffff;
+}
+
+.perfil-texto-escuro {
+  color: #b7c7c1;
+}
+
+.perfil-texto-secundario-escuro {
+  color: #8b9995;
+}
+
+/* Badges - Modo Escuro */
+.perfil-badge-escuro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+/* Inputs - Modo Escuro */
+.perfil-input-escuro {
+  background-color: #1a1f1e;
+  border-color: rgba(0, 255, 0, 0.15);
+  color: #ffffff;
+}
+
+.perfil-input-escuro:focus {
+  border-color: #00ff00;
+  box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.2);
+}
+
+.perfil-input-escuro::placeholder {
+  color: #8b9995;
+}
+
+/* Botões - Modo Escuro */
+.perfil-btn-primary-escuro {
+  background: linear-gradient(135deg, #00ff00 0%, #10b981 100%);
+  color: #082721;
+  border: none;
+  font-weight: 600;
+}
+
+.perfil-btn-primary-escuro:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0, 255, 0, 0.4);
+}
+
+.perfil-btn-secondary-escuro {
+  background: #374151;
+  color: #f9fafb;
+  border: 2px solid #00ff00;
+}
+
+.perfil-btn-secondary-escuro:hover {
+  background: #4b5563;
+  border-color: #10b981;
+}
+
+.perfil-btn-danger-escuro {
+  background: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+
+.perfil-btn-danger-escuro:hover {
+  background: rgba(220, 38, 38, 0.3);
+  border-color: #dc2626;
+}
+
+/* Status Indicators - Modo Escuro */
+.perfil-status-success-escuro {
+  background: rgba(5, 150, 105, 0.2);
+  color: #6ee7b7;
+  border: 1px solid #10b981;
+}
+
+.perfil-status-warning-escuro {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid #f59e0b;
+}
+
+.perfil-status-error-escuro {
+  background: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+
+.perfil-status-info-escuro {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border: 1px solid #3b82f6;
+}
+
+/* Progress Bar - Modo Escuro */
+.perfil-progress-bg-escuro {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.perfil-progress-fill-escuro {
+  background: linear-gradient(90deg, #10b981 0%, #059669 50%, #047857 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+/* Avatar - Modo Escuro */
+.perfil-avatar-escuro {
+  border: 3px solid #00ff00;
+  box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+}
+
+/* Tabs - Modo Escuro */
+.perfil-tab-escuro {
+  color: #9ca3af;
+  border-bottom: 2px solid transparent;
+}
+
+.perfil-tab-active-escuro {
+  color: #00ff00;
+  border-bottom: 2px solid #00ff00;
+}
+
+.perfil-tab-escuro:hover {
+  color: #10b981;
+}
+
+/* ============================================
+   UTILITÁRIOS E ANIMAÇÕES
+   ============================================ */
+
+/* Transições Suaves */
+.perfil-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Fade In */
+.perfil-fade-in {
+  animation: perfilFadeIn 0.5s ease-in-out;
+}
+
+@keyframes perfilFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar Customizado - Modo Claro */
+.perfil-scrollbar-claro::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.perfil-scrollbar-claro::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.perfil-scrollbar-claro::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border-radius: 4px;
+}
+
+.perfil-scrollbar-claro::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Scrollbar Customizado - Modo Escuro */
+.perfil-scrollbar-escuro::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.perfil-scrollbar-escuro::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 4px;
+}
+
+.perfil-scrollbar-escuro::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border-radius: 4px;
+}
+
+.perfil-scrollbar-escuro::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}

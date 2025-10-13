@@ -88,7 +88,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
             <Card className="review-card-claro review-card-escuro">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl review-card-title-claro review-card-title-escuro">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                     <CheckCircle className="w-4 h-4 text-white" />
                   </div>
                   <span className="review-card-title-claro review-card-title-escuro">
@@ -402,7 +402,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
           <CardContent className="p-6">
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-3">
-                <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                   <span className="text-white text-xs font-bold">ℹ️</span>
                 </div>
                 <h3 className="text-lg font-semibold review-info-title-claro review-info-title-escuro">

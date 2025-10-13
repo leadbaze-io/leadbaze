@@ -16,12 +16,16 @@ export default function LoadingScreen({
 }: LoadingScreenProps) {
   const containerClass = fullScreen
 
-    ? "fixed inset-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm z-50 transition-colors duration-300"
+    ? "fixed inset-0 backdrop-blur-sm z-50 transition-colors duration-300"
 
-    : "w-full h-64 bg-white dark:bg-gray-800 transition-colors duration-300"
+    : "w-full h-64 transition-colors duration-300"
+
+  const bgStyle = fullScreen 
+    ? {backgroundColor: 'rgba(255, 255, 255, 0.9)'}
+    : {backgroundColor: '#ffffff'}
 
   return (
-    <div className={`${containerClass} flex items-center justify-center`}>
+    <div className={`${containerClass} flex items-center justify-center`} style={bgStyle}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,8 +46,8 @@ export default function LoadingScreen({
           }}
           className="mb-6 relative"
         >
-          <div className="w-12 h-12 border-2 border-gray-200 dark:border-gray-700 rounded-full"></div>
-          <div className="w-12 h-12 border-2 border-transparent border-t-blue-500 rounded-full absolute top-0 left-0 animate-spin"></div>
+          <div className="w-12 h-12 border-2 rounded-full" style={{borderColor: '#b7c7c1'}}></div>
+          <div className="w-12 h-12 border-2 border-transparent rounded-full absolute top-0 left-0 animate-spin" style={{borderTopColor: '#10b981'}}></div>
         </motion.div>
 
         {/* Texto de carregamento */}
@@ -51,7 +55,8 @@ export default function LoadingScreen({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-gray-600 dark:text-gray-400 font-medium text-lg"
+          className="font-medium text-lg"
+          style={{color: '#2e4842'}}
         >
           {message}
         </motion.p>
@@ -61,8 +66,12 @@ export default function LoadingScreen({
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="mt-4 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-          style={{ maxWidth: "200px", margin: "16px auto 0" }}
+          className="mt-4 h-1 rounded-full"
+          style={{ 
+            maxWidth: "200px", 
+            margin: "16px auto 0",
+            background: "linear-gradient(to right, #00ff00, #00cc00)"
+          }}
         />
 
         {/* Pontos de loading */}
@@ -82,7 +91,8 @@ export default function LoadingScreen({
                 delay: index * 0.2,
                 ease: "easeInOut"
               }}
-              className="w-2 h-2 bg-blue-500 rounded-full"
+              className="w-2 h-2 rounded-full"
+              style={{backgroundColor: '#00ff00'}}
             />
           ))}
         </div>
@@ -101,7 +111,8 @@ export function ListSkeleton() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: i * 0.1 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
+          className="rounded-lg border p-6 transition-colors duration-300"
+          style={{backgroundColor: '#ffffff', borderColor: '#b7c7c1'}}
         >
           <div className="animate-pulse">
             <div className="flex items-start justify-between mb-4">
@@ -132,7 +143,8 @@ export function LeadCardSkeleton() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 transition-colors duration-300"
+          className="rounded-lg border p-4 transition-colors duration-300"
+          style={{backgroundColor: '#ffffff', borderColor: '#b7c7c1'}}
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-3">
@@ -164,7 +176,8 @@ export function AnalyticsSkeleton() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: i * 0.1 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-300"
+          className="rounded-lg border p-6 transition-colors duration-300"
+          style={{backgroundColor: '#ffffff', borderColor: '#b7c7c1'}}
         >
           <div className="animate-pulse">
             <div className="flex items-center justify-between mb-4">

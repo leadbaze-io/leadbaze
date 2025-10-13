@@ -42,7 +42,7 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -53,7 +53,7 @@ export default function AboutPage() {
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               <span className="text-gray-900">Sobre o </span>
-              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
                 LeadBaze
               </span>
             </h1>
@@ -84,7 +84,7 @@ export default function AboutPage() {
             <p className="text-lg text-gray-600 leading-relaxed">
               Em um mercado saturado de informações genéricas sobre marketing, o LeadBaze se destaca
 
-              por sua especialização única: <span className="font-semibold text-purple-600">prospecção B2B inteligente</span>.
+              por sua especialização única: <span className="font-semibold text-green-600">prospecção B2B inteligente</span>.
 
               Nossa abordagem combina estratégias comprovadas com as mais recentes tecnologias de
 
@@ -126,13 +126,13 @@ export default function AboutPage() {
                 icon: Target,
                 title: "Prospecção B2B",
                 description: "Estratégias avançadas para identificar e qualificar leads de alta qualidade no mercado B2B.",
-                color: "from-blue-500 to-blue-600"
+                color: "from-green-500 to-green-600"
               },
               {
                 icon: TrendingUp,
                 title: "Outbound Marketing",
                 description: "Táticas de cold outreach que realmente funcionam e geram resultados mensuráveis para sua empresa.",
-                color: "from-purple-500 to-purple-600"
+                color: "from-emerald-500 to-emerald-600"
               },
               {
                 icon: Users,
@@ -288,7 +288,7 @@ export default function AboutPage() {
                 variants={fadeInUp}
                 className="flex items-center space-x-4 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-200"
               >
-                <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex-shrink-0"></div>
+                <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex-shrink-0"></div>
                 <span className="text-gray-700 leading-relaxed font-medium">{item}</span>
               </motion.div>
             ))}
@@ -352,14 +352,14 @@ export default function AboutPage() {
                 title: "Newsletter Semanal",
                 description: "Insights exclusivos sobre prospecção B2B diretamente na sua caixa de entrada.",
                 buttonText: "Inscrever-se",
-                color: "from-blue-500 to-blue-600"
+                color: "from-green-500 to-green-600"
               },
               {
                 icon: Linkedin,
                 title: "Comunidade",
                 description: "Junte-se a outros profissionais no LinkedIn e participe de discussões exclusivas.",
                 buttonText: "Conectar",
-                color: "from-purple-500 to-purple-600"
+                color: "from-emerald-500 to-emerald-600"
               },
               {
                 icon: Calendar,

@@ -7,6 +7,8 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Users, Eye, EyeOff, Plus, AlertTriangle } from 'lucide-react'
+import { useTheme } from '../../../contexts/ThemeContext'
+import '../../../styles/disparador.css'
 
 import { Button } from '../../ui/button'
 import { Card, CardContent } from '../../ui/card'
@@ -46,6 +48,7 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
   loading,
   disabled = false
 }) => {
+  const { isDark } = useTheme()
   const [selectedLead, setSelectedLead] = useState<CampaignLead | null>(null)
   const [showIgnored, setShowIgnored] = useState(false)
 
@@ -69,15 +72,15 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-xl p-4 border border-blue-200/50 dark:border-blue-800/50 shadow-lg"
+        className={`rounded-xl p-4 shadow-lg ${isDark ? 'disparador-card-escuro' : 'disparador-card-claro'}`}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-            <Users className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+            <Users className="w-5 h-5" style={{color: '#ffffff'}} />
           </div>
           <div>
-            <h2 className="text-xl font-bold list-section-title">Seleção de Listas de Leads</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <h2 className={`text-xl font-bold ${isDark ? 'disparador-titulo-escuro' : 'disparador-titulo-claro'}`}>Seleção de Listas de Leads</h2>
+            <p className={`text-sm ${isDark ? 'disparador-texto-secundario-escuro' : 'disparador-texto-secundario-claro'}`}>
               Escolha as listas que deseja incluir na sua campanha
             </p>
           </div>
@@ -94,8 +97,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-1 sm:gap-2">
-              <h3 className="text-lg font-bold list-section-title">Listas Disponíveis</h3>
-              <span className="px-2 py-1 text-xs font-semibold rounded-full list-count-badge">
+              <h3 className={`text-lg font-bold ${isDark ? 'disparador-titulo-escuro' : 'disparador-titulo-claro'}`}>Listas Disponíveis</h3>
+              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isDark ? 'disparador-badge-escuro' : 'disparador-badge-claro'}`}>
                 {availableLists.length}
               </span>
             </div>
@@ -171,8 +174,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-1 sm:gap-2">
-              <h3 className="text-lg font-bold list-section-title">Listas Selecionadas</h3>
-              <span className="px-2 py-1 text-xs font-semibold rounded-full list-count-badge">
+              <h3 className={`text-lg font-bold ${isDark ? 'disparador-titulo-escuro' : 'disparador-titulo-claro'}`}>Listas Selecionadas</h3>
+              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isDark ? 'disparador-badge-escuro' : 'disparador-badge-claro'}`}>
                 {selectedLists.length}
               </span>
             </div>
@@ -223,7 +226,7 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
               >
                 <Card className="text-center py-8 empty-state-improved h-[200px] flex items-center justify-center">
                   <CardContent>
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                       <Plus className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
@@ -251,8 +254,8 @@ export const ListSelectionStep: React.FC<ListSelectionStepProps> = ({
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="flex items-center gap-1 sm:gap-2">
-              <h3 className="text-lg font-bold list-section-title">Listas Ignoradas</h3>
-              <span className="px-2 py-1 text-xs font-semibold rounded-full list-count-badge">
+              <h3 className={`text-lg font-bold ${isDark ? 'disparador-titulo-escuro' : 'disparador-titulo-claro'}`}>Listas Ignoradas</h3>
+              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isDark ? 'disparador-badge-escuro' : 'disparador-badge-claro'}`}>
                 {ignoredLists.length}
               </span>
               <motion.div

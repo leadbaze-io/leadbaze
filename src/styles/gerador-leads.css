@@ -1,0 +1,274 @@
+/* Gerador de Leads CSS - Paleta LeadBaze */
+/* Separação completa entre modo claro e escuro */
+
+/* ============================================
+   MODO CLARO - GERADOR DE LEADS
+   ============================================ */
+
+/* Background Principal */
+.gerador-bg-light {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 50%, #ffffff 100%);
+}
+
+/* Header */
+.gerador-header-light {
+  background: linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%);
+  color: #ffffff;
+}
+
+/* Cards */
+.gerador-card-light {
+  background-color: #ffffff;
+  border-color: #b7c7c1;
+  box-shadow: 0 4px 6px -1px rgba(8, 39, 33, 0.1), 0 2px 4px -1px rgba(8, 39, 33, 0.06);
+}
+
+/* Títulos */
+.gerador-titulo-light {
+  color: #082721;
+}
+
+/* Descrições */
+.gerador-descricao-light {
+  color: #2e4842;
+}
+
+/* Texto */
+.gerador-texto-light {
+  color: #082721;
+}
+
+/* Inputs */
+.gerador-input-light {
+  background-color: #ffffff;
+  border-color: #b7c7c1;
+  color: #082721;
+}
+
+.gerador-input-light:focus {
+  border-color: #00ff00;
+  box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.1);
+}
+
+/* Botões */
+.gerador-btn-primary-light {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+}
+
+.gerador-btn-primary-light:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Loading Spinner */
+.gerador-loading-spinner-light {
+  border: 3px solid rgba(16, 185, 129, 0.1);
+  border-top: 3px solid #10b981;
+}
+
+/* Badges */
+.gerador-badge-light {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+/* Status */
+.gerador-status-active-light {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.gerador-status-warning-light {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.gerador-status-inactive-light {
+  background-color: #6b7280;
+  color: #ffffff;
+}
+
+/* Progress Bar */
+.gerador-progress-fill-light {
+  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+}
+
+/* ============================================
+   MODO ESCURO - GERADOR DE LEADS
+   ============================================ */
+
+/* Background Principal */
+.gerador-bg-dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+/* Header */
+.gerador-header-dark {
+  background: linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%);
+  color: #ffffff;
+}
+
+/* Cards */
+.gerador-card-dark {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Títulos */
+.gerador-titulo-dark {
+  color: #ffffff;
+}
+
+/* Descrições */
+.gerador-descricao-dark {
+  color: #b7c7c1;
+}
+
+/* Texto */
+.gerador-texto-dark {
+  color: #ffffff;
+}
+
+/* Inputs */
+.gerador-input-dark {
+  background-color: #334155;
+  border-color: #475569;
+  color: #ffffff;
+}
+
+.gerador-input-dark:focus {
+  border-color: #00ff00;
+  box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.2);
+}
+
+/* Botões */
+.gerador-btn-primary-dark {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+}
+
+.gerador-btn-primary-dark:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Loading Spinner */
+.gerador-loading-spinner-dark {
+  border: 3px solid rgba(16, 185, 129, 0.2);
+  border-top: 3px solid #10b981;
+}
+
+/* Badges */
+.gerador-badge-dark {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+/* Status */
+.gerador-status-active-dark {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.gerador-status-warning-dark {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.gerador-status-inactive-dark {
+  background-color: #6b7280;
+  color: #ffffff;
+}
+
+/* Progress Bar */
+.gerador-progress-fill-dark {
+  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+}
+
+/* ============================================
+   ANIMAÇÕES E TRANSIÇÕES
+   ============================================ */
+
+/* Aurora Text Animation */
+@keyframes aurora-text {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.aurora-text {
+  animation: aurora-text 3s ease-in-out infinite alternate;
+}
+
+/* Transições suaves */
+.gerador-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects */
+.gerador-hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.gerador-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading animation */
+@keyframes gerador-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.gerador-pulse {
+  animation: gerador-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+
+/* Mobile */
+@media (max-width: 640px) {
+  .gerador-card-light,
+  .gerador-card-dark {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .gerador-titulo-light,
+  .gerador-titulo-dark {
+    font-size: 1.25rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .gerador-card-light,
+  .gerador-card-dark {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .gerador-card-light,
+  .gerador-card-dark {
+    margin: 1.5rem;
+    padding: 2rem;
+  }
+}

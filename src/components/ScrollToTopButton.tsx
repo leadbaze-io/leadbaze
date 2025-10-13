@@ -70,7 +70,7 @@ export default function ScrollToTopButton() {
 
           onClick={scrollToTop}
 
-          className="inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 focus:ring-blue-500 px-3 text-sm fixed bottom-4 right-4 z-[9999] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-xl border border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
+          className="inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:from-green-600 hover:to-emerald-700 focus:ring-green-500 px-3 text-sm fixed bottom-4 right-4 z-[9999] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl border border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95"
 
           aria-label="Voltar ao topo"
 

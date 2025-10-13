@@ -57,3 +57,10 @@ echo "🕐 Timestamp: $TIMESTAMP"
 # Limpar arquivo temporário
 rm -f /tmp/unique-post-data.json
 
+
+
+
+
+
+
+

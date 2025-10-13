@@ -3,9 +3,20 @@
    Força modo claro - sem dark mode
    ============================================== */
 
+/* Logo container - sempre modo claro */
+.login-page-container .logo-container {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 /* Container principal - sempre modo claro */
 .login-page-container {
-  background: linear-gradient(135deg, #dbeafe 0%, #ffffff 50%, #f3e8ff 100%) !important;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #ecfdf5 100%) !important;
   min-height: 100vh !important;
 }
 
@@ -18,7 +29,7 @@
 
 /* Títulos - sempre modo claro */
 .login-title {
-  color: #111827 !important; /* gray-900 */
+  color: #082721 !important; /* LeadBaze dark green */
 }
 
 .login-subtitle {
@@ -42,8 +53,8 @@
 }
 
 .login-input:focus {
-  border-color: #3b82f6 !important; /* blue-500 */
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important; /* LeadBaze green */
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
   outline: none !important;
 }
 
@@ -65,8 +76,8 @@
 }
 
 .login-input-with-icon:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
   outline: none !important;
 }
 
@@ -88,8 +99,8 @@
 }
 
 .login-input-with-icon-button:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
   outline: none !important;
 }
 
@@ -113,7 +124,7 @@
 
 /* Botões - sempre modo claro */
 .login-button {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
   padding: 0.75rem 1rem !important;
@@ -121,10 +132,11 @@
   font-weight: 600 !important;
   transition: all 0.3s ease-in-out !important;
   transform: translateY(0) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 .login-button:hover {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
   transform: translateY(-1px) scale(1.02) !important;
 }
 
@@ -152,14 +164,14 @@
 
 /* Links - sempre modo claro */
 .login-link {
-  color: #2563eb !important; /* blue-600 */
+  color: #10b981 !important; /* LeadBaze green */
   text-decoration: none !important;
   font-weight: 600 !important;
   transition: color 0.2s ease-in-out !important;
 }
 
 .login-link:hover {
-  color: #1d4ed8 !important; /* blue-700 */
+  color: #059669 !important; /* LeadBaze dark green */
 }
 
 /* Mensagens - sempre modo claro */
@@ -259,7 +271,7 @@
 
 /* Botão primário - sempre modo claro */
 .login-primary-button {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   color: #ffffff !important;
   border: none !important;
   padding: 0.75rem 1rem !important;
@@ -271,10 +283,11 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 0.5rem !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 .login-primary-button:hover {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
   transform: translateY(-1px) scale(1.02) !important;
 }
 
@@ -296,8 +309,8 @@
 }
 
 .login-page-container .input-mask:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 .login-page-container .input-mask::placeholder {
@@ -312,13 +325,13 @@
 }
 
 .login-page-container .select:focus {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
 /* Checkbox específico para login */
 .login-page-container input[type="checkbox"] {
-  accent-color: #3b82f6 !important;
+  accent-color: #10b981 !important;
 }
 
 /* ==============================================

@@ -1,17 +1,9 @@
-import { useState, useEffect } from 'react'
-import { ArrowRight, Sparkles, CheckCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
+import { AnimatedBeam } from '../magicui/animated-beam'
+import { FlickeringGrid } from '../magicui/flickering-grid'
+import { ShimmerButton } from '../magicui/shimmer-button'
 
 export default function MobileCTA() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
-
   const stats = [
     { value: 1000, suffix: '+', label: 'Empresas Confiam' },
     { value: 99.9, suffix: '%', label: 'Uptime Garantido' },
@@ -19,125 +11,95 @@ export default function MobileCTA() {
   ]
 
   return (
-    <section className="md:hidden relative py-16 bg-gray-900 overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20"></div>
-        <div
-
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }}
+    <section className="md:hidden relative py-16 overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+    }}>
+      {/* Background with Flickering Grid */}
+      <div className="absolute inset-0" style={{zIndex: 0}}>
+        <FlickeringGrid
+          gridSize={20}
+          flickerDuration={2000}
+          flickerDelay={100}
+          opacity={0.05}
         />
       </div>
 
-      <div className="relative max-w-md mx-auto px-4">
-        <div className="text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-xs shadow-lg mb-6"
-          >
-            <Sparkles className="w-3 h-3" />
-            🔥 Oferta Especial por Tempo Limitado
-          </motion.div>
+      {/* Subtle overlay for better text readability */}
+      <div className="absolute inset-0" style={{
+        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
+        zIndex: 1
+      }}></div>
 
+      <div className="relative max-w-md mx-auto px-4" style={{zIndex: 2}}>
+        <div className="text-center">
           {/* Main Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-6"
-          >
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Comece a gerar leads
+          <AnimatedBeam delay={0.2}>
+            <h2 className="text-3xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+                Comece a gerar leads
+              </span>
               <br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span style={{color: '#FFFFFF'}}>
                 hoje mesmo!
               </span>
             </h2>
-            <p className="text-base text-gray-300 leading-relaxed">
+            <p className="text-base max-w-sm mx-auto leading-relaxed mb-8" style={{color: '#FFFFFF', opacity: 0.9}}>
               Junte-se a mais de 1532 empresas que impulsionam sua prospecção com o LeadBaze
             </p>
-          </motion.div>
+          </AnimatedBeam>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12"
-          >
-            <ShimmerButton
-
-              onClick={() => {
-                const pricingSection = document.getElementById('pricing-plans-section');
-                if (pricingSection) {
-                  pricingSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 w-full"
-            >
-              <ArrowRight className="w-5 h-5 mr-2" />
-              Começar Agora
-            </ShimmerButton>
-          </motion.div>
+          {/* CTA Button */}
+          <AnimatedBeam delay={0.4}>
+            <div className="flex justify-center mb-12">
+              <ShimmerButton
+                onClick={() => {
+                  const pricingSection = document.getElementById('pricing-plans-section');
+                  if (pricingSection) {
+                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="px-8 py-3 text-base font-semibold"
+              >
+                <span>Começar Agora</span>
+              </ShimmerButton>
+            </div>
+          </AnimatedBeam>
 
           {/* Features */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mb-8"
-          >
-            <div className="space-y-3 text-gray-300">
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="text-sm">✨ 30 leads gratuitos</span>
+          <AnimatedBeam delay={0.6}>
+            <div className="flex flex-wrap items-center justify-center gap-6 mb-12" style={{color: '#FFFFFF'}}>
+              <div className="flex items-center gap-2">
+                <span>✨ 30 leads gratuitos</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="text-sm">🚀 Ativação instantânea</span>
+              <div className="flex items-center gap-2">
+                <span>🔒 Seus dados seguros</span>
               </div>
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="text-sm">💎 Melhor custo-benefício do mercado</span>
+              <div className="flex items-center gap-2">
+                <span>⭐ Satisfação garantida</span>
               </div>
             </div>
-          </motion.div>
+          </AnimatedBeam>
 
           {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-3 gap-4"
-          >
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-2xl font-bold text-white mb-1">
-                  <AnimatedCounter
-
-                    value={stat.value}
-
-                    suffix={stat.suffix}
-
-                    className="text-white"
-
-                    delay={500 + index * 200}
-
-                  />
+          <AnimatedBeam delay={0.8}>
+            <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
+              {stats.map((stat, index) => (
+                <div
+                  key={index}
+                  className="backdrop-blur-sm border rounded-2xl p-4 text-center hover:bg-gray-800/70 transition-all duration-300 flex flex-col items-center justify-center" style={{backgroundColor: 'rgba(8, 39, 33, 0.5)', borderColor: '#00ff00'}}
+                >
+                  <div className="text-xl font-bold mb-1" style={{color: '#FFFFFF'}}>
+                    <AnimatedCounter
+                      value={stat.value}
+                      suffix={stat.suffix}
+                      delay={500 + index * 200}
+                    />
+                  </div>
+                  <div className="text-xs font-medium" style={{color: '#FFFFFF', opacity: 0.8}}>{stat.label}</div>
                 </div>
-                <div className="text-xs text-gray-400">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </motion.div>
+              ))}
+            </div>
+          </AnimatedBeam>
         </div>
       </div>
     </section>

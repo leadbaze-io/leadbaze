@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Send, CheckCircle, AlertTriangle } from 'lucide-react'
+import { useTheme } from '../contexts/ThemeContext'
+import '../styles/disparador.css'
 
 // Componentes
 import { Button } from '../components/ui/button'
@@ -55,6 +57,7 @@ type PageState = 'campaigns' | 'create' | 'edit' | 'config'
 
 export default function NewDisparadorMassa() {
   const navigate = useNavigate()
+  const { isDark } = useTheme()
   const [user, setUser] = useState<any>(null)
 
   // Estado da página
@@ -546,7 +549,7 @@ export default function NewDisparadorMassa() {
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             className="w-16 h-16 mx-auto mb-6"
           >
-            <div className="w-full h-full rounded-full border-4 border-orange-200 border-t-orange-500"></div>
+            <div className="w-full h-full rounded-full border-4" style={{borderColor: '#b7c7c1', borderTopColor: '#00ff00'}}></div>
           </motion.div>
           <motion.p
 
@@ -572,7 +575,7 @@ export default function NewDisparadorMassa() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className={`min-h-screen ${isDark ? 'disparador-bg-escuro' : 'disparador-bg-claro'} disparador-transition`}>
       {/* Header */}
       <div className="py-4 sm:py-6 md:py-8">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
@@ -583,7 +586,12 @@ export default function NewDisparadorMassa() {
             transition={{ duration: 0.6 }}
             className="mb-4 sm:mb-6 md:mb-8"
           >
-            <div className="relative overflow-hidden dispatcher-header-claro dispatcher-header-escuro rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-2xl">
+            <div 
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-2xl"
+              style={{
+                background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+              }}
+            >
               {/* Background Pattern */}
               <div className="absolute inset-0 bg-white/5">
                 <div className="absolute inset-0" style={{
@@ -603,7 +611,7 @@ export default function NewDisparadorMassa() {
                       className="flex items-center space-x-2 sm:space-x-3"
                     >
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                        <Send className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-300" />
+                        <Send className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white truncate">
@@ -707,7 +715,7 @@ export default function NewDisparadorMassa() {
                 variant="outline"
                 size="sm"
                 onClick={handleBackToCampaigns}
-                className="group bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-3 sm:px-4 py-2 w-full sm:w-auto"
+                className="group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-3 sm:px-4 py-2 w-full sm:w-auto"
               >
                 <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2 transition-transform duration-300 group-hover:-translate-x-1" />
                 <span className="font-semibold text-sm sm:text-base">

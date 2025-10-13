@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Shield, Users, Clock, MessageCircle, Zap, Gift } from 'lucide-react'
+import { AnimatedBeam } from './magicui/animated-beam'
+import { ShimmerButton } from './magicui/shimmer-button'
 
 export default function MagicFAQ() {
   const [isVisible, setIsVisible] = useState(false)
@@ -54,118 +56,99 @@ export default function MagicFAQ() {
   }
 
   return (
-    <section id="faq-section-desktop" className="relative py-24 md:py-32 bg-gradient-to-br from-gray-900 via-gray-800 to-black" style={{ scrollMarginTop: '80px' }}>
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-green-500/20 to-cyan-500/20 rounded-full blur-3xl"></div>
-      </div>
+    <section id="faq-section-desktop" className="relative py-24 md:py-32 bg-white overflow-hidden" style={{ scrollMarginTop: '80px' }}>
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          {/* Main Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-6"
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Dúvidas <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Frequentes</span>
+        {/* Header */}
+        <AnimatedBeam delay={0.2}>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#082721'}}>
+              Dúvidas <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Frequentes</span>
               <br />
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
                 Resolvidas
               </span>
             </h2>
-          </motion.div>
-
-          {/* Subheadline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12"
-          >
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed" style={{color: '#2e4842'}}>
               Tire todas as suas dúvidas sobre o LeadBaze. Aqui você encontra respostas para as principais objeções.
             </p>
-          </motion.div>
-        </div>
+          </div>
+        </AnimatedBeam>
 
         {/* FAQ Items */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="space-y-4"
-        >
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden"
-            >
-              {/* Question Header */}
-              <button
-                onClick={() => toggleQuestion(index)}
-                className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-800/70 transition-colors duration-300"
+        <AnimatedBeam delay={0.4}>
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isVisible ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                className="bg-white backdrop-blur-sm rounded-3xl border overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
+                style={{borderColor: '#00ff00', borderWidth: '2px'}}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                    <faq.icon className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">{faq.question}</h3>
-                </div>
-                <motion.div
-                  animate={{ rotate: openQuestion === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-gray-400"
+                {/* Question Header */}
+                <button
+                  onClick={() => toggleQuestion(index)}
+                  className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-300"
                 >
-                  <ChevronDown className="w-5 h-5" />
-                </motion.div>
-              </button>
-
-              {/* Answer */}
-              <AnimatePresence>
-                {openQuestion === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-6 pb-6">
-                      <div className="border-t border-gray-700 pt-4">
-                        <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style={{backgroundColor: '#00ff00'}}>
+                      <faq.icon className="w-6 h-6" style={{color: '#082721'}} />
                     </div>
+                    <h3 className="text-lg font-semibold" style={{color: '#082721'}}>{faq.question}</h3>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: openQuestion === index ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{color: '#2e4842'}}
+                  >
+                    <ChevronDown className="w-5 h-5" />
                   </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </motion.div>
+                </button>
+
+                {/* Answer */}
+                <AnimatePresence>
+                  {openQuestion === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-6">
+                        <div className="border-t pt-4" style={{borderColor: '#00ff00'}}>
+                          <p className="leading-relaxed" style={{color: '#2e4842'}}>{faq.answer}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatedBeam>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-16"
-        >
-          <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-8 shadow-2xl">
-            <h3 className="text-2xl font-bold text-white mb-4">Ainda tem dúvidas?</h3>
-            <p className="text-blue-100 mb-6">
-              Nossa equipe está pronta para ajudar. Entre em contato e tire todas as suas dúvidas.
-            </p>
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg">
-              Falar com Especialista
-            </button>
+        <AnimatedBeam delay={0.8}>
+          <div className="text-center mt-16">
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border" style={{borderColor: '#00ff00', borderWidth: '2px'}}>
+              <h3 className="text-2xl font-bold mb-4" style={{color: '#082721'}}>Ainda tem dúvidas?</h3>
+              <p className="mb-6" style={{color: '#2e4842'}}>
+                Nossa equipe está pronta para ajudar. Entre em contato e tire todas as suas dúvidas.
+              </p>
+              <ShimmerButton
+                background="linear-gradient(135deg, #00ff00 0%, #00cc00 100%)"
+                hoverBackground="linear-gradient(135deg, #00cc00 0%, #00aa00 100%)"
+                color="#ffffff"
+                className="px-8 py-4 rounded-2xl font-semibold text-lg"
+              >
+                Falar com Especialista
+              </ShimmerButton>
+            </div>
           </div>
-        </motion.div>
+        </AnimatedBeam>
       </div>
     </section>
   )

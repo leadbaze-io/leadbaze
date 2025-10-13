@@ -32,7 +32,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   const getGradientClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'from-blue-500 to-purple-600'
+        return 'from-green-500 to-emerald-600'
       case 'success':
         return 'from-green-500 to-emerald-600'
       case 'warning':
@@ -42,7 +42,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
       case 'info':
         return 'from-cyan-500 to-blue-600'
       default:
-        return 'from-blue-500 to-purple-600'
+        return 'from-green-500 to-emerald-600'
     }
   }
 

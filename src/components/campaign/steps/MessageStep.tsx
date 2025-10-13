@@ -64,7 +64,7 @@ export const MessageStep: React.FC<MessageStepProps> = ({
         className="text-center"
       >
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 px-4">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
             <MessageSquare className="w-6 h-6 text-white" />
           </div>
           <div className="text-center sm:text-left">
@@ -92,7 +92,7 @@ export const MessageStep: React.FC<MessageStepProps> = ({
                   className="flex items-center gap-3 text-xl message-card-title-claro message-card-title-escuro"
                   style={{ color: 'var(--title-color)' }}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                     <MessageSquare className="w-4 h-4 text-white" />
                   </div>
                   <span
@@ -121,7 +121,7 @@ export const MessageStep: React.FC<MessageStepProps> = ({
                 <div className="space-y-4">
                   <div className="message-tip-card-claro message-tip-card-escuro rounded-xl p-3 sm:p-4 border">
                     <div className="flex items-start gap-2">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-white text-xs font-bold">💡</span>
                       </div>
                       <div className="flex-1 min-w-0">

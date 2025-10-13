@@ -51,7 +51,7 @@ export default function MobileProcess() {
           className="text-center mb-8"
         >
           <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Por que <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">funciona?</span>
+            Por que <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">funciona?</span>
           </h2>
           <div className="space-y-2">
             {benefits.map((benefit, index) => (

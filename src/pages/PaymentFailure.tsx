@@ -114,7 +114,7 @@ export default function PaymentFailure() {
         >
           <Button
             onClick={handleRetryPayment}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-5 h-5" />
             Tentar Novamente

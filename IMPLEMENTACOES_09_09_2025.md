@@ -217,3 +217,26 @@ npm run build (testado localmente)
 
 *Próxima sessão: Implementação simples de cores na Landing Page*
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

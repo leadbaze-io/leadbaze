@@ -26,8 +26,14 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="relative text-white overflow-hidden" style={{backgroundColor: '#1A3A3A'}}>
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-green-500/20 to-cyan-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-green-500/20 to-cyan-500/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo e Descrição */}
           <div className="col-span-1 md:col-span-2">
@@ -53,7 +59,7 @@ export default function Footer() {
 
           {/* Links Rápidos */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Links Rápidos</h3>
             <div className="space-y-2">
               {/* Links para usuários NÃO logados */}
               {!user && (
@@ -226,7 +232,7 @@ export default function Footer() {
           </div>
           {/* Suporte */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Suporte</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Suporte</h3>
             <div className="space-y-2">
               <button
 

@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { lazy, Suspense, useEffect } from 'react'
 import { queryClient } from './lib/queryClient'
-import { ThemeProvider, useTheme } from './contexts/ThemeContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import Navbar from './components/Navbar'
 import FaviconImage from './components/FaviconImage'
 import LoadingScreen from './components/LoadingScreen'
@@ -38,44 +38,12 @@ const ToastDemo = lazy(() => import('./pages/ToastDemo'))
 
 // Componente principal que gerencia as classes de tema
 function AppContent() {
-  const location = useLocation()
-  const { theme, isDark } = useTheme()
-  
   // Configurar handler de erros de extensões
   useEffect(() => {
     setupExtensionErrorHandler()
   }, [])
   
-  useEffect(() => {
-    const isLandingPage = location.pathname === '/'
-    const isBlogPage = location.pathname.startsWith('/blog')
-    
-    // Apenas log em desenvolvimento
-    if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
-      console.log('🔄 Mudando rota:', location.pathname, 'isLandingPage:', isLandingPage, 'isBlogPage:', isBlogPage)
-    }
-    
-    if (isLandingPage || isBlogPage) {
-      // Landing Page e Blog - sempre claros, forçar remoção da classe dark
-      document.documentElement.classList.remove('dark')
-      if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
-        console.log('✅ Landing Page/Blog - classe dark forçadamente removida')
-      }
-    } else {
-      // Para outras páginas, restaurar o tema escolhido pelo usuário
-      if (isDark) {
-        document.documentElement.classList.add('dark')
-        if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
-          console.log('✅ Restaurando tema escuro escolhido pelo usuário')
-        }
-      } else {
-        document.documentElement.classList.remove('dark')
-        if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {
-          console.log('✅ Restaurando tema claro escolhido pelo usuário')
-        }
-      }
-    }
-  }, [location.pathname, theme, isDark])
+  // ThemeContext já gerencia o modo claro/escuro automaticamente baseado na rota
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">

@@ -6,7 +6,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Check, Edit3 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Edit3, Zap } from 'lucide-react'
+import { useTheme } from '../../contexts/ThemeContext'
+import '../../styles/disparador.css'
 
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
@@ -43,6 +45,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
   onStepChange,
   onCampaignCreated
 }) => {
+  const { isDark } = useTheme()
   // Estado do wizard
   const [currentStep, setCurrentStep] = useState<WizardStep>('lists')
   const [campaignName, setCampaignName] = useState('')
@@ -620,43 +623,36 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-xl p-6 border border-blue-200/50 dark:border-blue-800/50 shadow-lg"
+          className={`rounded-xl p-6 shadow-lg ${isDark ? 'disparador-card-escuro' : 'disparador-card-claro'}`}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h1
-
-                className="text-3xl font-bold mb-2 campaign-title-gradient"
-                style={{
-                  background: 'linear-gradient(to right, #2563eb, #9333ea, #1d4ed8)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent'
-                }}
+                className={`text-3xl font-bold mb-2 ${isDark ? 'disparador-titulo-escuro' : 'disparador-titulo-claro'}`}
               >
                 {campaign ? 'Adicione Leads a Sua Campanha!' : 'Nova Campanha'}
               </h1>
               {campaign ? (
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800/80 rounded-lg border border-blue-200/50 dark:border-blue-700/50 shadow-sm">
-                    <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Campanha: <span className="font-semibold text-blue-700 dark:text-blue-400">{campaign.name}</span>
-                    </span>
+                  <div className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg px-3 py-1.5 rounded-lg">
+                    <div className="relative flex items-center gap-2">
+                      <Zap className="w-4 h-4" />
+                      <span className="font-semibold">{campaign.name}</span>
+                    </div>
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsEditingName(!isEditingName)}
-                    className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+                    className="p-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+                    style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}
                     title="Editar nome da campanha"
                   >
-                    <Edit3 className="w-4 h-4" />
+                    <Edit3 className="w-4 h-4" style={{color: '#ffffff'}} />
                   </motion.button>
                 </div>
               ) : (
-                <p className="text-gray-600 dark:text-gray-400 text-lg">
+                <p className={`text-lg ${isDark ? 'disparador-texto-secundario-escuro' : 'disparador-texto-secundario-claro'}`}>
                   Crie uma nova campanha de disparo
                 </p>
               )}
@@ -672,14 +668,14 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
           animate={{ opacity: 1, height: 'auto', y: 0 }}
           exit={{ opacity: 0, height: 0, y: -10 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl p-4 border border-blue-200/60 dark:border-blue-700/60 shadow-lg backdrop-blur-sm"
+          className={`rounded-xl p-4 shadow-lg backdrop-blur-sm ${isDark ? 'disparador-card-escuro' : 'disparador-card-claro'}`}
         >
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+                <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" style={{color: '#ffffff'}} />
               </div>
-              <label className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <label className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${isDark ? 'disparador-texto-escuro' : 'disparador-texto-claro'}`}>
                 Editar Nome:
               </label>
             </div>
@@ -688,7 +684,7 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
               value={campaignName}
               onChange={(e) => setCampaignName(e.target.value)}
               placeholder="Digite o nome da sua campanha..."
-              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-sm rounded-lg border-2 border-blue-200/50 dark:border-blue-700/50 bg-white dark:bg-gray-800/90 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 placeholder-gray-500 dark:placeholder-gray-400"
+              className={`flex-1 px-3 sm:px-4 py-2 sm:py-3 text-sm rounded-lg transition-all duration-200 ${isDark ? 'disparador-input-escuro' : 'disparador-input-claro'}`}
               autoFocus
             />
             <motion.div

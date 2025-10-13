@@ -92,7 +92,7 @@ export function EmptyState({
         >
           <Button
             onClick={onButtonClick}
-            className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 transition-all duration-300 transform hover:scale-105"
           >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"

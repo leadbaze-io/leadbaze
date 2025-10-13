@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabaseClient'
 import { UserProfileService } from '../lib/userProfileService'
 import { useToast } from '../hooks/use-toast'
+import { useTheme } from '../contexts/ThemeContext'
+import '../styles/perfil.css'
 import '../styles/profile-modern.css'
 import '../styles/toast-modern.css'
 import '../styles/subscription-history.css'
@@ -36,6 +39,7 @@ import { usePlans } from '../hooks/usePlans'
 import type { UserProfile } from '../types'
 
 export default function UserProfile() {
+  const { isDark } = useTheme()
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -187,7 +191,7 @@ export default function UserProfile() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Carregando perfil...</p>
         </div>
       </div>
@@ -201,7 +205,10 @@ export default function UserProfile() {
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Perfil não encontrado</h2>
           <p className="text-gray-600 mb-4">Não foi possível carregar seu perfil.</p>
-          <Button onClick={() => navigate('/login')}>
+          <Button 
+            onClick={() => navigate('/login')}
+            className="group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-4 py-2"
+          >
             Fazer Login
           </Button>
         </div>
@@ -210,38 +217,83 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="profile-page">
-      {/* Header Moderno */}
-      <div className="profile-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
-            <div className="space-y-2 sm:space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">
-                    Meu Perfil
-                  </h1>
-                  <p className="text-blue-100 text-xs sm:text-sm lg:text-base">
-                    Gerencie suas informações e configurações
-                  </p>
+    <div 
+      className="min-h-screen"
+      style={{
+        background: isDark 
+          ? 'linear-gradient(135deg, #0a0f0e 0%, #0f1514 50%, #0a0f0e 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)'
+      }}
+    >
+      {/* Header igual ao Dashboard */}
+      <div className="py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
+            <div 
+              className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl"
+              style={{
+                background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+              }}
+            >
+              {/* Background Pattern */}
+              <div className="absolute inset-0 bg-white/5">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px)`,
+                  backgroundSize: '32px 32px',
+                  opacity: 0.1
+                }}></div>
+              </div>
+
+              <div className="relative z-10">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                  <div className="space-y-4">
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="flex items-center space-x-3"
+                    >
+                      <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                        <User className="w-6 h-6" style={{color: '#ffffff'}} />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+                          Meu Perfil
+                        </h1>
+                        <p className="text-white/90 text-sm sm:text-base">
+                          Gerencie suas informações e configurações
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex justify-end"
+                  >
+                    <Button
+                      variant="outline"
+                      onClick={handleSignOut}
+                      className="group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-3 sm:px-4 py-2 w-full sm:w-auto"
+                    >
+                      <LogOut className="w-4 h-4 mr-1 sm:mr-2 transition-transform duration-300 group-hover:-translate-x-1" />
+                      <span className="font-semibold text-sm sm:text-base">
+                        <span className="hidden sm:inline">Sair da Conta</span>
+                        <span className="sm:hidden">Sair</span>
+                      </span>
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
             </div>
-            
-            <div className="flex items-center justify-end sm:justify-start">
-              <Button
-                variant="outline"
-                onClick={handleSignOut}
-                className="profile-btn-outline logout-btn flex items-center space-x-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2"
-              >
-                <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Sair</span>
-              </Button>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -249,11 +301,17 @@ export default function UserProfile() {
 
         {/* Sidebar - Mobile First */}
         <div className="lg:hidden mb-6">
-          <div className="profile-card">
+          <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
             <div className="p-4 sm:p-6">
               <div className="text-center mb-4 sm:mb-6">
                 <div className="relative inline-block mb-3 sm:mb-4">
-                  <div className="profile-avatar-container w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center">
+                  <div className={`w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center ${isDark ? 'perfil-avatar-escuro' : 'perfil-avatar-claro'}`}>
                     <span className="text-lg sm:text-2xl font-bold text-white">
                       {getInitials(profile.full_name)}
                     </span>
@@ -266,33 +324,58 @@ export default function UserProfile() {
                     <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
                 </div>
-                <h2 className="profile-title text-lg sm:text-xl mb-1">{profile.full_name}</h2>
-                <p className="profile-text-muted text-sm sm:text-base break-all">{profile.email}</p>
+                <h2 
+                  className="text-lg sm:text-xl mb-1 font-semibold"
+                  style={{ color: isDark ? '#ffffff' : '#082721' }}
+                >
+                  {profile.full_name}
+                </h2>
+                <p 
+                  className="text-sm sm:text-base break-all"
+                  style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                >
+                  {profile.email}
+                </p>
                 {profile.is_verified && (
-                  <div className="profile-badge profile-badge-success px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mt-2">
+                  <div 
+                    className="px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mt-2"
+                    style={{
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: '#ffffff'
+                    }}
+                  >
                     Verificado
                   </div>
                 )}
               </div>
 
-              <div className="profile-separator h-px my-4 sm:my-6"></div>
+              <div className={`h-px my-4 sm:my-6 ${isDark ? 'perfil-divider-escuro' : 'perfil-divider-claro'}`}></div>
 
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                  <Building2 className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                  <span className="profile-text-muted">
+                  <Building2 
+                    className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0"
+                    style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                  />
+                  <span style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
                     {profile.tax_type === 'pessoa_fisica' ? 'Pessoa Física' : 'Pessoa Jurídica'}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                  <span className="profile-text-muted">
+                  <Calendar 
+                    className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0"
+                    style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                  />
+                  <span style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
                     Membro desde {new Date(profile.created_at).toLocaleDateString('pt-BR')}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                  <span className="profile-text-muted">
+                  <MapPin 
+                    className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0"
+                    style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                  />
+                  <span style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
                     {profile.billing_city}, {profile.billing_state}
                   </span>
                 </div>
@@ -305,25 +388,46 @@ export default function UserProfile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Sidebar - Desktop Only */}
           <div className="hidden lg:block lg:col-span-1">
-            <div className="profile-card">
+            <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
               <div className="p-4 sm:p-6">
                 <div className="text-center mb-4 sm:mb-6">
                   <div className="relative inline-block mb-3 sm:mb-4">
-                    <div className="profile-avatar-container w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center">
+                    <div 
+                      className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                      }}
+                    >
                       <span className="text-lg sm:text-2xl font-bold text-white">
                         {getInitials(profile.full_name)}
                       </span>
                     </div>
                     <Button
                       size="sm"
-                      className="profile-camera-btn absolute -bottom-1 -right-1 rounded-full w-8 h-8 sm:w-10 sm:h-10 p-0"
+                      className={`absolute -bottom-1 -right-1 rounded-full w-8 h-8 sm:w-10 sm:h-10 p-0 ${isDark ? 'perfil-btn-primary-escuro' : 'perfil-btn-primary-claro'}`}
                       onClick={() => {/* Implementar upload de foto */}}
                     >
                       <Camera className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                   </div>
-                  <h2 className="profile-title text-lg sm:text-xl mb-1">{profile.full_name}</h2>
-                  <p className="profile-text-muted text-sm sm:text-base break-all">{profile.email}</p>
+                  <h2 
+                  className="text-lg sm:text-xl mb-1 font-semibold"
+                  style={{ color: isDark ? '#ffffff' : '#082721' }}
+                >
+                  {profile.full_name}
+                </h2>
+                  <p 
+                  className="text-sm sm:text-base break-all"
+                  style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                >
+                  {profile.email}
+                </p>
                   {profile.is_verified && (
                     <div className="profile-badge profile-badge-success px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mt-2">
                       Verificado
@@ -331,24 +435,24 @@ export default function UserProfile() {
                   )}
                 </div>
 
-                <div className="profile-separator h-px my-4 sm:my-6"></div>
+                <div className={`h-px my-4 sm:my-6 ${isDark ? 'perfil-divider-escuro' : 'perfil-divider-claro'}`}></div>
 
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                    <Building2 className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                    <span className="profile-text-muted">
+                    <Building2 className={`w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 ${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`} />
+                    <span className={`${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`}>
                       {profile.tax_type === 'pessoa_fisica' ? 'Pessoa Física' : 'Pessoa Jurídica'}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                    <span className="profile-text-muted">
+                    <Calendar className={`w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 ${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`} />
+                    <span className={`${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`}>
                       Membro desde {new Date(profile.created_at).toLocaleDateString('pt-BR')}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3 text-xs sm:text-sm">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 profile-text-muted flex-shrink-0" />
-                    <span className="profile-text-muted">
+                    <MapPin className={`w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 ${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`} />
+                    <span className={`${isDark ? 'perfil-texto-secundario-escuro' : 'perfil-texto-secundario-claro'}`}>
                       {profile.billing_city}, {profile.billing_state}
                     </span>
                   </div>
@@ -365,9 +469,16 @@ export default function UserProfile() {
                   : 'grid-cols-3'
               }`}>
                 <button
-                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
-                    activeTab === 'subscription' ? 'profile-tab-active' : ''
+                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                    activeTab === 'subscription' 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
+                      : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
+                  style={{
+                    color: activeTab === 'subscription' 
+                      ? '#ffffff' 
+                      : isDark ? '#9ca3af' : '#6b7280'
+                  }}
                   onClick={() => setActiveTab('subscription')}
                 >
                   <span className="hidden sm:inline">Assinatura</span>
@@ -375,9 +486,16 @@ export default function UserProfile() {
                 </button>
                 {subscription && subscription.status === 'active' && (
                   <button
-                    className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
-                      activeTab === 'lead-packages' ? 'profile-tab-active' : ''
+                    className={`px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                      activeTab === 'lead-packages' 
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
+                        : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
+                    style={{
+                      color: activeTab === 'lead-packages' 
+                        ? '#ffffff' 
+                        : isDark ? '#9ca3af' : '#6b7280'
+                    }}
                     onClick={() => setActiveTab('lead-packages')}
                   >
                     <Package className="w-4 h-4 mr-1 sm:mr-2" />
@@ -386,18 +504,32 @@ export default function UserProfile() {
                   </button>
                 )}
                 <button
-                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
-                    activeTab === 'overview' ? 'profile-tab-active' : ''
+                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                    activeTab === 'overview' 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
+                      : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
+                  style={{
+                    color: activeTab === 'overview' 
+                      ? '#ffffff' 
+                      : isDark ? '#9ca3af' : '#6b7280'
+                  }}
                   onClick={() => setActiveTab('overview')}
                 >
                   <span className="hidden sm:inline">Visão Geral</span>
                   <span className="sm:hidden">Geral</span>
                 </button>
                 <button
-                  className={`profile-tab-trigger px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
-                    activeTab === 'personal' ? 'profile-tab-active' : ''
+                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-md transition-all ${
+                    activeTab === 'personal' 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg' 
+                      : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
+                  style={{
+                    color: activeTab === 'personal' 
+                      ? '#ffffff' 
+                      : isDark ? '#9ca3af' : '#6b7280'
+                  }}
                   onClick={() => setActiveTab('personal')}
                 >
                   <span className="hidden sm:inline">Dados Pessoais</span>
@@ -410,9 +542,15 @@ export default function UserProfile() {
                   <div className="space-y-6">
                     {/* Status da Assinatura */}
                     {subscriptionLoading ? (
-                      <div className="profile-card p-6 text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                        <p className="profile-text-muted">Carregando dados da assinatura...</p>
+                      <div 
+                        className="p-6 text-center rounded-xl shadow-lg border"
+                        style={{
+                          backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+                          borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+                        }}
+                      >
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-4"></div>
+                        <p style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>Carregando dados da assinatura...</p>
                       </div>
                   ) : subscription ? (
                     <>
@@ -462,15 +600,29 @@ export default function UserProfile() {
                           profile={profile}
                         />
                         
-                        <div className="profile-card p-6 text-center mt-6">
+                        <div 
+                          className="p-6 text-center mt-6 rounded-xl shadow-lg border"
+                          style={{
+                            backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+                            borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+                          }}
+                        >
                           <div className="text-4xl mb-4">💳</div>
-                          <h3 className="profile-title text-lg mb-2">Nenhuma Assinatura Ativa</h3>
-                          <p className="profile-text-muted mb-6">
+                          <h3 
+                            className="text-lg mb-2 font-semibold"
+                            style={{ color: isDark ? '#ffffff' : '#082721' }}
+                          >
+                            Nenhuma Assinatura Ativa
+                          </h3>
+                          <p 
+                            className="mb-6"
+                            style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+                          >
                             Escolha um plano para começar a gerar leads de qualidade
                           </p>
                           <Button
                             onClick={() => navigate('/plans')}
-                            className="profile-btn-primary"
+                            className="group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-4 py-2"
                           >
                             <TrendingUp className="w-4 h-4 mr-2" />
                             Ver Planos Disponíveis
@@ -486,27 +638,40 @@ export default function UserProfile() {
 
                     {/* Rastreamento de Uso de Leads */}
                     {subscription && (
-                      <LeadsUsageTracker className="profile-card" />
+                      <LeadsUsageTracker 
+                        className="rounded-xl shadow-lg border"
+                      />
                     )}
 
                     {/* Histórico de Atividades da Assinatura */}
                     {subscription && (
                       <SubscriptionHistory 
                         subscription={subscription}
-                        className="profile-card"
+                        className="rounded-xl shadow-lg border"
                       />
                     )}
 
 
                     {/* Informações dos Planos */}
                     {!subscription && (
-                      <div className="profile-card p-6">
+                      <div 
+                        className="p-6 rounded-xl shadow-lg border"
+                        style={{
+                          backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+                          borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+                        }}
+                      >
                         <div className="flex items-center gap-3 mb-6">
-                          <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                            <TrendingUp className="w-5 h-5 text-white" />
+                          <div className="p-2 rounded-lg" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+                            <TrendingUp className="w-5 h-5" style={{color: '#ffffff'}} />
                           </div>
                           <div>
-                            <h3 className="profile-title text-lg">Planos Disponíveis</h3>
+                            <h3 
+                              className="text-lg font-semibold"
+                              style={{ color: isDark ? '#ffffff' : '#082721' }}
+                            >
+                              Planos Disponíveis
+                            </h3>
                             <p className="profile-text-muted text-sm">
                               Escolha o plano ideal para suas necessidades
                             </p>
@@ -517,8 +682,8 @@ export default function UserProfile() {
                         {!subscription && profile && (
                           <div className="mb-6 p-6 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-200 dark:border-green-800 rounded-xl">
                             <div className="flex items-center gap-4 mb-4">
-                              <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                                <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                              <div className="p-3 rounded-lg" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+                                <TrendingUp className="w-6 h-6" style={{color: '#ffffff'}} />
                               </div>
                               <div>
                                 <h3 className="text-xl font-bold text-green-800 dark:text-green-200">
@@ -576,7 +741,7 @@ export default function UserProfile() {
 
                         {plansLoading ? (
                           <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-4"></div>
                             <p className="profile-text-muted">Carregando planos...</p>
                           </div>
                         ) : (
@@ -620,7 +785,7 @@ export default function UserProfile() {
 
                                 <Button
                                   onClick={() => navigate('/plans')}
-                                  className="w-full profile-btn-primary"
+                                  className="w-full group bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg px-4 py-2"
                                 >
                                   Ver Detalhes
                                 </Button>
@@ -650,7 +815,13 @@ export default function UserProfile() {
               {activeTab === 'overview' && (
                 <div className="mt-4 sm:mt-6 animate-fade-in">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <div className="profile-card">
+                    <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
                       <div className="p-4 sm:p-6">
                         <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                           <User className="w-4 h-4 sm:w-5 sm:h-5 profile-text-muted" />
@@ -673,7 +844,13 @@ export default function UserProfile() {
                       </div>
                     </div>
 
-                    <div className="profile-card">
+                    <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
                       <div className="p-4 sm:p-6">
                         <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                           <Building2 className="w-4 h-4 sm:w-5 sm:h-5 profile-text-muted" />
@@ -702,7 +879,13 @@ export default function UserProfile() {
                       </div>
                     </div>
 
-                    <div className="profile-card">
+                    <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
                       <div className="p-4 sm:p-6">
                         <div className="flex items-center space-x-2 mb-3 sm:mb-4">
                           <Shield className="w-4 h-4 sm:w-5 sm:h-5 profile-text-muted" />
@@ -718,7 +901,7 @@ export default function UserProfile() {
                               <p className="profile-text-muted text-xs sm:text-sm">Atualize sua senha de acesso</p>
                             </div>
                             <Button 
-                              className="profile-btn-outline text-xs sm:text-sm px-3 py-2 self-start sm:self-auto"
+                              className="text-xs sm:text-sm px-3 py-2 self-start sm:self-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"
                               size="sm"
                               onClick={() => setShowChangePassword(true)}
                             >
@@ -734,7 +917,13 @@ export default function UserProfile() {
 
               {activeTab === 'personal' && (
                 <div className="mt-4 sm:mt-6 animate-fade-in">
-                  <div className="profile-card">
+                  <div 
+            className="rounded-xl shadow-lg border"
+            style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
+              borderColor: isDark ? '#2a2a2a' : '#e5e7eb'
+            }}
+          >
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-6">
                         <div>
@@ -744,7 +933,7 @@ export default function UserProfile() {
                           </p>
                         </div>
                         <Button
-                          className={isEditing ? "profile-btn-primary" : "profile-btn-outline"}
+                          className={isEditing ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg" : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"}
                           onClick={() => {
                             if (isEditing) {
                               handleSaveProfile()
@@ -773,7 +962,7 @@ export default function UserProfile() {
                           </label>
                           {isEditing ? (
                             <Input
-                              className="profile-input"
+                              className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                               value={editData.fullName}
                               onChange={(e) => setEditData({...editData, fullName: e.target.value})}
                             />
@@ -788,7 +977,7 @@ export default function UserProfile() {
                           </label>
                           {isEditing ? (
                             <Input
-                              className="profile-input"
+                              className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                               type="email"
                               value={editData.email}
                               onChange={(e) => setEditData({...editData, email: e.target.value})}
@@ -804,7 +993,7 @@ export default function UserProfile() {
                           </label>
                           {isEditing ? (
                             <Input
-                              className="profile-input"
+                              className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                               value={editData.phone}
                               onChange={(e) => setEditData({...editData, phone: e.target.value})}
                             />
@@ -821,7 +1010,7 @@ export default function UserProfile() {
                               </label>
                               {isEditing ? (
                                 <Input
-                                  className="profile-input"
+                                  className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                   value={editData.companyName}
                                   onChange={(e) => setEditData({...editData, companyName: e.target.value})}
                                 />
@@ -836,7 +1025,7 @@ export default function UserProfile() {
                               </label>
                               {isEditing ? (
                                 <Input
-                                  className="profile-input"
+                                  className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                   value={editData.tradeName}
                                   onChange={(e) => setEditData({...editData, tradeName: e.target.value})}
                                 />
@@ -863,7 +1052,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingStreet}
                                 onChange={(e) => setEditData({...editData, billingStreet: e.target.value})}
                               />
@@ -878,7 +1067,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingNumber}
                                 onChange={(e) => setEditData({...editData, billingNumber: e.target.value})}
                               />
@@ -893,7 +1082,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingComplement}
                                 onChange={(e) => setEditData({...editData, billingComplement: e.target.value})}
                               />
@@ -908,7 +1097,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingNeighborhood}
                                 onChange={(e) => setEditData({...editData, billingNeighborhood: e.target.value})}
                               />
@@ -923,7 +1112,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingCity}
                                 onChange={(e) => setEditData({...editData, billingCity: e.target.value})}
                               />
@@ -938,7 +1127,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingState}
                                 onChange={(e) => setEditData({...editData, billingState: e.target.value})}
                                 maxLength={2}
@@ -954,7 +1143,7 @@ export default function UserProfile() {
                             </label>
                             {isEditing ? (
                               <Input
-                                className="profile-input"
+                                className={`${isDark ? 'perfil-input-escuro' : 'perfil-input-claro'}`}
                                 value={editData.billingZipCode}
                                 onChange={(e) => setEditData({...editData, billingZipCode: e.target.value})}
                               />
@@ -968,7 +1157,7 @@ export default function UserProfile() {
                       {isEditing && (
                         <div className="flex justify-end space-x-3 mt-6">
                           <Button
-                            className="profile-btn-secondary"
+                            className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"
                             onClick={() => {
                               setIsEditing(false)
                               // Reset form data

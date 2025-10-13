@@ -46,14 +46,14 @@ const KPICard = ({
 }) => {
   const getGradientClasses = (color: string) => {
     const gradients = {
-      blue: 'from-blue-500 to-blue-600',
-      green: 'from-green-500 to-green-600',
+      blue: 'from-green-500 to-emerald-600',
+      green: 'from-green-500 to-emerald-600',
       red: 'from-red-500 to-red-600',
-      purple: 'from-purple-500 to-purple-600',
-      orange: 'from-orange-500 to-orange-600',
-      indigo: 'from-indigo-500 to-indigo-600'
+      purple: 'from-green-500 to-emerald-600',
+      orange: 'from-green-500 to-emerald-600',
+      indigo: 'from-green-500 to-emerald-600'
     };
-    return gradients[color as keyof typeof gradients] || gradients.blue;
+    return gradients[color as keyof typeof gradients] || gradients.green;
   };
 
   return (
@@ -72,7 +72,7 @@ const KPICard = ({
           <div className="flex items-center space-x-2 sm:space-x-3">
             <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold dashboard-card-title-claro dark:text-foreground">
               {loading ? (
-                <div className="h-6 sm:h-8 w-16 sm:w-20 bg-muted animate-pulse rounded" />
+                <div className="h-6 sm:h-8 w-16 sm:w-20 skeleton-loading-force animate-pulse rounded" />
               ) : (
                 value
               )}
@@ -129,11 +129,11 @@ const ActivityItem = ({
 
   const getActivityGradient = (type: string) => {
     switch (type) {
-      case 'campaign_completed': return 'from-green-500 to-green-600';
-      case 'campaign_sent': return 'from-blue-500 to-blue-600';
-      case 'campaign_created': return 'from-purple-500 to-purple-600';
-      case 'list_created': return 'from-orange-500 to-orange-600';
-      default: return 'from-gray-500 to-gray-600';
+      case 'campaign_completed': return 'from-green-500 to-emerald-600';
+      case 'campaign_sent': return 'from-green-500 to-emerald-600';
+      case 'campaign_created': return 'from-green-500 to-emerald-600';
+      case 'list_created': return 'from-green-500 to-emerald-600';
+      default: return 'from-green-500 to-emerald-600';
     }
   };
 
@@ -219,10 +219,10 @@ export const AnalyticsDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         {/* Header Skeleton */}
-        <div className="dashboard-header-claro dashboard-header-escuro rounded-3xl p-6 sm:p-8 text-white shadow-2xl">
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl dashboard-glow-green" style={{background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'}}>
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-              <BarChart3 className="w-6 h-6 text-yellow-300" />
+              <BarChart3 className="w-6 h-6" style={{color: '#10b981'}} />
             </div>
             <div>
               <div className="h-8 w-48 bg-white/20 animate-pulse rounded mb-2" />
@@ -235,7 +235,7 @@ export const AnalyticsDashboard: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
-              <div className="h-32 bg-muted animate-pulse rounded" />
+              <div className="h-32 skeleton-loading-force animate-pulse rounded" />
             </div>
           ))}
         </div>
@@ -248,7 +248,7 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="w-16 h-16 dashboard-badge-claro dashboard-badge-escuro rounded-full flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="w-8 h-8" />
+            <BarChart3 className="w-8 h-8" style={{color: '#10b981'}} />
           </div>
           <h3 className="text-lg font-semibold dashboard-card-title-claro dark:text-foreground mb-2">
             Nenhum dado disponível
@@ -260,7 +260,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
             onClick={handleRefresh}
 
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
           >
             <RefreshCw className="w-4 h-4 mr-2 inline" />
             Tentar novamente
@@ -277,7 +277,10 @@ export const AnalyticsDashboard: React.FC = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden dashboard-header-claro dashboard-header-escuro rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-white shadow-2xl"
+        className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl dashboard-glow-green"
+        style={{
+          background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+        }}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-white/5">
@@ -298,7 +301,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 className="flex items-center space-x-3"
               >
                 <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <BarChart3 className="w-6 h-6 text-yellow-300" />
+                  <BarChart3 className="w-6 h-6" style={{color: '#10b981'}} />
                 </div>
                 <div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
@@ -402,7 +405,7 @@ export const AnalyticsDashboard: React.FC = () => {
             {activeTab === 'performance' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-30 -z-10"
               />
             )}
           </button>
@@ -423,7 +426,7 @@ export const AnalyticsDashboard: React.FC = () => {
             {activeTab === 'activity' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur opacity-30 -z-10"
               />
             )}
           </button>
@@ -444,7 +447,7 @@ export const AnalyticsDashboard: React.FC = () => {
           >
             <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                   <Activity className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
@@ -585,7 +588,7 @@ export const AnalyticsDashboard: React.FC = () => {
           >
             <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                   <Clock className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">

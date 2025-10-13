@@ -146,7 +146,7 @@ export default function MobileTestimonials() {
 
             O que nossos
 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Clientes</span>
+            <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent"> Clientes</span>
 
             <br />
 

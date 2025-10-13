@@ -463,3 +463,5 @@ COMMENT ON TABLE campaign_performance_metrics IS 'Métricas detalhadas de perfor
 COMMENT ON FUNCTION calculate_lead_quality_score IS 'Calcula score de qualidade (0-100) baseado em rating, reviews, website, telefone e tipo de negócio';
 COMMENT ON FUNCTION calculate_conversion_probability IS 'Calcula probabilidade de conversão baseada no score de qualidade e outros fatores';
 COMMENT ON FUNCTION generate_analytics_insights IS 'Gera insights automáticos baseados na performance do usuário';
+
+

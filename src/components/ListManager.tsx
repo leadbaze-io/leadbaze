@@ -214,7 +214,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6"
           >
             <Loader className="w-6 h-6 text-white" />
           </motion.div>
@@ -323,7 +323,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg">
+              <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg">
                 <Plus className="w-5 h-5 mr-2" />
                 Nova Lista
               </Button>
@@ -408,7 +408,7 @@ export function ListManager({ onSelectList: _onSelectList }: ListManagerProps) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg">
+                  <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg">
                     <Sparkles className="w-5 h-5 mr-2" />
                     Criar Primeira Lista
                   </Button>

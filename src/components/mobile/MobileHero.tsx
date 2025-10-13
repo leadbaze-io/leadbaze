@@ -1,174 +1,237 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, Zap, TrendingUp, Sparkles } from 'lucide-react'
-import { ShimmerButton } from '../magicui/shimmer-button'
+import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activity, Target, Clock, Rocket } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
-import { BorderBeam } from '../magicui/border-beam'
+import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
-import LGPDImage from '../../assets/LGPD2.png'
+import { Meteors } from '../magicui/meteors'
+import { StarrySky } from '../magicui/starry-sky'
+import { AuroraText } from '../magicui/aurora-text'
+import { motion } from 'framer-motion'
+import '../MagicHero.css'
 
 export default function MobileHero() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
-    <section className="md:hidden relative py-16 bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-48 h-48 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-gradient-to-br from-green-100/40 to-cyan-100/40 rounded-full blur-2xl"></div>
+    <section className="md:hidden relative py-16 overflow-hidden min-h-screen" style={{
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+    }}>
+      {/* Background with Meteors and Starry Sky - Extended */}
+      <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
+        <Meteors 
+          number={25}
+          minDelay={0.2}
+          maxDelay={1.2}
+          minDuration={2}
+          maxDuration={10}
+          angle={215}
+        />
+        <StarrySky starCount={35} twinkleSpeed={2000} />
       </div>
+
+      {/* Subtle overlay for better text readability */}
+      <div className="absolute inset-0" style={{
+        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
+        minHeight: '100vh'
+      }}></div>
 
       <div className="relative max-w-md mx-auto px-4">
         <div className="text-center">
 
-          {/* Main Heading */}
-          <AnimatedBeam delay={0.6}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-6"
-            >
-              <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
-                  Gere mais de 1000 Leads B2B
-                </span>
-                <br />
-                <span className="text-gray-900 font-bold">
-                  em menos de 7 dias
-                </span>
-              </h1>
-              <p className="text-base text-gray-600 leading-relaxed">
-                Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
-              </p>
-            </motion.div>
+          {/* Título Principal */}
+          <AnimatedBeam delay={0.4}>
+            <h1 className="text-3xl font-bold mb-6">
+              <span style={{color: '#FFFFFF'}} className="font-extrabold">
+                Gere mais de{' '}
+              </span>
+              <AuroraText className="font-extrabold">
+                1000 Leads B2B
+              </AuroraText>
+              <br />
+              <span style={{color: '#FFFFFF'}}>
+                em menos de 7 dias
+              </span>
+            </h1>
           </AnimatedBeam>
 
-          {/* CTA Button */}
-          <AnimatedBeam delay={0.7}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-8"
-            >
-              <ShimmerButton
+          {/* Subtítulo */}
+          <AnimatedBeam delay={0.6}>
+            <p className="text-base mb-8 max-w-sm mx-auto leading-relaxed" style={{color: '#FFFFFF'}}>
+              Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
+            </p>
+          </AnimatedBeam>
 
+          {/* CTA Centralizado */}
+          <AnimatedBeam delay={0.8}>
+            <div className="button-illumination">
+              <ShimmerButton
                 onClick={() => {
                   const pricingSection = document.getElementById('pricing-plans-section');
                   if (pricingSection) {
                     pricingSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 w-full"
+                className="px-6 py-3 text-base"
               >
                 <span>Ver Planos</span>
-                <ArrowRight className="w-5 h-5 ml-2" />
               </ShimmerButton>
-            </motion.div>
+            </div>
           </AnimatedBeam>
 
-          {/* Selo LGPD */}
+          {/* Analytics Dashboard Preview - Mobile */}
           <AnimatedBeam delay={1.0}>
-            <div className="flex justify-center mb-8">
-              <motion.div
-                initial={{ scale: 0, opacity: 0, y: 50 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{
+            <div className="mt-12 relative">
+              <div className="bg-white rounded-2xl shadow-2xl border-2 overflow-hidden p-6 relative" style={{borderColor: 'rgba(0, 255, 0, 0.2)'}}>
+                {/* Stats Cards */}
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  {[
+                    { icon: Users, label: 'Leads Gerados', value: 1247, change: '+23%', color: '#00ff00' },
+                    { icon: Send, label: 'Mensagens', value: 3842, change: '+18%', color: '#00ff00' },
+                    { icon: Eye, label: 'Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
+                    { icon: MousePointerClick, label: 'Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
+                  ].map((stat, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.1 + index * 0.1 }}
+                      className="p-4 rounded-xl border-2 relative overflow-hidden"
+                      style={{
+                        borderColor: '#b7c7c1',
+                        backgroundColor: '#ffffff'
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <stat.icon className="w-5 h-5" style={{color: stat.color}} />
+                        <span className="text-xs font-bold px-2 py-1 rounded-full" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)', color: '#000000'}}>
+                          {stat.change}
+                        </span>
+                      </div>
+                      <div className="text-2xl font-bold mb-1" style={{color: '#082721'}}>
+                        <AnimatedCounter value={stat.value} delay={1100 + index * 100} duration={1000} />
+                        {stat.suffix}
+                      </div>
+                      <div className="text-xs font-medium" style={{color: '#2e4842'}}>
+                        {stat.label}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
 
-                  duration: 1.2,
-
-                  delay: 1.0,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20
-                }}
-                whileHover={{
-
-                  scale: 1.05,
-                  y: -5,
-                  transition: { duration: 0.4, ease: "easeOut" }
-                }}
-                className="relative group cursor-pointer"
-              >
+                {/* Chart */}
                 <motion.div
-                  animate={{
-
-                    boxShadow: [
-                      "0 10px 25px -3px rgba(0, 0, 0, 0.1)",
-                      "0 20px 40px -3px rgba(0, 0, 0, 0.15)",
-                      "0 10px 25px -3px rgba(0, 0, 0, 0.1)"
-                    ]
-                  }}
-                  transition={{
-
-                    duration: 3,
-
-                    repeat: Infinity,
-
-                    ease: "easeInOut"
-
-                  }}
-                  className="p-2 rounded-full bg-gradient-to-br from-white via-gray-50 to-white"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5 }}
+                  className="p-4 rounded-xl border-2"
+                  style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
                 >
-                  <img
-
-                    src={LGPDImage}
-
-                    alt="LGPD Compliant"
-
-                    className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-2xl group-hover:drop-shadow-3xl transition-all duration-500"
-                  />
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-bold" style={{color: '#082721'}}>
+                      Leads por Dia
+                    </h4>
+                    <Activity className="w-4 h-4" style={{color: '#00ff00'}} />
+                  </div>
+                  
+                  <div className="flex items-end justify-between gap-1 h-32">
+                    {[45, 68, 52, 78, 85, 92, 88].map((height, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ height: 0 }}
+                        animate={{ height: `${height}%` }}
+                        transition={{ delay: 1.6 + index * 0.1, type: "spring", stiffness: 100 }}
+                        className="flex-1 rounded-t-lg"
+                        style={{
+                          background: 'linear-gradient(to top, #10b981, #059669)',
+                          minHeight: '10px'
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  <div className="flex justify-between mt-2">
+                    {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((day, index) => (
+                      <div key={index} className="text-xs font-medium flex-1 text-center" style={{color: '#2e4842'}}>
+                        {day}
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
-              </motion.div>
+
+                {/* Additional Metrics - Mobile */}
+                <div className="grid grid-cols-1 gap-3 mt-4">
+                  {[
+                    { icon: Target, label: 'Campanhas Ativas', value: 12, color: '#00ff00' },
+                    { icon: Clock, label: 'Tempo Médio', value: '2.4h', color: '#00ff00' },
+                    { icon: Rocket, label: 'Crescimento', value: '+145%', color: '#00ff00' }
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.7 + index * 0.1 }}
+                      className="p-4 rounded-xl border-2 flex items-center gap-3"
+                      style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                    >
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
+                        <item.icon className="w-5 h-5" style={{color: item.color}} />
+                      </div>
+                      <div>
+                        <div className="text-xl font-bold" style={{color: '#082721'}}>
+                          {typeof item.value === 'number' ? (
+                            <AnimatedCounter value={item.value} delay={1700 + index * 100} duration={800} />
+                          ) : (
+                            item.value
+                          )}
+                        </div>
+                        <div className="text-xs font-medium" style={{color: '#2e4842'}}>
+                          {item.label}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             </div>
           </AnimatedBeam>
 
           {/* Stats */}
-          <AnimatedBeam delay={1.2}>
-            <div className="grid grid-cols-1 gap-6 max-w-sm mx-auto">
-              <div className="relative group">
-                <BorderBeam delay={0.2} className="text-center p-6 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Zap className="w-7 h-7 text-white" />
+          <AnimatedBeam delay={2.0}>
+            <div className="hero-stats-container" style={{marginTop: '4rem'}}>
+              <div className="hero-stat-card">
+                <div className="hero-stat-content">
+                  <div className="hero-stat-icon">
+                    <Zap />
                   </div>
-                  <div className="text-3xl font-black mb-2">
-                    <AnimatedCounter value={10} suffix="x" className="text-blue-600" delay={500} />
+                  <div className="hero-stat-number">
+                    <AnimatedCounter value={10} suffix="x" delay={500} />
                   </div>
-                  <div className="text-gray-700 font-semibold text-base">Mais Rápido</div>
-                  <div className="text-gray-500 text-sm mt-1">que métodos tradicionais</div>
-                </BorderBeam>
+                  <div className="hero-stat-title">Mais Rápido</div>
+                  <div className="hero-stat-description">que métodos tradicionais</div>
+                </div>
               </div>
 
-              <div className="relative group">
-                <BorderBeam delay={0.4} className="text-center p-6 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <TrendingUp className="w-7 h-7 text-white" />
+              <div className="hero-stat-card">
+                <div className="hero-stat-content">
+                  <div className="hero-stat-icon">
+                    <TrendingUp />
                   </div>
-                  <div className="text-3xl font-black mb-2">
-                    <AnimatedCounter value={95} suffix="%" className="text-purple-600" delay={700} />
+                  <div className="hero-stat-number">
+                    <AnimatedCounter value={95} suffix="%" delay={700} />
                   </div>
-                  <div className="text-gray-700 font-semibold text-base">Precisão</div>
-                  <div className="text-gray-500 text-sm mt-1">nos dados extraídos</div>
-                </BorderBeam>
+                  <div className="hero-stat-title">Precisão</div>
+                  <div className="hero-stat-description">nos dados extraídos</div>
+                </div>
               </div>
 
-              <div className="relative group">
-                <BorderBeam delay={0.6} className="text-center p-6 bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Sparkles className="w-7 h-7 text-white" />
+              <div className="hero-stat-card">
+                <div className="hero-stat-content">
+                  <div className="hero-stat-icon">
+                    <Sparkles />
                   </div>
-                  <div className="text-3xl font-black mb-2">
-                    <AnimatedCounter value={1000} suffix="+" className="text-green-600" delay={900} />
+                  <div className="hero-stat-number">
+                    <AnimatedCounter value={1000} suffix="+" delay={900} />
                   </div>
-                  <div className="text-gray-700 font-semibold text-base">Leads/semana</div>
-                  <div className="text-gray-500 text-sm mt-1">plano Start</div>
-                </BorderBeam>
+                  <div className="hero-stat-title">Leads/semana</div>
+                  <div className="hero-stat-description">plano Start</div>
+                </div>
               </div>
             </div>
           </AnimatedBeam>

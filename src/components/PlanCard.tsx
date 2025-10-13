@@ -58,7 +58,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
       {/* Badge Popular */}
       {isPopular && (
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
             <Star className="w-4 h-4" />
             Mais Popular
           </div>

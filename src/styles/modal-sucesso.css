@@ -1,0 +1,273 @@
+/* Modal de Sucesso CSS - Paleta LeadBaze */
+/* Separação completa entre modo claro e escuro */
+
+/* ============================================
+   MODO CLARO - MODAL DE SUCESSO
+   ============================================ */
+
+/* Background Principal */
+.modal-sucesso-bg-claro {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Decoração de Fundo */
+.modal-sucesso-decoration-claro {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%) !important;
+}
+
+/* Glow Effect */
+.modal-sucesso-glow-claro {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%) !important;
+}
+
+/* Ícone Principal */
+.modal-sucesso-icon-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Título */
+.modal-sucesso-titulo-claro {
+  color: #082721 !important;
+}
+
+/* Descrição */
+.modal-sucesso-descricao-claro {
+  color: #2e4842 !important;
+}
+
+/* Stats Container */
+.modal-sucesso-stats-claro {
+  background-color: #f8fffe !important;
+  border-color: #b7c7c1 !important;
+}
+
+/* Stats Icon (Azul) */
+.modal-sucesso-stats-icon-claro {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Stats Número (Azul) */
+.modal-sucesso-stats-numero-claro {
+  color: #3b82f6 !important;
+}
+
+/* Stats Label (Azul) */
+.modal-sucesso-stats-label-claro {
+  color: #1e40af !important;
+}
+
+/* Stats Icon (Roxo) */
+.modal-sucesso-stats-icon-purple-claro {
+  background-color: rgba(147, 51, 234, 0.1) !important;
+}
+
+/* Stats Número (Roxo) */
+.modal-sucesso-stats-numero-purple-claro {
+  color: #9333ea !important;
+}
+
+/* Stats Label (Roxo) */
+.modal-sucesso-stats-label-purple-claro {
+  color: #6b21a8 !important;
+}
+
+/* Botão Principal */
+.modal-sucesso-botao-principal-claro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.modal-sucesso-botao-principal-claro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Botão Secundário */
+.modal-sucesso-botao-secundario-claro {
+  background-color: transparent !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+}
+
+.modal-sucesso-botao-secundario-claro:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+/* Mensagem Final */
+.modal-sucesso-mensagem-claro {
+  background-color: rgba(16, 185, 129, 0.05) !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.modal-sucesso-mensagem-texto-claro {
+  color: #059669 !important;
+}
+
+/* ============================================
+   MODO ESCURO - MODAL DE SUCESSO
+   ============================================ */
+
+/* Background Principal */
+.modal-sucesso-bg-escuro {
+  background-color: #1e293b !important;
+  background: #1e293b !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Decoração de Fundo */
+.modal-sucesso-decoration-escuro {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%) !important;
+}
+
+/* Glow Effect */
+.modal-sucesso-glow-escuro {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%) !important;
+}
+
+/* Ícone Principal */
+.modal-sucesso-icon-escuro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Título */
+.modal-sucesso-titulo-escuro {
+  color: #ffffff !important;
+}
+
+/* Descrição */
+.modal-sucesso-descricao-escuro {
+  color: #b7c7c1 !important;
+}
+
+/* Stats Container */
+.modal-sucesso-stats-escuro {
+  background-color: #334155 !important;
+  border-color: #475569 !important;
+}
+
+/* Stats Icon (Azul) */
+.modal-sucesso-stats-icon-escuro {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Stats Número (Azul) */
+.modal-sucesso-stats-numero-escuro {
+  color: #60a5fa !important;
+}
+
+/* Stats Label (Azul) */
+.modal-sucesso-stats-label-escuro {
+  color: #93c5fd !important;
+}
+
+/* Stats Icon (Roxo) */
+.modal-sucesso-stats-icon-purple-escuro {
+  background-color: rgba(147, 51, 234, 0.2) !important;
+}
+
+/* Stats Número (Roxo) */
+.modal-sucesso-stats-numero-purple-escuro {
+  color: #a855f7 !important;
+}
+
+/* Stats Label (Roxo) */
+.modal-sucesso-stats-label-purple-escuro {
+  color: #c084fc !important;
+}
+
+/* Botão Principal */
+.modal-sucesso-botao-principal-escuro {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+}
+
+.modal-sucesso-botao-principal-escuro:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5) !important;
+}
+
+/* Botão Secundário */
+.modal-sucesso-botao-secundario-escuro {
+  background-color: transparent !important;
+  color: #e2e8f0 !important;
+  border-color: #64748b !important;
+}
+
+.modal-sucesso-botao-secundario-escuro:hover {
+  background-color: #475569 !important;
+  border-color: #94a3b8 !important;
+}
+
+/* Mensagem Final */
+.modal-sucesso-mensagem-escuro {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.modal-sucesso-mensagem-texto-escuro {
+  color: #34d399 !important;
+}
+
+/* ============================================
+   ANIMAÇÕES E TRANSIÇÕES
+   ============================================ */
+
+/* Transições suaves */
+.modal-sucesso-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects */
+.modal-sucesso-hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal-sucesso-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+
+/* Mobile */
+@media (max-width: 640px) {
+  .modal-sucesso-bg-claro,
+  .modal-sucesso-bg-escuro {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .modal-sucesso-bg-claro,
+  .modal-sucesso-bg-escuro {
+    margin: 1.5rem;
+    max-width: 28rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .modal-sucesso-bg-claro,
+  .modal-sucesso-bg-escuro {
+    margin: 2rem;
+    max-width: 32rem;
+  }
+}
+
+
+
+

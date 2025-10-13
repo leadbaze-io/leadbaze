@@ -35,6 +35,7 @@ import type { UserProfile } from '../types'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LeadList } from '../types'
 import type { User } from '@supabase/supabase-js'
+import { useTheme } from '../contexts/ThemeContext'
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
@@ -43,6 +44,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics'>('overview')
   const navigate = useNavigate()
   const { subscription, isLoading: subscriptionLoading } = useSubscription()
+  const { isDark } = useTheme()
 
   // Funções auxiliares para formatação
   const formatLeads = (count: number) => {
@@ -82,47 +84,56 @@ export default function Dashboard() {
   const getPlanIcon = (planName: string) => {
     switch (planName) {
       case 'free_trial':
-        return <Sparkles className="w-5 h-5 text-blue-300" />
+        return <Sparkles className="w-5 h-5" style={{color: '#00ff00'}} />
       case 'start':
-        return <CheckCircle className="w-5 h-5 text-green-300" />
+        return <CheckCircle className="w-5 h-5" style={{color: '#00ff00'}} />
       case 'scale':
-        return <Crown className="w-5 h-5 text-purple-300" />
+        return <Crown className="w-5 h-5" style={{color: '#00ff00'}} />
       case 'enterprise':
-        return <Award className="w-5 h-5 text-yellow-300" />
+        return <Award className="w-5 h-5" style={{color: '#00ff00'}} />
       default:
-        return <Award className="w-5 h-5 text-gray-300" />
+        return <Award className="w-5 h-5" style={{color: '#b7c7c1'}} />
     }
   }
 
   const getStatusColor = (status: string, isFreeTrial: boolean = false) => {
     if (isFreeTrial) {
-      return 'bg-blue-400'
+      return 'dashboard-status-active'
     }
 
     switch (status) {
       case 'active':
-        return 'bg-green-400'
+        return 'dashboard-status-active'
       case 'cancelled':
-        return 'bg-red-400'
+        return 'dashboard-status-cancelled'
       case 'expired':
-        return 'bg-orange-400'
+        return 'dashboard-status-warning'
       default:
-        return 'bg-gray-400'
+        return 'dashboard-status-inactive'
     }
   }
 
   const getUsagePercentage = () => {
     if (!subscription) return 0
 
-    // Calcular porcentagem baseada no total de leads disponíveis (usados + restantes)
-    const totalLeadsAvailable = subscription.leads_used + subscription.leads_remaining
-    if (totalLeadsAvailable <= 0) return 0
-
-    return Math.round((subscription.leads_used / totalLeadsAvailable) * 100)
+    // Usar a mesma lógica do LeadsUsageTracker que funciona
+    const totalUsed = subscription.leads_used || 0
+    const totalLeadsAvailable = subscription.leads_limit || 0
+    
+    // Calcular porcentagem de uso baseada no limite real
+    const usagePercentage = totalLeadsAvailable > 0 ? (totalUsed / totalLeadsAvailable) * 100 : 0
+    
+    return Math.round(usagePercentage)
   }
 
   const getUsageBarWidth = () => {
     const percentage = getUsagePercentage()
+    console.log('Progress Bar Debug:', {
+      leadsUsed: subscription?.leads_used,
+      leadsLimit: subscription?.leads_limit,
+      percentage: percentage,
+      width: `${Math.min(percentage, 100)}%`
+    })
     return `${Math.min(percentage, 100)}%`
   }
 
@@ -170,7 +181,7 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
+      <div className="min-h-screen dashboard-bg-light dark:dashboard-bg-dark flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -179,11 +190,10 @@ export default function Dashboard() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-16 h-16 mx-auto mb-6 dashboard-loading-spinner"
           >
-            <Loader className="w-6 h-6 text-white" />
           </motion.div>
-          <p className="text-lg font-medium dashboard-card-text-claro dark:text-muted-foreground">
+          <p className="text-lg font-medium dashboard-card-text-light dark:dashboard-card-text-dark">
             Carregando seu dashboard...
           </p>
         </motion.div>
@@ -193,9 +203,9 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro flex items-center justify-center">
+      <div className="min-h-screen dashboard-bg-light dark:dashboard-bg-dark flex items-center justify-center">
         <div className="text-center">
-          <p className="dashboard-card-text-claro dark:text-muted-foreground">
+          <p className="dashboard-card-text-light dark:dashboard-card-text-dark">
             Redirecionando para login...
           </p>
         </div>
@@ -205,7 +215,14 @@ export default function Dashboard() {
 
   return (
     <ProfileCheckGuard user={user}>
-      <div className="min-h-screen dashboard-bg-claro dashboard-bg-escuro">
+      <div 
+        className="min-h-screen transition-colors duration-300"
+        style={{
+          background: isDark 
+            ? 'linear-gradient(135deg, #0a0f0e 0%, #0f1514 50%, #0a0f0e 100%)'
+            : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)'
+        }}
+      >
         <div className="py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header de Boas-vindas Redesenhado */}
@@ -215,7 +232,12 @@ export default function Dashboard() {
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <div className="relative overflow-hidden dashboard-header-claro dashboard-header-escuro rounded-3xl p-6 sm:p-8 text-white shadow-2xl">
+          <div 
+            className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl dashboard-glow-green"
+            style={{
+              background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+            }}
+          >
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-white/5">
               <div className="absolute inset-0" style={{
@@ -235,13 +257,13 @@ export default function Dashboard() {
                     className="flex items-center space-x-3"
                   >
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                      <Crown className="w-6 h-6 text-yellow-300" />
+                      <Rocket className="w-6 h-6" style={{color: '#ffffff'}} />
                     </div>
                     <div>
-                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
                         Bem-vindo de volta!
                       </h1>
-                      <p className="text-blue-100 text-sm sm:text-base">
+                      <p className="text-white/90 text-sm sm:text-base">
                         {user.user_metadata?.name || user.email}
                       </p>
                     </div>
@@ -251,7 +273,7 @@ export default function Dashboard() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-blue-100 text-base sm:text-lg max-w-2xl leading-relaxed"
+                    className="text-white/80 text-base sm:text-lg max-w-2xl leading-relaxed"
                   >
                     Gerencie suas listas de leads e maximize suas conversões com nossa plataforma inteligente
                   </motion.p>
@@ -265,7 +287,7 @@ export default function Dashboard() {
                 >
 
                   {/* Status Card */}
-                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/30">
+                  <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 sm:p-8 border border-white/20 shadow-2xl">
                     {subscriptionLoading ? (
                       <div className="flex items-center justify-center py-4">
                         <Loader className="w-5 h-5 text-white animate-spin" />
@@ -273,44 +295,54 @@ export default function Dashboard() {
                       </div>
                     ) : subscription ? (
                       <>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center space-x-2">
-                            <div className={`w-3 h-3 ${getStatusColor(subscription.status, subscription.is_free_trial)} rounded-full animate-pulse shadow-sm`}></div>
-                            <span className="text-sm font-semibold text-white">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-5 h-5 ${getStatusColor(subscription.status)} rounded-full animate-pulse shadow-lg flex items-center justify-center`}>
+                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                            <span className="text-base font-bold text-white">
                               {getPlanDisplayName(subscription)}
                             </span>
                           </div>
-                          {getPlanIcon((subscription as any).plan_name || '')}
+                          <div className="p-2 bg-white/10 rounded-xl">
+                            {getPlanIcon((subscription as any).plan_name || '')}
+                          </div>
                         </div>
 
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-white/80">Leads restantes</span>
+                            <span className="text-sm font-medium text-white/90">Leads restantes</span>
                             <span className="text-sm font-bold text-white">
                               {formatLeads(subscription.leads_remaining)}
                             </span>
                           </div>
-                          <div className="w-full bg-white/20 rounded-full h-2">
-                            <div
-
-                              className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-300"
-                              style={{ width: getUsageBarWidth() }}
-                            ></div>
+                          <div className="flex items-center justify-between text-xs text-white/70">
+                            <span>Usados: {subscription.leads_used || 0}</span>
+                            <span>Limite: {subscription.leads_limit || 0}</span>
+                            <span>Progresso: {getUsagePercentage()}%</span>
                           </div>
-                          <div className="flex items-center justify-between text-xs text-white/80 space-x-4">
-                            <div className="flex items-center space-x-2">
-                              <div className={`w-2 h-2 ${getStatusColor(subscription.status)} rounded-full animate-pulse shadow-sm`}></div>
-                              <span>Status: {subscription.status === 'active' ? 'Ativo' : subscription.status === 'cancelled' ? 'Cancelado' : subscription.status}</span>
+                          <div className="w-full bg-white/20 rounded-full h-3 shadow-inner">
+                            <div
+                              className={`h-3 rounded-full transition-all duration-300 ${
+                                getUsagePercentage() >= 90 ? 'bg-red-500' :
+                                getUsagePercentage() >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                              }`}
+                              style={{ width: getUsageBarWidth() }}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-sm text-white/80 space-x-4">
+                            <div className="flex items-center space-x-3">
+                              <div className={`w-3 h-3 ${getStatusColor(subscription.status)} rounded-full animate-pulse shadow-md flex items-center justify-center`}>
+                                <div className="w-1 h-1 bg-white rounded-full"></div>
+                              </div>
+                              <span className="font-medium">Status: {subscription.status === 'active' ? 'Ativo' : subscription.status === 'cancelled' ? 'Cancelado' : subscription.status}</span>
                             </div>
-                            <span>
+                            <span className="text-xs whitespace-nowrap">
                               {subscription.is_free_trial
-
                                 ? `Expira em ${formatDate(subscription.current_period_end)}`
                                 : subscription.status === 'cancelled'
-
                                   ? `Acesso até ${formatDate(subscription.current_period_end)}`
-                                  : `Renova em ${formatDate(subscription.current_period_end)}`
-                              }
+                                  : `Renova em ${formatDate(subscription.current_period_end)}`}
                             </span>
                           </div>
                         </div>
@@ -319,7 +351,7 @@ export default function Dashboard() {
                       <>
                         {/* Se não tem assinatura mas tem perfil com leads bônus, mostrar BonusLeadsCard */}
                         {profile && (profile.bonus_leads || 0) > 0 ? (
-                          <BonusLeadsCard profile={profile} className="bg-white/20 backdrop-blur-md border border-white/30" />
+                          <BonusLeadsCard profile={profile} />
                         ) : (
                           <>
                             <div className="flex items-center justify-between mb-4">
@@ -364,15 +396,32 @@ export default function Dashboard() {
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <div className="dashboard-nav-card-claro dashboard-nav-card-escuro rounded-2xl p-2 shadow-lg border">
+          <div 
+            className="rounded-2xl p-2 shadow-lg border transition-colors duration-300"
+            style={{
+              backgroundColor: isDark ? '#1a1f1e' : '#ffffff',
+              borderColor: isDark ? 'rgba(0, 255, 0, 0.1)' : '#e5e7eb'
+            }}
+          >
             <nav className="flex space-x-2">
               <button
                 onClick={() => setActiveTab('overview')}
                 className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
                   activeTab === 'overview'
-                    ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
-                    : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+                    ? 'transform scale-105'
+                    : 'hover:scale-102'
                 }`}
+                style={{
+                  background: activeTab === 'overview' 
+                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                    : 'transparent',
+                  color: activeTab === 'overview' 
+                    ? '#ffffff'
+                    : isDark ? '#b7c7c1' : '#2e4842',
+                  boxShadow: activeTab === 'overview' 
+                    ? '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    : 'none'
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <Home className="w-5 h-5" />
@@ -381,7 +430,8 @@ export default function Dashboard() {
                 {activeTab === 'overview' && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                    className="absolute inset-0 rounded-xl blur opacity-20 -z-10"
+                    style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -391,9 +441,20 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('analytics')}
                 className={`relative py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-300 ${
                   activeTab === 'analytics'
-                    ? 'dashboard-nav-button-active-claro dashboard-nav-button-active-escuro transform scale-105'
-                    : 'dashboard-nav-button-claro dashboard-nav-button-escuro hover:scale-102'
+                    ? 'transform scale-105'
+                    : 'hover:scale-102'
                 }`}
+                style={{
+                  background: activeTab === 'analytics' 
+                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                    : 'transparent',
+                  color: activeTab === 'analytics' 
+                    ? '#ffffff'
+                    : isDark ? '#b7c7c1' : '#2e4842',
+                  boxShadow: activeTab === 'analytics' 
+                    ? '0 4px 12px rgba(16, 185, 129, 0.3)'
+                    : 'none'
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <BarChart3 className="w-5 h-5" />
@@ -402,7 +463,8 @@ export default function Dashboard() {
                 {activeTab === 'analytics' && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 -z-10"
+                    className="absolute inset-0 rounded-xl blur opacity-20 -z-10"
+                    style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -449,10 +511,22 @@ export default function Dashboard() {
           className="mt-12"
         >
           <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold dashboard-card-title-claro dark:text-foreground mb-2">
+            <h3 
+              className="text-2xl sm:text-3xl font-bold mb-2"
+              style={{
+                background: 'linear-gradient(135deg, #00ff00 0%, #00cc00 50%, #00ff00 100%)',
+                color: 'transparent',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
               Ações Rápidas
             </h3>
-            <p className="dashboard-card-muted-claro dark:text-muted-foreground">
+            <p 
+              className="text-sm sm:text-base"
+              style={{color: isDark ? '#b7c7c1' : '#6b7280'}}
+            >
               Comece a gerar leads e maximizar suas conversões
             </p>
           </div>
@@ -470,8 +544,8 @@ export default function Dashboard() {
                 }, 100)
               }}
             >
-              <div className="absolute inset-0 dashboard-action-card-claro dashboard-action-card-escuro rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
-              <div className="relative dashboard-action-card-claro dashboard-action-card-escuro rounded-3xl p-8 text-white shadow-xl border border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600 rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
+              <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 rounded-3xl p-8 text-white shadow-xl border border-white/10">
                 <div className="flex items-center justify-between">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
@@ -501,8 +575,20 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
+            {/* 
+              DIFERENTES TONS DE VERDE PARA EXPERIMENTAR:
+              
+              1. ATUAL: #10b981 → #34d399 (Verde esmeralda → Verde menta) - Tons naturais
+              2. #059669 → #10b981 (Verde escuro → Verde esmeralda) - Profissional
+              3. #34d399 → #6ee7b7 (Verde menta → Verde claro) - Suave e elegante
+              4. #047857 → #059669 (Verde muito escuro → Verde escuro) - Sofisticado
+              5. #6ee7b7 → #a7f3d0 (Verde claro → Verde muito claro) - Muito suave
+              6. #10b981 → #6ee7b7 (Verde esmeralda → Verde claro) - Contraste suave
+              
+              Para trocar, substitua o background nos dois lugares:
+              - background: 'linear-gradient(135deg, COR1 0%, COR2 100%)'
+            */}
             <motion.div
-
               whileHover={{ scale: 1.02, y: -8 }}
               whileTap={{ scale: 0.98 }}
               className="relative group cursor-pointer"
@@ -513,8 +599,8 @@ export default function Dashboard() {
                 }, 100)
               }}
             >
-              <div className="absolute inset-0 dashboard-action-card-purple-claro dashboard-action-card-purple-escuro rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
-              <div className="relative dashboard-action-card-purple-claro dashboard-action-card-purple-escuro rounded-3xl p-8 text-white shadow-xl border border-white/10">
+              <div className="absolute inset-0 rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity" style={{background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'}}></div>
+              <div className="relative rounded-3xl p-8 text-white shadow-xl" style={{background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'}}>
                 <div className="flex items-center justify-between">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
@@ -523,7 +609,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <h3 className="text-xl sm:text-2xl font-bold">Disparador em Massa</h3>
-                        <p className="text-purple-100 text-sm">Envie mensagens personalizadas via WhatsApp</p>
+                        <p className="text-green-100 text-sm">Envie mensagens personalizadas via WhatsApp</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-4 text-sm">
@@ -553,12 +639,15 @@ export default function Dashboard() {
           transition={{ delay: 0.6 }}
           className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8"
         >
-          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+          <div className="bg-white dark:bg-card rounded-3xl shadow-lg border border-border p-6 sm:p-8">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                 <Rocket className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+              <h3 
+                className="text-xl font-bold"
+                style={{color: isDark ? '#ffffff' : '#082721'}}
+              >
                 Recursos Disponíveis
               </h3>
             </div>
@@ -577,18 +666,24 @@ export default function Dashboard() {
                   className="flex items-start space-x-4 p-3 rounded-xl hover:bg-muted/50 transition-colors"
                 >
                   <div className={`w-12 h-12 bg-gradient-to-r ${
-                    resource.color === 'blue' ? 'from-blue-500 to-blue-600' :
-                    resource.color === 'green' ? 'from-green-500 to-green-600' :
-                    resource.color === 'purple' ? 'from-purple-500 to-purple-600' :
-                    'from-orange-500 to-orange-600'
+                    resource.color === 'blue' ? 'from-green-500 to-emerald-600' :
+                    resource.color === 'green' ? 'from-green-500 to-emerald-600' :
+                    resource.color === 'purple' ? 'from-green-500 to-emerald-600' :
+                    'from-green-500 to-emerald-600'
                   } rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
                     <resource.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-semibold dashboard-card-text-claro dark:text-foreground">
+                    <p 
+                      className="font-semibold"
+                      style={{color: isDark ? '#ffffff' : '#082721'}}
+                    >
                       {resource.title}
                     </p>
-                    <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground">
+                    <p 
+                      className="text-sm"
+                      style={{color: isDark ? '#b7c7c1' : '#6b7280'}}
+                    >
                       {resource.desc}
                     </p>
                   </div>
@@ -597,12 +692,15 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="dashboard-info-card-claro dashboard-info-card-escuro rounded-3xl shadow-lg border p-6 sm:p-8">
+          <div className="bg-white dark:bg-card rounded-3xl shadow-lg border border-border p-6 sm:p-8">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
+              <h3 
+                className="text-xl font-bold"
+                style={{color: isDark ? '#ffffff' : '#082721'}}
+              >
                 Dicas de Uso
               </h3>
             </div>
@@ -620,10 +718,13 @@ export default function Dashboard() {
                   transition={{ delay: 0.8 + index * 0.1 }}
                   className="flex items-start space-x-3 p-3 rounded-xl hover:bg-muted/50 transition-colors"
                 >
-                  <span className="flex-shrink-0 w-6 h-6 dashboard-badge-claro dashboard-badge-escuro rounded-full flex items-center justify-center text-xs font-bold">
+                  <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
                     {index + 1}
                   </span>
-                  <p className="text-sm dashboard-card-muted-claro dark:text-muted-foreground leading-relaxed">
+                  <p 
+                    className="text-sm leading-relaxed"
+                    style={{color: isDark ? '#b7c7c1' : '#6b7280'}}
+                  >
                     {tip}
                   </p>
                 </motion.div>

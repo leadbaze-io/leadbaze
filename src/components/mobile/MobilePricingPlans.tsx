@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, TrendingUp, Crown } from 'lucide-react'
 import { getCurrentUser } from '../../lib/supabaseClient'
+import { AnimatedBeam } from '../magicui/animated-beam'
+import { GridPattern } from '../magicui/grid-pattern'
+import { ShimmerButton } from '../magicui/shimmer-button'
 
 export default function MobilePricingPlans() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,7 +32,6 @@ export default function MobilePricingPlans() {
         }, 100)
       }
     } catch (error) {
-
       navigate('/login')
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -89,194 +91,142 @@ export default function MobilePricingPlans() {
         'Onboarding com nossos especialistas',
         'Suporte VIP 24/7'
       ],
-      color: 'from-orange-500 to-red-500',
+      color: 'from-green-500 to-emerald-500',
       icon: Crown
     }
   ]
 
   return (
-    <section id="pricing-plans-section" className="md:hidden relative py-16 bg-gradient-to-br from-gray-50 via-white to-blue-50 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-48 h-48 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-gradient-to-br from-green-100/40 to-cyan-100/40 rounded-full blur-2xl"></div>
+    <section id="pricing-plans-section" className="md:hidden relative py-16 overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+    }}>
+      {/* Background Pattern */}
+      <div className="absolute inset-0" style={{zIndex: 0}}>
+        <GridPattern
+          width={40}
+          height={40}
+          x={1}
+          y={1}
+          strokeDasharray="4 4"
+          className="opacity-15"
+          color="#00ff00"
+        />
       </div>
 
-      <div className="relative max-w-md mx-auto px-4">
-        <div className="text-center mb-12">
-          {/* Main Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-6"
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Escolha o <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Plano</span>
+      {/* Subtle overlay for better text readability */}
+      <div className="absolute inset-0" style={{
+        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
+        zIndex: 1
+      }}></div>
+
+      <div className="relative max-w-md mx-auto px-4" style={{zIndex: 2}}>
+        {/* Header */}
+        <AnimatedBeam delay={0.2}>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Escolha o <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Plano</span>
               <br />
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
                 Perfeito para Você
               </span>
             </h2>
-          </motion.div>
-
-          {/* Subheadline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
-          >
-            <p className="text-lg text-gray-600 leading-relaxed">
-              <span className="font-semibold text-gray-800">Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.<span className="font-semibold text-green-600"> Teste agora mesmo com 30 Leads Gratuitos!</span>
+            <p className="text-base text-white leading-relaxed" style={{opacity: 0.9}}>
+              Teste agora mesmo com 30 <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Leads Gratuitos</span>!
             </p>
-          </motion.div>
-        </div>
+          </div>
+        </AnimatedBeam>
 
         {/* Pricing Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="space-y-6 mb-12"
-        >
-          {plans.map((plan, index) => (
-            <motion.div
-              key={plan.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              whileHover={{
-
-                y: -5,
-                transition: { duration: 0.3 }
-              }}
-              className={`relative group cursor-pointer ${
-                selectedPlan === plan.id ? 'ring-4 ring-purple-500 ring-opacity-50' : ''
-              }`}
-              onClick={() => setSelectedPlan(plan.id as 'start' | 'scale' | 'enterprise')}
-            >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
-                  🏆 Mais Vendido
-                </div>
-              )}
-
-              {/* Best Value Badge for Start Plan */}
-              {plan.id === 'start' && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
-                  💎 Custo-Benefício
-                </div>
-              )}
-
-              {/* Premium Badge for Enterprise Plan */}
-              {plan.id === 'enterprise' && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
-                  👑 Premium
-                </div>
-              )}
-
-              <div className={`relative bg-white rounded-2xl p-6 shadow-xl border-2 transition-all duration-500 overflow-hidden ${
-                selectedPlan === plan.id
-
-                  ? 'border-purple-500 shadow-2xl'
-
-                  : 'border-gray-100 hover:border-gray-200'
-              }`}>
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-
-                {/* Header */}
-                <div className="relative text-center mb-6">
-                  <div className={`inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br ${plan.color} rounded-2xl text-white mb-4`}>
-                    <plan.icon className="w-7 h-7" />
+        <AnimatedBeam delay={0.4}>
+          <div className="space-y-6 mb-12">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isVisible ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className={`relative bg-white rounded-3xl border shadow-xl hover:shadow-2xl transition-all duration-500 p-6 cursor-pointer ${
+                  selectedPlan === plan.id ? 'ring-4 ring-[#00ff00] ring-opacity-50' : ''
+                }`}
+                style={{
+                  borderColor: selectedPlan === plan.id ? '#00ff00' : '#2e4842',
+                  borderWidth: '3px'
+                }}
+                onClick={() => setSelectedPlan(plan.id as 'start' | 'scale' | 'enterprise')}
+              >
+                {/* Badge */}
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#00ff00] to-[#00cc00] text-white px-3 py-1 rounded-full font-bold text-xs shadow-lg z-10">
+                    Mais Popular
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline justify-center">
-                    <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-base text-gray-600 ml-1">{plan.period}</span>
-                  </div>
-                </div>
+                )}
 
-                {/* Price per Lead */}
+                {/* Plan Header */}
                 <div className="text-center mb-6">
-                  <div className="text-sm text-gray-600 mb-1">Preço por Lead</div>
-                  <div className="text-xl font-bold text-gray-900">{plan.pricePerLead}</div>
-
-                  {/* Urgency Badge - Only for Scale Plan */}
-                  {plan.id === 'scale' && (
-                    <div className="mt-3 space-y-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
-                        ⚡ Oferta Limitada
-                      </span>
-                      <div className="text-xs text-gray-500">
-                        Apenas <span className="font-bold text-red-600">23 vagas</span> restantes
-                      </div>
+                  <div className="flex justify-center mb-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{backgroundColor: '#00ff00'}}>
+                      <plan.icon className="w-6 h-6" style={{color: '#082721'}} />
                     </div>
-                  )}
-
-                  {/* Limited spots for other plans */}
-                  {plan.id === 'start' && (
-                    <div className="mt-3">
-                      <div className="text-xs text-gray-500">
-                        Apenas <span className="font-bold text-blue-600">67 vagas</span> restantes
-                      </div>
-                    </div>
-                  )}
-
-                  {plan.id === 'enterprise' && (
-                    <div className="mt-3">
-                      <div className="text-xs text-gray-500">
-                        Apenas <span className="font-bold text-purple-600">12 vagas</span> restantes
-                      </div>
-                    </div>
-                  )}
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-2">
+                    {plan.name}
+                  </h3>
+                  <div className="text-3xl font-bold text-black mb-1">
+                    {plan.price}
+                    <span className="text-lg text-gray-600">{plan.period}</span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">Preço por lead:</span>
+                    <span className="font-bold text-black ml-1">{plan.pricePerLead}</span>
+                  </div>
                 </div>
-
 
                 {/* Features */}
                 <div className="space-y-3 mb-6">
                   {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start gap-3">
-                      <Check className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">{feature}</span>
+                    <div key={featureIndex} className="flex items-center space-x-3">
+                      <Check className="w-4 h-4" style={{color: '#00ff00'}} />
+                      <span className="text-sm text-gray-800">{feature}</span>
                     </div>
                   ))}
                 </div>
 
+
                 {/* CTA Button */}
-                <button className={`w-full py-3 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-105 ${
-                  selectedPlan === plan.id
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                }`}>
-                  {selectedPlan === plan.id ? '✅ Plano Selecionado' : '🚀 Começar Agora'}
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+                <ShimmerButton
+                  onClick={handleStartNow}
+                  className={`w-full py-3 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                    selectedPlan === plan.id
+                      ? 'bg-gradient-to-r from-[#00ff00] to-[#00cc00] shadow-lg'
+                      : 'bg-gradient-to-r from-[#00ff00] to-[#00cc00] hover:from-[#00cc00] hover:to-[#00aa00] shadow-lg hover:shadow-xl'
+                  }`}
+                >
+                  <span style={{color: '#082721'}}>Começar Agora</span>
+                </ShimmerButton>
+              </motion.div>
+            ))}
+          </div>
+        </AnimatedBeam>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center"
-        >
-          <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Pronto para começar?</h3>
-            <p className="text-sm text-gray-600 mb-4">Teste agora mesmo nossa plataforma com 30 Leads Gratuitos!</p>
-            <button
-
-              onClick={handleStartNow}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg"
-            >
-              Testar Agora
-            </button>
+        <AnimatedBeam delay={0.8}>
+          <div className="text-center">
+            <div className="bg-white rounded-3xl border shadow-xl p-6" style={{borderColor: '#00ff00', borderWidth: '3px'}}>
+              <h3 className="text-lg font-bold text-black mb-2">
+                Pronto para começar?
+              </h3>
+              <p className="text-sm text-gray-800 mb-4">
+                Junte-se a milhares de empresas que já estão gerando mais leads com a LeadBaze.
+              </p>
+              <ShimmerButton
+                onClick={handleStartNow}
+                className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] text-white px-6 py-3 rounded-xl font-semibold text-base hover:from-[#00cc00] hover:to-[#00aa00] transition-all duration-300 shadow-lg"
+              >
+                <span style={{color: '#082721'}}>Começar Agora</span>
+              </ShimmerButton>
+            </div>
           </div>
-        </motion.div>
+        </AnimatedBeam>
       </div>
     </section>
   )

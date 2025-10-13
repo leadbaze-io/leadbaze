@@ -149,7 +149,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
               </button>
               <button
                 onClick={() => window.location.href = '/plans'}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
               >
                 <CreditCard className="w-4 h-4" />
                 Assinar Novo Plano
@@ -166,7 +166,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => window.location.href = '/plans'}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2"
               >
                 <CreditCard className="w-4 h-4" />
                 Ver Planos Disponíveis

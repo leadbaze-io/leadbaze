@@ -203,7 +203,7 @@ export default function BlogPage() {
                              setShowSearch(!showSearch);
                              setShowFilters(false);
                            }}
-                           className="search-dropdown p-2 text-gray-600 hover:text-purple-600 transition-colors"
+                           className="search-dropdown p-2 text-gray-600 hover:text-green-600 transition-colors"
                          >
                            <Search className="w-5 h-5" />
                          </button>
@@ -215,13 +215,13 @@ export default function BlogPage() {
                                setShowFilters(!showFilters);
                                setShowSearch(false);
                              }}
-                             className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-blue-600 transition-colors border border-gray-300 rounded-lg hover:border-blue-500"
+                             className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-green-600 transition-colors border border-gray-300 rounded-lg hover:border-green-500"
                            >
                              <Filter className="w-4 h-4" />
                              <span className="text-sm font-medium">Filtros</span>
                              <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
                              {(filters.category || filters.sortBy !== 'newest') && (
-                               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                              )}
                            </button>
 
@@ -242,7 +242,7 @@ export default function BlogPage() {
                                        }}
                                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                          !filters.category
-                                           ? 'bg-blue-600 text-white'
+                                           ? 'bg-green-600 text-white'
                                            : 'text-gray-700 hover:bg-gray-100'
                                        }`}
                                      >
@@ -257,7 +257,7 @@ export default function BlogPage() {
                                          }}
                                          className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                            filters.category === category.slug
-                                             ? 'bg-blue-600 text-white'
+                                             ? 'bg-green-600 text-white'
                                              : 'text-gray-700 hover:bg-gray-100'
                                          }`}
                                        >
@@ -291,7 +291,7 @@ export default function BlogPage() {
                                          }}
                                          className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                                            filters.sortBy === option.value
-                                             ? 'bg-blue-600 text-white'
+                                             ? 'bg-green-600 text-white'
                                              : 'text-gray-700 hover:bg-gray-100'
                                          }`}
                                        >
@@ -341,13 +341,13 @@ export default function BlogPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchTerm)}
-                  className="w-full pl-12 pr-16 py-3 border border-gray-300  rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500  bg-white  text-gray-900  placeholder-gray-500  transition-colors"
+                  className="w-full pl-12 pr-16 py-3 border border-gray-300  rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500  bg-white  text-gray-900  placeholder-gray-500  transition-colors"
                   autoFocus
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center space-x-2 pr-4">
                   <button
                     onClick={() => handleSearch(searchTerm)}
-                    className="px-4 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm font-medium"
+                    className="px-4 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium"
                   >
                     Buscar
                   </button>
@@ -367,12 +367,12 @@ export default function BlogPage() {
         )}
 
                           {/* Hero Section - Professional */}
-          <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 ">
+          <div className="bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
               <div className="text-center max-w-4xl mx-auto">
                                  {/* Título Principal */}
                  <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
-                   <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                   <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
                      LeadBaze
                    </span>
                    <span className="text-gray-900  ml-4">
@@ -387,7 +387,7 @@ export default function BlogPage() {
 
                 {/* Estatísticas */}
                 {getPageDescription() && (
-                  <div className="text-base font-medium text-blue-600 ">
+                  <div className="text-base font-medium text-green-600 ">
                     {getPageDescription()}
                   </div>
                 )}
@@ -402,7 +402,7 @@ export default function BlogPage() {
         {/* Grid de Artigos - Layout Mailchimp */}
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader className="w-8 h-8 animate-spin text-green-600" />
             <span className="ml-3 text-gray-600">
               Carregando artigos...
             </span>
@@ -418,7 +418,7 @@ export default function BlogPage() {
             </p>
             <button
               onClick={() => handleFiltersChange({})}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               Ver Todos os Artigos
             </button>
@@ -475,7 +475,7 @@ export default function BlogPage() {
                           onClick={() => handlePageChange(page)}
                           className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                             page === currentPage
-                              ? 'bg-purple-600 text-white'
+                              ? 'bg-green-600 text-white'
                               : 'bg-white  text-gray-700  hover:bg-gray-50  border border-gray-300 '
                           }`}
                         >
@@ -503,11 +503,11 @@ export default function BlogPage() {
       </div>
 
       {/* Newsletter Section */}
-      <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 border-t border-gray-200">
+      <div className="bg-white border-t border-gray-200">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h3 className="text-xl md:text-2xl font-bold mb-3">
-              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-600 via-green-500 to-emerald-600 bg-clip-text text-transparent">
                 LeadBaze
               </span>
               <span className="text-black ml-2">
@@ -522,11 +522,11 @@ export default function BlogPage() {
                 <input
                   type="email"
                   placeholder="Digite seu e-mail"
-                  className="w-full px-3 py-2.5 rounded-md border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:bg-white transition-all text-center text-sm"
+                  className="w-full px-3 py-2.5 rounded-md border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:bg-white transition-all text-center text-sm"
                 />
                 <button
                   type="submit"
-                  className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 hover:from-purple-700 hover:via-blue-700 hover:to-indigo-700 text-white font-medium rounded-md transition-all duration-200 text-sm"
+                  className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 via-green-500 to-emerald-600 hover:from-green-700 hover:via-green-600 hover:to-emerald-700 text-white font-medium rounded-md transition-all duration-200 text-sm"
                 >
                   Assinar
                 </button>

@@ -3,9 +3,9 @@ import { createPortal } from "react-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import "../styles/lead-generator-buttons.css"
-import "../styles/lead-generator-tooltip.css"
+import '../styles/gerador-leads.css'
 import { useSubscription } from "../hooks/useSubscription"
+import { supabase } from "../lib/supabaseClient"
 import {
   Form,
   FormControl,
@@ -44,7 +44,7 @@ import { StatusIndicator } from './StatusIndicator'
 import { LeadsControlGuard } from './LeadsControlGuard'
 import { SimpleBonusLeadsAlert } from './SimpleBonusLeadsAlert'
 import { useProfileCheck } from '../hooks/useProfileCheck'
-import { supabase } from '../lib/supabaseClient'
+import { useTheme } from '../contexts/ThemeContext'
 
 const searchFormSchema = z.object({
   businessType: z
@@ -64,6 +64,7 @@ interface LeadGeneratorProProps {
 
 export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists = [] }: LeadGeneratorProProps) {
   const { subscription } = useSubscription()
+  const { isDark } = useTheme()
   
   // Função para detectar se um telefone é celular ou fixo
   const isMobilePhone = (phone: string): boolean => {
@@ -644,11 +645,38 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
             transition={{ duration: 0.6 }}
             className="mb-6"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl mb-4 shadow-lg">
               <Target className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4 leading-tight">
-              Busca Inteligente de Leads
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+              <span className={isDark ? 'text-white' : 'text-black'}>Busca </span>
+              <span 
+                className="aurora-text"
+                style={{
+                  background: 'linear-gradient(45deg, #10b981, #059669, #047857, #10b981)',
+                  backgroundSize: '200% auto',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'aurora-text 3s ease-in-out infinite alternate'
+                }}
+              >
+                Inteligente
+              </span>
+              <span className={isDark ? 'text-white' : 'text-black'}> de </span>
+              <span 
+                className="aurora-text"
+                style={{
+                  background: 'linear-gradient(45deg, #10b981, #059669, #047857, #10b981)',
+                  backgroundSize: '200% auto',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'aurora-text 3s ease-in-out infinite alternate'
+                }}
+              >
+                Leads
+              </span>
             </h1>
             <p className="text-lg sm:text-xl gerador-descricao-claro dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Defina o tipo de negócio e localização desejada. <strong>Seja específico</strong> para obter leads de maior qualidade e relevância!
@@ -690,12 +718,12 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
           <Card className="border-0 shadow-2xl gerador-card-claro gerador-card-escuro backdrop-blur-sm">
             <CardHeader className="text-center pb-4 sm:pb-6 px-4 sm:px-6">
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold gerador-titulo-claro dark:text-white text-center">Configuração da Busca</CardTitle>
+                <CardTitle className={`text-lg sm:text-xl lg:text-2xl font-bold text-center ${isDark ? 'gerador-titulo-dark' : 'gerador-titulo-light'}`}>Configuração da Busca</CardTitle>
               </div>
-              <CardDescription className="text-sm sm:text-base lg:text-lg gerador-descricao-claro dark:text-white text-center px-2">
+              <CardDescription className={`text-sm sm:text-base lg:text-lg text-center px-2 ${isDark ? 'gerador-descricao-dark' : 'gerador-descricao-light'}`}>
                 Especifique o segmento de mercado e região de interesse. Nossa plataforma localizará estabelecimentos relevantes em segundos.
               </CardDescription>
             </CardHeader>
@@ -1064,7 +1092,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       type="submit"
                       className={`w-full h-12 sm:h-14 transition-all duration-300 text-base sm:text-lg font-semibold rounded-lg sm:rounded-xl m-0 p-0 ${
                         isFormValid 
-                          ? 'gerador-botao-claro gerador-botao-escuro shadow-lg hover:shadow-xl transform hover:-translate-y-1' 
+                          ? 'gerador-botao-claro gerador-botao-escuro' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300'
                       }`}
                       disabled={isGenerating || !isFormValid}
@@ -1221,7 +1249,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                         stiffness: 300, 
                         damping: 30
                       }}
-                      className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
+                      className="sm:hidden fixed bottom-4 right-4 z-[9999] bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-full shadow-xl border border-white/30 backdrop-blur-md"
                       style={{
                         position: 'fixed',
                         bottom: '16px',
@@ -1501,7 +1529,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                           disabled={isSaving || getSelectedLeads().length === 0}
                           className={`w-full h-11 transition-all duration-300 text-base font-semibold rounded-lg ${
                             getSelectedLeads().length > 0 
-                              ? 'gerador-botao-claro gerador-botao-escuro shadow-md hover:shadow-lg transform hover:-translate-y-0.5 hover:scale-102 active:scale-98' 
+                              ? 'gerador-botao-claro gerador-botao-escuro' 
                               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           }`}
                           size="default"

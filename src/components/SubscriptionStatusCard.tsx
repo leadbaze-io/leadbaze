@@ -329,7 +329,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
         {subscription.is_free_trial && (
           <button
             onClick={() => window.location.href = '/plans'}
-            className="subscription-card-btn-primary flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+            className="subscription-card-btn-primary flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
           >
             <TrendingUp className="w-4 h-4" />
             Assinar Plano
@@ -339,7 +339,7 @@ export const SubscriptionStatusCard: React.FC<SubscriptionStatusCardPropsExtende
         {onUpgrade && subscription.status === 'active' && !subscription.is_free_trial && (
           <button
             onClick={onUpgrade}
-            className="subscription-card-btn-primary flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2"
+            className="flex-1 py-2 px-4 rounded-lg font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <TrendingUp className="w-4 h-4" />
             Atualizar Plano

@@ -46,7 +46,7 @@ export default function MobileBonus() {
             Bônus Inclusos
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">3 Bônus Exclusivos</span>
+            <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">3 Bônus Exclusivos</span>
           </h2>
           <p className="text-sm text-gray-600">
             Para garantir seu sucesso desde o primeiro dia

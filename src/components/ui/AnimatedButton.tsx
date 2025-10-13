@@ -32,7 +32,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       case 'red':
         return 'bg-gradient-to-r from-red-500 to-red-600 text-white border-0 hover:from-red-600 hover:to-red-700'
       case 'green':
-        return 'bg-gradient-to-r from-green-500 to-green-600 text-white border-0 hover:from-green-600 hover:to-green-700'
+        return 'bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 hover:from-green-600 hover:to-emerald-700'
       case 'purple':
         return 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0 hover:from-purple-600 hover:to-purple-700'
       default:

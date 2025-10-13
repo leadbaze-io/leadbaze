@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Zap, CreditCard, TrendingUp, Settings } from 'lucide-react';
 import { useSubscription } from '../hooks/useSubscription';
 import { useToast } from '../hooks/use-toast';
@@ -26,6 +26,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
   const [availability, setAvailability] = useState<LeadsAvailabilityResponse | null>(null);
   const [isChecking, setIsChecking] = useState(true);
   const [hasShownWarning, setHasShownWarning] = useState(false);
+  const hasShownErrorToast = useRef(false);
 
 
   // Verificar disponibilidade de leads
@@ -35,8 +36,9 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
       const result = await checkLeadsAvailability(leadsToGenerate);
       setAvailability(result);
       
-      // Se não pode gerar leads, mostrar toast de erro
-      if (!result.can_generate) {
+      // Se não pode gerar leads, mostrar toast de erro (apenas uma vez)
+      if (!result.can_generate && !hasShownErrorToast.current) {
+        hasShownErrorToast.current = true;
         toast({
           title: "🚫 Limite de Leads Atingido",
           description: result.message,
@@ -80,6 +82,8 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
 
   // Verificar disponibilidade quando o componente monta ou quando leadsToGenerate muda
   useEffect(() => {
+    // Resetar flag quando leadsToGenerate muda
+    hasShownErrorToast.current = false;
     checkAvailability();
   }, [leadsToGenerate]);
 
@@ -89,7 +93,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto mb-2"></div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Verificando disponibilidade de leads...
           </p>
@@ -111,7 +115,7 @@ export const LeadsControlGuard: React.FC<LeadsControlGuardProps> = ({
         </p>
         <button
           onClick={() => window.location.href = '/plans'}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 mx-auto"
+          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 mx-auto"
         >
           <CreditCard className="w-5 h-5" />
           Ver Planos

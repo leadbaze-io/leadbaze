@@ -1,5 +1,5 @@
 import React from 'react'
-import logoImage from '../assets/lblogo5.png'
+import logoImage from '../assets/leadbazelogonew1.png' // Nova logo
 
 interface LogoImageProps {
   className?: string
@@ -26,7 +26,7 @@ export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
         const fallback = document.createElement('span')
         fallback.textContent = 'LeadBaze'
         fallback.className = 'text-2xl font-bold'
-        fallback.innerHTML = '<span class="text-blue-600">Lead</span><span class="text-pink-600">Baze</span>'
+        fallback.innerHTML = '<span class="text-green-400">Lead</span><span class="text-white">Baze</span>'
 
         if (target.parentNode) {
           target.parentNode.insertBefore(fallback, target)

@@ -10,7 +10,7 @@ export const FaviconImage = () => {
 
     existingFavicons.forEach(favicon => favicon.remove())
 
-    // Favicon padrão (16x16) - usado na aba do navegador
+    // Favicon 16x16 - usado na aba do navegador
 
     const favicon16 = document.createElement('link')
 
@@ -20,7 +20,7 @@ export const FaviconImage = () => {
 
     favicon16.sizes = '16x16'
 
-    favicon16.href = '/faviconlf.png'
+    favicon16.href = '/favicon-16x16.png'
 
     document.head.appendChild(favicon16)
 
@@ -34,7 +34,7 @@ export const FaviconImage = () => {
 
     favicon32.sizes = '32x32'
 
-    favicon32.href = '/faviconlf.png'
+    favicon32.href = '/favicon-32x32.png'
 
     document.head.appendChild(favicon32)
 
@@ -48,9 +48,23 @@ export const FaviconImage = () => {
 
     favicon192.sizes = '192x192'
 
-    favicon192.href = '/faviconlf.png'
+    favicon192.href = '/android-chrome-192x192.png'
 
     document.head.appendChild(favicon192)
+
+    // Favicon 512x512 - usado em dispositivos Android e PWA
+
+    const favicon512 = document.createElement('link')
+
+    favicon512.rel = 'icon'
+
+    favicon512.type = 'image/png'
+
+    favicon512.sizes = '512x512'
+
+    favicon512.href = '/android-chrome-512x512.png'
+
+    document.head.appendChild(favicon512)
 
     // Apple Touch Icon - usado em dispositivos iOS
 
@@ -60,7 +74,7 @@ export const FaviconImage = () => {
 
     appleTouchIcon.sizes = '180x180'
 
-    appleTouchIcon.href = '/faviconlf.png'
+    appleTouchIcon.href = '/apple-touch-icon.png'
 
     document.head.appendChild(appleTouchIcon)
 

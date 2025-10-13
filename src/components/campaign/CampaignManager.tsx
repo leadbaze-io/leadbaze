@@ -226,7 +226,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
 
           <div className="flex items-center gap-2 sm:gap-3 mb-1">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-blue-400 campaign-manager-title-claro campaign-manager-title-escuro truncate">Minhas Campanhas</h1>
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg flex-shrink-0">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg flex-shrink-0">
               {campaigns.length}
             </div>
           </div>
@@ -247,7 +247,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
 
             <Button
               onClick={handleCreateCampaign}
-              className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-9 sm:h-10 px-3 sm:px-4 text-xs sm:text-sm w-full sm:w-auto"
+              className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 h-9 sm:h-10 px-3 sm:px-4 text-xs sm:text-sm w-full sm:w-auto"
             >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" style={{transform: 'translateX(-100%)'}}></div>
             <div className="relative flex items-center gap-2">
@@ -352,7 +352,7 @@ export const CampaignManager: React.FC<CampaignManagerProps> = ({
                       <Button
                         variant="primary"
                         size="sm"
-                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                         onClick={() => onEditCampaign(campaign)}
                       >
                         <Edit className="w-4 h-4 mr-2" />

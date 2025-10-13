@@ -205,7 +205,8 @@ export default function ListaDetalhes() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6"
+            className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6"
+            style={{background: 'linear-gradient(to right, #00ff00, #00cc00)'}}
           >
             <Loader className="w-6 h-6 text-white" />
           </motion.div>
@@ -282,7 +283,7 @@ export default function ListaDetalhes() {
                   transition={{ delay: 0.2 }}
                   className="flex items-center space-x-2 sm:space-x-3"
                 >
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <Target className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
@@ -524,7 +525,7 @@ export default function ListaDetalhes() {
                 </div>
                 <Link
                   to="/disparador"
-                  className="inline-flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 hover:scale-105 shadow-lg text-sm sm:text-base"
+                  className="inline-flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 hover:scale-105 shadow-lg text-sm sm:text-base"
                 >
                   <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">Iniciar Campanha</span>

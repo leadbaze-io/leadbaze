@@ -218,7 +218,7 @@ const isActiveLink = (path: string) => {
       >
         {/* Efeito de fundo no hover - com z-index menor */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg opacity-0"
+          className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg opacity-0"
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
@@ -228,7 +228,7 @@ const isActiveLink = (path: string) => {
         {/* Indicador de página ativa - Nova animação */}
         {isActiveLink(to) && (
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg"
+            className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
@@ -241,7 +241,7 @@ const isActiveLink = (path: string) => {
         {/* Linha inferior sutil */}
         {isActiveLink(to) && (
           <motion.div
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             exit={{ scaleX: 0, opacity: 0 }}
@@ -257,7 +257,7 @@ const isActiveLink = (path: string) => {
   )
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
+    <nav className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo com animação */}
@@ -282,8 +282,8 @@ const isActiveLink = (path: string) => {
 
                   to="/"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -410,12 +410,12 @@ const isActiveLink = (path: string) => {
                       }
                     }}
                     className={`relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 ${
-                      isPlansSectionActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'
+                      isPlansSectionActive ? 'text-green-400 font-semibold' : 'text-white hover:text-green-400'
                     }`}
                   >
                     {/* Efeito de fundo no hover - com z-index menor */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg opacity-0"
+                      className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg opacity-0"
                       initial={{ opacity: 0 }}
                       whileHover={{ opacity: 1 }}
                       transition={{ duration: 0.2 }}
@@ -425,7 +425,7 @@ const isActiveLink = (path: string) => {
                     {/* Indicador de página ativa - Nova animação */}
                     {isPlansSectionActive && (
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg"
+                        className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
@@ -438,7 +438,7 @@ const isActiveLink = (path: string) => {
                     {/* Linha inferior quando ativo */}
                     {isPlansSectionActive && (
                       <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
                         initial={{ scaleX: 0, opacity: 0 }}
                         animate={{ scaleX: 1, opacity: 1 }}
                         exit={{ scaleX: 0, opacity: 0 }}
@@ -452,7 +452,7 @@ const isActiveLink = (path: string) => {
                     {/* Linha inferior no hover (quando não ativo) */}
                     {!isPlansSectionActive && (
                       <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
                         initial={{ scaleX: 0, opacity: 0 }}
                         whileHover={{ scaleX: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
@@ -465,8 +465,8 @@ const isActiveLink = (path: string) => {
 
                   to="/blog/sobre"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/blog/sobre') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/blog/sobre') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -481,8 +481,8 @@ const isActiveLink = (path: string) => {
 
                   to="/blog"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/blog') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/blog') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -502,8 +502,8 @@ const isActiveLink = (path: string) => {
 
                   to="/dashboard"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/dashboard') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/dashboard') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -518,8 +518,8 @@ const isActiveLink = (path: string) => {
 
                   to="/gerador"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/gerador') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/gerador') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -534,8 +534,8 @@ const isActiveLink = (path: string) => {
 
                   to="/disparador"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/disparador') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/disparador') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -550,8 +550,8 @@ const isActiveLink = (path: string) => {
 
                   to="/profile"
 
-                  className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                    isActiveLink('/profile') ? 'text-blue-600 font-semibold' : ''
+                  className={`text-white hover:text-green-400 transition-colors ${
+                    isActiveLink('/profile') ? 'text-green-400 font-semibold' : ''
                   }`}
                   onClick={() => {
                     // Scroll para o topo após navegação
@@ -569,8 +569,8 @@ const isActiveLink = (path: string) => {
 
                     to="/admin/blog-automation"
 
-                    className={`text-gray-700 hover:text-blue-600 transition-colors ${
-                      isActiveLink('/admin/blog-automation') ? 'text-blue-600 font-semibold' : ''
+                    className={`text-white hover:text-green-400 transition-colors ${
+                      isActiveLink('/admin/blog-automation') ? 'text-green-400 font-semibold' : ''
                     }`}
                   >
                     Blog Auto
@@ -589,7 +589,7 @@ const isActiveLink = (path: string) => {
                   {shouldShowSubscribeButton && (
                     <motion.button
                       onClick={() => navigate('/plans')}
-                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold transition-all duration-200"
+                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold transition-all duration-200"
                       whileHover={{ scale: 1.02, y: -1 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.15 }}
@@ -601,7 +601,7 @@ const isActiveLink = (path: string) => {
 
                   <motion.button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 px-3 py-2 text-red-600 hover:text-red-700 transition-colors rounded-lg hover:bg-red-50"
+                    className="flex items-center space-x-2 px-3 py-2 text-red-400 hover:text-red-300 transition-colors rounded-lg hover:bg-red-900/20"
                     whileHover={{ scale: 1.02, x: 1 }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.15 }}
@@ -622,7 +622,7 @@ const isActiveLink = (path: string) => {
 
                     to="/login"
 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-lg"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2.5 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg hover:shadow-lg"
                   >
                     Entrar
                   </Link>
@@ -645,7 +645,7 @@ const isActiveLink = (path: string) => {
             {shouldShowSubscribeButton && (
               <motion.button
                 onClick={() => navigate('/plans')}
-                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-sm"
+                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-sm"
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.15 }}
@@ -657,7 +657,7 @@ const isActiveLink = (path: string) => {
 
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+              className="text-white hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-gray-700"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.15 }}
@@ -712,43 +712,43 @@ const isActiveLink = (path: string) => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 {/* Container do menu */}
-                <motion.div
-                  className="bg-white/95 backdrop-blur-xl border-t border-gray-200/50 shadow-2xl"
-                  initial={{ scaleY: 0, opacity: 0 }}
-                  animate={{ scaleY: 1, opacity: 1 }}
-                  exit={{ scaleY: 0, opacity: 0 }}
-                  transition={{
+              <motion.div
+                className="bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50 shadow-2xl"
+                initial={{ scaleY: 0, opacity: 0 }}
+                animate={{ scaleY: 1, opacity: 1 }}
+                exit={{ scaleY: 0, opacity: 0 }}
+                transition={{
 
-                    duration: 0.4,
+                  duration: 0.4,
 
-                    ease: "easeOut",
-                    staggerChildren: 0.05,
-                    delayChildren: 0.1
-                  }}
-                  style={{ transformOrigin: "top" }}
-                >
+                  ease: "easeOut",
+                  staggerChildren: 0.05,
+                  delayChildren: 0.1
+                }}
+                style={{ transformOrigin: "top" }}
+              >
                   {/* Header do menu */}
                   <motion.div
-                    className="px-6 py-4 border-b border-gray-100"
+                    className="px-6 py-4 border-b border-gray-700"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-pulse"></div>
-                        <span className="text-sm font-semibold text-gray-700">
+                        <div className="w-2 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-semibold text-white">
                           Menu de Navegação
                         </span>
                       </div>
                       <motion.button
                         onClick={() => setIsMenuOpen(false)}
-                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        className="p-2 rounded-full hover:bg-gray-700 transition-colors"
                         whileHover={{ scale: 1.1, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <X className="w-5 h-5 text-gray-600" />
+                        <X className="w-5 h-5 text-white" />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -768,9 +768,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -786,7 +786,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -797,15 +797,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Início
                             </span>
                             {isActiveLink('/') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -816,7 +816,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -920,19 +920,19 @@ const isActiveLink = (path: string) => {
                               }, 1000)
                             }
                           }}
-                          className="group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-gray-50 w-full text-left"
+                          className="group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-gray-800 w-full text-left"
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <motion.div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
                           >
                             <Crown className="w-4 h-4" />
                           </motion.div>
                           <div className="flex-1">
-                            <span className="text-sm font-medium transition-colors text-gray-700 group-hover:text-blue-600">
+                            <span className="text-sm font-medium transition-colors text-white group-hover:text-green-400">
                               Planos
                             </span>
                             <motion.div
@@ -951,9 +951,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/blog/sobre')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -969,7 +969,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -980,15 +980,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/blog/sobre')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Sobre
                             </span>
                             {isActiveLink('/blog/sobre') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -999,7 +999,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/blog/sobre') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1012,9 +1012,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/blog')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -1030,7 +1030,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -1041,15 +1041,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/blog')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Blog
                             </span>
                             {isActiveLink('/blog') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1060,7 +1060,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/blog') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1073,13 +1073,13 @@ const isActiveLink = (path: string) => {
                     {/* Links do usuário logado */}
                     {user && (
                       <motion.div
-                        className="px-2 py-1 border-t border-gray-100"
+                        className="px-2 py-1 border-t border-gray-700"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 }}
                       >
                         <div className="px-4 py-2">
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                             Área do Usuário
                           </span>
                         </div>
@@ -1089,9 +1089,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/dashboard')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -1107,7 +1107,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -1118,15 +1118,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/dashboard')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Dashboard
                             </span>
                             {isActiveLink('/dashboard') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1137,7 +1137,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/dashboard') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1150,9 +1150,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/gerador')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -1168,7 +1168,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -1179,15 +1179,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/gerador')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Gerar Leads
                             </span>
                             {isActiveLink('/gerador') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1198,7 +1198,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/gerador') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1211,9 +1211,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/disparador')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -1229,7 +1229,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -1240,15 +1240,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/disparador')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Disparador
                             </span>
                             {isActiveLink('/disparador') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1259,7 +1259,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/disparador') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1272,9 +1272,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/profile')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-900/50 to-emerald-900/50 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => {
                             setIsMenuOpen(false)
@@ -1289,7 +1289,7 @@ const isActiveLink = (path: string) => {
 
                                 ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
@@ -1300,15 +1300,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/profile')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Meu Perfil
                             </span>
                             {isActiveLink('/profile') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1319,7 +1319,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/profile') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1343,9 +1343,9 @@ const isActiveLink = (path: string) => {
                           className={`group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                             isActiveLink('/admin/blog-automation')
 
-                              ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 shadow-lg'
+                              ? 'bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 shadow-lg'
 
-                              : 'hover:bg-gray-50'
+                              : 'hover:bg-gray-800'
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                         >
@@ -1353,9 +1353,9 @@ const isActiveLink = (path: string) => {
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/admin/blog-automation')
 
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
+                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
 
-                                : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                                : 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
                             }`}
                             whileHover={{ scale: 1.1, rotate: 5 }}
                             transition={{ duration: 0.2 }}
@@ -1366,15 +1366,15 @@ const isActiveLink = (path: string) => {
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/admin/blog-automation')
 
-                                ? 'text-blue-700'
+                                ? 'text-green-400'
 
-                                : 'text-gray-700 group-hover:text-blue-600'
+                                : 'text-white group-hover:text-green-400'
                             }`}>
                               Blog Automation
                             </span>
                             {isActiveLink('/admin/blog-automation') && (
                               <motion.div
-                                className="text-xs text-blue-600 mt-1"
+                                className="text-xs text-green-600 mt-1"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
@@ -1385,7 +1385,7 @@ const isActiveLink = (path: string) => {
                           </div>
                           {isActiveLink('/admin/blog-automation') && (
                             <motion.div
-                              className="w-2 h-2 bg-blue-500 rounded-full"
+                              className="w-2 h-2 bg-green-500 rounded-full"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
@@ -1408,13 +1408,13 @@ const isActiveLink = (path: string) => {
                             handleLogout()
                             setIsMenuOpen(false)
                           }}
-                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 transition-all duration-300"
+                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-all duration-300"
                           whileHover={{ x: 4, scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           transition={{ duration: 0.2 }}
                         >
                           <motion.div
-                            className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors"
+                            className="w-8 h-8 rounded-lg bg-red-900/30 flex items-center justify-center group-hover:bg-red-800/40 transition-colors"
                             whileHover={{ scale: 1.1, rotate: -5 }}
                             transition={{ duration: 0.2 }}
                           >
@@ -1434,7 +1434,7 @@ const isActiveLink = (path: string) => {
                         <div className="px-4 py-3">
                           <Link
                             to="/login"
-                            className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                            className="block w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center py-3 px-6 rounded-xl font-medium hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             <motion.span

@@ -89,7 +89,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "842e7854-35df-4b20-9a6e-994fd934505e",
+            "path": "842e7854-35df-4b20-9a6e-994fd934505e",
         "responseMode": "responseNode",
         "options": {}
       },

@@ -5,7 +5,7 @@ const axios = require('axios');
 // =====================================================
 
 const BASE_URL = 'http://localhost:3001';
-const TEST_USER_ID = '39dc6c62-6dea-4222-adb5-7075fd704189';
+const TEST_USER_ID = '66875e05-eace-49ac-bf07-0e794dbab8fd';
 const WEBHOOK_URL = `${BASE_URL}/api/perfect-pay/webhook`;
 
 // Planos disponíveis (assumindo IDs do banco)
@@ -181,6 +181,8 @@ module.exports = {
   sendWebhook,
   runCompleteTest
 };
+
+
 
 
 
