@@ -1,11 +1,11 @@
-import React, { memo } from 'react'
+import React from 'react'
 import logoImage from '../assets/leadbazelogonew1.png' // Nova logo
 
 interface LogoImageProps {
   className?: string
 }
 
-export const LogoImage: React.FC<LogoImageProps> = memo(({ className = '' }) => {
+export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
   return (
     <img
       src={logoImage}
@@ -34,8 +34,6 @@ export const LogoImage: React.FC<LogoImageProps> = memo(({ className = '' }) => 
       }}
     />
   )
-})
-
-LogoImage.displayName = 'LogoImage'
+}
 
 export default LogoImage

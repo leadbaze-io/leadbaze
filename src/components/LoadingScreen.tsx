@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { motion } from 'framer-motion'
 // import { Loader2 } from 'lucide-react'
 import '../styles/skeleton-loading.css'
@@ -8,7 +7,7 @@ interface LoadingScreenProps {
   fullScreen?: boolean
 }
 
-const LoadingScreen = memo(function LoadingScreen({
+export default function LoadingScreen({
 
   message = "Carregando...",
 
@@ -100,12 +99,10 @@ const LoadingScreen = memo(function LoadingScreen({
       </motion.div>
     </div>
   )
-})
-
-export default LoadingScreen
+}
 
 // Loading skeleton para listas
-export const ListSkeleton = memo(function ListSkeleton() {
+export function ListSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(6)].map((_, i) => (
@@ -134,10 +131,10 @@ export const ListSkeleton = memo(function ListSkeleton() {
       ))}
     </div>
   )
-})
+}
 
 // Loading skeleton para cards de leads
-export const LeadCardSkeleton = memo(function LeadCardSkeleton() {
+export function LeadCardSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[...Array(9)].map((_, i) => (
@@ -167,10 +164,10 @@ export const LeadCardSkeleton = memo(function LeadCardSkeleton() {
       ))}
     </div>
   )
-})
+}
 
 // Loading para gráficos/analytics
-export const AnalyticsSkeleton = memo(function AnalyticsSkeleton() {
+export function AnalyticsSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {[...Array(4)].map((_, i) => (
@@ -194,4 +191,4 @@ export const AnalyticsSkeleton = memo(function AnalyticsSkeleton() {
       ))}
     </div>
   )
-})
+}

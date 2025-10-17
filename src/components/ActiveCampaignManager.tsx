@@ -4,13 +4,12 @@
  * =====================================================
  */
 
-import { memo } from 'react'
 import { CampaignProgressModal } from './CampaignProgressModal'
 import { CampaignNotification } from './CampaignNotification'
 import { CampaignCompletionOverlay } from './CampaignCompletionOverlay'
 import { useActiveCampaignContext } from '../contexts/ActiveCampaignContext'
 
-export const ActiveCampaignManager = memo(function ActiveCampaignManager() {
+export function ActiveCampaignManager() {
   const {
     activeCampaign,
     isModalOpen,
@@ -70,4 +69,4 @@ export const ActiveCampaignManager = memo(function ActiveCampaignManager() {
       )}
     </>
   )
-})
+}

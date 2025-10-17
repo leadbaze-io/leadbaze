@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { lazy, Suspense, useEffect, memo } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { queryClient } from './lib/queryClient'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Navbar from './components/Navbar'
@@ -46,8 +46,8 @@ const AuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ './pages/A
 const SMTPTestPage = lazy(() => import(/* webpackChunkName: "test" */ './pages/SMTPTestPage'))
 const ToastDemo = lazy(() => import(/* webpackChunkName: "test" */ './pages/ToastDemo'))
 
-// Componente principal que gerencia as classes de tema - Memoizado
-const AppContent = memo(function AppContent() {
+// Componente principal que gerencia as classes de tema
+function AppContent() {
   // Configurar handler de erros de extensões
   useEffect(() => {
     setupExtensionErrorHandler()
@@ -89,7 +89,7 @@ const AppContent = memo(function AppContent() {
       </main>
     </div>
   )
-})
+}
 
 function App() {
   return (
