@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Shield, CheckCircle, Star, TrendingUp } from 'lucide-react'
-import LGPDImage from '../../assets/LGPD2.png'
+import LGPDImage from '../../assets/LGPD2.webp'
 import { AnimatedBeam } from '../magicui/animated-beam'
 
 export default function MobileGuarantee() {
@@ -162,6 +162,9 @@ export default function MobileGuarantee() {
                   src={LGPDImage}
                   alt="LGPD Compliant"
                   className="w-16 h-16 object-contain drop-shadow-2xl group-hover:drop-shadow-3xl transition-all duration-500"
+                  loading="lazy"
+                  width="64"
+                  height="64"
                 />
               </motion.div>
             </motion.div>

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { Zap, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
 
@@ -6,7 +7,7 @@ interface StatusIndicatorProps {
   className?: string
 }
 
-export function StatusIndicator({ status, className = '' }: StatusIndicatorProps) {
+export const StatusIndicator = memo(function StatusIndicator({ status, className = '' }: StatusIndicatorProps) {
   const getStatusConfig = () => {
     switch (status) {
       case 'ready':
@@ -142,4 +143,4 @@ export function StatusIndicator({ status, className = '' }: StatusIndicatorProps
       )}
     </motion.div>
   )
-}
+})

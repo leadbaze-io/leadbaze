@@ -2,12 +2,15 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" href="/faviconlb.png" />
-    <link rel="apple-touch-icon" href="/faviconlb.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="LeadBaze - A plataforma mais eficiente para gerar leads qualificados usando dados do Google Maps" />
+    
+    <!-- Favicons - otimizados e estáticos -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     
     <!-- Analytics Scripts - Carregamento Condicional -->
     <script>
@@ -94,10 +97,15 @@
     <!-- Facebook Domain Verification -->
     <meta name="facebook-domain-verification" content="ygh647h1b3kkq9jvwquqfda8j96umb" />
     
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts - Inter (otimizado) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Preload recursos críticos -->
+    <link rel="preload" as="script" href="/src/main.tsx">
+    
     <title>LeadBaze</title>
   </head>
   <body>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Shield, CheckCircle, Star, TrendingUp } from 'lucide-react'
-import LGPDImage from '../assets/LGPD2.png'
+import LGPDImage from '../assets/LGPD2.webp'
 import { AnimatedBeam } from './magicui/animated-beam'
 
 export default function MagicGuarantee() {
@@ -222,6 +222,9 @@ export default function MagicGuarantee() {
                   src={LGPDImage}
                   alt="LGPD Compliant"
                   className="w-20 h-20 object-contain drop-shadow-lg"
+                  loading="lazy"
+                  width="80"
+                  height="80"
                 />
               </div>
               <p className="text-gray-600 text-sm font-medium text-center max-w-xs">

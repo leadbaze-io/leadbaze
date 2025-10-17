@@ -4,7 +4,7 @@
  * =====================================================
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Check, Edit3, Zap } from 'lucide-react'
 import { useTheme } from '../../contexts/ThemeContext'
@@ -91,41 +91,42 @@ export const CampaignWizard: React.FC<CampaignWizardProps> = ({
     }
   }, [currentStep, onStepChange])
 
-  // Recalcular leads únicos quando as listas selecionadas mudarem
-  useEffect(() => {
-    if (selectedLists.length > 0) {
-      // Recalcular leads únicos baseado nas listas selecionadas
-      const allLeads: any[] = []
-      selectedLists.forEach(listId => {
-        const list = lists.find(l => l.id === listId)
-        if (list) {
-          allLeads.push(...list.leads.map(lead => ({ ...lead, listId })))
-        }
-      })
-
-      // Deduplicar leads usando o serviço
-      const phoneMap = new Map<string, any>()
-      const uniqueLeads: any[] = []
-
-      for (const lead of allLeads) {
-        const normalizedPhone = LeadDeduplicationService.normalizePhone(lead.phone)
-        if (!normalizedPhone) continue
-
-        const phoneHash = LeadDeduplicationService.generatePhoneHash(lead.phone || '')
-
-        if (!phoneMap.has(phoneHash)) {
-          phoneMap.set(phoneHash, lead)
-          uniqueLeads.push(lead)
-        }
+  // Recalcular leads únicos quando as listas selecionadas mudarem - OTIMIZADO COM USEMEMO
+  const calculatedLeads = useMemo(() => {
+    if (selectedLists.length === 0) return []
+    
+    // Recalcular leads únicos baseado nas listas selecionadas
+    const allLeads: any[] = []
+    selectedLists.forEach(listId => {
+      const list = lists.find(l => l.id === listId)
+      if (list) {
+        allLeads.push(...list.leads.map(lead => ({ ...lead, listId })))
       }
+    })
 
-      // Recalculando leads únicos
+    // Deduplicar leads usando o serviço
+    const phoneMap = new Map<string, any>()
+    const uniqueLeads: any[] = []
 
-      setCampaignLeads(uniqueLeads)
-    } else {
-      setCampaignLeads([])
+    for (const lead of allLeads) {
+      const normalizedPhone = LeadDeduplicationService.normalizePhone(lead.phone)
+      if (!normalizedPhone) continue
+
+      const phoneHash = LeadDeduplicationService.generatePhoneHash(lead.phone || '')
+
+      if (!phoneMap.has(phoneHash)) {
+        phoneMap.set(phoneHash, lead)
+        uniqueLeads.push(lead)
+      }
     }
+
+    return uniqueLeads
   }, [selectedLists, lists])
+  
+  // Sincronizar com o estado apenas quando necessário
+  useEffect(() => {
+    setCampaignLeads(calculatedLeads)
+  }, [calculatedLeads])
 
   // Removido salvamento automático para evitar loop infinito
   // O salvamento agora é feito apenas quando o usuário executa ações específicas
