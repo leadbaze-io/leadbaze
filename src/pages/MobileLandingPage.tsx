@@ -1,5 +1,4 @@
 import MobileHero from '../components/mobile/MobileHero'
-import MobilePlatformPreview from '../components/mobile/MobilePlatformPreview'
 import MobileSteps from '../components/mobile/MobileSteps'
 import MobileBenefits from '../components/mobile/MobileBenefits'
 import MobilePricing from '../components/mobile/MobilePricing'
@@ -16,8 +15,6 @@ export default function MobileLandingPage() {
       {/* Mobile Hero Section */}
       <MobileHero />
 
-      {/* Mobile Platform Preview - Interactive Demo */}
-      <MobilePlatformPreview />
 
       {/* Mobile Como Funciona */}
       <MobileSteps />
