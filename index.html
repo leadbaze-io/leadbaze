@@ -95,14 +95,22 @@
           console.log('📊 Analytics carregado com sucesso');
         }
         
-        // Carregar analytics APENAS após LCP (delay de 3s para garantir que LCP ocorreu)
-        // Isso evita que scripts de terceiros bloqueiem o LCP
+        // Carregar analytics APENAS após LCP ser medido (delay de 5s usando requestIdleCallback)
+        // Isso evita que scripts de terceiros bloqueiem o LCP e JavaScript execution
+        function scheduleAnalyticsLoad() {
+          if ('requestIdleCallback' in window) {
+            // Usar requestIdleCallback se disponível (melhor para performance)
+            requestIdleCallback(loadAnalytics, { timeout: 5000 });
+          } else {
+            // Fallback para setTimeout de 5s
+            setTimeout(loadAnalytics, 5000);
+          }
+        }
+        
         if (document.readyState === 'complete') {
-          setTimeout(loadAnalytics, 3000);
+          scheduleAnalyticsLoad();
         } else {
-          window.addEventListener('load', function() {
-            setTimeout(loadAnalytics, 3000);
-          }, { once: true });
+          window.addEventListener('load', scheduleAnalyticsLoad, { once: true });
         }
       } else {
         console.log('🚫 Analytics não carregado (bloqueado ou modo desenvolvimento)');

@@ -1,5 +1,4 @@
 import { TrendingUp, Users, Send, Eye, MousePointerClick, Activity, Target, Clock, CheckCircle2, Rocket, Sparkles } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { AnimatedCounter } from './magicui/animated-counter'
 import { AnimatedBeam } from './magicui/animated-beam'
 
@@ -16,13 +15,11 @@ export default function HeroAnalyticsDashboard() {
               { icon: Eye, label: 'Taxa de Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
               { icon: MousePointerClick, label: 'Taxa de Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
             ].map((stat, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1 }}
                 className="p-6 rounded-2xl border-2 relative overflow-hidden group"
                 style={{
+                  opacity: 1,
                   borderColor: '#b7c7c1',
                   backgroundColor: '#ffffff'
                 }}
@@ -44,19 +41,20 @@ export default function HeroAnalyticsDashboard() {
                     {stat.label}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Charts Area */}
           <div className="grid md:grid-cols-2 gap-6">
             {/* Lead Generation Chart */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.5 }}
+            <div
               className="p-6 rounded-2xl border-2"
-              style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+              style={{
+                opacity: 1,
+                borderColor: '#b7c7c1',
+                backgroundColor: '#ffffff'
+              }}
             >
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-lg font-bold" style={{color: '#082721'}}>
@@ -68,15 +66,13 @@ export default function HeroAnalyticsDashboard() {
               {/* Chart Bars */}
               <div className="flex items-end justify-between gap-2 h-48">
                 {[45, 68, 52, 78, 85, 92, 88].map((height, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ height: 0 }}
-                    animate={{ height: `${height}%` }}
-                    transition={{ delay: 1.6 + index * 0.1, type: "spring", stiffness: 100 }}
                     className="flex-1 rounded-t-lg relative group cursor-pointer"
                     style={{
                       background: 'linear-gradient(to top, #10b981, #059669)',
-                      minHeight: '20px'
+                      minHeight: '20px',
+                      height: `${height}%`
                     }}
                   >
                     <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -84,7 +80,7 @@ export default function HeroAnalyticsDashboard() {
                         {Math.round(height * 2)} leads
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
               
@@ -96,15 +92,16 @@ export default function HeroAnalyticsDashboard() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Performance Metrics */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.5 }}
+            <div
               className="p-6 rounded-2xl border-2"
-              style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+              style={{
+                opacity: 1,
+                borderColor: '#b7c7c1',
+                backgroundColor: '#ffffff'
+              }}
             >
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-lg font-bold" style={{color: '#082721'}}>
@@ -131,20 +128,18 @@ export default function HeroAnalyticsDashboard() {
                       </span>
                     </div>
                     <div className="relative h-3 rounded-full overflow-hidden" style={{backgroundColor: '#e5e7eb'}}>
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${metric.value}%` }}
-                        transition={{ delay: 1.7 + index * 0.1, duration: 1, type: "spring", stiffness: 50 }}
+                      <div
                         className="absolute inset-y-0 left-0 rounded-full"
                         style={{
-                          background: `linear-gradient(to right, ${metric.color}, #059669)`
+                          background: `linear-gradient(to right, ${metric.color}, #059669)`,
+                          width: `${metric.value}%`
                         }}
                       />
                     </div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Additional Metrics Row */}
@@ -154,13 +149,14 @@ export default function HeroAnalyticsDashboard() {
               { icon: Clock, label: 'Tempo Médio de Resposta', value: '2.4h', color: '#00ff00' },
               { icon: Rocket, label: 'Crescimento Mensal', value: '+145%', color: '#00ff00' }
             ].map((item, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.8 + index * 0.1 }}
                 className="p-5 rounded-2xl border-2 flex items-center gap-4 hover:shadow-lg transition-shadow"
-                style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                style={{
+                  opacity: 1,
+                  borderColor: '#b7c7c1',
+                  backgroundColor: '#ffffff'
+                }}
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
                   <item.icon className="w-6 h-6" style={{color: item.color}} />
@@ -177,17 +173,18 @@ export default function HeroAnalyticsDashboard() {
                     {item.label}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Recent Activity Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.1 }}
+          <div
             className="mt-6 p-6 rounded-2xl border-2"
-            style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+            style={{
+              opacity: 1,
+              borderColor: '#b7c7c1',
+              backgroundColor: '#ffffff'
+            }}
           >
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-lg font-bold" style={{color: '#082721'}}>
@@ -204,13 +201,13 @@ export default function HeroAnalyticsDashboard() {
                 { action: 'Campanha "Diretores TI" iniciada', time: 'Há 15 minutos', icon: Sparkles, color: '#00ff00' },
                 { action: '18 leads responderam', time: 'Há 22 minutos', icon: CheckCircle2, color: '#00ff00' }
               ].map((activity, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 2.2 + index * 0.1 }}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors border"
-                  style={{borderColor: '#e5e7eb'}}
+                  style={{
+                    opacity: 1,
+                    borderColor: '#e5e7eb'
+                  }}
                 >
                   <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
                     <activity.icon className="w-5 h-5" style={{color: activity.color}} />
@@ -223,10 +220,10 @@ export default function HeroAnalyticsDashboard() {
                       {activity.time}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </AnimatedBeam>
