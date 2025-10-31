@@ -1,7 +1,14 @@
-import Slider from 'react-slick'
+import { lazy, Suspense } from 'react'
 import { AnimatedBeam } from '../magicui/animated-beam'
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
+
+// Lazy load do carousel para não bloquear renderização inicial
+const Slider = lazy(() => import('react-slick').then(module => ({ default: module.default })))
+
+// CSS do carousel também lazy
+if (typeof window !== 'undefined') {
+  import("slick-carousel/slick/slick.css")
+  import("slick-carousel/slick/slick-theme.css")
+}
 
 export default function MobileBenefits() {
   // Depoimentos de empresas B2B fictícias com fotos
@@ -152,11 +159,12 @@ export default function MobileBenefits() {
           </div>
         </AnimatedBeam>
 
-        {/* Carousel */}
+        {/* Carousel - Lazy loaded */}
         <AnimatedBeam delay={0.4}>
           <div className="testimonial-swiper">
-            <Slider {...settings}>
-              {testimonials.map((testimonial, index) => (
+            <Suspense fallback={<div className="min-h-[400px] flex items-center justify-center">Carregando...</div>}>
+              <Slider {...settings}>
+                {testimonials.map((testimonial, index) => (
                 <div key={index} className="px-2">
                   <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500" style={{minHeight: '350px', maxHeight: '350px'}}>
                     {/* Conteúdo */}
@@ -167,6 +175,10 @@ export default function MobileBenefits() {
                           <img
                             src={testimonial.photo}
                             alt={testimonial.name}
+                            width={64}
+                            height={64}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -202,7 +214,8 @@ export default function MobileBenefits() {
                   </div>
                 </div>
               ))}
-            </Slider>
+              </Slider>
+            </Suspense>
           </div>
         </AnimatedBeam>
       </div>

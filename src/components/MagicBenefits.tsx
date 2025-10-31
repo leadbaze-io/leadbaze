@@ -1,7 +1,14 @@
-import Slider from 'react-slick'
+import { lazy, Suspense } from 'react'
 import { AnimatedBeam } from './magicui/animated-beam'
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
+
+// Lazy load do carousel para não bloquear renderização inicial
+const Slider = lazy(() => import('react-slick').then(module => ({ default: module.default })))
+
+// CSS do carousel também lazy
+if (typeof window !== 'undefined') {
+  import("slick-carousel/slick/slick.css")
+  import("slick-carousel/slick/slick-theme.css")
+}
 
 export default function MagicBenefits() {
   // Depoimentos de empresas B2B fictícias com fotos
@@ -116,7 +123,7 @@ export default function MagicBenefits() {
     }
   ]
 
-  // Configurações do Slick
+  // Configurações do Slick - Otimizado para reduzir forced reflows
   const settings = {
     dots: false,
     infinite: true,
@@ -130,6 +137,12 @@ export default function MagicBenefits() {
     arrows: true,
     centerMode: false,
     variableWidth: false,
+    // Otimizações para reduzir forced reflows
+    adaptiveHeight: false, // Evita recalcular altura
+    useCSS: true, // Usa CSS transitions em vez de JS
+    useTransform: true, // Usa transform em vez de left/top
+    swipeToSlide: true,
+    lazyLoad: 'ondemand' as const, // Lazy load de imagens
     responsive: [
       {
         breakpoint: 1024,
@@ -160,10 +173,11 @@ export default function MagicBenefits() {
           </div>
         </AnimatedBeam>
 
-        {/* Carrossel com React Slick */}
+        {/* Carrossel com React Slick - Lazy loaded */}
         <AnimatedBeam delay={0.4}>
           <div className="max-w-7xl mx-auto">
-            <Slider {...settings}>
+            <Suspense fallback={<div className="min-h-[400px] flex items-center justify-center">Carregando...</div>}>
+              <Slider {...settings}>
               {testimonials.map((testimonial, index) => (
                 <div key={index} className="px-3">
                   <div className="bg-white rounded-2xl shadow-lg border overflow-hidden group hover:shadow-xl transition-all duration-300 h-full flex flex-col" 
@@ -178,7 +192,12 @@ export default function MagicBenefits() {
                           <img
                             src={testimonial.photo}
                             alt={testimonial.name}
+                            width={64}
+                            height={64}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
+                            style={{contain: 'layout'}} // Otimização para evitar reflow
                           />
                         </div>
                       </div>
@@ -218,7 +237,8 @@ export default function MagicBenefits() {
                   </div>
                 </div>
               ))}
-            </Slider>
+              </Slider>
+            </Suspense>
           </div>
         </AnimatedBeam>
       </div>

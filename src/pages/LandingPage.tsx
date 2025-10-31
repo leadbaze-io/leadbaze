@@ -1,14 +1,18 @@
+import { lazy, Suspense } from 'react'
 import MagicHero from '../components/MagicHero'
-import MagicSteps from '../components/MagicSteps'
-import MagicBenefits from '../components/MagicBenefits'
-import MagicPricing from '../components/MagicPricing'
-import MagicCTA from '../components/MagicCTA'
-import MagicGuarantee from '../components/MagicGuarantee'
-import MagicPricingPlans from '../components/MagicPricingPlans'
-import MagicFAQ from '../components/MagicFAQ'
+import { LazySection } from '../components/LazySection'
 import Footer from '../components/Footer'
 import MobileLandingPage from './MobileLandingPage'
 import ScrollToTopButton from '../components/ScrollToTopButton'
+
+// Lazy load componentes abaixo do fold para reduzir JavaScript execution time
+const MagicSteps = lazy(() => import('../components/MagicSteps'))
+const MagicBenefits = lazy(() => import('../components/MagicBenefits'))
+const MagicCTA = lazy(() => import('../components/MagicCTA'))
+const MagicPricing = lazy(() => import('../components/MagicPricing'))
+const MagicGuarantee = lazy(() => import('../components/MagicGuarantee'))
+const MagicPricingPlans = lazy(() => import('../components/MagicPricingPlans'))
+const MagicFAQ = lazy(() => import('../components/MagicFAQ'))
 
 export default function LandingPage() {
   return (
@@ -18,30 +22,51 @@ export default function LandingPage() {
 
       {/* Desktop Version - Hidden on mobile devices */}
       <div className="hidden md:block">
-        {/* Hero Section */}
+        {/* Hero Section - Carregar imediatamente (LCP element) */}
         <MagicHero />
 
+        {/* Componentes abaixo do fold - Lazy load com Intersection Observer */}
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <MagicSteps />
+          </Suspense>
+        </LazySection>
 
-        {/* Como Funciona */}
-        <MagicSteps />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[600px]" />}>
+            <MagicBenefits />
+          </Suspense>
+        </LazySection>
 
-        {/* Benefícios */}
-        <MagicBenefits />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[300px]" />}>
+            <MagicCTA />
+          </Suspense>
+        </LazySection>
 
-        {/* CTA Final */}
-        <MagicCTA />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[500px]" />}>
+            <MagicPricing />
+          </Suspense>
+        </LazySection>
 
-        {/* Desejo vs Dor */}
-        <MagicPricing />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <MagicGuarantee />
+          </Suspense>
+        </LazySection>
 
-        {/* 6º Dobra - GARANTIA */}
-        <MagicGuarantee />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[600px]" />}>
+            <MagicPricingPlans />
+          </Suspense>
+        </LazySection>
 
-        {/* 7º Dobra - OFERTA */}
-        <MagicPricingPlans />
-
-        {/* 8º Dobra - FAQ: Quebra de Objeções */}
-        <MagicFAQ />
+        <LazySection rootMargin="300px">
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <MagicFAQ />
+          </Suspense>
+        </LazySection>
 
         {/* Footer */}
         <Footer />

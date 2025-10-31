@@ -2,28 +2,33 @@ import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activit
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
-import { Meteors } from '../magicui/meteors'
-import { StarrySky } from '../magicui/starry-sky'
-import { AuroraText } from '../magicui/aurora-text'
+import { lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
+import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
+
+// Lazy load apenas componentes de background
+const Meteors = lazy(() => import('../magicui/meteors').then(m => ({ default: m.Meteors })))
+const StarrySky = lazy(() => import('../magicui/starry-sky').then(m => ({ default: m.StarrySky })))
 
 export default function MobileHero() {
   return (
     <section className="md:hidden relative py-16 overflow-hidden min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
     }}>
-      {/* Background with Meteors and Starry Sky - Extended */}
+      {/* Background with Meteors and Starry Sky - Lazy loaded */}
       <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
-        <Meteors 
-          number={25}
-          minDelay={0.2}
-          maxDelay={1.2}
-          minDuration={2}
-          maxDuration={10}
-          angle={215}
-        />
-        <StarrySky starCount={35} twinkleSpeed={2000} />
+        <Suspense fallback={null}>
+          <Meteors 
+            number={25}
+            minDelay={0.2}
+            maxDelay={1.2}
+            minDuration={2}
+            maxDuration={10}
+            angle={215}
+          />
+          <StarrySky starCount={35} twinkleSpeed={2000} />
+        </Suspense>
       </div>
 
       {/* Subtle overlay for better text readability */}
@@ -35,21 +40,19 @@ export default function MobileHero() {
       <div className="relative max-w-md mx-auto px-4">
         <div className="text-center">
 
-          {/* Título Principal */}
-          <AnimatedBeam delay={0.4}>
-            <h1 className="text-3xl font-bold mb-6">
-              <span style={{color: '#FFFFFF'}} className="font-extrabold">
-                Gere mais de{' '}
-              </span>
-              <AuroraText className="font-extrabold">
-                1000 Leads B2B
-              </AuroraText>
-              <br />
-              <span style={{color: '#FFFFFF'}}>
-                em menos de 7 dias
-              </span>
-            </h1>
-          </AnimatedBeam>
+          {/* Título Principal - Renderizado sem delay para LCP */}
+          <h1 className="text-3xl font-bold mb-6" style={{opacity: 1}}>
+            <span style={{color: '#FFFFFF'}} className="font-extrabold">
+              Gere mais de{' '}
+            </span>
+            <AuroraText className="font-extrabold">
+              1000 Leads B2B
+            </AuroraText>
+            <br />
+            <span style={{color: '#FFFFFF'}}>
+              em menos de 7 dias
+            </span>
+          </h1>
 
           {/* Subtítulo */}
           <AnimatedBeam delay={0.6}>

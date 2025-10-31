@@ -10,7 +10,13 @@ export const LogoImage: React.FC<LogoImageProps> = ({ className = '' }) => {
     <img
       src={logoImage}
       alt="LeadBaze"
+      width={150}
+      height={40}
+      loading="eager"
+      decoding="async"
+      fetchPriority="high"
       className={className}
+      style={{contain: 'layout'}} // Otimização para evitar reflow
       onLoad={() => {
         // Apenas log em desenvolvimento
         if (import.meta.env.VITE_DEBUG_MODE === 'true' || import.meta.env.VITE_APP_ENV !== 'production') {

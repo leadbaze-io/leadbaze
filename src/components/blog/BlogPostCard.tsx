@@ -34,6 +34,10 @@ export default function BlogPostCard({
             <img
               src={post.featuredImage || 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&h=600&fit=crop'}
               alt={post.title}
+              width={1200}
+              height={600}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -102,6 +106,10 @@ export default function BlogPostCard({
             <img
               src={post.featuredImage || '/images/blog/default-featured.jpg'}
               alt={post.title}
+              width={80}
+              height={80}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             />
           </div>
@@ -137,6 +145,10 @@ export default function BlogPostCard({
           <img
             src={post.featuredImage || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop'}
             alt={post.title}
+            width={800}
+            height={400}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>

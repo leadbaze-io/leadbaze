@@ -1,41 +1,66 @@
+import { lazy, Suspense } from 'react'
 import MobileHero from '../components/mobile/MobileHero'
-import MobileSteps from '../components/mobile/MobileSteps'
-import MobileBenefits from '../components/mobile/MobileBenefits'
-import MobilePricing from '../components/mobile/MobilePricing'
-import MobileCTA from '../components/mobile/MobileCTA'
-import MobileGuarantee from '../components/mobile/MobileGuarantee'
-import MobilePricingPlans from '../components/mobile/MobilePricingPlans'
-import MobileFAQ from '../components/mobile/MobileFAQ'
+import { LazySection } from '../components/LazySection'
 import MobileFooter from '../components/mobile/MobileFooter'
 import ScrollToTopButton from '../components/ScrollToTopButton'
+
+// Lazy load componentes mobile abaixo do fold
+const MobileSteps = lazy(() => import('../components/mobile/MobileSteps'))
+const MobileBenefits = lazy(() => import('../components/mobile/MobileBenefits'))
+const MobileCTA = lazy(() => import('../components/mobile/MobileCTA'))
+const MobilePricing = lazy(() => import('../components/mobile/MobilePricing'))
+const MobileGuarantee = lazy(() => import('../components/mobile/MobileGuarantee'))
+const MobilePricingPlans = lazy(() => import('../components/mobile/MobilePricingPlans'))
+const MobileFAQ = lazy(() => import('../components/mobile/MobileFAQ'))
 
 export default function MobileLandingPage() {
   return (
     <div className="md:hidden min-h-screen">
-      {/* Mobile Hero Section */}
+      {/* Mobile Hero Section - Carregar imediatamente */}
       <MobileHero />
 
+      {/* Componentes abaixo do fold - Lazy load */}
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[400px]" />}>
+          <MobileSteps />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile Como Funciona */}
-      <MobileSteps />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[600px]" />}>
+          <MobileBenefits />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile Benefícios */}
-      <MobileBenefits />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[300px]" />}>
+          <MobileCTA />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile CTA Final */}
-      <MobileCTA />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[500px]" />}>
+          <MobilePricing />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile Desejo vs Dor */}
-      <MobilePricing />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[400px]" />}>
+          <MobileGuarantee />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile 6º Dobra - GARANTIA */}
-      <MobileGuarantee />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[600px]" />}>
+          <MobilePricingPlans />
+        </Suspense>
+      </LazySection>
 
-      {/* Mobile 7º Dobra - OFERTA */}
-      <MobilePricingPlans />
-
-      {/* Mobile 8º Dobra - FAQ: Quebra de Objeções */}
-      <MobileFAQ />
+      <LazySection rootMargin="300px">
+        <Suspense fallback={<div className="min-h-[400px]" />}>
+          <MobileFAQ />
+        </Suspense>
+      </LazySection>
 
       {/* Mobile Footer */}
       <MobileFooter />

@@ -36,8 +36,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import type { LeadList } from '../types'
 import type { User } from '@supabase/supabase-js'
 import { useTheme } from '../contexts/ThemeContext'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 
 export default function Dashboard() {
+  const prefersReducedMotion = useReducedMotion()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -474,34 +476,48 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Tab Content */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'overview' ? (
-            <motion.div
-              key="overview"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Gerenciador de Listas */}
+        {prefersReducedMotion ? (
+          // Sem animação para dispositivos de baixo desempenho
+          activeTab === 'overview' ? (
+            <div>
               <ListManager
-
                 onSelectList={handleSelectList}
               />
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
-              key="analytics"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Analytics Dashboard */}
+            <div>
               <AnalyticsDashboard />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          )
+        ) : (
+          <AnimatePresence mode="wait">
+            {activeTab === 'overview' ? (
+              <motion.div
+                key="overview"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                {/* Gerenciador de Listas */}
+                <ListManager
+                  onSelectList={handleSelectList}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="analytics"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                {/* Analytics Dashboard */}
+                <AnalyticsDashboard />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
 
         {/* Ações Rápidas Redesenhadas */}
         <motion.div
