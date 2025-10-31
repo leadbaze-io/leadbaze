@@ -1,5 +1,4 @@
 import { Zap, TrendingUp, Sparkles } from 'lucide-react'
-import { AnimatedBeam } from './magicui/animated-beam'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { AnimatedCounter } from './magicui/animated-counter'
 import { AuroraText } from './magicui/aurora-text'
@@ -55,15 +54,13 @@ export default function MagicHero() {
             </span>
           </h1>
 
-          {/* Subtítulo */}
-          <AnimatedBeam delay={0.6}>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{color: '#FFFFFF'}}>
-              Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
-            </p>
-          </AnimatedBeam>
+          {/* Subtítulo - SEM animação para melhorar LCP */}
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{color: '#FFFFFF', opacity: 1}}>
+            Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
+          </p>
 
-          {/* CTA Centralizado */}
-          <AnimatedBeam delay={0.8}>
+          {/* CTA Centralizado - SEM animação para melhorar LCP */}
+          <div>
             <div className="button-illumination">
               <ShimmerButton
 
@@ -125,16 +122,15 @@ export default function MagicHero() {
                 <span>Ver Planos</span>
               </ShimmerButton>
             </div>
-          </AnimatedBeam>
+          </div>
 
           {/* Analytics Dashboard Preview - Lazy loaded (não crítico para LCP) */}
           <Suspense fallback={<div className="mt-16 min-h-[600px]" />}>
             <HeroAnalyticsDashboard />
           </Suspense>
 
-          {/* Stats */}
-          <AnimatedBeam delay={2.0}>
-            <div className="hero-stats-container" style={{marginTop: '6rem'}}>
+          {/* Stats - SEM animação para melhorar performance */}
+          <div className="hero-stats-container" style={{marginTop: '6rem', opacity: 1}}>
               <div className="hero-stat-card">
                 <div className="hero-stat-content">
                   <div className="hero-stat-icon">
@@ -174,7 +170,6 @@ export default function MagicHero() {
                 </div>
               </div>
             </div>
-          </AnimatedBeam>
         </div>
       </div>
     </section>

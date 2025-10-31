@@ -1,5 +1,10 @@
-import { motion } from "framer-motion"
+import { lazy, Suspense } from "react"
 import { cn } from "../../lib/utils"
+
+// Lazy load framer-motion apenas quando necessário
+const MotionDiv = lazy(() => 
+  import("framer-motion").then(m => ({ default: m.motion.div }))
+)
 
 interface AnimatedBeamProps {
   children: React.ReactNode
@@ -15,14 +20,17 @@ export function AnimatedBeam({ children, className, delay = 0 }: AnimatedBeamPro
     return <div className={cn("relative", className)}>{children}</div>
   }
 
+  // Lazy load framer-motion apenas quando necessário (delay > 0.1)
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay, ease: 'easeOut' }}
-      className={cn("relative", className)}
-    >
-      {children}
-    </motion.div>
+    <Suspense fallback={<div className={cn("relative", className)}>{children}</div>}>
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay, ease: 'easeOut' }}
+        className={cn("relative", className)}
+      >
+        {children}
+      </MotionDiv>
+    </Suspense>
   )
 }
