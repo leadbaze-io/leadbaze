@@ -125,7 +125,8 @@ export default function MagicHero() {
           </div>
 
           {/* Analytics Dashboard Preview - Lazy loaded (não crítico para LCP) */}
-          <Suspense fallback={<div className="mt-16 min-h-[600px]" />}>
+          {/* Altura fixa no fallback para evitar CLS */}
+          <Suspense fallback={<div className="mt-16 min-h-[600px] w-full" style={{ minHeight: '600px', width: '100%' }} aria-hidden="true" />}>
             <HeroAnalyticsDashboard />
           </Suspense>
 

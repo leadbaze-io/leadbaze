@@ -17,7 +17,7 @@ export function AuroraText({
   const animationDuration = `${5 / speed}s`
   
   return (
-    <span className={cn('relative inline-block', className)}>
+    <span className={cn('relative inline-block', className)} style={{ contain: 'layout' }}>
       <span 
         className="relative z-10 bg-clip-text text-transparent"
         style={{
@@ -26,7 +26,8 @@ export function AuroraText({
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
           backgroundSize: '200% auto',
-          animation: `aurora-text ${animationDuration} ease-in-out infinite alternate`
+          animation: `aurora-text ${animationDuration} ease-in-out infinite alternate`,
+          contain: 'layout' // Prevenir layout shifts
         }}
       >
         {children}
