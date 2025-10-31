@@ -108,3 +108,10 @@ Write-Host "   Teste Pacotes: cd backend && node test-package-purchase-flow.js" 
 
 
 
+
+
+
+
+
+
+

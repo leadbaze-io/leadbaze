@@ -41,9 +41,9 @@
         }
       }
       
-      // Carregar analytics apenas se necessário - com defer para não bloquear renderização
+      // Carregar analytics apenas se necessário - APÓS LCP para não bloquear renderização
       if (shouldLoadAnalytics()) {
-        // Função para carregar analytics após carregamento da página
+        // Função para carregar analytics após LCP (delay de 3s para garantir que LCP ocorreu)
         function loadAnalytics() {
           // Google Tag Manager
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -95,11 +95,14 @@
           console.log('📊 Analytics carregado com sucesso');
         }
         
-        // Carregar analytics após a página estar completamente carregada
+        // Carregar analytics APENAS após LCP (delay de 3s para garantir que LCP ocorreu)
+        // Isso evita que scripts de terceiros bloqueiem o LCP
         if (document.readyState === 'complete') {
-          loadAnalytics();
+          setTimeout(loadAnalytics, 3000);
         } else {
-          window.addEventListener('load', loadAnalytics, { once: true });
+          window.addEventListener('load', function() {
+            setTimeout(loadAnalytics, 3000);
+          }, { once: true });
         }
       } else {
         console.log('🚫 Analytics não carregado (bloqueado ou modo desenvolvimento)');

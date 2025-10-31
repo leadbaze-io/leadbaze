@@ -229,3 +229,10 @@ console.log('✅ Funções de debug V2 carregadas! Use window.disparadorDebugV2 
 
 
 
+
+
+
+
+
+
+

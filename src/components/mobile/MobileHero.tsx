@@ -2,22 +2,22 @@ import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activit
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
-import { lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
 
 // Lazy load apenas componentes de background
-const Meteors = lazy(() => import('../magicui/meteors').then(m => ({ default: m.Meteors })))
-const StarrySky = lazy(() => import('../magicui/starry-sky').then(m => ({ default: m.StarrySky })))
+// StarrySky e Meteors DESABILITADOS - consumiam 34s de CPU time em produção
+// const Meteors = lazy(() => import('../magicui/meteors').then(m => ({ default: m.Meteors })))
+// const StarrySky = lazy(() => import('../magicui/starry-sky').then(m => ({ default: m.StarrySky })))
 
 export default function MobileHero() {
   return (
     <section className="md:hidden relative py-16 overflow-hidden min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
     }}>
-      {/* Background with Meteors and Starry Sky - Lazy loaded */}
-      <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
+      {/* Background - Desabilitado para melhorar performance (StarrySky consumia 34s CPU) */}
+      {/* <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
         <Suspense fallback={null}>
           <Meteors 
             number={25}
@@ -29,7 +29,7 @@ export default function MobileHero() {
           />
           <StarrySky starCount={35} twinkleSpeed={2000} />
         </Suspense>
-      </div>
+      </div> */}
 
       {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{

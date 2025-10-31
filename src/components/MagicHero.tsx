@@ -7,8 +7,9 @@ import { lazy, Suspense } from 'react'
 import './MagicHero.css'
 
 // Lazy load componentes não críticos para LCP
-const Meteors = lazy(() => import('./magicui/meteors').then(m => ({ default: m.Meteors })))
-const StarrySky = lazy(() => import('./magicui/starry-sky').then(m => ({ default: m.StarrySky })))
+// StarrySky e Meteors DESABILITADOS - consumiam 34s de CPU time em produção
+// const Meteors = lazy(() => import('./magicui/meteors').then(m => ({ default: m.Meteors })))
+// const StarrySky = lazy(() => import('./magicui/starry-sky').then(m => ({ default: m.StarrySky })))
 const HeroAnalyticsDashboard = lazy(() => import('./HeroAnalyticsDashboard'))
 
 export default function MagicHero() {
@@ -16,8 +17,8 @@ export default function MagicHero() {
     <section className="relative py-20 md:py-32 overflow-hidden min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
     }}>
-      {/* Background with Meteors and Starry Sky - Lazy loaded (não críticos para LCP) */}
-      <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
+      {/* Background - Desabilitado para melhorar performance (StarrySky consumia 34s CPU) */}
+      {/* <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
         <Suspense fallback={null}>
           <Meteors 
             number={40}
@@ -29,7 +30,7 @@ export default function MagicHero() {
           />
           <StarrySky starCount={50} twinkleSpeed={2000} />
         </Suspense>
-      </div>
+      </div> */}
 
       {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{

@@ -70,3 +70,10 @@ module.exports = { verificarEstruturaTabela };
 
 
 
+
+
+
+
+
+
+
