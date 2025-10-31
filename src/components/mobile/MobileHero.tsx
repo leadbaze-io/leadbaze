@@ -2,7 +2,6 @@ import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activit
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
-import { motion } from 'framer-motion'
 import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
 
@@ -90,13 +89,11 @@ export default function MobileHero() {
                     { icon: Eye, label: 'Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
                     { icon: MousePointerClick, label: 'Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
                   ].map((stat, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.1 + index * 0.1 }}
                       className="p-4 rounded-xl border-2 relative overflow-hidden"
                       style={{
+                        opacity: 1,
                         borderColor: '#b7c7c1',
                         backgroundColor: '#ffffff'
                       }}
@@ -114,17 +111,14 @@ export default function MobileHero() {
                       <div className="text-xs font-medium" style={{color: '#2e4842'}}>
                         {stat.label}
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
                 {/* Chart */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.5 }}
+                <div
                   className="p-4 rounded-xl border-2"
-                  style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                  style={{ opacity: 1, borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-sm font-bold" style={{color: '#082721'}}>
@@ -135,13 +129,11 @@ export default function MobileHero() {
                   
                   <div className="flex items-end justify-between gap-1 h-32">
                     {[45, 68, 52, 78, 85, 92, 88].map((height, index) => (
-                      <motion.div
+                      <div
                         key={index}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${height}%` }}
-                        transition={{ delay: 1.6 + index * 0.1, type: "spring", stiffness: 100 }}
                         className="flex-1 rounded-t-lg"
                         style={{
+                          height: `${height}%`,
                           background: 'linear-gradient(to top, #10b981, #059669)',
                           minHeight: '10px'
                         }}
@@ -156,7 +148,7 @@ export default function MobileHero() {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Additional Metrics - Mobile */}
                 <div className="grid grid-cols-1 gap-3 mt-4">
@@ -165,13 +157,10 @@ export default function MobileHero() {
                     { icon: Clock, label: 'Tempo Médio', value: '2.4h', color: '#00ff00' },
                     { icon: Rocket, label: 'Crescimento', value: '+145%', color: '#00ff00' }
                   ].map((item, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.7 + index * 0.1 }}
                       className="p-4 rounded-xl border-2 flex items-center gap-3"
-                      style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                      style={{ opacity: 1, borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
                     >
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
                         <item.icon className="w-5 h-5" style={{color: item.color}} />
@@ -188,7 +177,7 @@ export default function MobileHero() {
                           {item.label}
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import { useInView } from "framer-motion"
 import { cn } from "../../lib/utils"
 
 interface AnimatedCounterProps {
@@ -21,7 +20,25 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const [count, setCount] = useState(0)
-  const isInView = useInView(ref, { once: true, margin: "0px" })
+  const [isInView, setIsInView] = useState(false)
+
+  // IntersectionObserver nativo ao invés de framer-motion
+  useEffect(() => {
+    if (!ref.current) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true)
+          observer.disconnect() // once: true
+        }
+      },
+      { threshold: 0, rootMargin: "0px" }
+    )
+
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!isInView) return
