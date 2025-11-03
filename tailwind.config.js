@@ -49,14 +49,20 @@ export default {
         },
         meteor: {
           '0%': {
-            transform: 'rotate(var(--angle)) translateX(0)',
+            transform: 'rotate(215deg) translateX(0) translateY(-150vh)',
+            opacity: '0',
+          },
+          '10%': {
             opacity: '1',
           },
           '70%': {
             opacity: '1',
           },
+          '90%': {
+            opacity: '1',
+          },
           '100%': {
-            transform: 'rotate(var(--angle)) translateX(-500px)',
+            transform: 'rotate(215deg) translateX(-500px) translateY(150vh)',
             opacity: '0',
           },
         },

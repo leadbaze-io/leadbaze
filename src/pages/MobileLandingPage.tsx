@@ -3,6 +3,7 @@ import MobileHero from '../components/mobile/MobileHero'
 import { LazySection } from '../components/LazySection'
 import MobileFooter from '../components/mobile/MobileFooter'
 import ScrollToTopButton from '../components/ScrollToTopButton'
+import MobilePricingPlans from '../components/mobile/MobilePricingPlans' // Import direto - crítico para botão "Ver Planos"
 
 // Lazy load componentes mobile abaixo do fold
 const MobileSteps = lazy(() => import('../components/mobile/MobileSteps'))
@@ -10,7 +11,6 @@ const MobileBenefits = lazy(() => import('../components/mobile/MobileBenefits'))
 const MobileCTA = lazy(() => import('../components/mobile/MobileCTA'))
 const MobilePricing = lazy(() => import('../components/mobile/MobilePricing'))
 const MobileGuarantee = lazy(() => import('../components/mobile/MobileGuarantee'))
-const MobilePricingPlans = lazy(() => import('../components/mobile/MobilePricingPlans'))
 const MobileFAQ = lazy(() => import('../components/mobile/MobileFAQ'))
 
 export default function MobileLandingPage() {
@@ -50,11 +50,9 @@ export default function MobileLandingPage() {
         </Suspense>
       </LazySection>
 
-      <LazySection rootMargin="300px">
-        <Suspense fallback={<div className="min-h-[600px]" />}>
-          <MobilePricingPlans />
-        </Suspense>
-      </LazySection>
+      {/* Seção de Planos - CRÍTICO: Renderizada IMEDIATAMENTE sem delay para botão "Ver Planos" funcionar */}
+      {/* Renderizar diretamente (sem LazySection) para garantir presença no DOM desde o início */}
+      <MobilePricingPlans />
 
       <LazySection rootMargin="300px">
         <Suspense fallback={<div className="min-h-[400px]" />}>

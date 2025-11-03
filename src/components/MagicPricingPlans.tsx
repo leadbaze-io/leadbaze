@@ -1,20 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useLayoutEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Zap, TrendingUp, Crown } from 'lucide-react'
 import { getCurrentUser } from '../lib/supabaseClient'
-import { AnimatedBeam } from './magicui/animated-beam'
 import { GridPattern } from './magicui/grid-pattern'
 import { ShimmerButton } from './magicui/shimmer-button'
 
 export default function MagicPricingPlans() {
-  const [isVisible, setIsVisible] = useState(false)
+  const isVisible = true // Sempre visível para garantir renderização imediata
   const [selectedPlan, setSelectedPlan] = useState<'start' | 'scale' | 'enterprise'>('scale')
   const navigate = useNavigate()
+  const sectionRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100)
-    return () => clearTimeout(timer)
+  // Garantir que está no DOM imediatamente
+  useLayoutEffect(() => {
+    if (sectionRef.current) {
+      sectionRef.current.setAttribute('id', 'pricing-plans-section-desktop')
+      sectionRef.current.offsetHeight // Forçar layout
+      sectionRef.current.offsetTop // Forçar cálculo do offsetTop
+    }
   }, [])
 
   const handleStartNow = async () => {
@@ -101,9 +105,18 @@ export default function MagicPricingPlans() {
   ]
 
   return (
-    <section id="pricing-plans-section" className="relative py-24 md:py-32 overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
-    }}>
+    <section 
+      ref={sectionRef}
+      id="pricing-plans-section-desktop" 
+      data-section-type="pricing-desktop"
+      className="relative py-24 md:py-32 overflow-hidden" 
+      data-ready="true"
+      style={{
+        background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
+        scrollMarginTop: '100px',
+        scrollPaddingTop: '100px'
+      }}
+    >
       {/* Background with Grid Pattern */}
       <div className="absolute inset-0">
         <GridPattern
@@ -119,11 +132,11 @@ export default function MagicPricingPlans() {
       }}></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          {/* Main Heading */}
-          <AnimatedBeam delay={0.2}>
+        <div className="text-center mb-16" style={{ minHeight: '200px' }}>
+          {/* Main Heading - Renderizar imediatamente sem delay para garantir dimensões */}
+          <div style={{ opacity: 1 }}>
             <div className="mb-6">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#FFFFFF'}}>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#FFFFFF', opacity: 1}}>
                 Escolha o <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Plano</span>
                 <br />
                 <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
@@ -131,21 +144,20 @@ export default function MagicPricingPlans() {
                 </span>
               </h2>
             </div>
-          </AnimatedBeam>
+          </div>
 
-          {/* Subheadline */}
-          <AnimatedBeam delay={0.4}>
+          {/* Subheadline - Renderizar imediatamente */}
+          <div style={{ opacity: 1 }}>
             <div className="mb-12">
               <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{color: '#FFFFFF', opacity: 0.9}}>
                 <span className="font-semibold" style={{color: '#FFFFFF'}}>Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.<span className="font-semibold"> Teste agora mesmo com 30 <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Leads Gratuitos</span>!</span>
               </p>
             </div>
-          </AnimatedBeam>
+          </div>
         </div>
 
         {/* Pricing Cards */}
-        <AnimatedBeam delay={0.6}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 items-stretch">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.id}
@@ -263,7 +275,6 @@ export default function MagicPricingPlans() {
             </motion.div>
           ))}
           </div>
-        </AnimatedBeam>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

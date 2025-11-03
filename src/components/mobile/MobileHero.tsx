@@ -2,41 +2,29 @@ import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activit
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
+import { motion } from 'framer-motion'
 import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
 
-// Lazy load apenas componentes de background
-// StarrySky e Meteors DESABILITADOS - consumiam 34s de CPU time em produção
-// const Meteors = lazy(() => import('../magicui/meteors').then(m => ({ default: m.Meteors })))
-// const StarrySky = lazy(() => import('../magicui/starry-sky').then(m => ({ default: m.StarrySky })))
-
 export default function MobileHero() {
   return (
-    <section className="md:hidden relative py-16 overflow-hidden min-h-screen" style={{
-      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+    <section className="md:hidden relative py-16 min-h-screen" style={{
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
+      overflow: 'visible',
+      position: 'relative'
     }}>
-      {/* Background - Desabilitado para melhorar performance (StarrySky consumia 34s CPU) */}
-      {/* <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
-        <Suspense fallback={null}>
-          <Meteors 
-            number={25}
-            minDelay={0.2}
-            maxDelay={1.2}
-            minDuration={2}
-            maxDuration={10}
-            angle={215}
-          />
-          <StarrySky starCount={35} twinkleSpeed={2000} />
-        </Suspense>
-      </div> */}
-
+      {/* Background gradient */}
+      
       {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
-        minHeight: '100vh'
+        minHeight: '100vh',
+        zIndex: 1,
+        pointerEvents: 'none'
       }}></div>
 
-      <div className="relative max-w-md mx-auto px-4">
+      {/* Conteúdo principal - acima de tudo */}
+      <div className="relative max-w-md mx-auto px-4" style={{ zIndex: 10 }}>
         <div className="text-center">
 
           {/* Título Principal - Renderizado sem delay para LCP */}
@@ -65,10 +53,69 @@ export default function MobileHero() {
             <div className="button-illumination">
               <ShimmerButton
                 onClick={() => {
-                  const pricingSection = document.getElementById('pricing-plans-section');
-                  if (pricingSection) {
-                    pricingSection.scrollIntoView({ behavior: 'smooth' });
-                  }
+                  console.log('=== BOTÃO VER PLANOS MOBILE CLICADO ===');
+                  
+                  // Buscar a seção de Planos com retry
+                  const findAndScroll = (retries = 0, maxRetries = 30) => {
+                    let section: HTMLElement | null = null;
+                    
+                    // Método 1: Buscar pelo ID
+                    section = document.getElementById('pricing-plans-section') as HTMLElement | null;
+                    
+                    // Método 2: Buscar no container mobile
+                    if (!section) {
+                      const mobileContainer = document.querySelector('div.md\\:hidden');
+                      if (mobileContainer) {
+                        section = mobileContainer.querySelector('#pricing-plans-section') as HTMLElement | null;
+                      }
+                    }
+                    
+                    // Método 3: Buscar por todas as seções mobile
+                    if (!section) {
+                      const allSections = document.querySelectorAll('section#pricing-plans-section');
+                      for (const s of allSections) {
+                        const htmlSection = s as HTMLElement;
+                        if (htmlSection.classList.contains('md:hidden')) {
+                          section = htmlSection;
+                          break;
+                        }
+                      }
+                    }
+                    
+                    // Se encontrou a seção, fazer scroll
+                    if (section) {
+                      const rect = section.getBoundingClientRect();
+                      const hasValidDimensions = rect.height > 100;
+                      
+                      if (hasValidDimensions) {
+                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                        const navbar = document.querySelector('nav');
+                        const navbarHeight = navbar ? navbar.offsetHeight : 80;
+                        const targetY = Math.max(0, rect.top + scrollTop - navbarHeight);
+                        
+                        window.scrollTo({
+                          top: targetY,
+                          behavior: 'smooth'
+                        });
+                        
+                        return true;
+                      }
+                    }
+                    
+                    // Se não encontrou e ainda tem retries, tentar novamente
+                    if (!section && retries < maxRetries) {
+                      const delay = retries < 5 ? 30 : retries < 15 ? 50 : 100;
+                      setTimeout(() => {
+                        findAndScroll(retries + 1, maxRetries);
+                      }, delay);
+                      return false;
+                    }
+                    
+                    return false;
+                  };
+                  
+                  // Executar busca imediatamente
+                  findAndScroll();
                 }}
                 className="px-6 py-3 text-base"
               >
@@ -89,11 +136,13 @@ export default function MobileHero() {
                     { icon: Eye, label: 'Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
                     { icon: MousePointerClick, label: 'Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
                   ].map((stat, index) => (
-                    <div
+                    <motion.div
                       key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.1 + index * 0.1 }}
                       className="p-4 rounded-xl border-2 relative overflow-hidden"
                       style={{
-                        opacity: 1,
                         borderColor: '#b7c7c1',
                         backgroundColor: '#ffffff'
                       }}
@@ -111,14 +160,17 @@ export default function MobileHero() {
                       <div className="text-xs font-medium" style={{color: '#2e4842'}}>
                         {stat.label}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
                 {/* Chart */}
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5 }}
                   className="p-4 rounded-xl border-2"
-                  style={{ opacity: 1, borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
+                  style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-sm font-bold" style={{color: '#082721'}}>
@@ -129,11 +181,13 @@ export default function MobileHero() {
                   
                   <div className="flex items-end justify-between gap-1 h-32">
                     {[45, 68, 52, 78, 85, 92, 88].map((height, index) => (
-                      <div
+                      <motion.div
                         key={index}
+                        initial={{ height: 0 }}
+                        animate={{ height: `${height}%` }}
+                        transition={{ delay: 1.6 + index * 0.1, type: "spring", stiffness: 100 }}
                         className="flex-1 rounded-t-lg"
                         style={{
-                          height: `${height}%`,
                           background: 'linear-gradient(to top, #10b981, #059669)',
                           minHeight: '10px'
                         }}
@@ -148,7 +202,7 @@ export default function MobileHero() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Additional Metrics - Mobile */}
                 <div className="grid grid-cols-1 gap-3 mt-4">
@@ -157,10 +211,13 @@ export default function MobileHero() {
                     { icon: Clock, label: 'Tempo Médio', value: '2.4h', color: '#00ff00' },
                     { icon: Rocket, label: 'Crescimento', value: '+145%', color: '#00ff00' }
                   ].map((item, index) => (
-                    <div
+                    <motion.div
                       key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.7 + index * 0.1 }}
                       className="p-4 rounded-xl border-2 flex items-center gap-3"
-                      style={{ opacity: 1, borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
+                      style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
                     >
                       <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
                         <item.icon className="w-5 h-5" style={{color: item.color}} />
@@ -177,7 +234,7 @@ export default function MobileHero() {
                           {item.label}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

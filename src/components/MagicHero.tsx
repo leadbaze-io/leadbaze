@@ -5,116 +5,136 @@ import { AuroraText } from './magicui/aurora-text'
 import { lazy, Suspense } from 'react'
 import './MagicHero.css'
 
-// Lazy load componentes não críticos para LCP
-// StarrySky e Meteors DESABILITADOS - consumiam 34s de CPU time em produção
-// const Meteors = lazy(() => import('./magicui/meteors').then(m => ({ default: m.Meteors })))
-// const StarrySky = lazy(() => import('./magicui/starry-sky').then(m => ({ default: m.StarrySky })))
 const HeroAnalyticsDashboard = lazy(() => import('./HeroAnalyticsDashboard'))
 
 export default function MagicHero() {
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden min-h-screen" style={{
-      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+    <section className="relative py-20 md:py-32 min-h-screen" style={{
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
+      overflow: 'visible',
+      position: 'relative'
     }}>
-      {/* Background - Desabilitado para melhorar performance (StarrySky consumia 34s CPU) */}
-      {/* <div className="absolute inset-0" style={{height: '100%', minHeight: '100vh'}}>
-        <Suspense fallback={null}>
-          <Meteors 
-            number={40}
-            minDelay={0.2}
-            maxDelay={1.2}
-            minDuration={2}
-            maxDuration={10}
-            angle={215}
-          />
-          <StarrySky starCount={50} twinkleSpeed={2000} />
-        </Suspense>
-      </div> */}
-
+      {/* Background gradient */}
+      
       {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
-        minHeight: '100vh'
+        minHeight: '100vh',
+        zIndex: 1,
+        pointerEvents: 'none'
       }}></div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Conteúdo principal - acima de tudo */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ zIndex: 10 }}>
         <div className="text-center">
 
           {/* Título Principal - SEM delay para melhorar LCP (é o LCP element) */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6" style={{opacity: 1}}>
-            <span style={{color: '#FFFFFF'}} className="font-extrabold">
-              Gere mais de{' '}
-            </span>
-            <AuroraText className="font-extrabold">
-              1000 Leads B2B
-            </AuroraText>
-            <br />
-            <span style={{color: '#FFFFFF'}}>
-              em menos de 7 dias
-            </span>
-          </h1>
+              <span style={{color: '#FFFFFF'}} className="font-extrabold">
+                Gere mais de{' '}
+              </span>
+              <AuroraText className="font-extrabold">
+                1000 Leads B2B
+              </AuroraText>
+              <br />
+              <span style={{color: '#FFFFFF'}}>
+                em menos de 7 dias
+              </span>
+            </h1>
 
           {/* Subtítulo - SEM animação para melhorar LCP */}
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto leading-relaxed" style={{color: '#FFFFFF', opacity: 1}}>
-            Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
-          </p>
+              Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
+            </p>
 
           {/* CTA Centralizado - SEM animação para melhorar LCP */}
           <div>
             <div className="button-illumination">
               <ShimmerButton
-
-                onClick={() => {
-
-                  // Tentar múltiplos métodos para encontrar a seção
-                  let pricingSection = document.getElementById('pricing-plans-section')
-
-                  // Verificar se é a seção correta (não mobile)
-                  if (pricingSection && pricingSection.classList.contains('md:hidden')) {
-
-                    pricingSection = null
-                  }
-
-                  // Se não encontrar, tentar por classe (desktop)
-                  if (!pricingSection) {
-                    pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
-
-                  }
-
-                  // Se ainda não encontrar, tentar por texto (desktop)
-                  if (!pricingSection) {
-                    const sections = document.querySelectorAll('section:not(.md\\:hidden)')
-                    for (const section of sections) {
-                      if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
-                        pricingSection = section as HTMLElement
-
-                        break
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
+                  // Buscar seção de planos
+                  const findAllSections = () => {
+                    const desktopContainer = document.querySelector('div.hidden.md\\:block')
+                    if (!desktopContainer) return null
+                    
+                    const allSections = desktopContainer.querySelectorAll('section')
+                    
+                    for (const s of allSections) {
+                      const section = s as HTMLElement
+                      
+                      // Pular seções mobile ou testimonials
+                      if (section.id === 'testimonials-section' || section.classList.contains('md:hidden')) {
+                        continue
+                      }
+                      
+                      const h2 = section.querySelector('h2')
+                      if (!h2) continue
+                      
+                      const text = h2.textContent || ''
+                      
+                      // DEVE ter "Escolha o Plano" E "Perfeito para Você"
+                      // E NÃO pode ter "Líderes de Vendas"
+                      if (text.includes('Escolha o Plano') && 
+                          text.includes('Perfeito para Você') &&
+                          !text.includes('Líderes de Vendas')) {
+                        return section
                       }
                     }
+                    return null
                   }
-
-                  // Fallback: usar qualquer seção com pricing
-                  if (!pricingSection) {
-                    pricingSection = document.querySelector('[id*="pricing"]')
-
+                  
+                  // Tentar encontrar a seção pelo ID
+                  let section = document.getElementById('pricing-plans-section-desktop')
+                  
+                  if (section) {
+                    const h2 = section.querySelector('h2')
+                    const text = h2?.textContent || ''
+                    
+                    // Validar que é a seção correta
+                    if (text.includes('Líderes de Vendas') || text.includes('confiam')) {
+                      section = null
+                    } else if (!text.includes('Escolha o Plano')) {
+                      section = null
+                    }
                   }
-                  if (pricingSection) {
-                    // Scroll com offset para compensar navbar fixa
-                    const elementPosition = pricingSection.getBoundingClientRect().top
-                    const offsetPosition = elementPosition + window.pageYOffset - 80
-
+                  
+                  // Se não encontrou ou não validou, buscar em todas as seções
+                  if (!section) {
+                    section = findAllSections()
+                  }
+                  
+                  // Fazer scroll se encontrou
+                  if (section) {
+                    // Forçar layout recalculation para garantir que offsetTop está correto
+                    section.offsetHeight
+                    document.body.offsetHeight
+                    
+                    // Calcular offsetTop usando getBoundingClientRect + scrollY (mais confiável)
+                    const rect = section.getBoundingClientRect()
+                    const actualOffsetTop = rect.top + window.scrollY
+                    const navbarHeight = 65
+                    const targetScroll = actualOffsetTop - navbarHeight
+                    
+                    // Scroll direto e suave para a posição correta
                     window.scrollTo({
-                      top: offsetPosition,
+                      top: targetScroll,
                       behavior: 'smooth'
                     })
-
                   } else {
-
-                    // Método alternativo: scroll para o final da página
-                    window.scrollTo({
-                      top: document.body.scrollHeight,
-                      behavior: 'smooth'
-                    })
+                    // Tentar novamente após delay
+                    setTimeout(() => {
+                      let section = findAllSections() || document.getElementById('pricing-plans-section-desktop')
+                      if (section) {
+                        const h2 = section.querySelector('h2')
+                        const text = h2?.textContent || ''
+                        if (!text.includes('Líderes de Vendas') && text.includes('Escolha o Plano')) {
+                          section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        }
+                      }
+                    }, 100)
                   }
                 }}
                 className="px-8 py-4 text-lg"
@@ -122,8 +142,8 @@ export default function MagicHero() {
                 <span>Ver Planos</span>
               </ShimmerButton>
             </div>
-          </div>
-
+                    </div>
+                    
           {/* Analytics Dashboard Preview - Lazy loaded (não crítico para LCP) */}
           {/* Altura fixa no fallback para evitar CLS */}
           <Suspense fallback={<div className="mt-16 min-h-[600px] w-full" style={{ minHeight: '600px', width: '100%' }} aria-hidden="true" />}>

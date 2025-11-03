@@ -4,6 +4,7 @@ import { LazySection } from '../components/LazySection'
 import Footer from '../components/Footer'
 import MobileLandingPage from './MobileLandingPage'
 import ScrollToTopButton from '../components/ScrollToTopButton'
+import MagicPricingPlans from '../components/MagicPricingPlans' // Import direto - crítico para botão "Ver Planos"
 
 // Lazy load componentes abaixo do fold para reduzir JavaScript execution time
 const MagicSteps = lazy(() => import('../components/MagicSteps'))
@@ -11,7 +12,6 @@ const MagicBenefits = lazy(() => import('../components/MagicBenefits'))
 const MagicCTA = lazy(() => import('../components/MagicCTA'))
 const MagicPricing = lazy(() => import('../components/MagicPricing'))
 const MagicGuarantee = lazy(() => import('../components/MagicGuarantee'))
-const MagicPricingPlans = lazy(() => import('../components/MagicPricingPlans'))
 const MagicFAQ = lazy(() => import('../components/MagicFAQ'))
 
 export default function LandingPage() {
@@ -25,45 +25,33 @@ export default function LandingPage() {
         {/* Hero Section - Carregar imediatamente (LCP element) */}
         <MagicHero />
 
-        {/* Componentes abaixo do fold - Lazy load com Intersection Observer */}
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[400px]" />}>
-            <MagicSteps />
-          </Suspense>
-        </LazySection>
+        {/* Componentes acima da seção de planos - CARREGAR IMEDIATAMENTE para offsetTop estável */}
+        {/* Renderizar diretamente sem lazy loading para manter layout estável */}
+        <Suspense fallback={null}>
+          <MagicSteps />
+        </Suspense>
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[600px]" />}>
-            <MagicBenefits />
-          </Suspense>
-        </LazySection>
+        <Suspense fallback={null}>
+          <MagicBenefits />
+        </Suspense>
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[300px]" />}>
-            <MagicCTA />
-          </Suspense>
-        </LazySection>
+        <Suspense fallback={null}>
+          <MagicCTA />
+        </Suspense>
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[500px]" />}>
-            <MagicPricing />
-          </Suspense>
-        </LazySection>
+        <Suspense fallback={null}>
+          <MagicPricing />
+        </Suspense>
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[400px]" />}>
-            <MagicGuarantee />
-          </Suspense>
-        </LazySection>
+        <Suspense fallback={null}>
+          <MagicGuarantee />
+        </Suspense>
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[600px]" />}>
-            <MagicPricingPlans />
-          </Suspense>
-        </LazySection>
+        {/* Seção de Planos - SEM lazy loading, renderizada IMEDIATAMENTE */}
+        <MagicPricingPlans />
 
-        <LazySection rootMargin="300px">
-          <Suspense fallback={<div className="min-h-[400px]" />}>
+        <LazySection rootMargin="500px">
+          <Suspense fallback={<div className="min-h-[400px] animate-pulse" />}>
             <MagicFAQ />
           </Suspense>
         </LazySection>
