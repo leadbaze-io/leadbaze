@@ -1,9 +1,17 @@
 // Carregar variáveis de ambiente PRIMEIRO
-require('dotenv').config({ path: './config.env' });
+const path = require('path');
+const fs = require('fs');
+const configPath = path.join(__dirname, 'config.env');
+
+console.log('📁 Carregando config.env de:', configPath);
+console.log('📁 Arquivo existe?', fs.existsSync(configPath) ? '✅' : '❌');
+
+require('dotenv').config({ path: configPath });
 
 // Verificar se as variáveis essenciais estão carregadas
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
   console.error('❌ Variáveis de ambiente do Supabase não encontradas!');
+  console.error('📁 Caminho do config.env:', configPath);
   console.error('SUPABASE_URL:', process.env.SUPABASE_URL ? '✅' : '❌');
   console.error('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅' : '❌');
   process.exit(1);

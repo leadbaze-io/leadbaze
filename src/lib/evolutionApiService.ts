@@ -72,8 +72,34 @@ export class EvolutionApiService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao criar instância');
+        // Verificar se a resposta é JSON antes de tentar fazer parse
+        const contentType = response.headers.get('content-type');
+        let errorMessage = `Erro ao criar instância (HTTP ${response.status})`;
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.error || errorData.details || errorMessage;
+          } catch (parseError) {
+            console.error('❌ Erro ao fazer parse do JSON de erro:', parseError);
+          }
+        } else {
+          // Se não for JSON, provavelmente é HTML (erro 502, 503, etc)
+          const text = await response.text();
+          console.error('❌ Resposta não é JSON:', text.substring(0, 200));
+          
+          if (response.status === 502) {
+            errorMessage = 'Servidor backend não está respondendo. Verifique se o servidor está online.';
+          } else if (response.status === 503) {
+            errorMessage = 'Serviço temporariamente indisponível. Tente novamente em alguns instantes.';
+          } else if (response.status === 504) {
+            errorMessage = 'Tempo de resposta excedido. O servidor pode estar sobrecarregado.';
+          } else {
+            errorMessage = `Erro do servidor (${response.status}). Tente novamente mais tarde.`;
+          }
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -87,6 +113,12 @@ export class EvolutionApiService {
       };
     } catch (error) {
       console.error('❌ Erro ao criar instância:', error);
+      
+      // Melhorar mensagem de erro para o usuário
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Não foi possível conectar ao servidor. Verifique sua conexão com a internet.');
+      }
+      
       throw error;
     }
   }
