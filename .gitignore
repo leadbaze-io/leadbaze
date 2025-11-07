@@ -147,6 +147,9 @@ build/
 # backend/config.env - Now tracked for deployment
 # backend/.env - Temporarily commented for debugging
 
+# Exceção: permitir config.env no backend (necessário para deployment)
+!backend/config.env
+
 # Deployment files
 deploy/
 .deployment/

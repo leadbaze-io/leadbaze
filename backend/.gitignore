@@ -6,8 +6,10 @@ yarn-error.log*
 
 # Environment variables
 .env
-config.env
+# config.env - Permitido para deployment
+# *.env - Comentado para permitir config.env
 *.env
+!config.env
 
 # Logs
 logs
