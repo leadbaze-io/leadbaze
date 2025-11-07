@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { User, LogOut, Menu, X, CreditCard } from 'lucide-react'
 import { getCurrentUser, signOut, supabase } from '../../lib/supabaseClient'
 import { useSubscription } from '../../hooks/useSubscription'
@@ -10,6 +10,7 @@ export default function MobileNavbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const { subscription, isLoading: subscriptionLoading } = useSubscription()
 
   // Verificar se deve mostrar o botão "Assinar Plano"
@@ -62,7 +63,18 @@ export default function MobileNavbar() {
         <div className="flex justify-between items-center h-14">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center" onClick={closeMenu}>
+            <Link 
+              to="/" 
+              className="flex items-center" 
+              onClick={(e) => {
+                closeMenu()
+                // Se estiver na landing page, fazer scroll suave para o topo
+                if (location.pathname === '/') {
+                  e.preventDefault()
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+            >
               <LogoImage className="h-7 w-auto" />
             </Link>
           </div>

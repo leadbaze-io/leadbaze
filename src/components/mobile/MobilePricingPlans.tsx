@@ -98,7 +98,8 @@ export default function MobilePricingPlans() {
 
   return (
     <section id="pricing-plans-section" className="md:hidden relative py-16 overflow-hidden" style={{
-      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
+      background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
+      scrollMarginTop: '80px'
     }}>
       {/* Background Pattern */}
       <div className="absolute inset-0" style={{zIndex: 0}}>

@@ -1,4 +1,4 @@
-import { TrendingUp, Users, Send, Eye, MousePointerClick, Activity, Target, Clock, CheckCircle2, Rocket, Sparkles } from 'lucide-react'
+import { TrendingUp, Users, Send, Activity, Target, CheckCircle2, Rocket, Sparkles } from 'lucide-react'
 import { AnimatedCounter } from './magicui/animated-counter'
 import { AnimatedBeam } from './magicui/animated-beam'
 
@@ -12,8 +12,8 @@ export default function HeroAnalyticsDashboard() {
             {[
               { icon: Users, label: 'Leads Gerados', value: 1247, change: '+23%', color: '#00ff00' },
               { icon: Send, label: 'Mensagens Enviadas', value: 3842, change: '+18%', color: '#00ff00' },
-              { icon: Eye, label: 'Taxa de Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
-              { icon: MousePointerClick, label: 'Taxa de Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
+              { icon: Target, label: 'Campanhas Ativas', value: 12, change: '+5%', color: '#00ff00' },
+              { icon: Activity, label: 'Listas Ativas', value: 24, change: '+8%', color: '#00ff00' }
             ].map((stat, index) => (
               <div
                 key={index}
@@ -35,7 +35,6 @@ export default function HeroAnalyticsDashboard() {
                   </div>
                   <div className="text-3xl font-bold mb-1" style={{color: '#082721'}}>
                     <AnimatedCounter value={stat.value} delay={1100 + index * 100} duration={1000} />
-                    {stat.suffix}
                   </div>
                   <div className="text-sm font-medium" style={{color: '#2e4842'}}>
                     {stat.label}
@@ -112,10 +111,9 @@ export default function HeroAnalyticsDashboard() {
 
               <div className="space-y-5">
                 {[
-                  { label: 'Leads Qualificados', value: 87, color: '#10b981' },
-                  { label: 'Taxa de Resposta', value: 68, color: '#10b981' },
-                  { label: 'Custo por Lead', value: 45, color: '#10b981', inverse: true },
-                  { label: 'Listas Ativas', value: 94, color: '#10b981' }
+                  { label: 'Taxa de Sucesso', value: 87, color: '#10b981' },
+                  { label: 'Taxa de Conversão', value: 24, color: '#10b981' },
+                  { label: 'Crescimento', value: 45, color: '#10b981' }
                 ].map((metric, index) => (
                   <div key={index}>
                     <div className="flex items-center justify-between mb-2">
@@ -123,7 +121,6 @@ export default function HeroAnalyticsDashboard() {
                         {metric.label}
                       </span>
                       <span className="text-lg font-bold" style={{color: '#000000'}}>
-                        {metric.inverse && '-'}
                         <AnimatedCounter value={metric.value} delay={1600 + index * 100} duration={800} />%
                       </span>
                     </div>
@@ -143,11 +140,10 @@ export default function HeroAnalyticsDashboard() {
           </div>
 
           {/* Additional Metrics Row */}
-          <div className="grid md:grid-cols-3 gap-6 mt-6">
+          <div className="grid md:grid-cols-2 gap-6 mt-6">
             {[
-              { icon: Target, label: 'Campanhas Ativas', value: 12, color: '#00ff00' },
-              { icon: Clock, label: 'Tempo Médio de Resposta', value: '2.4h', color: '#00ff00' },
-              { icon: Rocket, label: 'Crescimento Mensal', value: '+145%', color: '#00ff00' }
+              { icon: Rocket, label: 'Crescimento Mensal', value: '+145%', color: '#00ff00' },
+              { icon: CheckCircle2, label: 'Taxa de Sucesso', value: '87%', color: '#00ff00' }
             ].map((item, index) => (
               <div
                 key={index}

@@ -148,7 +148,7 @@ export default function MobileBenefits() {
   }
 
   return (
-    <section className="md:hidden py-16 bg-white overflow-hidden">
+    <section className="md:hidden py-16 bg-white overflow-hidden hidden">
       <div className="relative max-w-md mx-auto px-4">
         {/* Header */}
         <AnimatedBeam delay={0.2}>

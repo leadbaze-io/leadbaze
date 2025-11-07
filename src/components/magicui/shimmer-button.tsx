@@ -47,6 +47,7 @@ export function ShimmerButton({
           background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent)`,
           animation: `shimmer ${shimmerDuration} infinite`,
           transform: "translateX(-100%)",
+          pointerEvents: "none", // Garantir que não intercepta cliques
         }}
       />
 

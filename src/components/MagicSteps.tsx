@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Link2, Zap, TrendingUp } from 'lucide-react'
 import { AnimatedBeam } from './magicui/animated-beam'
 import { ShimmerButton } from './magicui/shimmer-button'
+import { getCurrentUser } from '../lib/supabaseClient'
 
 export default function MagicSteps() {
+  const navigate = useNavigate()
   const [visibleSteps, setVisibleSteps] = useState(new Set())
   const stepsRef = useRef<HTMLDivElement>(null)
 
@@ -115,13 +118,28 @@ export default function MagicSteps() {
         <AnimatedBeam delay={0.6}>
           <div className="text-center mt-16">
             <ShimmerButton
-              onClick={() => {
-                // Scroll para a seção de login ou pricing
-                const pricingSection = document.querySelector('section[id*="pricing"]')
-                if (pricingSection) {
-                  pricingSection.scrollIntoView({ behavior: 'smooth' })
-                } else {
-                  window.location.href = '/login'
+              onClick={async () => {
+                try {
+                  const user = await getCurrentUser()
+                  if (user) {
+                    navigate('/dashboard')
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  } else {
+                    navigate('/login')
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }
+                } catch (error) {
+                  navigate('/login')
+                  // Scroll para o topo após navegação
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }, 100)
                 }
               }}
               className="px-8 py-4 text-lg"

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
 import ThemeToggle from './ThemeToggle'
 import { useSubscription } from '../hooks/useSubscription'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
-import './Navbar.css'
 
 export default function Navbar() {
   const [user, setUser] = useState<SupabaseUser | null>(null)
@@ -117,7 +117,24 @@ const isActiveLink = (path: string) => {
     return rect.top < windowHeight * 0.7 && rect.bottom > windowHeight * 0.3
   }
 
-  // Animações removidas - usando CSS puro para melhor performance
+  // Animações para os links - otimizadas para suavidade e consistência
+  const linkVariants = {
+    hover: {
+      y: -2,
+      scale: 1.05,
+      transition: {
+        duration: 0.3,
+        ease: "easeOut" as const
+      }
+    },
+    tap: {
+      scale: 0.95,
+      y: 0,
+      transition: {
+        duration: 0.15
+      }
+    }
+  }
   useEffect(() => {
     // Verificar usuário logado inicialmente
     const checkUser = async () => {
@@ -175,43 +192,96 @@ const isActiveLink = (path: string) => {
     navigate('/')
   }
 
-  // Componente para links da NavBar com CSS transitions
-  const NavLink = ({ to, children, className = "", onClick }: {
+  // Componente para links da NavBar com animações
+  const NavLink = ({ to, children, className = "", variants = linkVariants, onClick }: {
+
     to: string;
+
     children: React.ReactNode;
+
     className?: string;
+    variants?: any;
     onClick?: () => void;
   }) => (
-    <div className="nav-link-wrapper relative">
+    <motion.div
+      variants={variants}
+      whileHover="hover"
+      whileTap="tap"
+      className="relative"
+    >
       <Link
+
         to={to}
+
         className={`relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 ${className}`}
         onClick={onClick}
       >
-        {/* Efeito de fundo no hover - CSS puro */}
-        <div className="nav-link-hover-bg" />
+        {/* Efeito de fundo no hover - com z-index menor */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg opacity-0"
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          style={{ zIndex: -1 }}
+        />
         {children}
-        {/* Indicador de página ativa - CSS puro */}
+        {/* Indicador de página ativa - Nova animação */}
         {isActiveLink(to) && (
-          <>
-            <div className="nav-link-active-bg" />
-            <div className="nav-link-active-line" />
-          </>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{
+              duration: 0.3,
+              ease: "easeOut"
+            }}
+          />
+        )}
+        {/* Linha inferior sutil */}
+        {isActiveLink(to) && (
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            exit={{ scaleX: 0, opacity: 0 }}
+            transition={{
+              duration: 0.4,
+              ease: "easeOut"
+            }}
+            style={{ transformOrigin: "left" }}
+          />
         )}
       </Link>
-    </div>
+    </motion.div>
   )
 
   return (
     <nav className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo com animação CSS pura */}
-          <div className="flex items-center btn-animate-hover">
-            <Link to="/" className="flex items-center">
+          {/* Logo com animação */}
+          <motion.div
+
+            className="flex items-center"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.15 }}
+          >
+            <Link 
+              to="/" 
+              className="flex items-center"
+              onClick={(e) => {
+                // Se estiver na landing page, fazer scroll suave para o topo
+                if (location.pathname === '/') {
+                  e.preventDefault()
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+            >
               <LogoImage className="h-8 w-auto" />
             </Link>
-          </div>
+          </motion.div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-2">
@@ -234,140 +304,122 @@ const isActiveLink = (path: string) => {
                 >
                   Início
                 </NavLink>
-                <div className="relative nav-link-wrapper">
-                  <button
+                <motion.div
+                  variants={linkVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="relative"
+                >
+                  <motion.button
                     onClick={() => {
-                      // Verificar se estamos na landing page
-                      if (location.pathname === '/') {
-
-                        // Tentar múltiplos métodos para encontrar a seção
-                        let pricingSection = document.getElementById('pricing-plans-section')
-
-                        // Verificar se é a seção correta (não mobile)
-                        if (pricingSection && pricingSection.classList.contains('md:hidden')) {
-
-                          pricingSection = null
+                      // Buscar TODAS as seções desktop e encontrar a de planos
+                      const findPlansSection = () => {
+                        // Primeiro tentar pelo ID
+                        let section = document.getElementById('pricing-plans-section-desktop')
+                        if (section) {
+                          const h2 = section.querySelector('h2')
+                          const text = h2?.textContent || ''
+                          if (!text.includes('Líderes de Vendas') && text.includes('Escolha o Plano')) {
+                            return section
+                          }
                         }
-
-                        // Se não encontrar, tentar por classe (desktop)
-                        if (!pricingSection) {
-                          pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
-
-                        }
-
-                        // Se ainda não encontrar, tentar por texto (desktop)
-                        if (!pricingSection) {
-                          const sections = document.querySelectorAll('section:not(.md\\:hidden)')
-                          for (const section of sections) {
-                            if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
-                              pricingSection = section as HTMLElement
-
-                              break
+                        
+                        // Se não encontrou, buscar em todas as seções desktop
+                        const desktopContainer = document.querySelector('div.hidden.md\\:block')
+                        if (desktopContainer) {
+                          const allSections = desktopContainer.querySelectorAll('section')
+                          for (const s of allSections) {
+                            const section = s as HTMLElement
+                            if (section.id === 'testimonials-section') continue
+                            
+                            const h2 = section.querySelector('h2')
+                            if (!h2) continue
+                            
+                            const text = h2.textContent || ''
+                            if (text.includes('Escolha o Plano') && 
+                                text.includes('Perfeito para Você') &&
+                                !text.includes('Líderes de Vendas')) {
+                              return section
                             }
                           }
                         }
-
-                        // Fallback: usar qualquer seção com pricing
-                        if (!pricingSection) {
-                          pricingSection = document.querySelector('[id*="pricing"]')
-
-                        }
-                        if (pricingSection) {
-                          // Scroll com offset para compensar navbar fixa
-                          const elementPosition = pricingSection.getBoundingClientRect().top
-                          const offsetPosition = elementPosition + window.pageYOffset - 80
-
-                          window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                          })
-
+                        return null
+                      }
+                      
+                      if (location.pathname === '/') {
+                        const section = findPlansSection()
+                        if (section) {
+                          section.scrollIntoView({ behavior: 'smooth', block: 'start' })
                         } else {
-
-                          // Método alternativo: scroll para o final da página
-                          window.scrollTo({
-                            top: document.body.scrollHeight,
-                            behavior: 'smooth'
-                          })
+                          setTimeout(() => {
+                            const section = findPlansSection()
+                            if (section) {
+                              section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                            }
+                          }, 100)
                         }
                       } else {
-
-                        // Se não estiver na landing page, navegar para lá
                         navigate('/')
                         setTimeout(() => {
-
-                          // Tentar múltiplos métodos para encontrar a seção
-                          let pricingSection = document.getElementById('pricing-plans-section')
-
-                          // Verificar se é a seção correta (não mobile)
-                          if (pricingSection && pricingSection.classList.contains('md:hidden')) {
-
-                            pricingSection = null
+                          const section = findPlansSection()
+                          if (section) {
+                            section.scrollIntoView({ behavior: 'smooth', block: 'start' })
                           }
-
-                          // Se não encontrar, tentar por classe (desktop)
-                          if (!pricingSection) {
-                            pricingSection = document.querySelector('section[id*="pricing"]:not(.md\\:hidden)')
-
-                          }
-
-                          // Se ainda não encontrar, tentar por texto (desktop)
-                          if (!pricingSection) {
-                            const sections = document.querySelectorAll('section:not(.md\\:hidden)')
-                            for (const section of sections) {
-                              if (section.textContent?.includes('Plano') || section.textContent?.includes('Preço')) {
-                                pricingSection = section as HTMLElement
-
-                                break
-                              }
-                            }
-                          }
-
-                          // Fallback: usar qualquer seção com pricing
-                          if (!pricingSection) {
-                            pricingSection = document.querySelector('[id*="pricing"]')
-
-                          }
-
-                          if (pricingSection) {
-                            const elementPosition = pricingSection.getBoundingClientRect().top
-                            const offsetPosition = elementPosition + window.pageYOffset - 80
-
-                            window.scrollTo({
-                              top: offsetPosition,
-                              behavior: 'smooth'
-                            })
-
-                          } else {
-
-                          }
-                        }, 1000)
+                        }, 500)
                       }
                     }}
-                    className={`relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 btn-animate-hover ${
+                    className={`relative px-3 py-2 rounded-lg font-medium transition-all duration-300 z-10 ${
                       isPlansSectionActive ? 'text-green-400 font-semibold' : 'text-white hover:text-green-400'
                     }`}
                   >
                     {/* Efeito de fundo no hover - com z-index menor */}
-                    <div
-                      className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg nav-link-hover-bg"
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg opacity-0"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
                       style={{ zIndex: -1 }}
                     />
                     Planos
                     {/* Indicador de página ativa - Nova animação */}
                     {isPlansSectionActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg nav-link-active-bg" />
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{
+                          duration: 0.3,
+                          ease: "easeOut"
+                        }}
+                      />
                     )}
                     {/* Linha inferior quando ativo */}
                     {isPlansSectionActive && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full nav-link-active-line" style={{ transformOrigin: "left" }} />
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
+                        initial={{ scaleX: 0, opacity: 0 }}
+                        animate={{ scaleX: 1, opacity: 1 }}
+                        exit={{ scaleX: 0, opacity: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          ease: "easeOut"
+                        }}
+                        style={{ transformOrigin: "left" }}
+                      />
                     )}
                     {/* Linha inferior no hover (quando não ativo) */}
                     {!isPlansSectionActive && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300" style={{ transformOrigin: "left" }} />
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"
+                        initial={{ scaleX: 0, opacity: 0 }}
+                        whileHover={{ scaleX: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ transformOrigin: "left" }}
+                      />
                     )}
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
                 <NavLink
 
                   to="/blog/sobre"
@@ -494,27 +546,37 @@ const isActiveLink = (path: string) => {
 
                   {/* Botão Assinar Plano - apenas para usuários sem assinatura ativa */}
                   {shouldShowSubscribeButton && (
-                    <button
+                    <motion.button
                       onClick={() => navigate('/plans')}
-                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 btn-animate-hover"
+                      className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold transition-all duration-200"
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.15 }}
                     >
                       <CreditCard className="w-4 h-4" />
                       <span>Assinar Plano</span>
-                    </button>
+                    </motion.button>
                   )}
 
-                  <button
+                  <motion.button
                     onClick={handleLogout}
-                    className="flex items-center space-x-2 px-3 py-2 text-red-400 hover:text-red-300 transition-colors rounded-lg hover:bg-red-900/20 btn-animate-hover"
+                    className="flex items-center space-x-2 px-3 py-2 text-red-400 hover:text-red-300 transition-colors rounded-lg hover:bg-red-900/20"
+                    whileHover={{ scale: 1.02, x: 1 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ duration: 0.15 }}
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sair</span>
-                  </button>
+                  </motion.button>
                 </div>
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <div className="btn-animate-hover">
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.15 }}
+                >
                   <Link
 
                     to="/login"
@@ -523,7 +585,7 @@ const isActiveLink = (path: string) => {
                   >
                     Entrar
                   </Link>
-                </div>
+                </motion.div>
               </div>
             )}
           </div>
@@ -540,49 +602,96 @@ const isActiveLink = (path: string) => {
 
             {/* Botão Assinar Plano - Mobile - apenas para usuários sem assinatura ativa */}
             {shouldShowSubscribeButton && (
-              <button
+              <motion.button
                 onClick={() => navigate('/plans')}
-                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-sm btn-animate-hover"
+                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-sm"
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15 }}
               >
                 <CreditCard className="w-3 h-3" />
                 <span>Assinar</span>
-              </button>
+              </motion.button>
             )}
 
-            <button
+            <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-gray-700 btn-animate-hover"
+              className="text-white hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-gray-700"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.15 }}
             >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
+              <AnimatePresence mode="wait">
+                {isMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -45, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 45, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <X className="w-6 h-6" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 45, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -45, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Menu className="w-6 h-6" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
 
         {/* Mobile Menu - Versão Profissional */}
-        {isMenuOpen && (
-          <>
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
               {/* Overlay de fundo */}
-              <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden mobile-menu-overlay show"
+              <motion.div
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setIsMenuOpen(false)}
               />
 
               {/* Menu principal */}
-              <div
-                className="absolute top-full left-0 right-0 z-50 md:hidden mobile-menu-container show"
+              <motion.div
+                className="absolute top-full left-0 right-0 z-50 md:hidden"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 {/* Container do menu */}
-              <div
-                className="bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50 shadow-2xl mobile-menu-content show"
+              <motion.div
+                className="bg-gray-900/95 backdrop-blur-xl border-t border-gray-700/50 shadow-2xl"
+                initial={{ scaleY: 0, opacity: 0 }}
+                animate={{ scaleY: 1, opacity: 1 }}
+                exit={{ scaleY: 0, opacity: 0 }}
+                transition={{
+
+                  duration: 0.4,
+
+                  ease: "easeOut",
+                  staggerChildren: 0.05,
+                  delayChildren: 0.1
+                }}
                 style={{ transformOrigin: "top" }}
               >
                   {/* Header do menu */}
-                  <div
+                  <motion.div
                     className="px-6 py-4 border-b border-gray-700"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
@@ -591,21 +700,27 @@ const isActiveLink = (path: string) => {
                           Menu de Navegação
                         </span>
                       </div>
-                      <button
+                      <motion.button
                         onClick={() => setIsMenuOpen(false)}
                         className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+                        whileHover={{ scale: 1.1, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
                       >
                         <X className="w-5 h-5 text-white" />
-                      </button>
+                      </motion.button>
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Links de navegação */}
-                  <div className="py-2">
+                  <motion.div className="py-2">
                     {/* Links para usuários NÃO logados */}
                     {!user && (
-                      <div
+                      <motion.div
                         className="px-2 py-1"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.15 }}
                       >
                         <Link
                           to="/"
@@ -624,7 +739,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/')
 
@@ -632,9 +747,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <Home className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/')
@@ -646,22 +763,28 @@ const isActiveLink = (path: string) => {
                               Início
                             </span>
                             {isActiveLink('/') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
 
                         {/* Botão Planos para mobile */}
-                        <button
+                        <motion.button
                           onClick={() => {
                             setIsMenuOpen(false)
                             // Verificar se estamos na landing page
@@ -756,24 +879,31 @@ const isActiveLink = (path: string) => {
                               }, 1000)
                             }
                           }}
-                          className="group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-gray-800 w-full text-left btn-animate-hover"
+                          className="group flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-gray-800 w-full text-left"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                         >
-                          <div
+                          <motion.div
                             className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg"
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <Crown className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className="text-sm font-medium transition-colors text-white group-hover:text-green-400">
                               Planos
                             </span>
-                            <div
+                            <motion.div
                               className="text-xs text-gray-500 mt-1"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
                             >
                               Ver preços
-                            </div>
+                            </motion.div>
                           </div>
-                        </button>
+                        </motion.button>
 
                         <Link
                           to="/blog/sobre"
@@ -792,7 +922,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/blog/sobre')
 
@@ -800,9 +930,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <Info className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/blog/sobre')
@@ -814,16 +946,22 @@ const isActiveLink = (path: string) => {
                               Sobre
                             </span>
                             {isActiveLink('/blog/sobre') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/blog/sobre') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
@@ -845,7 +983,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/blog')
 
@@ -853,9 +991,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <FileText className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/blog')
@@ -867,26 +1007,35 @@ const isActiveLink = (path: string) => {
                               Blog
                             </span>
                             {isActiveLink('/blog') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/blog') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
-                      </div>
+                      </motion.div>
                     )}
 
                     {/* Links do usuário logado */}
                     {user && (
-                      <div
+                      <motion.div
                         className="px-2 py-1 border-t border-gray-700"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
                       >
                         <div className="px-4 py-2">
                           <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -911,7 +1060,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/dashboard')
 
@@ -919,9 +1068,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <BarChart3 className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/dashboard')
@@ -933,16 +1084,22 @@ const isActiveLink = (path: string) => {
                               Dashboard
                             </span>
                             {isActiveLink('/dashboard') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/dashboard') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
@@ -964,7 +1121,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/gerador')
 
@@ -972,9 +1129,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <Users className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/gerador')
@@ -986,16 +1145,22 @@ const isActiveLink = (path: string) => {
                               Gerar Leads
                             </span>
                             {isActiveLink('/gerador') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/gerador') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
@@ -1017,7 +1182,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/disparador')
 
@@ -1025,9 +1190,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <MessageCircle className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/disparador')
@@ -1039,16 +1206,22 @@ const isActiveLink = (path: string) => {
                               Disparador
                             </span>
                             {isActiveLink('/disparador') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/disparador') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
@@ -1069,7 +1242,7 @@ const isActiveLink = (path: string) => {
                             }, 100)
                           }}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/profile')
 
@@ -1077,9 +1250,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
                           >
                             <Users className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/profile')
@@ -1091,27 +1266,36 @@ const isActiveLink = (path: string) => {
                               Meu Perfil
                             </span>
                             {isActiveLink('/profile') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/profile') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
 
-                      </div>
+                      </motion.div>
                     )}
 
                     {/* Blog Automation Dashboard - Mobile - Apenas para admin */}
                     {isAdminAuthorized && (
-                      <div
+                      <motion.div
                         className="px-2 py-1"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
                       >
                         <Link
                           to="/admin/blog-automation"
@@ -1124,7 +1308,7 @@ const isActiveLink = (path: string) => {
                           }`}
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          <div
+                          <motion.div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isActiveLink('/admin/blog-automation')
 
@@ -1132,9 +1316,11 @@ const isActiveLink = (path: string) => {
 
                                 : 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
                             }`}
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <span className="text-sm font-bold">BA</span>
-                          </div>
+                          </motion.div>
                           <div className="flex-1">
                             <span className={`text-sm font-medium transition-colors ${
                               isActiveLink('/admin/blog-automation')
@@ -1146,46 +1332,63 @@ const isActiveLink = (path: string) => {
                               Blog Automation
                             </span>
                             {isActiveLink('/admin/blog-automation') && (
-                              <div
+                              <motion.div
                                 className="text-xs text-green-600 mt-1"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2 }}
                               >
                                 Página atual
-                              </div>
+                              </motion.div>
                             )}
                           </div>
                           {isActiveLink('/admin/blog-automation') && (
-                            <div
+                            <motion.div
                               className="w-2 h-2 bg-green-500 rounded-full"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
                             />
                           )}
                         </Link>
-                      </div>
+                      </motion.div>
                     )}
 
                     {/* Botão de logout ou login */}
-                    <div
+                    <motion.div
                       className="px-2 py-1 border-t border-gray-100"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.25 }}
                     >
                       {user ? (
-                        <button
+                        <motion.button
                           onClick={() => {
                             handleLogout()
                             setIsMenuOpen(false)
                           }}
-                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-all duration-300 btn-animate-hover"
+                          className="group w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-all duration-300"
+                          whileHover={{ x: 4, scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          transition={{ duration: 0.2 }}
                         >
-                          <div
+                          <motion.div
                             className="w-8 h-8 rounded-lg bg-red-900/30 flex items-center justify-center group-hover:bg-red-800/40 transition-colors"
+                            whileHover={{ scale: 1.1, rotate: -5 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <LogOut className="w-4 h-4" />
-                          </div>
+                          </motion.div>
                           <span className="text-sm font-medium">Sair da Conta</span>
-                          <div
+                          <motion.div
                             className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                            initial={{ x: 10 }}
+                            animate={{ x: 0 }}
+                            transition={{ duration: 0.2 }}
                           >
                             <ArrowRight className="w-4 h-4" />
-                          </div>
-                        </button>
+                          </motion.div>
+                        </motion.button>
                       ) : (
                         <div className="px-4 py-3">
                           <Link
@@ -1193,16 +1396,23 @@ const isActiveLink = (path: string) => {
                             className="block w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center py-3 px-6 rounded-xl font-medium hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            Entrar na Plataforma
+                            <motion.span
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.3 }}
+                            >
+                              Entrar na Plataforma
+                            </motion.span>
                           </Link>
                         </div>
                       )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </>
           )}
+        </AnimatePresence>
       </div>
     </nav>
   )

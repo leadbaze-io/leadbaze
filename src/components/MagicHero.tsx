@@ -2,6 +2,7 @@ import { Zap, TrendingUp, Sparkles } from 'lucide-react'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { AnimatedCounter } from './magicui/animated-counter'
 import { AuroraText } from './magicui/aurora-text'
+import { LightRays } from './magicui/light-rays'
 import { lazy, Suspense } from 'react'
 import './MagicHero.css'
 
@@ -11,7 +12,7 @@ export default function MagicHero() {
   return (
     <section className="relative py-20 md:py-32 min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
-      overflow: 'visible',
+      overflow: 'hidden',
       position: 'relative'
     }}>
       {/* Background gradient */}
@@ -23,6 +24,17 @@ export default function MagicHero() {
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
+
+      {/* Light Rays Animation */}
+      <LightRays 
+        count={7}
+        color="rgba(34, 197, 94, 0.15)"
+        blur={40}
+        opacity={0.6}
+        speed={14}
+        length="70vh"
+        style={{ zIndex: 2 }}
+      />
 
       {/* Conteúdo principal - acima de tudo */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ zIndex: 10 }}>

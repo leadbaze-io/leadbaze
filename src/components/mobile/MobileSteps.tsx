@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Link2, Zap, TrendingUp } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
+import { getCurrentUser } from '../../lib/supabaseClient'
 
 export default function MobileSteps() {
+  const navigate = useNavigate()
   const [visibleSteps, setVisibleSteps] = useState(new Set())
   const stepsRef = useRef<HTMLDivElement>(null)
 
@@ -112,10 +115,28 @@ export default function MobileSteps() {
         <AnimatedBeam delay={0.8}>
           <div className="text-center mt-12">
             <ShimmerButton
-              onClick={() => {
-                const pricingSection = document.getElementById('pricing-plans-section');
-                if (pricingSection) {
-                  pricingSection.scrollIntoView({ behavior: 'smooth' });
+              onClick={async () => {
+                try {
+                  const user = await getCurrentUser()
+                  if (user) {
+                    navigate('/dashboard')
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  } else {
+                    navigate('/login')
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }
+                } catch (error) {
+                  navigate('/login')
+                  // Scroll para o topo após navegação
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }, 100)
                 }
               }}
               className="px-6 py-3 text-base"

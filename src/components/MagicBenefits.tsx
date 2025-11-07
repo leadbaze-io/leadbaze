@@ -161,7 +161,7 @@ export default function MagicBenefits() {
     ]
   }
   return (
-    <section className="relative py-20 md:py-32 bg-white overflow-hidden">
+    <section id="testimonials-section" className="relative py-20 md:py-32 bg-white overflow-hidden hidden">
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}

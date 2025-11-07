@@ -1,7 +1,8 @@
-import { TrendingUp, Zap, Sparkles, Users, Send, Eye, MousePointerClick, Activity, Target, Clock, Rocket } from 'lucide-react'
+import { TrendingUp, Zap, Sparkles, Users, Send, Activity, Target, Rocket, CheckCircle2 } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
+import { LightRays } from '../magicui/light-rays'
 import { motion } from 'framer-motion'
 import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
@@ -10,7 +11,7 @@ export default function MobileHero() {
   return (
     <section className="md:hidden relative py-16 min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
-      overflow: 'visible',
+      overflow: 'hidden',
       position: 'relative'
     }}>
       {/* Background gradient */}
@@ -22,6 +23,17 @@ export default function MobileHero() {
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
+
+      {/* Light Rays Animation */}
+      <LightRays 
+        count={5}
+        color="rgba(34, 197, 94, 0.15)"
+        blur={35}
+        opacity={0.6}
+        speed={14}
+        length="70vh"
+        style={{ zIndex: 2 }}
+      />
 
       {/* Conteúdo principal - acima de tudo */}
       <div className="relative max-w-md mx-auto px-4" style={{ zIndex: 10 }}>
@@ -133,8 +145,8 @@ export default function MobileHero() {
                   {[
                     { icon: Users, label: 'Leads Gerados', value: 1247, change: '+23%', color: '#00ff00' },
                     { icon: Send, label: 'Mensagens', value: 3842, change: '+18%', color: '#00ff00' },
-                    { icon: Eye, label: 'Abertura', value: 68, suffix: '%', change: '+12%', color: '#00ff00' },
-                    { icon: MousePointerClick, label: 'Resposta', value: 24, suffix: '%', change: '+8%', color: '#00ff00' }
+                    { icon: Target, label: 'Campanhas', value: 12, change: '+5%', color: '#00ff00' },
+                    { icon: Activity, label: 'Listas', value: 24, change: '+8%', color: '#00ff00' }
                   ].map((stat, index) => (
                     <motion.div
                       key={index}
@@ -155,7 +167,6 @@ export default function MobileHero() {
                       </div>
                       <div className="text-2xl font-bold mb-1" style={{color: '#082721'}}>
                         <AnimatedCounter value={stat.value} delay={1100 + index * 100} duration={1000} />
-                        {stat.suffix}
                       </div>
                       <div className="text-xs font-medium" style={{color: '#2e4842'}}>
                         {stat.label}
@@ -207,9 +218,8 @@ export default function MobileHero() {
                 {/* Additional Metrics - Mobile */}
                 <div className="grid grid-cols-1 gap-3 mt-4">
                   {[
-                    { icon: Target, label: 'Campanhas Ativas', value: 12, color: '#00ff00' },
-                    { icon: Clock, label: 'Tempo Médio', value: '2.4h', color: '#00ff00' },
-                    { icon: Rocket, label: 'Crescimento', value: '+145%', color: '#00ff00' }
+                    { icon: Rocket, label: 'Crescimento', value: '+145%', color: '#00ff00' },
+                    { icon: CheckCircle2, label: 'Taxa de Sucesso', value: '87%', color: '#00ff00' }
                   ].map((item, index) => (
                     <motion.div
                       key={index}

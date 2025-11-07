@@ -22,21 +22,24 @@ export function AnimatedCounter({
   const [count, setCount] = useState(0)
   const [isInView, setIsInView] = useState(false)
 
-  // IntersectionObserver nativo ao invés de framer-motion
+  // Use native Intersection Observer instead of framer-motion
   useEffect(() => {
-    if (!ref.current) return
+    const element = ref.current
+    if (!element) return
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-          observer.disconnect() // once: true
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true)
+            observer.disconnect() // Only trigger once
+          }
+        })
       },
-      { threshold: 0, rootMargin: "0px" }
+      { threshold: 0, rootMargin: '0px' }
     )
 
-    observer.observe(ref.current)
+    observer.observe(element)
     return () => observer.disconnect()
   }, [])
 

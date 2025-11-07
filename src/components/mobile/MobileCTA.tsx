@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import { AnimatedCounter } from '../magicui/animated-counter'
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { FlickeringGrid } from '../magicui/flickering-grid'
 import { ShimmerButton } from '../magicui/shimmer-button'
+import { getCurrentUser } from '../../lib/supabaseClient'
 
 export default function MobileCTA() {
+  const navigate = useNavigate()
   const stats = [
     { value: 1000, suffix: '+', label: 'Empresas Confiam' },
     { value: 99.9, suffix: '%', label: 'Uptime Garantido' },
@@ -44,7 +47,7 @@ export default function MobileCTA() {
               </span>
             </h2>
             <p className="text-base max-w-sm mx-auto leading-relaxed mb-8" style={{color: '#FFFFFF', opacity: 0.9}}>
-              Junte-se a mais de 1532 empresas que impulsionam sua prospecção com o LeadBaze
+              Junte-se a empresas que impulsionam sua prospecção com o Leadbaze
             </p>
           </AnimatedBeam>
 
@@ -52,10 +55,28 @@ export default function MobileCTA() {
           <AnimatedBeam delay={0.4}>
             <div className="flex justify-center mb-12">
               <ShimmerButton
-                onClick={() => {
-                  const pricingSection = document.getElementById('pricing-plans-section');
-                  if (pricingSection) {
-                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                onClick={async () => {
+                  try {
+                    const user = await getCurrentUser()
+                    if (user) {
+                      navigate('/dashboard')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    } else {
+                      navigate('/login')
+                      // Scroll para o topo após navegação
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 100)
+                    }
+                  } catch (error) {
+                    navigate('/login')
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
                   }
                 }}
                 className="px-8 py-3 text-base font-semibold"
