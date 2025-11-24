@@ -13,6 +13,16 @@ export const PlanCard: React.FC<PlanCardProps> = ({
   // Usar sempre o preço mensal
   const price = plan.price;
 
+  // Mapear nome do plano para ID do botão
+  const getButtonId = (planName: string): string => {
+    const buttonIds: Record<string, string> = {
+      'start': 'plano_200',
+      'scale': 'plano_497',
+      'enterprise': 'plano_997'
+    };
+    return buttonIds[planName.toLowerCase()] || `plano_${planName}`;
+  };
+
   // Função para determinar hierarquia dos planos
   const getPlanHierarchy = (planName: string): number => {
     const hierarchy = {
@@ -163,6 +173,7 @@ export const PlanCard: React.FC<PlanCardProps> = ({
               userId={plan.userId || "temp-user-id"}
               userEmail={plan.userEmail || "temp@example.com"}
               className="w-full"
+              buttonId={getButtonId(plan.name)}
             />
           )}
         </div>

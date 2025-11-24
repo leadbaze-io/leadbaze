@@ -39,6 +39,7 @@ const PaymentSuccess = lazy(() => import(/* webpackChunkName: "payment" */ './pa
 const PaymentFailure = lazy(() => import(/* webpackChunkName: "payment" */ './pages/PaymentFailure'))
 const SubscriptionSuccess = lazy(() => import(/* webpackChunkName: "subscription" */ './pages/SubscriptionSuccess'))
 const SubscriptionCancel = lazy(() => import(/* webpackChunkName: "subscription" */ './pages/SubscriptionCancel'))
+const CadastroConcluido = lazy(() => import(/* webpackChunkName: "cadastro" */ './pages/CadastroConcluido'))
 
 // Páginas de teste - mínima prioridade
 const ModalTestPage = lazy(() => import(/* webpackChunkName: "test" */ './pages/ModalTestPage'))
@@ -83,6 +84,7 @@ function AppContent() {
             <Route path="/payment/pending" element={<PaymentSuccess />} />
             <Route path="/subscription/success" element={<SubscriptionSuccess />} />
             <Route path="/subscription/cancel" element={<SubscriptionCancel />} />
+            <Route path="/cadastro-concluido" element={<CadastroConcluido />} />
             <Route path="/toast-demo" element={<ToastDemo />} />
           </Routes>
         </Suspense>

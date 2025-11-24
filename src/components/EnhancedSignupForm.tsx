@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -110,6 +111,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
   onSuccess,
   onError
 }) => {
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setLoading] = useState(false)
   const [, setVerificationStatus] = useState<Record<string, boolean>>({})
@@ -472,27 +474,13 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
           console.log('✅ Leads bônus dados com sucesso!', bonusResult)
         }
 
-        // Verificar se o email foi confirmado para mostrar mensagem apropriada
-        if (!authData.user.email_confirmed_at) {
-          // Email não confirmado - mostrar mensagem de confirmação
-          toast({
-            title: "📧 Verifique seu email!",
-            description: "Enviamos um link de confirmação para seu email. Clique no link para ativar sua conta. Seu perfil já foi criado e estará disponível após a confirmação.",
-            variant: 'default',
-            className: 'toast-modern toast-info'
-          })
-        } else {
-          // Email confirmado - conta pronta para uso
-          // Rastrear cadastro bem-sucedido
-          trackSignUp('email');
-          
-          toast({
-            title: "✅ Conta criada com sucesso!",
-            description: "Sua conta foi ativada e você pode fazer login.",
-            variant: 'success',
-            className: 'toast-modern toast-success'
-          })
-        }
+        // Rastrear cadastro bem-sucedido
+        trackSignUp('email');
+        
+        // Redirecionar para a página de cadastro concluído
+        setTimeout(() => {
+          navigate('/cadastro-concluido');
+        }, 500);
 
         onSuccess?.()
       }

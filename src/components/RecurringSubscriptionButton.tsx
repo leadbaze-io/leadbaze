@@ -16,6 +16,7 @@ interface RecurringSubscriptionButtonProps {
   onError?: (error: string) => void;
   className?: string;
   children?: React.ReactNode;
+  buttonId?: string; // ID personalizado para o botão
 }
 
 const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = ({
@@ -27,7 +28,8 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
   userEmail: _userEmail,
   onError,
   className = '',
-  children
+  children,
+  buttonId
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { subscription } = useSubscription();
@@ -104,6 +106,7 @@ const RecurringSubscriptionButton: React.FC<RecurringSubscriptionButtonProps> = 
   return (
     <>
       <button
+        id={buttonId}
         onClick={handleSubscribe}
         disabled={isProcessing}
         className={`
