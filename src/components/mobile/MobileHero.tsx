@@ -5,7 +5,8 @@ import { AnimatedCounter } from '../magicui/animated-counter'
 import { LightRays } from '../magicui/light-rays'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
+import { AuroraText } from '../magicui/aurora-text'
+import ThreeHeroScene from '../hero/ThreeHeroScene'
 import '../MagicHero.css'
 
 export default function MobileHero() {
@@ -26,6 +27,9 @@ export default function MobileHero() {
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
+
+      {/* Three.js 3D City */}
+      <ThreeHeroScene />
 
       {/* Light Rays Animation */}
       <LightRays

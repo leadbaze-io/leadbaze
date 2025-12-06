@@ -5,6 +5,7 @@ import { AuroraText } from './magicui/aurora-text'
 import { LightRays } from './magicui/light-rays'
 import { lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ThreeHeroScene from './hero/ThreeHeroScene'
 import './MagicHero.css'
 
 const HeroAnalyticsDashboard = lazy(() => import('./HeroAnalyticsDashboard'))
@@ -27,6 +28,9 @@ export default function MagicHero() {
         zIndex: 1,
         pointerEvents: 'none'
       }}></div>
+
+      {/* Three.js 3D Scene */}
+      <ThreeHeroScene />
 
       {/* Light Rays Animation */}
       <LightRays
