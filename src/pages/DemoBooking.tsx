@@ -544,7 +544,7 @@ export default function DemoBooking() {
                     >
                         <CalendlyPopupButton
                             url="https://calendly.com/orafamachadoc/demonstracao-leadbaze"
-                            buttonText="🎯 Agendar Minha Demonstração Gratuita"
+                            buttonText="Agendar Demonstração Gratuita"
                             prefillData={{
                                 name: formData.name,
                                 email: formData.email,
