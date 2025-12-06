@@ -33,6 +33,7 @@ const BlogAutomationDashboard = lazy(() => import(/* webpackChunkName: "blog-adm
 // Páginas de perfil e planos
 const UserProfile = lazy(() => import(/* webpackChunkName: "profile" */ './pages/UserProfile'))
 const PlansPage = lazy(() => import(/* webpackChunkName: "plans" */ './pages/PlansPage'))
+const DemoBooking = lazy(() => import(/* webpackChunkName: "demo-booking" */ './pages/DemoBooking'))
 
 // Páginas de pagamento - baixa prioridade
 const PaymentSuccess = lazy(() => import(/* webpackChunkName: "payment" */ './pages/PaymentSuccess'))
@@ -53,13 +54,13 @@ function AppContent() {
   useEffect(() => {
     setupExtensionErrorHandler()
   }, [])
-  
+
   // ThemeContext já gerencia o modo claro/escuro automaticamente baseado na rota
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
       <Navbar />
-      
+
       <main className="flex-1">
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
@@ -79,6 +80,7 @@ function AppContent() {
             <Route path="/test-smtp" element={<SMTPTestPage />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/plans" element={<PlansPage />} />
+            <Route path="/agendar-demo" element={<DemoBooking />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/failure" element={<PaymentFailure />} />
             <Route path="/payment/pending" element={<PaymentSuccess />} />
@@ -103,13 +105,13 @@ function App() {
               <AppContent />
             </MetaPixelProvider>
           </Router>
-          
+
           {/* DevTools apenas em desenvolvimento */}
           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-          
+
           {/* Toaster para notificações */}
           <Toaster />
-          
+
           {/* Gerenciador global de campanhas ativas */}
           <ActiveCampaignManager />
         </ActiveCampaignProvider>

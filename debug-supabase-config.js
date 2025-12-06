@@ -298,3 +298,5 @@ console.log('✅ Funções de debug carregadas! Use window.disparadorDebug para 
 
 
 
+
+

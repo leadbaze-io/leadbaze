@@ -4,10 +4,13 @@ import { ShimmerButton } from '../magicui/shimmer-button'
 import { AnimatedCounter } from '../magicui/animated-counter'
 import { LightRays } from '../magicui/light-rays'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { AuroraText } from '../magicui/aurora-text' // Import direto - é o LCP element!
 import '../MagicHero.css'
 
 export default function MobileHero() {
+  const navigate = useNavigate();
+
   return (
     <section className="md:hidden relative py-16 min-h-screen" style={{
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
@@ -15,7 +18,7 @@ export default function MobileHero() {
       position: 'relative'
     }}>
       {/* Background gradient */}
-      
+
       {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{
         background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.3) 100%)',
@@ -25,7 +28,7 @@ export default function MobileHero() {
       }}></div>
 
       {/* Light Rays Animation */}
-      <LightRays 
+      <LightRays
         count={5}
         color="rgba(34, 197, 94, 0.15)"
         blur={35}
@@ -40,22 +43,22 @@ export default function MobileHero() {
         <div className="text-center">
 
           {/* Título Principal - Renderizado sem delay para LCP */}
-          <h1 className="text-3xl font-bold mb-6" style={{opacity: 1}}>
-            <span style={{color: '#FFFFFF'}} className="font-extrabold">
+          <h1 className="text-3xl font-bold mb-6" style={{ opacity: 1 }}>
+            <span style={{ color: '#FFFFFF' }} className="font-extrabold">
               Gere mais de{' '}
             </span>
             <AuroraText className="font-extrabold">
               1000 Leads B2B
             </AuroraText>
             <br />
-            <span style={{color: '#FFFFFF'}}>
+            <span style={{ color: '#FFFFFF' }}>
               em menos de 7 dias
             </span>
           </h1>
 
           {/* Subtítulo */}
           <AnimatedBeam delay={0.6}>
-            <p className="text-base mb-8 max-w-sm mx-auto leading-relaxed" style={{color: '#FFFFFF'}}>
+            <p className="text-base mb-8 max-w-sm mx-auto leading-relaxed" style={{ color: '#FFFFFF' }}>
               Tudo que você precisa para prospectar, escalar e ter sucesso em vendas.
             </p>
           </AnimatedBeam>
@@ -65,73 +68,15 @@ export default function MobileHero() {
             <div className="button-illumination">
               <ShimmerButton
                 onClick={() => {
-                  console.log('=== BOTÃO VER PLANOS MOBILE CLICADO ===');
-                  
-                  // Buscar a seção de Planos com retry
-                  const findAndScroll = (retries = 0, maxRetries = 30) => {
-                    let section: HTMLElement | null = null;
-                    
-                    // Método 1: Buscar pelo ID
-                    section = document.getElementById('pricing-plans-section') as HTMLElement | null;
-                    
-                    // Método 2: Buscar no container mobile
-                    if (!section) {
-                      const mobileContainer = document.querySelector('div.md\\:hidden');
-                      if (mobileContainer) {
-                        section = mobileContainer.querySelector('#pricing-plans-section') as HTMLElement | null;
-                      }
-                    }
-                    
-                    // Método 3: Buscar por todas as seções mobile
-                    if (!section) {
-                      const allSections = document.querySelectorAll('section#pricing-plans-section');
-                      for (const s of allSections) {
-                        const htmlSection = s as HTMLElement;
-                        if (htmlSection.classList.contains('md:hidden')) {
-                          section = htmlSection;
-                          break;
-                        }
-                      }
-                    }
-                    
-                    // Se encontrou a seção, fazer scroll
-                    if (section) {
-                      const rect = section.getBoundingClientRect();
-                      const hasValidDimensions = rect.height > 100;
-                      
-                      if (hasValidDimensions) {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        const navbar = document.querySelector('nav');
-                        const navbarHeight = navbar ? navbar.offsetHeight : 80;
-                        const targetY = Math.max(0, rect.top + scrollTop - navbarHeight);
-                        
-                        window.scrollTo({
-                          top: targetY,
-                          behavior: 'smooth'
-                        });
-                        
-                        return true;
-                      }
-                    }
-                    
-                    // Se não encontrou e ainda tem retries, tentar novamente
-                    if (!section && retries < maxRetries) {
-                      const delay = retries < 5 ? 30 : retries < 15 ? 50 : 100;
-                      setTimeout(() => {
-                        findAndScroll(retries + 1, maxRetries);
-                      }, delay);
-                      return false;
-                    }
-                    
-                    return false;
-                  };
-                  
-                  // Executar busca imediatamente
-                  findAndScroll();
+                  navigate('/agendar-demo');
+                  // Scroll para o topo após navegação
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }, 100);
                 }}
                 className="px-6 py-3 text-base"
               >
-                <span>Ver Planos</span>
+                <span>Agende uma Demonstração</span>
               </ShimmerButton>
             </div>
           </AnimatedBeam>
@@ -139,7 +84,7 @@ export default function MobileHero() {
           {/* Analytics Dashboard Preview - Mobile */}
           <AnimatedBeam delay={1.0}>
             <div className="mt-12 relative">
-              <div className="bg-white rounded-2xl shadow-2xl border-2 overflow-hidden p-6 relative" style={{borderColor: 'rgba(0, 255, 0, 0.2)'}}>
+              <div className="bg-white rounded-2xl shadow-2xl border-2 overflow-hidden p-6 relative" style={{ borderColor: 'rgba(0, 255, 0, 0.2)' }}>
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   {[
@@ -160,15 +105,15 @@ export default function MobileHero() {
                       }}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <stat.icon className="w-5 h-5" style={{color: stat.color}} />
-                        <span className="text-xs font-bold px-2 py-1 rounded-full" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)', color: '#000000'}}>
+                        <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                        <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ backgroundColor: 'rgba(0, 255, 0, 0.1)', color: '#000000' }}>
                           {stat.change}
                         </span>
                       </div>
-                      <div className="text-2xl font-bold mb-1" style={{color: '#082721'}}>
+                      <div className="text-2xl font-bold mb-1" style={{ color: '#082721' }}>
                         <AnimatedCounter value={stat.value} delay={1100 + index * 100} duration={1000} />
                       </div>
-                      <div className="text-xs font-medium" style={{color: '#2e4842'}}>
+                      <div className="text-xs font-medium" style={{ color: '#2e4842' }}>
                         {stat.label}
                       </div>
                     </motion.div>
@@ -181,15 +126,15 @@ export default function MobileHero() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
                   className="p-4 rounded-xl border-2"
-                  style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                  style={{ borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-sm font-bold" style={{color: '#082721'}}>
+                    <h4 className="text-sm font-bold" style={{ color: '#082721' }}>
                       Leads por Dia
                     </h4>
-                    <Activity className="w-4 h-4" style={{color: '#00ff00'}} />
+                    <Activity className="w-4 h-4" style={{ color: '#00ff00' }} />
                   </div>
-                  
+
                   <div className="flex items-end justify-between gap-1 h-32">
                     {[45, 68, 52, 78, 85, 92, 88].map((height, index) => (
                       <motion.div
@@ -205,10 +150,10 @@ export default function MobileHero() {
                       />
                     ))}
                   </div>
-                  
+
                   <div className="flex justify-between mt-2">
                     {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((day, index) => (
-                      <div key={index} className="text-xs font-medium flex-1 text-center" style={{color: '#2e4842'}}>
+                      <div key={index} className="text-xs font-medium flex-1 text-center" style={{ color: '#2e4842' }}>
                         {day}
                       </div>
                     ))}
@@ -227,20 +172,20 @@ export default function MobileHero() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 1.7 + index * 0.1 }}
                       className="p-4 rounded-xl border-2 flex items-center gap-3"
-                      style={{borderColor: '#b7c7c1', backgroundColor: '#ffffff'}}
+                      style={{ borderColor: '#b7c7c1', backgroundColor: '#ffffff' }}
                     >
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: 'rgba(0, 255, 0, 0.1)'}}>
-                        <item.icon className="w-5 h-5" style={{color: item.color}} />
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 255, 0, 0.1)' }}>
+                        <item.icon className="w-5 h-5" style={{ color: item.color }} />
                       </div>
                       <div>
-                        <div className="text-xl font-bold" style={{color: '#082721'}}>
+                        <div className="text-xl font-bold" style={{ color: '#082721' }}>
                           {typeof item.value === 'number' ? (
                             <AnimatedCounter value={item.value} delay={1700 + index * 100} duration={800} />
                           ) : (
                             item.value
                           )}
                         </div>
-                        <div className="text-xs font-medium" style={{color: '#2e4842'}}>
+                        <div className="text-xs font-medium" style={{ color: '#2e4842' }}>
                           {item.label}
                         </div>
                       </div>
@@ -253,7 +198,7 @@ export default function MobileHero() {
 
           {/* Stats */}
           <AnimatedBeam delay={2.0}>
-            <div className="hero-stats-container" style={{marginTop: '4rem'}}>
+            <div className="hero-stats-container" style={{ marginTop: '4rem' }}>
               <div className="hero-stat-card">
                 <div className="hero-stat-content">
                   <div className="hero-stat-icon">

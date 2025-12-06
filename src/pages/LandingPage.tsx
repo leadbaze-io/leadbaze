@@ -4,7 +4,7 @@ import { LazySection } from '../components/LazySection'
 import Footer from '../components/Footer'
 import MobileLandingPage from './MobileLandingPage'
 import ScrollToTopButton from '../components/ScrollToTopButton'
-import MagicPricingPlans from '../components/MagicPricingPlans' // Import direto - crítico para botão "Ver Planos"
+// import MagicPricingPlans from '../components/MagicPricingPlans' // Import direto - crítico para botão "Ver Planos" - TEMPORARIAMENTE DESABILITADO
 
 // Lazy load componentes abaixo do fold para reduzir JavaScript execution time
 const MagicSteps = lazy(() => import('../components/MagicSteps'))
@@ -47,8 +47,9 @@ export default function LandingPage() {
           <MagicGuarantee />
         </Suspense>
 
-        {/* Seção de Planos - SEM lazy loading, renderizada IMEDIATAMENTE */}
-        <MagicPricingPlans />
+        {/* Seção de Planos - TEMPORARIAMENTE OCULTA */}
+        {/* NOTA: Seção comentada para não aparecer para os clientes. Para restaurar, descomente as linhas abaixo. */}
+        {/* <MagicPricingPlans /> */}
 
         <LazySection rootMargin="500px">
           <Suspense fallback={<div className="min-h-[400px] animate-pulse" />}>
