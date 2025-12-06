@@ -26,7 +26,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative text-white overflow-hidden" style={{backgroundColor: '#1A3A3A'}}>
+    <footer className="relative text-white overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-t border-gray-700">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-green-500/20 to-cyan-500/20 rounded-full blur-3xl"></div>
