@@ -3,7 +3,6 @@ import { AnimatedCounter } from './magicui/animated-counter'
 import { AnimatedBeam } from './magicui/animated-beam'
 import { FlickeringGrid } from './magicui/flickering-grid'
 import { ShimmerButton } from './magicui/shimmer-button'
-import { getCurrentUser } from '../lib/supabaseClient'
 
 export default function MagicCTA() {
   const navigate = useNavigate()
@@ -37,15 +36,15 @@ export default function MagicCTA() {
           {/* Main Heading */}
           <AnimatedBeam delay={0.2}>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+              <span className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Comece a gerar leads
               </span>
               <br />
-              <span style={{color: '#FFFFFF'}}>
+              <span style={{ color: '#FFFFFF' }}>
                 hoje mesmo!
               </span>
             </h2>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8" style={{color: '#FFFFFF', opacity: 0.9}}>
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8" style={{ color: '#FFFFFF', opacity: 0.9 }}>
               Junte-se a empresas que impulsionam sua prospecção com o Leadbaze
             </p>
           </AnimatedBeam>
@@ -54,40 +53,24 @@ export default function MagicCTA() {
           <AnimatedBeam delay={0.4}>
             <div className="flex justify-center mb-16">
               <ShimmerButton
-                onClick={async () => {
-                  try {
-                    const user = await getCurrentUser()
-                    if (user) {
-                      navigate('/dashboard')
-                      // Scroll para o topo após navegação
-                      setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      }, 100)
-                    } else {
-                      navigate('/login')
-                      // Scroll para o topo após navegação
-                      setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      }, 100)
-                    }
-                  } catch (error) {
-                    navigate('/login')
-                    // Scroll para o topo após navegação
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }, 100)
-                  }
+                id="id_lead_dm2"
+                onClick={() => {
+                  navigate('/demo-booking')
+                  // Scroll para o topo após navegação
+                  setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }, 100)
                 }}
                 className="px-12 py-4 text-lg font-semibold"
               >
-                <span>Começar Agora</span>
+                <span>Agendar Demonstração Gratuita</span>
               </ShimmerButton>
             </div>
           </AnimatedBeam>
 
           {/* Features */}
           <AnimatedBeam delay={0.6}>
-            <div className="flex flex-wrap items-center justify-center gap-8 mb-16" style={{color: '#FFFFFF'}}>
+            <div className="flex flex-wrap items-center justify-center gap-8 mb-16" style={{ color: '#FFFFFF' }}>
               <div className="flex items-center gap-2">
                 <span>✨ 30 leads gratuitos</span>
               </div>
@@ -106,16 +89,16 @@ export default function MagicCTA() {
               {stats.map((stat, index) => (
                 <div
                   key={index}
-                  className="backdrop-blur-sm border rounded-2xl p-8 text-center hover:bg-gray-800/70 transition-all duration-300 flex flex-col items-center justify-center" style={{backgroundColor: 'rgba(8, 39, 33, 0.5)', borderColor: '#00ff00'}}
+                  className="backdrop-blur-sm border rounded-2xl p-8 text-center hover:bg-gray-800/70 transition-all duration-300 flex flex-col items-center justify-center" style={{ backgroundColor: 'rgba(8, 39, 33, 0.5)', borderColor: '#00ff00' }}
                 >
-                  <div className="text-3xl md:text-4xl font-bold mb-2" style={{color: '#FFFFFF'}}>
+                  <div className="text-3xl md:text-4xl font-bold mb-2" style={{ color: '#FFFFFF' }}>
                     <AnimatedCounter
                       value={stat.value}
                       suffix={stat.suffix}
                       delay={500 + index * 200}
                     />
                   </div>
-                  <div className="font-medium" style={{color: '#FFFFFF', opacity: 0.8}}>{stat.label}</div>
+                  <div className="font-medium" style={{ color: '#FFFFFF', opacity: 0.8 }}>{stat.label}</div>
                 </div>
               ))}
             </div>
