@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Shield, Users, Clock, MessageCircle, Zap, Gift } from 'lucide-react'
 import { AnimatedBeam } from './magicui/animated-beam'
 import { ShimmerButton } from './magicui/shimmer-button'
+import { Meteors } from './magicui/meteors'
 
 export default function MagicFAQ() {
   const [isVisible, setIsVisible] = useState(false)
@@ -56,20 +57,31 @@ export default function MagicFAQ() {
   }
 
   return (
-    <section id="faq-section-desktop" className="relative py-24 md:py-32 bg-white overflow-hidden" style={{ scrollMarginTop: '80px' }}>
+    <section id="faq-section-desktop" className="relative py-24 md:py-32 overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)',
+      scrollMarginTop: '80px'
+    }}>
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0, 255, 0, 0.15) 1px, transparent 0)',
+        backgroundSize: '32px 32px'
+      }}></div>
+
+      {/* Meteors Animation */}
+      <Meteors number={30} />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <AnimatedBeam delay={0.2}>
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#082721'}}>
-              Dúvidas <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Frequentes</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#FFFFFF' }}>
+              Dúvidas <span className="bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Frequentes</span>
               <br />
-              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+              <span className="bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Resolvidas
               </span>
             </h2>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed" style={{color: '#2e4842'}}>
+            <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               Tire todas as suas dúvidas sobre o LeadBaze. Aqui você encontra respostas para as principais objeções.
             </p>
           </div>
@@ -84,24 +96,31 @@ export default function MagicFAQ() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isVisible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="bg-white backdrop-blur-sm rounded-3xl border overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
-                style={{borderColor: '#00ff00', borderWidth: '2px'}}
+                className="backdrop-blur-sm rounded-3xl border overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
+                style={{
+                  backgroundColor: 'rgba(8, 39, 33, 0.6)',
+                  borderColor: 'rgba(0, 255, 0, 0.3)',
+                  borderWidth: '2px'
+                }}
               >
                 {/* Question Header */}
                 <button
                   onClick={() => toggleQuestion(index)}
-                  className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-300"
+                  className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
+                  style={{
+                    backgroundColor: openQuestion === index ? 'rgba(0, 255, 0, 0.05)' : 'transparent'
+                  }}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style={{backgroundColor: '#00ff00'}}>
-                      <faq.icon className="w-6 h-6" style={{color: '#082721'}} />
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#00ff00' }}>
+                      <faq.icon className="w-6 h-6" style={{ color: '#082721' }} />
                     </div>
-                    <h3 className="text-lg font-semibold" style={{color: '#082721'}}>{faq.question}</h3>
+                    <h3 className="text-lg font-semibold" style={{ color: '#FFFFFF' }}>{faq.question}</h3>
                   </div>
                   <motion.div
                     animate={{ rotate: openQuestion === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
-                    style={{color: '#2e4842'}}
+                    style={{ color: 'rgba(255, 255, 255, 0.7)' }}
                   >
                     <ChevronDown className="w-5 h-5" />
                   </motion.div>
@@ -118,8 +137,8 @@ export default function MagicFAQ() {
                       className="overflow-hidden"
                     >
                       <div className="px-6 pb-6">
-                        <div className="border-t pt-4" style={{borderColor: '#00ff00'}}>
-                          <p className="leading-relaxed" style={{color: '#2e4842'}}>{faq.answer}</p>
+                        <div className="border-t pt-4" style={{ borderColor: 'rgba(0, 255, 0, 0.2)' }}>
+                          <p className="leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{faq.answer}</p>
                         </div>
                       </div>
                     </motion.div>
@@ -133,9 +152,13 @@ export default function MagicFAQ() {
         {/* Bottom CTA */}
         <AnimatedBeam delay={0.8}>
           <div className="text-center mt-16">
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border" style={{borderColor: '#00ff00', borderWidth: '2px'}}>
-              <h3 className="text-2xl font-bold mb-4" style={{color: '#082721'}}>Ainda tem dúvidas?</h3>
-              <p className="mb-6" style={{color: '#2e4842'}}>
+            <div className="backdrop-blur-sm rounded-3xl p-8 shadow-2xl border" style={{
+              backgroundColor: 'rgba(0, 255, 0, 0.08)',
+              borderColor: 'rgba(0, 255, 0, 0.3)',
+              borderWidth: '2px'
+            }}>
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#FFFFFF' }}>Ainda tem dúvidas?</h3>
+              <p className="mb-6" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 Nossa equipe está pronta para ajudar. Entre em contato e tire todas as suas dúvidas.
               </p>
               <ShimmerButton

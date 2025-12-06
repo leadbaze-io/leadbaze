@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Shield, Users, Clock, MessageCircle, Zap, Gift } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
+import { Meteors } from '../magicui/meteors'
 
 export default function MobileFAQ() {
   const [isVisible, setIsVisible] = useState(false)
@@ -52,19 +53,30 @@ export default function MobileFAQ() {
   ]
 
   return (
-    <section className="md:hidden py-16 bg-white overflow-hidden">
+    <section className="md:hidden py-16 overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)'
+    }}>
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 opacity-5" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0, 255, 0, 0.15) 1px, transparent 0)',
+        backgroundSize: '32px 32px'
+      }}></div>
+
+      {/* Meteors Animation */}
+      <Meteors number={20} />
+
       <div className="relative max-w-md mx-auto px-4">
         {/* Header */}
         <AnimatedBeam delay={0.2}>
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4" style={{color: '#082721'}}>
-              Dúvidas <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent">Frequentes</span>
+            <h2 className="text-3xl font-bold mb-4" style={{ color: '#FFFFFF' }}>
+              Dúvidas <span className="bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent">Frequentes</span>
               <br />
-              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-400 via-green-300 to-green-500 bg-clip-text text-transparent">
                 Resolvidas
               </span>
             </h2>
-            <p className="text-base leading-relaxed" style={{color: '#2e4842'}}>
+            <p className="text-base leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               Encontre respostas para as principais dúvidas sobre a LeadBaze.
             </p>
           </div>
@@ -79,18 +91,25 @@ export default function MobileFAQ() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isVisible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-2xl border shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
-                style={{borderColor: '#00ff00', borderWidth: '2px'}}
+                className="backdrop-blur-sm rounded-2xl border shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                style={{
+                  backgroundColor: 'rgba(8, 39, 33, 0.6)',
+                  borderColor: 'rgba(0, 255, 0, 0.3)',
+                  borderWidth: '2px'
+                }}
               >
                 <button
-                  className="w-full p-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                  className="w-full p-4 text-left flex items-center justify-between transition-colors duration-200"
                   onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
+                  style={{
+                    backgroundColor: openQuestion === index ? 'rgba(0, 255, 0, 0.05)' : 'transparent'
+                  }}
                 >
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gradient-to-r from-[#00ff00] to-[#00cc00] rounded-lg flex items-center justify-center">
                       <faq.icon className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold" style={{ color: '#FFFFFF' }}>
                       {faq.question}
                     </span>
                   </div>
@@ -98,10 +117,10 @@ export default function MobileFAQ() {
                     animate={{ rotate: openQuestion === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                    <ChevronDown className="w-5 h-5" style={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                   </motion.div>
                 </button>
-                
+
                 <AnimatePresence>
                   {openQuestion === index && (
                     <motion.div
@@ -112,7 +131,7 @@ export default function MobileFAQ() {
                       className="overflow-hidden"
                     >
                       <div className="px-4 pb-4 pt-0">
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
                           {faq.answer}
                         </p>
                       </div>
@@ -127,11 +146,15 @@ export default function MobileFAQ() {
         {/* Bottom CTA */}
         <AnimatedBeam delay={0.8}>
           <div className="text-center">
-            <div className="bg-white rounded-2xl border shadow-xl p-6" style={{borderColor: '#00ff00', borderWidth: '2px'}}>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <div className="backdrop-blur-sm rounded-2xl border shadow-xl p-6" style={{
+              backgroundColor: 'rgba(0, 255, 0, 0.08)',
+              borderColor: 'rgba(0, 255, 0, 0.3)',
+              borderWidth: '2px'
+            }}>
+              <h3 className="text-lg font-bold mb-2" style={{ color: '#FFFFFF' }}>
                 Ainda tem dúvidas?
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                 Nossa equipe está pronta para ajudar você a encontrar a melhor solução.
               </p>
               <ShimmerButton
