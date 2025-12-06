@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Shield, Users, Clock, MessageCircle, Zap, Gift } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
 import { ShimmerButton } from '../magicui/shimmer-button'
-import { Meteors } from '../magicui/meteors'
 
 export default function MobileFAQ() {
   const [isVisible, setIsVisible] = useState(false)
@@ -56,14 +55,28 @@ export default function MobileFAQ() {
     <section className="md:hidden py-16 overflow-hidden" style={{
       background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)'
     }}>
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 opacity-5" style={{
-        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0, 255, 0, 0.15) 1px, transparent 0)',
-        backgroundSize: '32px 32px'
+      {/* Animated background pattern */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `
+          radial-gradient(circle at 20% 30%, rgba(0, 255, 0, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 80% 70%, rgba(0, 255, 0, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 2px 2px, rgba(0, 255, 0, 0.08) 1px, transparent 0)
+        `,
+        backgroundSize: '600px 600px, 600px 600px, 30px 30px',
+        backgroundPosition: '0% 0%, 100% 100%, 0 0',
+        animation: 'backgroundMove 20s ease-in-out infinite'
       }}></div>
 
-      {/* Meteors Animation */}
-      <Meteors number={20} />
+      <style>{`
+        @keyframes backgroundMove {
+          0%, 100% {
+            background-position: 0% 0%, 100% 100%, 0 0;
+          }
+          50% {
+            background-position: 100% 100%, 0% 0%, 0 0;
+          }
+        }
+      `}</style>
 
       <div className="relative max-w-md mx-auto px-4">
         {/* Header */}
