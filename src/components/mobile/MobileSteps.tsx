@@ -1,12 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Link2, Zap, TrendingUp } from 'lucide-react'
 import { AnimatedBeam } from '../magicui/animated-beam'
-import { ShimmerButton } from '../magicui/shimmer-button'
-import { getCurrentUser } from '../../lib/supabaseClient'
 
 export default function MobileSteps() {
-  const navigate = useNavigate()
   const [visibleSteps, setVisibleSteps] = useState(new Set())
   const stepsRef = useRef<HTMLDivElement>(null)
 
@@ -58,7 +54,7 @@ export default function MobileSteps() {
         <AnimatedBeam delay={0.2}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LeadBaze</span>: Simplificando a geração de Leads
+              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>LeadBaze</span>: Simplificando a geração de Leads
             </h2>
             <p className="text-base text-gray-600 leading-relaxed">
               São apenas 3 passos:
@@ -74,25 +70,24 @@ export default function MobileSteps() {
                 <div
                   key={index}
                   data-step={index}
-                  className={`relative bg-white p-6 rounded-3xl border shadow-xl transition-all duration-700 transform hover:shadow-2xl hover:-translate-y-2 ${
-                    visibleSteps.has(index)
-                      ? 'translate-y-0 opacity-100 scale-100'
-                      : 'translate-y-8 opacity-0 scale-95'
-                  }`}
-                  style={{ 
+                  className={`relative bg-white p-6 rounded-3xl border shadow-xl transition-all duration-700 transform hover:shadow-2xl hover:-translate-y-2 ${visibleSteps.has(index)
+                    ? 'translate-y-0 opacity-100 scale-100'
+                    : 'translate-y-8 opacity-0 scale-95'
+                    }`}
+                  style={{
                     borderColor: '#00ff00',
                     borderWidth: '2px',
-                    transitionDelay: `${index * 200}ms` 
+                    transitionDelay: `${index * 200}ms`
                   }}
                 >
                   {/* Número do Step */}
-                  <div className="absolute -top-3 left-6 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs z-10 shadow-lg" style={{backgroundColor: '#00ff00', color: '#082721'}}>
+                  <div className="absolute -top-3 left-6 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs z-10 shadow-lg" style={{ backgroundColor: '#00ff00', color: '#082721' }}>
                     {index + 1}
                   </div>
 
                   {/* Ícone */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{backgroundColor: '#00ff00'}}>
-                    <step.icon className="w-6 h-6" style={{color: '#082721'}} />
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{ backgroundColor: '#00ff00' }}>
+                    <step.icon className="w-6 h-6" style={{ color: '#082721' }} />
                   </div>
 
                   {/* Conteúdo */}
@@ -108,41 +103,6 @@ export default function MobileSteps() {
                 </div>
               ))}
             </div>
-          </div>
-        </AnimatedBeam>
-
-        {/* CTA Bottom */}
-        <AnimatedBeam delay={0.8}>
-          <div className="text-center mt-12">
-            <ShimmerButton
-              onClick={async () => {
-                try {
-                  const user = await getCurrentUser()
-                  if (user) {
-                    navigate('/dashboard')
-                    // Scroll para o topo após navegação
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }, 100)
-                  } else {
-                    navigate('/login')
-                    // Scroll para o topo após navegação
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }, 100)
-                  }
-                } catch (error) {
-                  navigate('/login')
-                  // Scroll para o topo após navegação
-                  setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }, 100)
-                }
-              }}
-              className="px-6 py-3 text-base"
-            >
-              <span>Comece a Gerar Leads</span>
-            </ShimmerButton>
           </div>
         </AnimatedBeam>
       </div>

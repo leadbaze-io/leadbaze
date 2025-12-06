@@ -67,6 +67,7 @@ export default function MobileHero() {
           <AnimatedBeam delay={0.8}>
             <div className="button-illumination">
               <ShimmerButton
+                id="id_lead_dm"
                 onClick={() => {
                   navigate('/agendar-demo');
                   // Scroll para o topo após navegação
