@@ -22,11 +22,36 @@ export default function DemoBooking() {
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const hasInitialized = useRef(false)
     const [showInput, setShowInput] = useState(false)
+    const [isMobile, setIsMobile] = useState(false)
+    const calendlyButtonRef = useRef<HTMLDivElement>(null)
+
+    // Detect mobile viewport
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768)
+        }
+
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     // Auto-scroll to latest message
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages])
+
+    // Auto-scroll to Calendly button on mobile when it appears
+    useEffect(() => {
+        if (currentStep === 'summary' && isMobile && calendlyButtonRef.current) {
+            setTimeout(() => {
+                calendlyButtonRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                })
+            }, 600) // Wait for animation to complete
+        }
+    }, [currentStep, isMobile])
 
     // Initialize with welcome message ONCE (using ref to prevent StrictMode double execution)
     useEffect(() => {
@@ -506,10 +531,16 @@ export default function DemoBooking() {
 
                 {currentStep === 'summary' && (
                     <motion.div
+                        ref={calendlyButtonRef}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5, duration: 0.6 }}
                         className="mt-8 w-full max-w-full"
+                        style={{
+                            // Mobile-optimized padding and spacing
+                            padding: isMobile ? '0 1rem' : '0',
+                            marginTop: isMobile ? '2rem' : '2rem'
+                        }}
                     >
                         <CalendlyPopupButton
                             url="https://calendly.com/orafamachadoc/demonstracao-leadbaze"
@@ -525,6 +556,7 @@ export default function DemoBooking() {
                                     a4: formData.desiredVolume || ''
                                 }
                             }}
+                            isMobile={isMobile}
                         />
                     </motion.div>
                 )}

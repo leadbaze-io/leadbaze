@@ -11,12 +11,14 @@ interface CalendlyPopupButtonProps {
         phone?: string
         customAnswers?: Record<string, string>
     }
+    isMobile?: boolean
 }
 
 export function CalendlyPopupButton({
     url = 'https://calendly.com/orafamachadoc/demonstracao-leadbaze',
     buttonText = 'Agendar Demonstração',
-    prefillData
+    prefillData,
+    isMobile = false
 }: CalendlyPopupButtonProps) {
     useEffect(() => {
         // Load Calendly widget script
@@ -111,18 +113,24 @@ export function CalendlyPopupButton({
             <motion.button
                 onClick={openCalendly}
                 whileHover={{
-                    scale: 1.02,
+                    scale: isMobile ? 1.01 : 1.02,
                     boxShadow: '0 8px 32px rgba(0, 255, 0, 0.3)'
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full px-6 py-4 rounded-xl font-semibold text-base relative overflow-hidden group"
+                className="w-full rounded-xl font-semibold relative overflow-hidden group"
                 style={{
+                    // Mobile-optimized sizing
+                    padding: isMobile ? '1.25rem 1.5rem' : '1rem 1.5rem',
+                    fontSize: isMobile ? '1.125rem' : '1rem',
+                    minHeight: isMobile ? '64px' : '56px',
                     background: 'linear-gradient(135deg, #00ff00 0%, #00cc00 100%)',
                     color: '#082721',
                     border: 'none',
                     cursor: 'pointer',
                     boxShadow: '0 4px 20px rgba(0, 255, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3)',
-                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    // Better touch target on mobile
+                    touchAction: isMobile ? 'manipulation' : 'auto'
                 }}
             >
                 {/* Animated gradient overlay */}
