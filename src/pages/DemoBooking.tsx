@@ -7,6 +7,7 @@ import { ButtonGroup } from '../components/conversational-form/ButtonGroup'
 import { TextInput } from '../components/conversational-form/TextInput'
 import { useConversationalForm } from '../hooks/useConversationalForm'
 import { CalendlyPopupButton } from '../components/conversational-form/CalendlyPopupButton'
+import logoImage from '../assets/leadbazelogonew1.png'
 
 export default function DemoBooking() {
     const {
@@ -314,7 +315,7 @@ export default function DemoBooking() {
                     }}
                 >
                     <img
-                        src="/src/assets/leadbazelogonew1.png"
+                        src={logoImage}
                         alt="LeadBaze"
                         className="w-full h-full object-contain"
                     />
