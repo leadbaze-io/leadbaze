@@ -58,9 +58,9 @@ export default function MobilePricing() {
         <AnimatedBeam delay={0.2}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Cada <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>LEAD</span> sai por
+              Cada <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>LEAD</span> sai por
               <br />
-              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+              <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 MENOS de 30 CENTAVOS
               </span>
             </h2>
@@ -80,22 +80,22 @@ export default function MobilePricing() {
                 animate={isVisible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 className="bg-white rounded-3xl border shadow-xl hover:shadow-2xl transition-all duration-500 p-6"
-                style={{borderColor: '#00ff00', borderWidth: '2px'}}
+                style={{ borderColor: '#00ff00', borderWidth: '2px' }}
               >
                 <div className="flex items-start space-x-4">
                   {/* Icon */}
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{backgroundColor: '#00ff00'}}>
-                      <benefit.icon className="w-6 h-6" style={{color: '#082721'}} />
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#00ff00' }}>
+                      <benefit.icon className="w-6 h-6" style={{ color: '#082721' }} />
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-black mb-1">
+                    <h3 className="text-lg font-bold text-black leading-tight">
                       {benefit.title}
                     </h3>
-                    <p className="text-sm text-gray-800 font-medium mb-2">
+                    <p className="text-sm text-gray-800 font-semibold mt-1 mb-3">
                       {benefit.subtitle}
                     </p>
                     <p className="text-sm text-gray-800 leading-relaxed mb-4">
@@ -105,11 +105,11 @@ export default function MobilePricing() {
                     {/* Metrics */}
                     <div className="grid grid-cols-2 gap-3">
                       {benefit.metrics.map((metric, metricIndex) => (
-                        <div key={metricIndex} className="bg-gray-50 rounded-xl p-3 text-center border" style={{borderColor: '#2e4842'}}>
-                          <div className="text-lg font-bold" style={{color: '#082721'}}>
+                        <div key={metricIndex} className="bg-gray-50 rounded-xl p-3 text-center border" style={{ borderColor: '#2e4842' }}>
+                          <div className="text-lg font-bold" style={{ color: '#082721' }}>
                             {metric.value}
                           </div>
-                          <div className="text-xs font-medium" style={{color: '#2e4842'}}>
+                          <div className="text-xs font-medium" style={{ color: '#2e4842' }}>
                             {metric.label}
                           </div>
                         </div>
@@ -125,15 +125,15 @@ export default function MobilePricing() {
         {/* Price Highlight */}
         <AnimatedBeam delay={0.8}>
           <div className="text-center">
-            <div className="inline-block rounded-3xl p-6 shadow-2xl" style={{backgroundColor: '#2e4842'}}>
-              <div style={{color: '#FFFFFF'}}>
+            <div className="inline-block rounded-3xl p-6 shadow-2xl" style={{ backgroundColor: '#2e4842' }}>
+              <div style={{ color: '#FFFFFF' }}>
                 <div className="text-lg font-semibold mb-2">
                   Preço por Lead
                 </div>
-                <div className="text-4xl font-bold mb-2" style={{color: '#00ff00'}}>
+                <div className="text-4xl font-bold mb-2" style={{ color: '#00ff00' }}>
                   R$ <AnimatedCounter value={0.30} delay={200} duration={800} />
                 </div>
-                <div className="text-sm font-medium" style={{color: '#b7c7c1'}}>
+                <div className="text-sm font-medium" style={{ color: '#b7c7c1' }}>
                   vs. R$ 15+ em outras plataformas
                 </div>
               </div>

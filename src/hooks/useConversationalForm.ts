@@ -5,12 +5,7 @@ export type ConversationalStep =
     | 'name'
     | 'phone'
     | 'email'
-    | 'company'
-    | 'segment'
-    | 'teamSize'
-    | 'position'
-    | 'challenge'
-    | 'desiredVolume'
+    | 'investment'
     | 'summary'
     | 'calendar'
     | 'complete'
@@ -19,12 +14,7 @@ export interface FormData {
     name: string
     phone: string
     email: string
-    company: string
-    segment: string
-    teamSize: string
-    position: string
-    challenge: string
-    desiredVolume: string
+    investment: string
 }
 
 export interface Message {
@@ -68,12 +58,7 @@ export function useConversationalForm() {
             'name',
             'phone',
             'email',
-            'company',
-            'segment',
-            'teamSize',
-            'position',
-            'challenge',
-            'desiredVolume',
+            'investment',
             'summary',
             'calendar',
             'complete'

@@ -61,31 +61,19 @@ export function CalendlyPopupButton({
             const customAnswers: any = {}
 
             if (prefillData?.customAnswers) {
-                // Empresa (a1)
+                // Investimento mensal (a1)
                 if (prefillData.customAnswers.a1) {
                     customAnswers.a1 = prefillData.customAnswers.a1
                 }
-                // Segmento (a2)
-                if (prefillData.customAnswers.a2) {
-                    customAnswers.a2 = prefillData.customAnswers.a2
-                }
-                // Desafio (a3)
-                if (prefillData.customAnswers.a3) {
-                    customAnswers.a3 = prefillData.customAnswers.a3
-                }
-                // Volume desejado (a4)
-                if (prefillData.customAnswers.a4) {
-                    customAnswers.a4 = prefillData.customAnswers.a4
-                }
             }
 
-            // WhatsApp como quinta pergunta (a5) com código do país
+            // WhatsApp como segunda pergunta (a2) com código do país
             if (prefillData?.phone) {
                 // Limpar telefone removendo caracteres especiais
-                const cleanPhone = prefillData.phone.replace(/\D/g, '')
+                const cleanPhone = prefillData.phone.replace(/\\D/g, '')
                 // Adicionar +55 se não tiver
                 const phoneWithCountry = cleanPhone.startsWith('55') ? `+${cleanPhone}` : `+55${cleanPhone}`
-                customAnswers.a5 = phoneWithCountry
+                customAnswers.a2 = phoneWithCountry
             }
 
             if (Object.keys(customAnswers).length > 0) {

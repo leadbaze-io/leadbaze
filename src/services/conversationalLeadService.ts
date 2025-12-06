@@ -4,12 +4,7 @@ export interface ConversationalLeadData {
     name: string
     phone?: string
     email: string
-    company?: string
-    segment?: string
-    team_size?: string
-    position?: string
-    challenge?: string
-    desired_volume?: string
+    investment?: string
     utm_source?: string
     utm_medium?: string
     utm_campaign?: string
@@ -44,12 +39,7 @@ export async function saveConversationalLead(data: ConversationalLeadData) {
                 name: data.name,
                 phone: data.phone,
                 email: data.email,
-                company: data.company,
-                segment: data.segment,
-                team_size: data.team_size,
-                position: data.position,
-                challenge: data.challenge,
-                desired_volume: data.desired_volume,
+                investment: data.investment,
                 status: 'form_completed',
                 source: 'conversational_form',
                 utm_source: data.utm_source,

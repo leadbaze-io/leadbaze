@@ -99,69 +99,13 @@ export default function DemoBooking() {
         addMessage('user', value)
 
         setTimeout(() => {
-            addMessage('bot', 'Qual é o nome da sua empresa?', () => setShowInput(true))
+            addMessage('bot', 'Quanto você tem disponível para investir mensalmente na geração de leads para o seu negócio?')
             nextStep()
         }, 800)
     }
 
-    const handleCompanySubmit = (value: string) => {
-        setShowInput(false)
-        updateFormData('company', value)
-        addMessage('user', value)
-
-        setTimeout(() => {
-            addMessage('bot', (
-                <>
-                    Em qual segmento a <strong style={{ color: '#00ff00' }}>{value}</strong> atua?
-                </>
-            ), () => setShowInput(true))
-            nextStep()
-        }, 800)
-    }
-
-    const handleSegmentSelect = (value: string) => {
-        setShowInput(false)
-        updateFormData('segment', value)
-        addMessage('user', value)
-
-        setTimeout(() => {
-            addMessage('bot', 'Quantas pessoas trabalham na área comercial?', () => setShowInput(true))
-            nextStep()
-        }, 800)
-    }
-
-    const handleTeamSizeSelect = (value: string) => {
-        updateFormData('teamSize', value)
-        addMessage('user', value)
-
-        setTimeout(() => {
-            addMessage('bot', `Qual é o seu cargo na ${formData.company}?`)
-            nextStep()
-        }, 800)
-    }
-
-    const handlePositionSelect = (value: string) => {
-        updateFormData('position', value)
-        addMessage('user', value)
-
-        setTimeout(() => {
-            addMessage('bot', `Qual é o maior desafio comercial da ${formData.company}?`)
-            nextStep()
-        }, 800)
-    }
-
-    const handleChallengeSelect = (value: string) => {
-        updateFormData('challenge', value)
-        addMessage('user', value)
-
-        setTimeout(() => {
-            addMessage('bot', 'Quantos leads qualificados por mês seria ideal?')
-            nextStep()
-        }, 800)
-    }
-
-    const handleVolumeSelect = async (value: string) => {
-        updateFormData('desiredVolume', value)
+    const handleInvestmentSelect = async (value: string) => {
+        updateFormData('investment', value)
         addMessage('user', value)
 
         // Salvar lead no Supabase antes de mostrar o Calendly
@@ -172,12 +116,7 @@ export default function DemoBooking() {
                 name: formData.name || '',
                 phone: formData.phone,
                 email: formData.email || '',
-                company: formData.company,
-                segment: formData.segment,
-                team_size: formData.teamSize,
-                position: formData.position,
-                challenge: formData.challenge,
-                desired_volume: value
+                investment: value
             }
 
             const savedLead = await saveConversationalLead(leadData)
@@ -221,11 +160,8 @@ export default function DemoBooking() {
                         </h3>
                         <div className="space-y-3">
                             {[
-                                { icon: '🏢', label: 'Empresa', value: formData.company },
-                                { icon: '🎯', label: 'Segmento', value: formData.segment },
-                                { icon: '👥', label: 'Equipe Comercial', value: formData.teamSize },
-                                { icon: '⚠️', label: 'Principal Desafio', value: formData.challenge },
-                                { icon: '🚀', label: 'Meta de Leads', value: value }
+                                { icon: '👤', label: 'Nome', value: formData.name },
+                                { icon: '💰', label: 'Investimento Mensal', value: value }
                             ].map((item, index) => (
                                 <motion.div
                                     key={index}
@@ -268,10 +204,10 @@ export default function DemoBooking() {
                         </p>
                         <ul className="space-y-3 mb-4">
                             {[
-                                `Como resolver "${formData.challenge}" usando nossa tecnologia de ponta`,
-                                `Estratégia exata para alcançar ${value} de forma consistente`,
-                                `Como empresas do segmento ${formData.segment} estão multiplicando resultados`,
-                                `Plano de ação personalizado para ${formData.company} começar hoje mesmo`
+                                'Como gerar leads qualificados de forma automática e escalável',
+                                `Estratégia personalizada para o seu orçamento de ${value}`,
+                                'Como empresas estão multiplicando resultados com nossa tecnologia',
+                                'Plano de ação para começar a gerar leads hoje mesmo'
                             ].map((text, index) => (
                                 <motion.li
                                     key={index}
@@ -371,7 +307,7 @@ export default function DemoBooking() {
                         lineHeight: '1.6'
                     }}
                 >
-                    Responda <span style={{ color: '#00ff00', fontWeight: '600' }}>3 perguntas rápidas</span> e descubra como <span style={{ color: '#00ff00', fontWeight: '600' }}>10x seus leads</span>
+                    Responda <span style={{ color: '#00ff00', fontWeight: '600' }}>4 perguntas rápidas</span> e descubra como <span style={{ color: '#00ff00', fontWeight: '600' }}>10x seus leads</span>
                 </motion.p>
 
                 {/* Decorative line */}
@@ -438,93 +374,16 @@ export default function DemoBooking() {
                     />
                 )}
 
-                {currentStep === 'company' && showInput && (
-                    <TextInput
-                        placeholder="Nome da empresa"
-                        onSubmit={handleCompanySubmit}
-                        delay={0.3}
-                    />
-                )}
-
-                {currentStep === 'segment' && (
+                {currentStep === 'investment' && (
                     <ButtonGroup
                         options={[
-                            { label: 'Imobiliário', value: 'Imobiliário', emoji: '🏢' },
-                            { label: 'Arquitetura', value: 'Arquitetura', emoji: '🏛️' },
-                            { label: 'Engenharia', value: 'Engenharia', emoji: '🛠️' },
-                            { label: 'Construção', value: 'Construção', emoji: '🏗️' },
-                            { label: 'Automotivo', value: 'Automotivo', emoji: '🚗' },
-                            { label: 'Estética e Beleza', value: 'Estética e Beleza', emoji: '💅' },
-                            { label: 'Saúde e Bem-estar', value: 'Saúde e Bem-estar', emoji: '🏋️' },
-                            { label: 'Tecnologia', value: 'Tecnologia', emoji: '💻' },
-                            { label: 'Educação', value: 'Educação', emoji: '🎓' },
-                            { label: 'Varejo', value: 'Varejo', emoji: '🛒' },
-                            { label: 'Alimentação', value: 'Alimentação', emoji: '🍽️' },
-                            { label: 'Serviços', value: 'Serviços', emoji: '🔧' },
-                            { label: 'Outro', value: 'Outro', emoji: '➕' }
+                            { label: 'Não quero investir', value: 'Não quero investir', emoji: '🚫' },
+                            { label: 'Menos de R$300', value: 'Menos de R$300', emoji: '💵' },
+                            { label: 'R$300 a R$500', value: 'R$300 a R$500', emoji: '💰' },
+                            { label: 'R$500 a R$1000', value: 'R$500 a R$1000', emoji: '💎' },
+                            { label: 'Mais de R$1000', value: 'Mais de R$1000', emoji: '🚀' }
                         ]}
-                        onSelect={handleSegmentSelect}
-                        delay={0.3}
-                    />
-                )}
-
-                {currentStep === 'teamSize' && (
-                    <ButtonGroup
-                        options={[
-                            { label: 'Só eu', value: 'Só eu', emoji: '👤' },
-                            { label: '2-5 pessoas', value: '2-5 pessoas', emoji: '👥' },
-                            { label: '6-10 pessoas', value: '6-10 pessoas', emoji: '👨‍👩‍👧' },
-                            { label: '11-20 pessoas', value: '11-20 pessoas', emoji: '👨‍👩‍👧‍👦' },
-                            { label: '20-30 pessoas', value: '20-30 pessoas', emoji: '👥' },
-                            { label: '30-40 pessoas', value: '30-40 pessoas', emoji: '👥' },
-                            { label: '40-50 pessoas', value: '40-50 pessoas', emoji: '🏢' },
-                            { label: '50+ pessoas', value: '50+ pessoas', emoji: '🏭' }
-                        ]}
-                        onSelect={handleTeamSizeSelect}
-                        delay={0.3}
-                    />
-                )}
-
-                {currentStep === 'position' && (
-                    <ButtonGroup
-                        options={[
-                            { label: 'Sócio ou Fundador', value: 'Sócio ou Fundador' },
-                            { label: 'Diretor Comercial', value: 'Diretor Comercial' },
-                            { label: 'Gerente de Vendas', value: 'Gerente de Vendas' },
-                            { label: 'Coordenador', value: 'Coordenador' },
-                            { label: 'Vendedor', value: 'Vendedor' },
-                            { label: 'Outro', value: 'Outro' }
-                        ]}
-                        onSelect={handlePositionSelect}
-                        delay={0.3}
-                    />
-                )}
-
-                {currentStep === 'challenge' && (
-                    <ButtonGroup
-                        options={[
-                            { label: 'Falta de leads qualificados', value: 'Falta de leads qualificados', emoji: '😓' },
-                            { label: 'Leads muito caros', value: 'Leads muito caros', emoji: '💸' },
-                            { label: 'Dificuldade em encontrar contatos', value: 'Dificuldade em encontrar contatos', emoji: '🔍' },
-                            { label: 'Prospecção manual e demorada', value: 'Prospecção manual e demorada', emoji: '⏰' },
-                            { label: 'Baixa taxa de conversão', value: 'Baixa taxa de conversão', emoji: '📉' },
-                            { label: 'Outro', value: 'Outro', emoji: '❓' }
-                        ]}
-                        onSelect={handleChallengeSelect}
-                        delay={0.3}
-                    />
-                )}
-
-                {currentStep === 'desiredVolume' && (
-                    <ButtonGroup
-                        options={[
-                            { label: '50-100 leads/mês', value: '50-100 leads/mês', emoji: '📈' },
-                            { label: '100-300 leads/mês', value: '100-300 leads/mês', emoji: '🚀' },
-                            { label: '300-500 leads/mês', value: '300-500 leads/mês', emoji: '💎' },
-                            { label: '500-1000 leads/mês', value: '500-1000 leads/mês', emoji: '🏆' },
-                            { label: 'Mais de 1000/mês', value: 'Mais de 1000/mês', emoji: '🌟' }
-                        ]}
-                        onSelect={handleVolumeSelect}
+                        onSelect={handleInvestmentSelect}
                         delay={0.3}
                     />
                 )}
@@ -550,10 +409,7 @@ export default function DemoBooking() {
                                 email: formData.email,
                                 phone: formData.phone,
                                 customAnswers: {
-                                    a1: formData.company || '',
-                                    a2: formData.segment || '',
-                                    a3: formData.challenge || '',
-                                    a4: formData.desiredVolume || ''
+                                    a1: formData.investment || ''
                                 }
                             }}
                             isMobile={isMobile}
