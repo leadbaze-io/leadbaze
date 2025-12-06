@@ -80,6 +80,12 @@ export function CalendlyPopupButton({
                 prefill.customAnswers = customAnswers
             }
 
+            console.log('🔍 Dados enviados ao Calendly:', {
+                name: prefill.name,
+                email: prefill.email,
+                customAnswers: customAnswers
+            })
+
             // @ts-ignore
             window.Calendly.initPopupWidget({
                 url: url,
