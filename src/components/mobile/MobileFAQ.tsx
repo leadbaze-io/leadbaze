@@ -55,25 +55,53 @@ export default function MobileFAQ() {
     <section className="md:hidden py-16 overflow-hidden" style={{
       background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)'
     }}>
-      {/* Animated background pattern */}
+      {/* Animated Gradient Flow Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating gradient orbs - mobile optimized */}
+        <div className="absolute w-64 h-64 rounded-full" style={{
+          background: 'radial-gradient(circle, rgba(0, 255, 0, 0.15) 0%, transparent 70%)',
+          top: '15%',
+          left: '5%',
+          animation: 'float1 20s ease-in-out infinite',
+          filter: 'blur(30px)'
+        }}></div>
+
+        <div className="absolute w-56 h-56 rounded-full" style={{
+          background: 'radial-gradient(circle, rgba(0, 204, 0, 0.12) 0%, transparent 70%)',
+          bottom: '25%',
+          right: '10%',
+          animation: 'float2 25s ease-in-out infinite',
+          filter: 'blur(30px)'
+        }}></div>
+      </div>
+
+      {/* Subtle overlay for better text readability */}
       <div className="absolute inset-0" style={{
-        backgroundImage: `
-          radial-gradient(circle at 20% 30%, rgba(0, 255, 0, 0.03) 0%, transparent 50%),
-          radial-gradient(circle at 80% 70%, rgba(0, 255, 0, 0.03) 0%, transparent 50%),
-          radial-gradient(circle at 2px 2px, rgba(0, 255, 0, 0.08) 1px, transparent 0)
-        `,
-        backgroundSize: '600px 600px, 600px 600px, 30px 30px',
-        backgroundPosition: '0% 0%, 100% 100%, 0 0',
-        animation: 'backgroundMove 20s ease-in-out infinite'
+        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.4) 100%)'
       }}></div>
 
       <style>{`
-        @keyframes backgroundMove {
+        @keyframes float1 {
           0%, 100% {
-            background-position: 0% 0%, 100% 100%, 0 0;
+            transform: translate(0, 0) scale(1);
           }
-          50% {
-            background-position: 100% 100%, 0% 0%, 0 0;
+          33% {
+            transform: translate(20px, -20px) scale(1.1);
+          }
+          66% {
+            transform: translate(-15px, 15px) scale(0.9);
+          }
+        }
+        
+        @keyframes float2 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+          }
+          33% {
+            transform: translate(-25px, 20px) scale(0.9);
+          }
+          66% {
+            transform: translate(15px, -18px) scale(1.1);
           }
         }
       `}</style>
