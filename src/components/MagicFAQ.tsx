@@ -60,76 +60,25 @@ export default function MagicFAQ() {
       background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)',
       scrollMarginTop: '80px'
     }}>
-      {/* Animated Gradient Flow Background */}
+      {/* Clean Minimal Background - viverdeia.ai inspired */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating gradient orbs */}
-        <div className="absolute w-96 h-96 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(0, 255, 0, 0.15) 0%, transparent 70%)',
-          top: '10%',
-          left: '10%',
-          animation: 'float1 20s ease-in-out infinite',
-          filter: 'blur(40px)'
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.015) 1px, transparent 1px)',
+          backgroundSize: '100px 100px'
         }}></div>
 
-        <div className="absolute w-80 h-80 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(0, 204, 0, 0.12) 0%, transparent 70%)',
-          top: '60%',
-          right: '15%',
-          animation: 'float2 25s ease-in-out infinite',
-          filter: 'blur(40px)'
-        }}></div>
-
-        <div className="absolute w-72 h-72 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%)',
-          bottom: '20%',
-          left: '50%',
-          animation: 'float3 30s ease-in-out infinite',
-          filter: 'blur(40px)'
+        {/* Subtle gradient accents */}
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 255, 0, 0.015) 0%, transparent 50%)'
         }}></div>
       </div>
 
-      {/* Subtle overlay for better text readability */}
+      {/* Dark overlay for text readability */}
       <div className="absolute inset-0" style={{
-        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.4) 100%)'
+        background: 'linear-gradient(180deg, rgba(8, 39, 33, 0.3) 0%, rgba(8, 39, 33, 0.5) 100%)'
       }}></div>
 
-      <style>{`
-        @keyframes float1 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(30px, -30px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-        
-        @keyframes float2 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(-40px, 30px) scale(0.9);
-          }
-          66% {
-            transform: translate(20px, -25px) scale(1.1);
-          }
-        }
-        
-        @keyframes float3 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(25px, 35px) scale(1.05);
-          }
-          66% {
-            transform: translate(-30px, -20px) scale(0.95);
-          }
-        }
-      `}</style>
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}

@@ -55,56 +55,26 @@ export default function MobileFAQ() {
     <section className="md:hidden py-16 overflow-hidden" style={{
       background: 'linear-gradient(135deg, #0a2f26 0%, #082721 50%, #0a2f26 100%)'
     }}>
-      {/* Animated Gradient Flow Background */}
+      {/* Clean Minimal Background - viverdeia.ai inspired */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating gradient orbs - mobile optimized */}
-        <div className="absolute w-64 h-64 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(0, 255, 0, 0.15) 0%, transparent 70%)',
-          top: '15%',
-          left: '5%',
-          animation: 'float1 20s ease-in-out infinite',
-          filter: 'blur(30px)'
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'linear-gradient(rgba(0, 255, 0, 0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 0, 0.015) 1px, transparent 1px)',
+          backgroundSize: '100px 100px'
         }}></div>
 
-        <div className="absolute w-56 h-56 rounded-full" style={{
-          background: 'radial-gradient(circle, rgba(0, 204, 0, 0.12) 0%, transparent 70%)',
-          bottom: '25%',
-          right: '10%',
-          animation: 'float2 25s ease-in-out infinite',
-          filter: 'blur(30px)'
+        {/* Subtle gradient accents */}
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(circle at 20% 20%, rgba(0, 255, 0, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 255, 0, 0.015) 0%, transparent 50%)'
         }}></div>
       </div>
 
-      {/* Subtle overlay for better text readability */}
+      {/* Dark overlay for text readability */}
       <div className="absolute inset-0" style={{
-        background: 'radial-gradient(circle at center, transparent 0%, rgba(8, 39, 33, 0.4) 100%)'
+        background: 'linear-gradient(180deg, rgba(8, 39, 33, 0.3) 0%, rgba(8, 39, 33, 0.5) 100%)'
       }}></div>
 
-      <style>{`
-        @keyframes float1 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(20px, -20px) scale(1.1);
-          }
-          66% {
-            transform: translate(-15px, 15px) scale(0.9);
-          }
-        }
-        
-        @keyframes float2 {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          33% {
-            transform: translate(-25px, 20px) scale(0.9);
-          }
-          66% {
-            transform: translate(15px, -18px) scale(1.1);
-          }
-        }
-      `}</style>
+
 
       <div className="relative max-w-md mx-auto px-4">
         {/* Header */}
