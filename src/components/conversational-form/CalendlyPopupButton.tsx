@@ -102,8 +102,7 @@ export function CalendlyPopupButton({
                 id="lead_mql"
                 onClick={openCalendly}
                 whileHover={{
-                    scale: isMobile ? 1.01 : 1.02,
-                    boxShadow: '0 8px 32px rgba(0, 255, 0, 0.3)'
+                    boxShadow: '0 8px 32px rgba(0, 255, 0, 0.4)'
                 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full rounded-xl font-semibold relative overflow-hidden group"
