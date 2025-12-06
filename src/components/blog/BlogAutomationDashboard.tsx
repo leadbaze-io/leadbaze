@@ -474,11 +474,10 @@ const BlogAutomationDashboard: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
+                className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
                     ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
+                  }`}
               >
                 <tab.icon className="h-4 w-4" />
                 <span>{tab.label}</span>
@@ -504,11 +503,10 @@ const BlogAutomationDashboard: React.FC = () => {
                       setActiveTab(tab.id as any);
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full flex items-center space-x-3 py-3 px-4 rounded-lg font-medium text-sm transition-colors ${
-                      activeTab === tab.id
+                    className={`w-full flex items-center space-x-3 py-3 px-4 rounded-lg font-medium text-sm transition-colors ${activeTab === tab.id
                         ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
                         : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-                    }`}
+                      }`}
                   >
                     <tab.icon className="h-5 w-5" />
                     <span>{tab.label}</span>
@@ -666,13 +664,12 @@ const OverviewTab: React.FC<{
           <button
             onClick={onProcessQueue}
             disabled={processing}
-            className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-300 transform ${
-              processing
+            className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-300 transform ${processing
 
                 ? 'bg-blue-500 cursor-not-allowed scale-95'
 
                 : 'bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-            } text-white disabled:opacity-70`}
+              } text-white disabled:opacity-70`}
           >
             {processing ? (
               <>
@@ -713,9 +710,8 @@ const OverviewTab: React.FC<{
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Scheduler Status:
               </span>
-              <span className={`text-sm font-medium ${
-                config.schedulerActive ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <span className={`text-sm font-medium ${config.schedulerActive ? 'text-green-600' : 'text-red-600'
+                }`}>
                 {config.schedulerActive ? 'Ativo' : 'Inativo'}
               </span>
             </div>
@@ -756,7 +752,7 @@ const StatCard: React.FC<{
     >
       <div className="flex items-center">
         <div className={`p-1.5 sm:p-2 rounded-lg bg-opacity-10 ${colorClasses[color]}`}>
-          <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${colorClasses[color].split(' ')[1]}`} />
+          <Icon className={`h-4 w-4 sm:h-6 sm:w-6 ${colorClasses[color].split(' ')[1] || ''}`} />
         </div>
         <div className="ml-2 sm:ml-4">
           <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -1006,13 +1002,12 @@ const PostsTab: React.FC<{
                     {post.blog_categories?.name || 'Sem categoria'}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      post.published
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${post.published
 
                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
 
                         : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                    }`}>
+                      }`}>
                       {post.published ? 'Publicado' : 'Rascunho'}
                     </span>
                   </td>
@@ -1053,13 +1048,12 @@ const PostsTab: React.FC<{
                 <h3 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 flex-1">
                   {post.title}
                 </h3>
-                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 ${
-                  post.published
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ml-2 ${post.published
 
                     ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
 
                     : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                }`}>
+                  }`}>
                   {post.published ? 'Publicado' : 'Rascunho'}
                 </span>
               </div>
@@ -1142,13 +1136,12 @@ const ConfigTab: React.FC<{
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Status do Sistema
             </label>
-            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              config.enabled
+            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.enabled
 
                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
 
                 : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-            }`}>
+              }`}>
               {config.enabled ? 'Habilitado' : 'Desabilitado'}
             </div>
           </div>
