@@ -53,7 +53,7 @@ export default function MagicCTA() {
           <AnimatedBeam delay={0.4}>
             <div className="flex justify-center mb-16">
               <ShimmerButton
-                id="id_lead_dm2"
+                id="id_lead_dm"
                 onClick={() => {
                   navigate('/demo-booking')
                   // Scroll para o topo após navegação
