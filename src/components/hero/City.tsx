@@ -74,6 +74,7 @@ export default function City() {
                 <bufferGeometry>
                     <bufferAttribute
                         attach="attributes-position"
+                        args={[particles, 3]}
                         count={particles.length / 3}
                         array={particles}
                         itemSize={3}
