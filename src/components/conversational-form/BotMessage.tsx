@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TypingIndicator, TypewriterText } from './TypingIndicator'
+import iconLogo from '../../assets/iconlogo.png'
 
 interface BotMessageProps {
     content: string | ReactNode
@@ -31,13 +32,7 @@ export function BotMessage({ content, delay = 0, enableTyping = true, onTypingCo
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: -20, y: 10 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{
-                duration: 0.5,
-                delay,
-                ease: [0.16, 1, 0.3, 1]
-            }}
+            // ... existing props ...
             className="flex gap-3 sm:gap-4 mb-6 items-start"
         >
             {/* Bot Avatar with pulse */}
@@ -51,35 +46,17 @@ export function BotMessage({ content, delay = 0, enableTyping = true, onTypingCo
                         type: "spring",
                         stiffness: 200
                     }}
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex-shrink-0 flex items-center justify-center relative overflow-hidden"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex-shrink-0 flex items-center justify-center relative overflow-hidden bg-black/40 backdrop-blur-sm"
                     style={{
-                        background: 'linear-gradient(135deg, #00ff00 0%, #00cc00 100%)',
-                        boxShadow: '0 4px 12px rgba(0, 255, 0, 0.3)',
-                        border: '2px solid rgba(0, 255, 0, 0.4)'
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
                     }}
                 >
-                    {/* Pulse ring */}
-                    <motion.div
-                        animate={{
-                            scale: [1, 1.3, 1],
-                            opacity: [0.5, 0, 0.5]
-                        }}
-                        transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="absolute inset-0 rounded-full"
-                        style={{
-                            border: '2px solid rgba(0, 255, 0, 0.5)'
-                        }}
-                    />
-
                     {/* Attendant photo */}
                     <img
-                        src="/attendant-avatar.jpg"
-                        alt="Atendente LeadBaze"
-                        className="w-full h-full object-cover rounded-full relative z-10"
+                        src={iconLogo}
+                        alt="Logo LeadBaze"
+                        className="w-full h-full object-cover"
                     />
                 </motion.div>
             )}

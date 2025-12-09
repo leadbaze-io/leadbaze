@@ -15,8 +15,8 @@ export default function MagicPricing() {
   const benefits = [
     {
       icon: Users,
-      title: "Agende 6x mais reuniões",
-      subtitle: "para seus vendedores",
+      title: "Agende 6x mais reuniões para seus vendedores",
+      subtitle: "",
       description: "Transforme sua equipe de vendas com leads qualificados e segmentados. Aumente a produtividade e feche mais negócios.",
       metrics: [
         { label: "Taxa de conversão", value: "+180%", color: "text-blue-600" },
@@ -27,8 +27,8 @@ export default function MagicPricing() {
     },
     {
       icon: Clock,
-      title: "Economia de 60%",
-      subtitle: "do tempo gasto com criação de listas",
+      title: "Economia de 60% do tempo",
+      subtitle: "",
       description: "Automatize todo o processo de prospecção. De horas para minutos na criação de listas de leads qualificados.",
       metrics: [
         { label: "Tempo economizado", value: "60%", color: "text-purple-600" },
@@ -39,8 +39,8 @@ export default function MagicPricing() {
     },
     {
       icon: TrendingUp,
-      title: "Aumente em 40%",
-      subtitle: "suas vendas em 3 meses",
+      title: "Aumente em 40% suas vendas",
+      subtitle: "",
       description: "Pipeline sempre abastecido com leads de alta qualidade. Resultados mensuráveis e crescimento sustentável.",
       metrics: [
         { label: "Crescimento", value: "+40%", color: "text-green-600" },

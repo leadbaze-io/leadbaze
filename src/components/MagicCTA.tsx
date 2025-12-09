@@ -8,7 +8,6 @@ export default function MagicCTA() {
   const navigate = useNavigate()
   const stats = [
     { value: 1000, suffix: '+', label: 'Empresas Confiam' },
-    { value: 99.9, suffix: '%', label: 'Uptime Garantido' },
     { value: 24, suffix: '/7', label: 'Suporte Ativo' }
   ]
 
@@ -68,24 +67,10 @@ export default function MagicCTA() {
             </div>
           </AnimatedBeam>
 
-          {/* Features */}
-          <AnimatedBeam delay={0.6}>
-            <div className="flex flex-wrap items-center justify-center gap-8 mb-16" style={{ color: '#FFFFFF' }}>
-              <div className="flex items-center gap-2">
-                <span>✨ 30 leads gratuitos</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>🔒 Seus dados seguros</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>⭐ Satisfação garantida</span>
-              </div>
-            </div>
-          </AnimatedBeam>
 
           {/* Stats */}
           <AnimatedBeam delay={0.8}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
               {stats.map((stat, index) => (
                 <div
                   key={index}

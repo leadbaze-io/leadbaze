@@ -60,7 +60,7 @@ export default function DemoBooking() {
 
 
             // Welcome message with typing effect and callback
-            addMessage('bot', 'Olá! 👋 Bem-vindo à LeadBaze.\n\nA plataforma que multiplica seus leads qualificados do Google Maps de forma automática e inteligente. 🚀\n\nEm apenas 2 minutos, vamos criar um diagnóstico personalizado para sua empresa. 📊\n\nVamos começar? 😊', () => {
+            addMessage('bot', 'Olá! Faltam poucos passos para ganhar sua demonstração gratuita e melhorar sua prospecção ativa de leads B2B.\n\nVamos começar? 😊', () => {
                 // This callback fires AFTER typing completes
                 addMessage('bot', 'Qual é o seu nome?', () => {
                     // Show input only after second message finishes typing
@@ -134,55 +134,11 @@ export default function DemoBooking() {
         setTimeout(() => {
             addMessage('bot', (
                 <>
-                    <div className="mb-6">
-                        <p className="text-2xl font-bold mb-4" style={{ color: '#00ff00' }}>
-                            🎉 Parabéns, {formData.name}!
-                        </p>
-                        <p className="text-lg mb-6">
-                            Seu diagnóstico está pronto e temos uma <strong>excelente notícia</strong> para você!
-                        </p>
-                    </div>
+
 
 
                     {/* Resumo do Diagnóstico - Animated */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                            duration: 0.6,
-                            delay: 0.3,
-                            ease: [0.16, 1, 0.3, 1]
-                        }}
-                        className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 p-6 rounded-xl border-2 border-green-500/30 mb-6"
-                    >
-                        <h3 className="text-xl font-bold mb-4" style={{ color: '#00ff00' }}>
-                            📊 Resumo do Diagnóstico
-                        </h3>
-                        <div className="space-y-3">
-                            {[
-                                { icon: '👤', label: 'Nome', value: formData.name },
-                                { icon: '💰', label: 'Investimento Mensal', value: value }
-                            ].map((item, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                        duration: 0.4,
-                                        delay: 0.5 + (index * 0.1),
-                                        ease: [0.16, 1, 0.3, 1]
-                                    }}
-                                    className="flex items-start gap-3"
-                                >
-                                    <span className="text-green-400 text-xl">{item.icon}</span>
-                                    <div>
-                                        <p className="text-sm text-gray-400">{item.label}</p>
-                                        <p className="font-semibold text-white">{item.value}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
+
 
 
                     {/* Demonstração EXCLUSIVA - Animated */}
@@ -236,8 +192,9 @@ export default function DemoBooking() {
                             transition={{ duration: 0.4, delay: 2.1 }}
                             className="text-sm text-gray-300 italic"
                         >
-                            💡 Demonstração 100% gratuita, sem compromisso. Apenas conhecimento de alto valor!
+                            💡 Demonstração 100% gratuita.
                         </motion.p>
+
                     </motion.div>
                 </>
             ), undefined, true) // hideAvatar = true to prevent scroll
@@ -307,7 +264,7 @@ export default function DemoBooking() {
                         lineHeight: '1.6'
                     }}
                 >
-                    Responda <span style={{ color: '#00ff00', fontWeight: '600' }}>4 perguntas rápidas</span> e descubra como <span style={{ color: '#00ff00', fontWeight: '600' }}>10x seus leads</span>
+                    Responda <span style={{ color: '#00ff00', fontWeight: '600' }}>4 perguntas rápidas</span> e descubra como <span style={{ color: '#00ff00', fontWeight: '600' }}>aumentar 10x sua prospecção</span>
                 </motion.p>
 
                 {/* Decorative line */}
@@ -422,3 +379,4 @@ export default function DemoBooking() {
         </ChatContainer>
     )
 }
+

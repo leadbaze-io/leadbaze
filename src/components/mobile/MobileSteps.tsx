@@ -28,19 +28,19 @@ export default function MobileSteps() {
   const steps = [
     {
       icon: Link2,
-      title: "1º) Mapeamento",
+      title: "Mapeamento",
       description: "Digite o tipo de estabelecimento e localização desejada. Nossa IA encontrará automaticamente os melhores leads para você.",
       color: "blue"
     },
     {
       icon: Zap,
-      title: "2º) Qualificação",
+      title: "Qualificação",
       description: "Nossa IA processa automaticamente os dados e extrai informações relevantes para o seu time comercial. Filtre pelo seu perfil de cliente ideal (ICP).",
       color: "purple"
     },
     {
       icon: TrendingUp,
-      title: "3º) Comece a Vender",
+      title: "Comece a Vender",
       description: "Receba uma lista completa com nome, endereço, telefone, avaliações, sites e redes sociais. Dispare mensagem de forma automática e personalizada para os leads gerados.",
       color: "green"
     }
@@ -81,17 +81,12 @@ export default function MobileSteps() {
                   }}
                 >
                   {/* Número do Step */}
-                  <div className="absolute -top-3 left-6 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs z-10 shadow-lg" style={{ backgroundColor: '#00ff00', color: '#082721' }}>
+                  <div className="absolute -top-4 left-6 w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl z-10 shadow-lg" style={{ backgroundColor: '#00ff00', color: '#082721' }}>
                     {index + 1}
                   </div>
 
-                  {/* Ícone */}
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{ backgroundColor: '#00ff00' }}>
-                    <step.icon className="w-6 h-6" style={{ color: '#082721' }} />
-                  </div>
-
                   {/* Conteúdo */}
-                  <h3 className="text-lg font-semibold text-black mb-2">
+                  <h3 className="text-lg font-semibold text-black mb-2 mt-4">
                     {step.title}
                   </h3>
                   <p className="text-sm text-gray-800 leading-relaxed">

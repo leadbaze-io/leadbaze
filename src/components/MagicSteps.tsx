@@ -28,19 +28,19 @@ export default function MagicSteps() {
   const steps = [
     {
       icon: Link2,
-      title: "1º) Mapeamento",
+      title: "Mapeamento",
       description: "Digite o tipo de estabelecimento e localização desejada. Nossa IA encontrará automaticamente os melhores leads para você.",
       color: "blue"
     },
     {
       icon: Zap,
-      title: "2º) Qualificação",
+      title: "Qualificação",
       description: "Nossa IA processa automaticamente os dados e extrai informações relevantes para o seu time comercial. Filtre pelo seu perfil de cliente ideal (ICP).",
       color: "purple"
     },
     {
       icon: TrendingUp,
-      title: "3º) Comece a Vender",
+      title: "Comece a Vender",
       description: "Receba uma lista completa com nome, endereço, telefone, avaliações, sites e redes sociais. Dispare mensagem de forma automática e personalizada para os leads gerados.",
       color: "green"
     }
@@ -84,17 +84,12 @@ export default function MagicSteps() {
                   }}
                 >
                   {/* Número do Step */}
-                  <div className="absolute -top-4 left-8 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm z-10 shadow-lg" style={{ backgroundColor: '#00ff00', color: '#082721' }}>
+                  <div className="absolute -top-6 left-8 w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl z-10 shadow-lg" style={{ backgroundColor: '#00ff00', color: '#082721' }}>
                     {index + 1}
                   </div>
 
-                  {/* Ícone */}
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-6 shadow-lg" style={{ backgroundColor: '#00ff00' }}>
-                    <step.icon className="w-10 h-10" style={{ color: '#082721' }} />
-                  </div>
-
                   {/* Conteúdo */}
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-6">
                     {step.title}
                   </h3>
                   <p className="text-gray-600 text-lg leading-relaxed">

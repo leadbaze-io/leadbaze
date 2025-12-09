@@ -9,7 +9,6 @@ export default function MobileCTA() {
   const navigate = useNavigate()
   const stats = [
     { value: 1000, suffix: '+', label: 'Empresas Confiam' },
-    { value: 99.9, suffix: '%', label: 'Uptime Garantido' },
     { value: 24, suffix: '/7', label: 'Suporte Ativo' }
   ]
 
@@ -18,7 +17,7 @@ export default function MobileCTA() {
       background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
     }}>
       {/* Background with Flickering Grid */}
-      <div className="absolute inset-0" style={{zIndex: 0}}>
+      <div className="absolute inset-0" style={{ zIndex: 0 }}>
         <FlickeringGrid
           gridSize={20}
           flickerDuration={2000}
@@ -33,20 +32,20 @@ export default function MobileCTA() {
         zIndex: 1
       }}></div>
 
-      <div className="relative max-w-md mx-auto px-4" style={{zIndex: 2}}>
+      <div className="relative max-w-md mx-auto px-4" style={{ zIndex: 2 }}>
         <div className="text-center">
           {/* Main Heading */}
           <AnimatedBeam delay={0.2}>
             <h2 className="text-3xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+              <span className="bg-gradient-to-r from-[#00ff00] to-[#00cc00] bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Comece a gerar leads
               </span>
               <br />
-              <span style={{color: '#FFFFFF'}}>
+              <span style={{ color: '#FFFFFF' }}>
                 hoje mesmo!
               </span>
             </h2>
-            <p className="text-base max-w-sm mx-auto leading-relaxed mb-8" style={{color: '#FFFFFF', opacity: 0.9}}>
+            <p className="text-base max-w-sm mx-auto leading-relaxed mb-8" style={{ color: '#FFFFFF', opacity: 0.9 }}>
               Junte-se a empresas que impulsionam sua prospecção com o Leadbaze
             </p>
           </AnimatedBeam>
@@ -86,37 +85,23 @@ export default function MobileCTA() {
             </div>
           </AnimatedBeam>
 
-          {/* Features */}
-          <AnimatedBeam delay={0.6}>
-            <div className="flex flex-wrap items-center justify-center gap-6 mb-12" style={{color: '#FFFFFF'}}>
-              <div className="flex items-center gap-2">
-                <span>✨ 30 leads gratuitos</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>🔒 Seus dados seguros</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>⭐ Satisfação garantida</span>
-              </div>
-            </div>
-          </AnimatedBeam>
 
           {/* Stats */}
           <AnimatedBeam delay={0.8}>
-            <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
+            <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
               {stats.map((stat, index) => (
                 <div
                   key={index}
-                  className="backdrop-blur-sm border rounded-2xl p-4 text-center hover:bg-gray-800/70 transition-all duration-300 flex flex-col items-center justify-center" style={{backgroundColor: 'rgba(8, 39, 33, 0.5)', borderColor: '#00ff00'}}
+                  className="backdrop-blur-sm border rounded-2xl p-4 text-center hover:bg-gray-800/70 transition-all duration-300 flex flex-col items-center justify-center" style={{ backgroundColor: 'rgba(8, 39, 33, 0.5)', borderColor: '#00ff00' }}
                 >
-                  <div className="text-xl font-bold mb-1" style={{color: '#FFFFFF'}}>
+                  <div className="text-xl font-bold mb-1" style={{ color: '#FFFFFF' }}>
                     <AnimatedCounter
                       value={stat.value}
                       suffix={stat.suffix}
                       delay={500 + index * 200}
                     />
                   </div>
-                  <div className="text-xs font-medium" style={{color: '#FFFFFF', opacity: 0.8}}>{stat.label}</div>
+                  <div className="text-xs font-medium" style={{ color: '#FFFFFF', opacity: 0.8 }}>{stat.label}</div>
                 </div>
               ))}
             </div>
