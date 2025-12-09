@@ -102,7 +102,6 @@ export default function MagicHero() {
                   <AnimatedCounter value={10} suffix="x" delay={500} />
                 </div>
                 <div className="hero-stat-title">Mais Rápido</div>
-                <div className="hero-stat-description">que métodos tradicionais</div>
               </div>
             </div>
 
@@ -115,7 +114,6 @@ export default function MagicHero() {
                   <AnimatedCounter value={95} suffix="%" delay={700} />
                 </div>
                 <div className="hero-stat-title">Precisão</div>
-                <div className="hero-stat-description">nos dados extraídos</div>
               </div>
             </div>
 
@@ -128,7 +126,6 @@ export default function MagicHero() {
                   <AnimatedCounter value={1000} suffix="+" delay={900} />
                 </div>
                 <div className="hero-stat-title">Leads/semana</div>
-                <div className="hero-stat-description">plano Start</div>
               </div>
             </div>
           </div>
