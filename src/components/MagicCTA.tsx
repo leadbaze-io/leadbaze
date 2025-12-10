@@ -62,7 +62,7 @@ export default function MagicCTA() {
                 }}
                 className="px-12 py-4 text-lg font-semibold"
               >
-                <span>Agendar Demonstração Gratuita</span>
+                <span>Agende Uma Demonstração</span>
               </ShimmerButton>
             </div>
           </AnimatedBeam>
