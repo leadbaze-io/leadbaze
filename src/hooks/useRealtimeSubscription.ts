@@ -20,7 +20,7 @@ export const useRealtimeSubscription = () => {
 
   }, [refetch]);
 
-  // Listener para mudanças na tabela user_subscriptions
+  // Listener para mudanças na tabela user_payment_subscriptions
 
   useEffect(() => {
 

@@ -18,16 +18,16 @@ export const SupportContact: React.FC<SupportContactProps> = ({ className = '' }
           <p className={styles.cardSubtitle}>Entre em contato para fazer upgrade ou downgrade</p>
         </div>
       </div>
-      
+
       <div className={styles.cardBody}>
         <p className={styles.description}>
-          Caso queira realizar um <span className={styles.highlight}>downgrade</span> ou <span className={styles.highlight}>upgrade</span> no seu plano, 
+          Caso queira realizar um <span className={styles.highlight}>downgrade</span> ou <span className={styles.highlight}>upgrade</span> no seu plano,
           favor entrar em contato com nosso suporte especializado!
         </p>
-        
+
         <div className={styles.contactSection}>
           <h4 className={styles.contactTitle}>Informações de Contato</h4>
-          
+
           <div className={styles.contactGrid}>
             <div className={styles.contactCard}>
               <div className={styles.contactIconWrapper}>
@@ -38,19 +38,19 @@ export const SupportContact: React.FC<SupportContactProps> = ({ className = '' }
                 <span className={styles.contactValue}>leadbaze@gmail.com</span>
               </div>
             </div>
-            
+
             <div className={styles.contactCard}>
               <div className={styles.contactIconWrapper}>
                 <Phone className={styles.contactIcon} />
               </div>
               <div className={styles.contactInfo}>
                 <span className={styles.contactLabel}>Telefone</span>
-                <span className={styles.contactValue}>(11) 99999-9999</span>
+                <span className={styles.contactValue}>+55 31 9660-9993</span>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div className={styles.scheduleSection}>
           <div className={styles.scheduleIcon}>
             <Calendar className="w-4 h-4" />

@@ -11,16 +11,16 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const verifyWebhookAuth = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const expectedToken = process.env.WHATSAPP_WEBHOOK_TOKEN;
-  
+
   if (!authHeader || !expectedToken) {
     return res.status(401).json({ error: 'Token de autenticação não configurado' });
   }
-  
+
   const token = authHeader.replace('Bearer ', '');
   if (token !== expectedToken) {
     return res.status(401).json({ error: 'Token inválido' });
   }
-  
+
   next();
 };
 
@@ -40,7 +40,7 @@ router.post('/response', verifyWebhookAuth, async (req, res) => {
 
     // Validar dados obrigatórios
     if (!campaign_id || !lead_phone || !response_text || !user_id) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Dados obrigatórios não fornecidos',
         required: ['campaign_id', 'lead_phone', 'response_text', 'user_id']
       });
@@ -79,8 +79,8 @@ router.post('/response', verifyWebhookAuth, async (req, res) => {
     // Gerar insights se necessário
     await generateResponseInsights(user_id, campaign_id, classifiedResponseType);
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       response_id: data.id,
       message: 'Resposta salva com sucesso'
     });
@@ -105,7 +105,7 @@ router.post('/delivery-status', verifyWebhookAuth, async (req, res) => {
 
     // Validar dados obrigatórios
     if (!campaign_id || !lead_phone || !status || !user_id) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Dados obrigatórios não fornecidos',
         required: ['campaign_id', 'lead_phone', 'status', 'user_id']
       });
@@ -113,7 +113,7 @@ router.post('/delivery-status', verifyWebhookAuth, async (req, res) => {
 
     // Atualizar status na tabela de campanhas
     const updateField = status === 'delivered' || status === 'read' ? 'success_count' : 'failed_count';
-    
+
     const { error } = await supabase
       .from('bulk_campaigns')
       .update({
@@ -131,8 +131,8 @@ router.post('/delivery-status', verifyWebhookAuth, async (req, res) => {
     // Log do status para debugging
     console.log(`Status atualizado para ${lead_phone}: ${status}`);
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       message: 'Status atualizado com sucesso'
     });
 
@@ -158,7 +158,7 @@ router.post('/conversion', verifyWebhookAuth, async (req, res) => {
 
     // Validar dados obrigatórios
     if (!campaign_id || !lead_phone || !sale_value || !user_id) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Dados obrigatórios não fornecidos',
         required: ['campaign_id', 'lead_phone', 'sale_value', 'user_id']
       });
@@ -189,8 +189,8 @@ router.post('/conversion', verifyWebhookAuth, async (req, res) => {
     // Gerar insights de conversão
     await generateConversionInsights(user_id, campaign_id, sale_value);
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       conversion_id: data.id,
       message: 'Conversão salva com sucesso'
     });
@@ -201,57 +201,108 @@ router.post('/conversion', verifyWebhookAuth, async (req, res) => {
   }
 });
 
+// Endpoint genérico para eventos da Evolution API (Connection, etc)
+router.post('/events', verifyWebhookAuth, async (req, res) => {
+  try {
+    const eventData = req.body;
+    const { instance, event, data } = eventData;
+
+    console.log(`📡 [Webhook Event] Recebido evento ${event} para instância ${instance}`);
+
+    // Tratamento de CONNECTION_UPDATE
+    if (event === 'connection.update' || (eventData.type === 'connection' && eventData.state)) {
+      // Normalizar dados dependendo da versão da Evolution
+      const state = data?.state || eventData.state;
+      const instanceName = instance || eventData.instance;
+
+      if (!instanceName || !state) {
+        return res.status(400).json({ error: 'Dados de conexão incompletos' });
+      }
+
+      console.log(`🔄 [Connection Update] Instância: ${instanceName}, Novo Estado: ${state}`);
+
+      // Mapear status da Evolution para status do nosso banco
+      let dbStatus = 'disconnected';
+      if (state === 'open') dbStatus = 'connected';
+      else if (state === 'connecting') dbStatus = 'connecting';
+      else if (state === 'close' || state === 'closed') dbStatus = 'disconnected';
+
+      // Atualizar no Supabase
+      const { error } = await supabase
+        .from('whatsapp_instances')
+        .update({
+          status: dbStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('instance_name', instanceName);
+
+      if (error) {
+        console.error('❌ Erro ao atualizar status da instância no banco:', error);
+        return res.status(500).json({ error: 'Erro ao atualizar banco de dados' });
+      }
+
+      console.log(`✅ Status da instância ${instanceName} atualizado para ${dbStatus}`);
+    }
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+    console.error('❌ Erro no webhook de eventos:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 // Função para classificar automaticamente o tipo de resposta
 function classifyResponse(responseText) {
   const text = responseText.toLowerCase();
-  
+
   // Palavras positivas
   const positiveWords = [
     'sim', 'yes', 'interessado', 'quero', 'gostaria', 'pode', 'pode ser',
     'legal', 'bom', 'ótimo', 'excelente', 'perfeito', 'combinado', 'ok',
     'aceito', 'vamos', 'pode ser', 'me interessa', 'tenho interesse'
   ];
-  
+
   // Palavras negativas
   const negativeWords = [
     'não', 'no', 'não quero', 'não tenho interesse', 'não me interessa',
     'não preciso', 'não obrigado', 'não obrigada', 'não estou interessado',
     'não estou interessada', 'não quero', 'não posso', 'não dá', 'não rola'
   ];
-  
+
   // Palavras de pergunta
   const questionWords = [
     '?', 'quanto', 'como', 'quando', 'onde', 'por que', 'porque',
     'pode me explicar', 'como funciona', 'quanto custa', 'qual o preço',
     'tem desconto', 'tem promoção', 'como faço', 'o que preciso'
   ];
-  
+
   // Palavras de descadastro
   const unsubscribeWords = [
     'parar', 'sair', 'remover', 'descadastrar', 'não quero receber',
     'pare de enviar', 'não me envie mais', 'remover da lista'
   ];
-  
+
   // Verificar descadastro primeiro
   if (unsubscribeWords.some(word => text.includes(word))) {
     return 'unsubscribe';
   }
-  
+
   // Verificar perguntas
   if (questionWords.some(word => text.includes(word))) {
     return 'question';
   }
-  
+
   // Verificar respostas negativas
   if (negativeWords.some(word => text.includes(word))) {
     return 'negative';
   }
-  
+
   // Verificar respostas positivas
   if (positiveWords.some(word => text.includes(word))) {
     return 'positive';
   }
-  
+
   // Default para neutro
   return 'neutral';
 }
@@ -314,7 +365,7 @@ async function generateResponseInsights(userId, campaignId, responseType) {
 
     // Gerar insight baseado no tipo de resposta
     let insight = null;
-    
+
     if (responseType === 'positive') {
       insight = {
         user_id: userId,

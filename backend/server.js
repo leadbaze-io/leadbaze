@@ -57,7 +57,7 @@ const captureWebhook = (req, res, next) => {
   // Adicionar ao histórico do webhook-monitor
   if (global.webhookHistory) {
     global.webhookHistory.unshift(webhookData);
-    
+
     // Manter apenas os últimos 100
     if (global.webhookHistory.length > 100) {
       global.webhookHistory = global.webhookHistory.slice(0, 100);
@@ -158,7 +158,7 @@ app.use(generalLimit);
 app.use(express.json({ limit: '10mb' }));
 
 // Configuração CORS dinâmica
-const corsOrigins = process.env.CORS_ORIGIN 
+const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['https://leadflow-indol.vercel.app', 'http://localhost:5173', 'http://localhost:5175'];
 
@@ -173,21 +173,21 @@ app.use(cors({
     if (process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
-    
+
     // Permitir requisições sem origin (como mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
-    
+
     // Verificar se é uma URL do ngrok ou outros túneis
     if (origin && (
-      origin.includes('.ngrok.io') || 
-      origin.includes('.ngrok-free.app') || 
+      origin.includes('.ngrok.io') ||
+      origin.includes('.ngrok-free.app') ||
       origin.includes('.loca.lt') ||
       origin.includes('ngrok')
     )) {
       console.log('✅ [TUNNEL] Origin permitida (túnel):', origin);
       return callback(null, true);
     }
-    
+
     if (corsOrigins.indexOf(origin) !== -1) {
       console.log('✅ Origin permitida:', origin);
       callback(null, true);
@@ -258,7 +258,7 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
   try {
     console.log('🔄 Recebendo requisição dispatch-campaign...');
     console.log('📍 N8N_WEBHOOK_URL configurada:', N8N_WEBHOOK_URL);
-    
+
     if (!N8N_WEBHOOK_URL) {
       console.log('❌ N8N_WEBHOOK_URL não configurada');
       return res.status(400).json({ success: false, error: 'N8N_WEBHOOK_URL não configurada no servidor' });
@@ -273,7 +273,7 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
     }
 
     // Valida URL
-    try { 
+    try {
       new URL(N8N_WEBHOOK_URL);
       console.log('✅ URL válida:', N8N_WEBHOOK_URL);
     } catch (urlError) {
@@ -303,11 +303,11 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
       status: error.response?.status,
       stack: error.stack
     });
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Falha ao enviar campanha para N8N', 
+    return res.status(500).json({
+      success: false,
+      error: 'Falha ao enviar campanha para N8N',
       details: error.response?.data || error.message,
-      status: error.response?.status 
+      status: error.response?.status
     });
   }
 });
@@ -319,7 +319,7 @@ app.post('/api/dispatch-campaign', campaignLimit, async (req, res) => {
 app.post('/api/campaign/update-status', async (req, res) => {
   try {
     const { campaignId, status, successCount, failedCount } = req.body;
-    
+
     if (!campaignId || !status) {
       return res.status(400).json({
         success: false,
@@ -368,7 +368,7 @@ app.post('/api/campaign/update-status', async (req, res) => {
     }
 
     console.log(`✅ Campanha ${campaignId} atualizada com sucesso para status: ${status}`);
-    
+
     res.json({
       success: true,
       message: 'Status da campanha atualizado com sucesso',
@@ -392,13 +392,13 @@ app.post('/api/campaign/update-status', async (req, res) => {
 app.post('/api/campaign/n8n-webhook', async (req, res) => {
   try {
     console.log('📡 [N8N Webhook] Recebido:', JSON.stringify(req.body, null, 2));
-    
-    const { 
-      campaignId, 
+
+    const {
+      campaignId,
       type, // 'progress', 'complete', 'error'
-      data 
+      data
     } = req.body;
-    
+
     if (!campaignId || !type) {
       console.log('❌ [N8N Webhook] Dados inválidos:', { campaignId, type });
       return res.status(400).json({
@@ -427,14 +427,14 @@ app.post('/api/campaign/n8n-webhook', async (req, res) => {
           leadName: data.leadName
         })
       });
-      
+
       if (progressResponse.ok) {
         const result = await progressResponse.json();
         console.log('✅ [N8N Webhook] Progresso processado:', result);
       } else {
         console.error('❌ [N8N Webhook] Erro ao processar progresso:', progressResponse.status);
       }
-      
+
     } else if (type === 'complete') {
       // Fazer requisição interna para o endpoint de conclusão
       const completeResponse = await fetch(`${req.protocol}://${req.get('host')}/api/campaign/status/complete`, {
@@ -449,7 +449,7 @@ app.post('/api/campaign/n8n-webhook', async (req, res) => {
           totalProcessed: data.totalProcessed
         })
       });
-      
+
       if (completeResponse.ok) {
         const result = await completeResponse.json();
         console.log('✅ [N8N Webhook] Conclusão processada:', result);
@@ -518,7 +518,7 @@ app.post('/api/campaign/check-timeouts', async (req, res) => {
 
     // Atualizar campanhas para 'failed'
     const campaignIds = timeoutCampaigns.map(c => c.id);
-    
+
     const { data: updatedCampaigns, error: updateError } = await supabase
       .from('bulk_campaigns')
       .update({
@@ -539,7 +539,7 @@ app.post('/api/campaign/check-timeouts', async (req, res) => {
     }
 
     console.log(`✅ ${updatedCampaigns.length} campanhas atualizadas para 'failed'`);
-    
+
     res.json({
       success: true,
       message: `${updatedCampaigns.length} campanhas foram marcadas como falhadas por timeout`,
@@ -564,7 +564,7 @@ app.post('/api/campaign/check-timeouts', async (req, res) => {
 app.post('/api/create-instance-and-qrcode', async (req, res) => {
   try {
     const { instanceName, userName } = req.body;
-    
+
     if (!instanceName) {
       return res.status(400).json({
         success: false,
@@ -588,22 +588,88 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
 
     // 1. Criar a instância na Evolution API com estrutura simplificada
     console.log('📤 Enviando requisição para Evolution API...');
-    
+
     const createInstanceResponse = await axios.post(
       `${EVOLUTION_API_URL}/instance/create`,
       {
         instanceName: instanceName,
         token: uuidv4(), // Token único para a instância
         qrcode: true,
-        integration: "WHATSAPP-BAILEYS"
+        integration: "WHATSAPP-BAILEYS",
+        reject_call: true,
+        groups_ignore: true,
+        always_online: true
       },
-      { 
+      {
         headers: evolutionHeaders,
         timeout: 30000 // 30 segundos timeout
       }
     );
 
     console.log('✅ Instância criada com sucesso:', createInstanceResponse.data);
+
+    // 1.5 Configurar Webhook para a instância para garantir persistência e updates
+    try {
+      // Determinar URL do webhook com fallback seguro
+      const backendUrl = process.env.BACKEND_URL || 'https://leadbaze.io';
+      const webhookUrl = `${backendUrl}/api/whatsapp/webhook/events`;
+      const webhookToken = process.env.WHATSAPP_WEBHOOK_TOKEN;
+
+      console.log(`🔗 Configurando webhook para instância ${instanceName}`);
+      console.log(`🔗 URL do webhook: ${webhookUrl}`);
+
+      if (webhookToken) {
+        await axios.post(
+          `${EVOLUTION_API_URL}/webhook/set/${instanceName}`,
+          {
+            enabled: true,
+            url: webhookUrl,
+            webhookByEvents: false,
+            events: [
+              "QRCODE_UPDATED",
+              "CONNECTION_UPDATE",
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE"
+            ],
+            headers: {
+              "Authorization": `Bearer ${webhookToken}`
+            }
+          },
+          {
+            headers: evolutionHeaders,
+            timeout: 15000
+          }
+        );
+        console.log('✅ Webhook configurado com sucesso! Persistência ativada.');
+      } else {
+        console.warn('⚠️ Token de webhook não configurado (WHATSAPP_WEBHOOK_TOKEN). Configurando sem auth...');
+        // Tentar configurar sem auth se não tiver token
+        await axios.post(
+          `${EVOLUTION_API_URL}/webhook/set/${instanceName}`,
+          {
+            enabled: true,
+            url: webhookUrl,
+            webhookByEvents: false,
+            events: [
+              "QRCODE_UPDATED",
+              "CONNECTION_UPDATE",
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE"
+            ]
+          },
+          {
+            headers: evolutionHeaders,
+            timeout: 15000
+          }
+        );
+      }
+    } catch (webhookError) {
+      console.error('❌ Erro ao configurar webhook:', webhookError.message);
+      if (webhookError.response) {
+        console.error('❌ Detalhes:', JSON.stringify(webhookError.response.data));
+      }
+      // Não falhar o request principal por erro no webhook, mas é crítico reportar
+    }
 
     // 2. Retornar dados para o frontend
     res.json({
@@ -622,11 +688,11 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
     console.error('Message:', error.message);
     console.error('URL tentada:', `${EVOLUTION_API_URL}/instance/create`);
     console.error('Headers enviados:', evolutionHeaders);
-    
+
     // Retornar erro mais específico
     let errorMessage = 'Erro ao criar instância';
     let errorDetails = error.message;
-    
+
     if (error.response?.status === 401) {
       errorMessage = 'Erro de autenticação com Evolution API';
       errorDetails = 'Verifique a chave da API (EVOLUTION_API_KEY)';
@@ -650,7 +716,7 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
       errorMessage = 'Não foi possível conectar à Evolution API';
       errorDetails = 'Verifique se a Evolution API está rodando';
     }
-    
+
     res.status(500).json({
       success: false,
       error: errorMessage,
@@ -668,7 +734,7 @@ app.post('/api/create-instance-and-qrcode', async (req, res) => {
 app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
   try {
     const { instanceName } = req.params;
-    
+
     if (!instanceName) {
       return res.status(400).json({
         success: false,
@@ -681,7 +747,7 @@ app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
     // Tentar diferentes endpoints para obter o QR Code
     let qrCodeBase64 = null;
     let pairingCode = null;
-    
+
     try {
       // Estratégia 1: Endpoint padrão
       const qrCodeResponse = await axios.get(
@@ -690,12 +756,12 @@ app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
       );
 
       console.log('📱 Resposta do QR Code:', JSON.stringify(qrCodeResponse.data, null, 2));
-      
+
       // Verificar diferentes formatos de resposta
       const qrData = qrCodeResponse.data;
-      
 
-      
+
+
       // Priorizar o campo base64 que já vem formatado para imagem
       if (qrData.base64 && qrData.base64.startsWith('data:image/')) {
         qrCodeBase64 = qrData.base64;
@@ -710,12 +776,12 @@ app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
         // O campo code não é base64, não usar para imagem
         console.log('⚠️ Campo code encontrado, mas não é formato de imagem válido');
       }
-      
+
       // Se não encontrou QR Code válido, retornar null
       if (!qrCodeBase64) {
         console.log('❌ Nenhum QR Code válido encontrado');
       }
-      
+
       // Verificar pairing code
       const possiblePairingFields = ['pairingCode', 'pairing', 'code'];
       for (const field of possiblePairingFields) {
@@ -736,14 +802,14 @@ app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
       qrCodeBase64: qrCodeBase64,
       pairingCode: pairingCode,
       hasQRCode: !!qrCodeBase64,
-      message: qrCodeBase64 
+      message: qrCodeBase64
         ? 'QR Code encontrado!'
         : 'QR Code ainda não disponível. Tente novamente.'
     });
 
   } catch (error) {
     console.error('Erro ao buscar QR Code:', error.response?.data || error.message);
-    
+
     res.status(500).json({
       success: false,
       error: 'Erro ao buscar QR Code',
@@ -759,7 +825,7 @@ app.get('/api/qrcode/:instanceName', qrCodeLimit, async (req, res) => {
 app.get('/api/connection-state/:instanceName', async (req, res) => {
   try {
     const { instanceName } = req.params;
-    
+
     if (!instanceName) {
       return res.status(400).json({
         success: false,
@@ -789,7 +855,7 @@ app.get('/api/connection-state/:instanceName', async (req, res) => {
 
   } catch (error) {
     console.error('Erro ao verificar estado da conexão:', error.response?.data || error.message);
-    
+
     res.status(500).json({
       success: false,
       error: 'Erro ao verificar estado da conexão',
@@ -805,7 +871,7 @@ app.get('/api/connection-state/:instanceName', async (req, res) => {
 app.delete('/api/delete-instance/:instanceName', async (req, res) => {
   try {
     const { instanceName } = req.params;
-    
+
     if (!instanceName) {
       return res.status(400).json({
         success: false,
@@ -829,7 +895,7 @@ app.delete('/api/delete-instance/:instanceName', async (req, res) => {
 
   } catch (error) {
     console.error('Erro ao deletar instância:', error.response?.data || error.message);
-    
+
     res.status(500).json({
       success: false,
       error: 'Erro ao deletar instância',
@@ -846,15 +912,15 @@ app.post('/webhook/:instanceName', (req, res) => {
   try {
     const { instanceName } = req.params;
     const webhookData = req.body;
-    
+
     console.log(`📡 Webhook recebido para instância ${instanceName}:`, webhookData);
-    
+
     // Verificar se é um evento de QR Code
     if (webhookData.event === 'qrcode' || webhookData.qrcode) {
       console.log('✅ QR Code recebido via webhook!');
       // Aqui você pode implementar lógica para notificar o frontend
     }
-    
+
     res.json({ success: true, message: 'Webhook recebido' });
   } catch (error) {
     console.error('Erro ao processar webhook:', error);
@@ -881,7 +947,7 @@ app.get('/webhook/mercadopago', (req, res) => {
  */
 app.get('/api/health', async (req, res) => {
   const startTime = Date.now();
-  
+
   try {
     // Verificar conectividade com serviços externos
     const healthChecks = {
@@ -912,7 +978,7 @@ app.get('/api/health', async (req, res) => {
           headers: evolutionHeaders,
           timeout: 5000,
         });
-        
+
         healthChecks.evolution_api.status = response.status === 200 ? 'healthy' : 'unhealthy';
         healthChecks.evolution_api.response_time = Date.now() - start;
         healthChecks.evolution_api.instances_count = response.data?.length || 0;
@@ -983,7 +1049,7 @@ app.get('/api/health', async (req, res) => {
  */
 app.get('/api/metrics', (req, res) => {
   const startTime = process.hrtime();
-  
+
   res.json({
     success: true,
     timestamp: new Date().toISOString(),
@@ -1022,7 +1088,7 @@ function getStateMessage(state) {
     'stop': 'Conexão parada',
     'destroy': 'Instância destruída'
   };
-  
+
   return messages[state] || `Estado: ${state}`;
 }
 
@@ -1043,14 +1109,14 @@ app.use((error, req, res, next) => {
 const checkAdminAuth = (req, res, next) => {
   const userEmail = req.headers['x-user-email'];
   const automationService = getBlogAutomationService();
-  
+
   if (!userEmail || !automationService.isAuthorizedAdmin(userEmail)) {
     return res.status(403).json({
       success: false,
       error: 'Acesso negado. Apenas administradores autorizados.'
     });
   }
-  
+
   next();
 };
 
@@ -1059,7 +1125,7 @@ app.get('/api/blog/automation/health', async (req, res) => {
   try {
     const automationService = getBlogAutomationService();
     const health = await automationService.healthCheck();
-    
+
     res.json(health);
   } catch (error) {
     console.error('❌ Erro no health check de automação:', error);
@@ -1075,7 +1141,7 @@ app.get('/api/blog/automation/stats', async (req, res) => {
   try {
     const automationService = getBlogAutomationService();
     const stats = await automationService.getStats();
-    
+
     res.json(stats);
   } catch (error) {
     console.error('❌ Erro ao obter estatísticas:', error);
@@ -1108,9 +1174,9 @@ app.get('/api/subscription/plans', async (req, res) => {
   try {
     const perfectPayService = require('./services/perfectPayService');
     const service = new perfectPayService();
-    
+
     console.log('📋 [Server] Listando planos via /api/subscription/plans');
-    
+
     const { data: plans, error } = await service.supabase
       .from('payment_plans')
       .select('*')
@@ -1174,15 +1240,15 @@ app.post('/api/blog/automation/admin/process', processLimit, async (req, res) =>
   console.log('👤 [Backend] User email:', req.headers['x-user-email']);
   console.log('🌐 [Backend] IP:', req.ip);
   console.log('📋 [Backend] Headers:', JSON.stringify(req.headers, null, 2));
-  
+
   try {
     console.log('🔧 [Backend] Obtendo BlogAutomationService...');
     const automationService = getBlogAutomationService();
     console.log('✅ [Backend] Serviço obtido com sucesso');
-    
+
     console.log('🚀 [Backend] Chamando automationService.processQueue()...');
     const result = await automationService.processQueue();
-    
+
     console.log('✅ [Backend] ===== RESULTADO DO PROCESSAMENTO =====');
     console.log('📄 [Backend] Tipo do resultado:', typeof result);
     console.log('📄 [Backend] Resultado completo:', JSON.stringify(result, null, 2));
@@ -1190,18 +1256,18 @@ app.post('/api/blog/automation/admin/process', processLimit, async (req, res) =>
     console.log('📄 [Backend] result.processed:', result?.processed);
     console.log('📄 [Backend] result.errors:', result?.errors);
     console.log('📄 [Backend] result.details:', result?.details);
-    
+
     console.log('📤 [Backend] Enviando resposta para o frontend...');
     res.json(result);
     console.log('✅ [Backend] Resposta enviada com sucesso');
-    
+
   } catch (error) {
     console.error('❌ [Backend] ===== ERRO NO PROCESSAMENTO =====');
     console.error('❌ [Backend] Tipo do erro:', typeof error);
     console.error('❌ [Backend] Erro completo:', error);
     console.error('❌ [Backend] Error message:', error.message);
     console.error('❌ [Backend] Error stack:', error.stack);
-    
+
     res.status(500).json({
       success: false,
       error: 'Erro ao processar fila',
@@ -1216,7 +1282,7 @@ app.get('/api/blog/automation/admin/queue', async (req, res) => {
     const automationService = getBlogAutomationService();
     const limit = parseInt(req.query.limit) || 50;
     const queue = await automationService.getQueue(limit);
-    
+
     res.json(queue);
   } catch (error) {
     console.error('❌ Erro ao obter fila:', error);
@@ -1233,7 +1299,7 @@ app.post('/api/blog/automation/admin/process/:itemId', async (req, res) => {
     const automationService = getBlogAutomationService();
     const { itemId } = req.params;
     const result = await automationService.processItem(itemId);
-    
+
     res.json(result);
   } catch (error) {
     console.error('❌ Erro ao processar item:', error);
@@ -1249,7 +1315,7 @@ app.get('/api/blog/automation/admin/config', (req, res) => {
   try {
     const automationService = getBlogAutomationService();
     const config = automationService.getConfig();
-    
+
     res.json({
       success: true,
       config
@@ -1268,9 +1334,9 @@ app.put('/api/blog/automation/admin/config', (req, res) => {
   try {
     const automationService = getBlogAutomationService();
     const newConfig = req.body;
-    
+
     automationService.updateConfig(newConfig);
-    
+
     res.json({
       success: true,
       message: 'Configuração atualizada com sucesso',
@@ -1290,7 +1356,7 @@ app.post('/api/blog/automation/admin/scheduler/:action', (req, res) => {
   try {
     const automationService = getBlogAutomationService();
     const { action } = req.params;
-    
+
     if (action === 'start') {
       automationService.startScheduler();
       res.json({
@@ -1324,7 +1390,7 @@ app.get('/api/blog/automation/admin/logs', async (req, res) => {
     const automationService = getBlogAutomationService();
     const limit = parseInt(req.query.limit) || 100;
     const logs = await automationService.getLogs(limit);
-    
+
     res.json(logs);
   } catch (error) {
     console.error('❌ Erro ao obter logs:', error);
@@ -1339,9 +1405,9 @@ app.get('/api/blog/automation/admin/logs', async (req, res) => {
 app.post('/api/blog/automation/webhook', async (req, res) => {
   try {
     console.log('📡 Webhook N8N recebido:', req.body);
-    
+
     const { title, content, category, date, imageurl, autor } = req.body;
-    
+
     // Validação básica
     if (!title || !content || !category || !date) {
       return res.status(400).json({
@@ -1349,7 +1415,7 @@ app.post('/api/blog/automation/webhook', async (req, res) => {
         error: 'Campos obrigatórios: title, content, category, date'
       });
     }
-    
+
     // Inserir na fila N8N
     const automationService = getBlogAutomationService();
     const result = await automationService.addToQueue({
@@ -1360,7 +1426,7 @@ app.post('/api/blog/automation/webhook', async (req, res) => {
       imageurl: imageurl || null,
       autor: autor || 'LeadBaze Team'
     });
-    
+
     if (result.success) {
       console.log('✅ Artigo adicionado à fila:', result.data);
       res.json({
@@ -1376,7 +1442,7 @@ app.post('/api/blog/automation/webhook', async (req, res) => {
         details: result.error
       });
     }
-    
+
   } catch (error) {
     console.error('❌ Erro no webhook N8N:', error);
     res.status(500).json({
@@ -1402,30 +1468,30 @@ app.listen(PORT, () => {
   console.log(`🌐 CORS Origin: ${process.env.CORS_ORIGIN}`);
   console.log(`🔧 Ambiente: ${process.env.NODE_ENV}`);
   console.log(`🔗 N8N Webhook URL configurada: ${N8N_WEBHOOK_URL ? '✅' : '❌'}`);
-  
+
   // Iniciar serviço de automação do blog
   try {
     const automationService = getBlogAutomationService();
     automationService.startScheduler();
-    
+
     // AutoPollingService disponível mas não iniciado por padrão
     // Para ativar: POST /api/blog/realtime/polling/start
     // const autoPollingService = getAutoPollingService();
     // console.log('🔄 AutoPollingService disponível (não iniciado por padrão)');
-    
+
     // Iniciar serviço de polling automático
     const { getPollingService } = require("./services/pollingService");
     const pollingService = getPollingService();
     pollingService.start();
-    
+
     console.log('🤖 Blog Automation Service iniciado');
     console.log('📧 Admin autorizado: creaty12345@gmail.com');
-    
+
     // Iniciar job de sincronização diária com Perfect Pay
     const dailySyncJob = new DailySyncJob();
     dailySyncJob.start();
     console.log('🔄 Daily Sync Job iniciado (execução diária às 6:00 AM)');
-    
+
   } catch (error) {
     console.error('❌ Erro ao iniciar Blog Automation Service:', error);
   }
