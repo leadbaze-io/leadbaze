@@ -63,14 +63,14 @@ export default function WhatsAppConnection({
               try {
                 const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
 
-                if (evolutionState.state === 'open') {
+                if (evolutionState.state === 'open' || evolutionState.state === 'connecting') {
                   // Instância ainda está ativa na Evolution
 
                   setInstanceName(instance.instance_name)
                   setConnectionState({
                     instanceName: instance.instance_name,
-                    state: 'open',
-                    message: 'WhatsApp já conectado!'
+                    state: evolutionState.state,
+                    message: evolutionState.state === 'open' ? 'WhatsApp já conectado!' : 'Sincronizando WhatsApp...'
                   })
                 } else {
                   // Instância não está mais ativa na Evolution
@@ -92,15 +92,15 @@ export default function WhatsAppConnection({
               try {
                 const evolutionState = await EvolutionApiService.getConnectionState(instance.instance_name)
 
-                if (evolutionState.state === 'open') {
+                if (evolutionState.state === 'open' || evolutionState.state === 'connecting') {
                   // Instância ainda está ativa na Evolution - corrigir banco
 
                   await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'connected')
                   setInstanceName(instance.instance_name)
                   setConnectionState({
                     instanceName: instance.instance_name,
-                    state: 'open',
-                    message: 'WhatsApp já conectado!'
+                    state: evolutionState.state,
+                    message: evolutionState.state === 'open' ? 'WhatsApp já conectado!' : 'Sincronizando WhatsApp...'
                   })
                 } else {
                   // Instância realmente está desconectada
@@ -142,7 +142,7 @@ export default function WhatsAppConnection({
         try {
 
           const evolutionState = await EvolutionApiService.getConnectionState(instanceName)
-          if (evolutionState.state !== 'open') {
+          if (evolutionState.state !== 'open' && evolutionState.state !== 'connecting') {
 
             // Atualizar banco e estado local
             if (userId) {
