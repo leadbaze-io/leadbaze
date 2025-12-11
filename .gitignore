@@ -71,7 +71,7 @@ web_modules/
 .env.development.local
 .env.test.local
 .env.production.local
-# .env.local - Allow editing for development
+.env.local
 
 
 # parcel-bundler cache (https://parceljs.org/)
