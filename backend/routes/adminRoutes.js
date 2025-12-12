@@ -82,12 +82,15 @@ router.get('/users', requireAdmin, async (req, res) => {
 
         // Enriquecer com dados de subscription se necessário
         const enrichedUsers = await Promise.all(data.map(async (profile) => {
-            // Buscar dados de assinatura se existir
+            // Buscar assinatura ATIVA mais recente (usuários podem ter múltiplas: canceladas + ativa)
             const { data: subscription } = await supabase
                 .from('user_payment_subscriptions')
                 .select('*')
                 .eq('user_id', profile.user_id)
-                .single();
+                .eq('status', 'active')
+                .order('current_period_start', { ascending: false })
+                .limit(1)
+                .maybeSingle();
 
             const planName = subscription?.plan_id ? (plansMap[subscription.plan_id] || 'Plano Desconhecido') : 'Sem plano';
 
