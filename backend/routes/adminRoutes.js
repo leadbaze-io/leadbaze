@@ -160,6 +160,9 @@ router.post('/users/bulk-add-leads', requireAdmin, async (req, res) => {
 
         await Promise.all(updates);
 
+        // Invalidar cache para refresh imediato no admin panel
+        cache.users = { data: null, expires: 0 };
+
         // Opcional: Registrar logs de histórico para cada um (Se quisermos ser perfeitos, faríamos isso)
         // Por enquanto, vamos manter simples.
 
@@ -198,6 +201,9 @@ router.post('/users/:userId/add-leads', requireAdmin, async (req, res) => {
             .eq('user_id', userId);
 
         if (updateError) throw updateError;
+
+        // Invalidar cache para refresh imediato no admin panel
+        cache.users = { data: null, expires: 0 };
 
         res.json({ success: true, message: `${amount} leads added successfully` });
     } catch (error) {

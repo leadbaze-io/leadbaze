@@ -135,8 +135,8 @@ export default function AdminUsers() {
                 });
                 setSelectedUsers([]);
             } else if (selectedUser) {
-                // Single User Add
-                await apiClient.post(`/api/admin/users/${selectedUser.id}/add-leads`, {
+                // Single User Add - use user_id (auth ID), not id (profile ID)
+                await apiClient.post(`/api/admin/users/${selectedUser.user_id}/add-leads`, {
                     amount: parseInt(leadsAmount)
                 });
             }
