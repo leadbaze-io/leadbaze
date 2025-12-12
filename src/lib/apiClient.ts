@@ -1,7 +1,8 @@
 // API Configuration
-// IMPORTANTE: Para testar novas funcionalidades (Admin), precisamos usar o backend LOCAL
-// pois o backend de produção ainda não tem as novas rotas.
-const API_BASE_URL = 'http://localhost:3001';
+// Usa a variável de ambiente para determinar a URL do backend
+// Development: http://localhost:3001
+// Production: https://leadbaze.io/api
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export const apiClient = {
     get: async (endpoint: string) => {
