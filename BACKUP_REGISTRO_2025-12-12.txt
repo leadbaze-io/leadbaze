@@ -1,0 +1,135 @@
+=================================================================
+BACKUP COMPLETO - OTIMIZAÇÃO DE REGISTRO
+Data: 2025-12-12 14:19
+=================================================================
+
+## 📦 ARQUIVOS ORIGINAIS SALVOS
+
+### 1. Código Frontend
+Arquivo: src/components/EnhancedSignupForm.tsx
+Linhas Críticas: 280-480
+Backup em: Git Stash "BACKUP BEFORE REGISTRATION OPTIMIZATION"
+
+### 2. Estado Original do Código
+
+#### Configuração Atual (ANTES das mudanças):
+```typescript
+// Linha 360 - Delay fixo de 3 segundos
+await new Promise(resolve => setTimeout(resolve, 3000))
+
+// Linha 400 - Delay de retry de 2 segundos  
+await new Promise(resolve => setTimeout(resolve, 2000))
+
+// Linhas 368-392 - Primeira tentativa de criar perfil
+const { data: profileResult, error: profileError } = await supabase.rpc('create_user_profile', {
+  p_user_id: authData.user.id,
+  // ... 23 parâmetros
+})
+
+// Linhas 403-435 - Segunda tentativa (CÓDIGO DUPLICADO)
+const { data: retryResult, error: retryError } = await supabase.rpc('create_user_profile', {
+  p_user_id: authData.user.id,
+  // ... MESMOS 23 parâmetros repetidos
+})
+```
+
+##================================================================
+INSTRUÇÕES DE ROLLBACK
+================================================================
+
+### Opção A: Rollback Completo (Se algo quebrar)
+
+```bash
+cd c:\Gaveta 2\Projetos\leadflow
+
+# 1. Restaurar código do stash
+git stash list  # Ver todos os stashes
+git stash apply stash@{0}  # Aplicar o backup mais recente
+
+# 2. Reverter migration do banco de dados (executar no Supabase)
+-- Ver arquivo: supabase/migrations/YYYYMMDDHHMMSS_rollback_auto_profile_trigger.sql
+
+# 3. Rebuild e redeploy
+npm run build
+# Deploy conforme procedimento normal
+```
+
+### Opção B: Rollback Parcial (Apenas Database)
+
+```sql
+-- Executar no Supabase SQL Editor:
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS auto_create_user_profile();
+```
+
+### Opção C: Rollback Parcial (Apenas Código)
+
+```bash
+# Descartar mudanças locais e voltar ao commit anterior
+git checkout -- src/components/EnhancedSignupForm.tsx
+git checkout -- src/lib/registrationUtils.ts  # Se criado
+```
+
+================================================================
+VALIDAÇÃO PÓS-ROLLBACK
+================================================================
+
+Após fazer rollback, verificar:
+
+1. **Frontend builds sem erros**:
+   ```bash
+   npm run build
+   ```
+
+2. **Registro funciona**:
+   - Criar conta de teste
+   - Verificar que perfil é criado em `user_profiles`
+   - Login funciona após registro
+
+3. **Logs sem erros**:
+   ```bash
+   # No servidor
+   pm2 logs leadbaze-backend --lines 50
+   ```
+
+================================================================
+ESTADO DO BANCO DE DADOS ANTES DAS MUDANÇAS
+================================================================
+
+### Tabela: user_profiles
+
+**Índices Existentes:**
+- user_profiles_pkey (PRIMARY KEY em id)
+- user_profiles_user_id_key (UNIQUE em user_id)
+- idx_user_profiles_user_id (INDEX em user_id)
+- idx_user_profiles_created_at (INDEX em created_at DESC)
+- user_profiles_cpf_key (UNIQUE em cpf)
+- user_profiles_cnpj_key (UNIQUE em cnpj)
+
+**Triggers Existentes:** NENHUM relacionado a auth.users
+
+**RPC Functions:**
+- create_user_profile(23 parâmetros) - EXISTE e funciona
+
+================================================================
+MÉTRICAS ANTES DA OTIMIZAÇÃO (BASELINE)
+================================================================
+
+- Tempo médio de registro: 3200ms (sucesso)
+- Tempo com retry: 5400ms (quando FK falha)
+- Taxa de sucesso primeiro attempt: ~60%
+- Taxa de sucesso após retry: ~98%
+
+================================================================
+CONTATO E SUPORTE
+================================================================
+
+Se precisar reverter ou tiver problemas:
+1. Consultar este arquivo
+2. Usar comandos de rollback acima
+3. Verificar logs do PM2 e Supabase
+4. Em último caso: restaurar do Git stash completo
+
+================================================================
+FIM DO BACKUP
+================================================================

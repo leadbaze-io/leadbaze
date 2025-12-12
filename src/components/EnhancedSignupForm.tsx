@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  User, 
-  Phone, 
-  MapPin, 
-  CheckCircle, 
-  ArrowRight, 
+import {
+  User,
+  Phone,
+  MapPin,
+  CheckCircle,
+  ArrowRight,
   ArrowLeft,
   Loader,
   Building,
@@ -23,13 +23,14 @@ import { PasswordStrengthIndicator } from './PasswordStrengthIndicator'
 import { useToast } from '../hooks/use-toast'
 import { useAnalytics } from '../hooks/useAnalytics'
 import { supabase } from '../lib/supabaseClient'
-import { 
-  validateCPF, 
-  validateCNPJ, 
-  validateCEP, 
-  validateEmail, 
+import {
+  validateCPF,
+  validateCNPJ,
+  validateCEP,
+  validateEmail,
   validatePhone
 } from '../lib/validationUtils'
+import { waitForUserCreation, createProfileWithRetry } from '../lib/registrationUtils'
 import '../styles/toast-modern.css'
 
 // ==============================================
@@ -116,10 +117,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
   const [isLoading, setLoading] = useState(false)
   const [, setVerificationStatus] = useState<Record<string, boolean>>({})
   const [, setCepData] = useState<any>(null)
-  
+
   const { toast } = useToast()
   const { trackSignUp } = useAnalytics()
-  
+
   const totalSteps = 3
 
   // Formulários para cada etapa
@@ -257,10 +258,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       const paymentErrors = paymentForm.formState.errors
       const complianceErrors = complianceForm.formState.errors
 
-      if (Object.keys(personalErrors).length > 0 || 
-          Object.keys(addressErrors).length > 0 || 
-          Object.keys(paymentErrors).length > 0 || 
-          Object.keys(complianceErrors).length > 0) {
+      if (Object.keys(personalErrors).length > 0 ||
+        Object.keys(addressErrors).length > 0 ||
+        Object.keys(paymentErrors).length > 0 ||
+        Object.keys(complianceErrors).length > 0) {
         console.log('❌ BLOQUEANDO SUBMIT - Há erros de validação')
         toast({
           title: "⚠️ Erro de Validação",
@@ -313,20 +314,20 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       if (authData.user) {
         // SEMPRE criar perfil, independente da confirmação de email
         console.log('📝 Criando perfil com dados reais do formulário...')
-        
+
         // Converter data de nascimento do formato brasileiro (DD/MM/YYYY) para ISO (YYYY-MM-DD)
         const convertBirthDate = (dateStr: string): string | null => {
           if (!dateStr) return null;
-          
+
           // Verificar se está no formato DD/MM/YYYY
           const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
           const match = dateStr.match(dateRegex);
-          
+
           if (match) {
             const [, day, month, year] = match;
             return `${year}-${month}-${day}`;
           }
-          
+
           return dateStr; // Se já estiver no formato correto, retorna como está
         };
 
@@ -355,111 +356,40 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
           lgpd_consent_user_agent: navigator.userAgent
         }
 
-        // Aguardar um pouco para garantir que o usuário esteja na tabela auth.users
-        console.log('⏳ Aguardando usuário ser registrado no sistema...')
-        await new Promise(resolve => setTimeout(resolve, 3000)) // Aguardar 3 segundos
-        
-        console.log('🔐 Prosseguindo com criação do perfil para usuário:', authData.user.id)
-        
-        // Criar perfil usando função RPC (bypassa RLS)
-        console.log('🔐 Usuário autenticado:', authData.user.id)
-        console.log('📊 Dados do perfil:', profileData)
-        
-        const { data: profileResult, error: profileError } = await supabase.rpc('create_user_profile', {
-          p_user_id: authData.user.id,
-          p_tax_type: profileData.tax_type,
-          p_full_name: profileData.full_name,
-          p_email: profileData.email,
-          p_phone: profileData.phone,
-          p_billing_street: profileData.billing_street,
-          p_billing_number: profileData.billing_number,
-          p_billing_neighborhood: profileData.billing_neighborhood,
-          p_billing_city: profileData.billing_city,
-          p_billing_state: profileData.billing_state,
-          p_billing_zip_code: profileData.billing_zip_code,
-          p_cpf: profileData.cpf,
-          p_cnpj: profileData.cnpj,
-          p_birth_date: profileData.birth_date,
-          p_company_name: profileData.company_name,
-          p_billing_complement: profileData.billing_complement,
-          p_billing_country: 'BR',
-          p_accepted_payment_methods: profileData.accepted_payment_methods,
-          p_billing_cycle: profileData.billing_cycle,
-          p_auto_renewal: profileData.auto_renewal,
-          p_lgpd_consent: profileData.lgpd_consent,
-          p_lgpd_consent_ip: profileData.lgpd_consent_ip,
-          p_lgpd_consent_user_agent: profileData.lgpd_consent_user_agent
-        })
-
-        if (profileError) {
-          console.error('❌ Erro ao criar perfil:', profileError)
-          
-          // Tratar erro específico de foreign key do usuário
-          if (profileError.code === '23503' && profileError.message.includes('user_id')) {
-            console.log('🔄 Erro de foreign key - tentando novamente em 2 segundos...')
-            await new Promise(resolve => setTimeout(resolve, 2000))
-            
-            // Tentar criar o perfil novamente
-            const { data: retryResult, error: retryError } = await supabase.rpc('create_user_profile', {
-              p_user_id: authData.user.id,
-              p_tax_type: profileData.tax_type,
-              p_full_name: profileData.full_name,
-              p_email: profileData.email,
-              p_phone: profileData.phone,
-              p_billing_street: profileData.billing_street,
-              p_billing_number: profileData.billing_number,
-              p_billing_neighborhood: profileData.billing_neighborhood,
-              p_billing_city: profileData.billing_city,
-              p_billing_state: profileData.billing_state,
-              p_billing_zip_code: profileData.billing_zip_code,
-              p_cpf: profileData.cpf,
-              p_cnpj: profileData.cnpj,
-              p_birth_date: profileData.birth_date,
-              p_company_name: profileData.company_name,
-              p_billing_complement: profileData.billing_complement,
-              p_billing_country: 'BR',
-              p_accepted_payment_methods: profileData.accepted_payment_methods,
-              p_billing_cycle: profileData.billing_cycle,
-              p_auto_renewal: profileData.auto_renewal,
-              p_lgpd_consent: profileData.lgpd_consent,
-              p_lgpd_consent_ip: profileData.lgpd_consent_ip,
-              p_lgpd_consent_user_agent: profileData.lgpd_consent_user_agent
-            })
-            
-            if (retryError) {
-              throw new Error("Erro de sincronização. Aguarde alguns minutos e tente novamente ou entre em contato com o suporte.")
-            } else {
-              console.log('✅ Perfil criado com sucesso na segunda tentativa!', retryResult)
-              // Continuar com o fluxo normal - não há erro
-            }
-          } else {
-            // Outros tipos de erro
-            let profileErrorMessage = "Erro ao criar perfil. Tente novamente."
-            
-            if (profileError.code === '23505') {
-              // Violação de constraint única
-              if (profileError.message.includes('cpf')) {
-                profileErrorMessage = "Este CPF já está cadastrado em nossa base de dados. Verifique os dados ou entre em contato com o suporte."
-              } else if (profileError.message.includes('cnpj')) {
-                profileErrorMessage = "Este CNPJ já está cadastrado em nossa base de dados. Verifique os dados ou entre em contato com o suporte."
-              } else if (profileError.message.includes('email')) {
-                profileErrorMessage = "Este email já está cadastrado. Tente fazer login ou use outro email."
-              } else {
-                profileErrorMessage = "Dados já cadastrados. Verifique as informações ou entre em contato com o suporte."
-              }
-            } else if (profileError.code === '23514') {
-              profileErrorMessage = "Dados inválidos. Verifique as informações e tente novamente."
-            } else if (profileError.message.includes('value too long')) {
-              profileErrorMessage = "Algum campo contém muitos caracteres. Verifique os dados e tente novamente."
-            } else if (profileError.message.includes('invalid input')) {
-              profileErrorMessage = "Dados inválidos. Verifique as informações e tente novamente."
-            }
-            
-            throw new Error(profileErrorMessage)
-          }
+        // Aguardar INTELIGENTEMENTE a criação do perfil pelo trigger
+        // Apenas se tivermos sessão (se email não for confirmado, RLS bloqueia leitura)
+        let profileCreated = false
+        if (authData.session) {
+          console.log('⏳ Aguardando perfil ser criado automaticamente...')
+          profileCreated = await waitForUserCreation(authData.user.id)
+        } else {
+          console.log('ℹ️ Usuário sem sessão ativa (email não confirmado?), pulando verificação e forçando upsert...')
         }
 
-        console.log('✅ Perfil criado com sucesso!', profileResult)
+        if (!profileCreated) {
+          console.warn('⚠️ Perfil não foi detectado (ou usuário sem permissão), prosseguindo com criação/atualização manual...')
+        }
+
+        console.log('🔐 Atualizando perfil com dados completos do formulário:', authData.user.id)
+
+        // Atualizar perfil com dados completos usando função com retry automático
+        console.log('🔐 Usuário autenticado:', authData.user.id)
+        console.log('📊 Dados do perfil:', profileData)
+
+        const { error: profileError } = await createProfileWithRetry(
+          authData.user.id,
+          profileData,
+          1 // Máximo 1 retry
+        )
+
+        if (profileError) {
+          console.error('❌ Erro ao criar/atualizar perfil:', profileError)
+          throw new Error(
+            'Erro ao criar perfil do usuário. Por favor, entre em contato com o suporte.'
+          )
+        }
+
+        console.log('✅ Perfil criado/atualizado com sucesso!')
 
         // Dar 30 leads bônus para o usuário (após criar o perfil)
         console.log('🎁 Dando 30 leads bônus para o usuário...')
@@ -476,7 +406,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
 
         // Rastrear cadastro bem-sucedido
         trackSignUp('email');
-        
+
         // Redirecionar para a página de cadastro concluído
         setTimeout(() => {
           navigate('/cadastro-concluido');
@@ -486,10 +416,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       }
     } catch (error: any) {
       console.error('Erro ao criar conta:', error)
-      
+
       let errorMessage = "Erro inesperado. Tente novamente mais tarde."
       let errorTitle = "❌ Erro ao criar conta"
-      
+
       // Tratar erros de autenticação
       if (error.message && error.message.includes('User already registered')) {
         errorMessage = "Este email já está cadastrado. Tente fazer login ou use outro email."
@@ -534,7 +464,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
         // Usar a mensagem personalizada se disponível
         errorMessage = error.message
       }
-      
+
       // Determinar o tipo de erro para o CSS
       let errorClass = 'toast-modern toast-error'
       if (errorMessage.includes('CPF')) {
@@ -548,7 +478,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       } else if (errorMessage.includes('validação') || errorMessage.includes('Validação')) {
         errorClass = 'toast-modern toast-error-validation'
       }
-      
+
       toast({
         title: errorTitle,
         description: errorMessage,
@@ -590,11 +520,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
           <button
             type="button"
             onClick={() => personalForm.setValue('taxType', 'pessoa_fisica')}
-            className={`p-4 border rounded-lg text-center transition-colors ${
-              personalForm.watch('taxType') === 'pessoa_fisica'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-300 hover:border-gray-400'
-            }`}
+            className={`p-4 border rounded-lg text-center transition-colors ${personalForm.watch('taxType') === 'pessoa_fisica'
+              ? 'border-blue-500 bg-blue-50 text-blue-700'
+              : 'border-gray-300 hover:border-gray-400'
+              }`}
           >
             <User className="w-6 h-6 mx-auto mb-2" />
             Pessoa Física
@@ -602,11 +531,10 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
           <button
             type="button"
             onClick={() => personalForm.setValue('taxType', 'pessoa_juridica')}
-            className={`p-4 border rounded-lg text-center transition-colors ${
-              personalForm.watch('taxType') === 'pessoa_juridica'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-300 hover:border-gray-400'
-            }`}
+            className={`p-4 border rounded-lg text-center transition-colors ${personalForm.watch('taxType') === 'pessoa_juridica'
+              ? 'border-blue-500 bg-blue-50 text-blue-700'
+              : 'border-gray-300 hover:border-gray-400'
+              }`}
           >
             <Building className="w-6 h-6 mx-auto mb-2" />
             Pessoa Jurídica
@@ -627,7 +555,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             error={personalForm.formState.errors.cpf?.message}
             forceLightMode={true}
           />
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Data de Nascimento
@@ -653,7 +581,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
             error={personalForm.formState.errors.cnpj?.message}
             forceLightMode={true}
           />
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Razão Social
