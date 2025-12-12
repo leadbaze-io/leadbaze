@@ -18,18 +18,18 @@ export class LeadsControlService {
         };
       }
 
-      
+
       // Buscar assinatura atual diretamente da API
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         // Verificar se o acesso não expirou
         const accessUntil = new Date(data.data.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
-        
+
+
         // Se o acesso não expirou e tem leads suficientes
         if (!isAccessExpired && data.data.leads_remaining >= leadsToGenerate) {
           return {
@@ -40,7 +40,7 @@ export class LeadsControlService {
             leads_limit: data.data.leads_limit
           };
         }
-        
+
         // Se o acesso expirou, não usar leads da assinatura
         if (isAccessExpired) {
         }
@@ -65,8 +65,8 @@ export class LeadsControlService {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
-      
+
+
       if (bonusLeadsRemaining >= leadsToGenerate) {
         return {
           can_generate: true,
@@ -77,7 +77,7 @@ export class LeadsControlService {
         };
       }
 
-      
+
       return {
         can_generate: false,
         reason: 'insufficient_leads',
@@ -115,15 +115,15 @@ export class LeadsControlService {
       // Primeiro, tentar consumir leads da assinatura (se existir)
       const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         const subscription = data.data;
-        
+
         // Verificar se o acesso não expirou
         const accessUntil = new Date(subscription.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
+
         // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
         if (!isAccessExpired && subscription.leads_remaining >= leadsToConsume) {
 
@@ -142,6 +142,15 @@ export class LeadsControlService {
             console.error('Erro ao atualizar leads da assinatura:', updateError);
             // Se falhar, tentar consumir bonus leads
           } else {
+
+            // Registrar histórico de uso
+            await supabase.from('leads_usage_history').insert({
+              user_id: user.id,
+              leads_generated: -leadsToConsume, // Negativo para consumo
+              remaining_leads: updateResult.leads_balance,
+              operation_reason: _reason || 'Consumo de Leads (Assinatura)',
+              operation_type: 'generated'
+            });
 
             return {
               success: true,
@@ -172,7 +181,7 @@ export class LeadsControlService {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
+
       if (bonusLeadsRemaining < leadsToConsume) {
         return {
           success: false,
@@ -201,6 +210,14 @@ export class LeadsControlService {
         };
       }
 
+      // Registrar histórico de uso para bônus
+      await supabase.from('leads_usage_history').insert({
+        user_id: user.id,
+        leads_generated: -leadsToConsume, // Negativo para consumo
+        remaining_leads: bonusLeadsRemaining - leadsToConsume,
+        operation_reason: _reason || 'Consumo de Leads (Bônus)',
+        operation_type: 'generated'
+      });
 
       return {
         success: true,

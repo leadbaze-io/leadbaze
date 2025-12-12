@@ -48,6 +48,13 @@ const AuthCallback = lazy(() => import(/* webpackChunkName: "auth" */ './pages/A
 const SMTPTestPage = lazy(() => import(/* webpackChunkName: "test" */ './pages/SMTPTestPage'))
 const ToastDemo = lazy(() => import(/* webpackChunkName: "test" */ './pages/ToastDemo'))
 
+// Páginas Admin
+const AdminDashboard = lazy(() => import(/* webpackChunkName: "admin" */ './pages/admin/AdminDashboard'))
+const AdminUsers = lazy(() => import(/* webpackChunkName: "admin" */ './pages/admin/AdminUsers'))
+const AdminMonitor = lazy(() => import(/* webpackChunkName: "admin" */ './pages/admin/AdminMonitor'))
+const AdminLayout = lazy(() => import(/* webpackChunkName: "admin" */ './layouts/AdminLayout'))
+const AdminGuard = lazy(() => import(/* webpackChunkName: "admin" */ './components/admin/AdminGuard'))
+
 // Componente principal que gerencia as classes de tema
 function AppContent() {
   // Configurar handler de erros de extensões
@@ -74,7 +81,20 @@ function AppContent() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/blog/sobre" element={<AboutPage />} />
-            <Route path="/admin/blog-automation" element={<BlogAutomationDashboard />} />
+            {/* Admin Routes - Protected */}
+            <Route
+              path="/admin"
+              element={
+                <AdminGuard>
+                  <AdminLayout />
+                </AdminGuard>
+              }
+            >
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="monitor" element={<AdminMonitor />} />
+              <Route path="blog-automation" element={<BlogAutomationDashboard />} />
+            </Route>
             <Route path="/test-modals" element={<ModalTestPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/test-smtp" element={<SMTPTestPage />} />

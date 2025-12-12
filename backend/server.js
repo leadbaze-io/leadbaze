@@ -39,7 +39,10 @@ const subscriptionSyncRoutes = require('./routes/subscriptionSync');
 const subscriptionOriginalRoutes = require('./routes/subscription-original');
 const recurringPaymentsRoutes = require('./routes/recurringPayments');
 const leadPackagesRoutes = require('./routes/leadPackages');
+// ADMIN ROUTES
+const adminRoutes = require('./routes/adminRoutes');
 const DailySyncJob = require('./jobs/dailySyncJob');
+const SystemMonitor = require('./jobs/systemMonitor');
 
 // Middleware para capturar webhooks (importado do webhook-monitor)
 const captureWebhook = (req, res, next) => {
@@ -156,6 +159,8 @@ app.use(generalLimit);
 
 // Middleware básico
 app.use(express.json({ limit: '10mb' }));
+const compression = require('compression');
+app.use(compression());
 
 // Configuração CORS dinâmica
 const corsOrigins = process.env.CORS_ORIGIN
@@ -212,12 +217,7 @@ app.use('/api/recurring-subscription/webhook', (req, res, next) => {
 });
 */
 
-// Middleware adicional para lidar com preflight requests
-app.options('*', (req, res) => {
-  console.log('🔄 Preflight request recebida para:', req.path);
-  // Remover headers manuais - o CORS middleware já cuida disso
-  res.sendStatus(200);
-});
+// Preflight requests são automaticamente tratados pelo cors() middleware acima
 
 // Evolution API Configuration
 const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL;
@@ -1168,6 +1168,10 @@ app.use('/api/webhook-monitor', webhookMonitorRoutes);
 app.use('/api/subscription-sync', subscriptionSyncRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
 app.use('/api/lead-packages', leadPackagesRoutes);
+// Admin routes - protegidas
+app.use('/api/admin', adminRoutes);
+console.log('✅ Rota de ADMIN registrada com sucesso em /api/admin');
+console.log('✅ [Server] Admin routes registradas com sucesso');
 
 // Rota específica DEVE vir ANTES da rota genérica
 app.get('/api/subscription/plans', async (req, res) => {
@@ -1491,6 +1495,11 @@ app.listen(PORT, () => {
     const dailySyncJob = new DailySyncJob();
     dailySyncJob.start();
     console.log('🔄 Daily Sync Job iniciado (execução diária às 6:00 AM)');
+
+    // Iniciar monitoramento do sistema
+    const systemMonitor = new SystemMonitor();
+    systemMonitor.start();
+    console.log('🔍 System Monitor iniciado (verificação a cada 5 minutos)');
 
   } catch (error) {
     console.error('❌ Erro ao iniciar Blog Automation Service:', error);
