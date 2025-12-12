@@ -12,7 +12,8 @@ const systemLogs = require('../utils/systemLogs');
 const ALLOWED_ADMIN_IDS = [
     '7f90037e-5cff-4086-b6d7-4b48a796104b',
     'ce480f61-74a5-4ce7-bbab-3ee386f8f776',
-    '2d033d93-5281-4580-81de-0b143abbf6ce'
+    '2d033d93-5281-4580-81de-0b143abbf6ce',
+    '1a086a54-bb59-4a34-99b4-cd5da2b1b962'  // Novo admin adicionado
 ];
 
 // Middleware para verificar admin
