@@ -16,7 +16,8 @@ export default function DemoBooking() {
         updateFormData,
         messages,
         addMessage,
-        nextStep
+        nextStep,
+        saveProgress // 🆕 Nova função para salvar progressivamente
     } = useConversationalForm()
 
     const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -71,10 +72,13 @@ export default function DemoBooking() {
         }
     }, [addMessage, nextStep])
 
-    const handleNameSubmit = (value: string) => {
+    const handleNameSubmit = async (value: string) => {
         setShowInput(false)
         updateFormData('name', value)
         addMessage('user', value)
+
+        // 🆕 SALVAR PROGRESSIVAMENTE
+        await saveProgress('name', value)
 
         setTimeout(() => {
             addMessage('bot', `Prazer, ${value}! 😊 Qual é o seu WhatsApp?`, () => setShowInput(true))
@@ -82,10 +86,13 @@ export default function DemoBooking() {
         }, 800)
     }
 
-    const handlePhoneSubmit = (value: string) => {
+    const handlePhoneSubmit = async (value: string) => {
         setShowInput(false)
         updateFormData('phone', value)
         addMessage('user', value)
+
+        // 🆕 SALVAR PROGRESSIVAMENTE
+        await saveProgress('phone', value)
 
         setTimeout(() => {
             addMessage('bot', 'Qual é o seu email profissional?', () => setShowInput(true))
@@ -93,10 +100,13 @@ export default function DemoBooking() {
         }, 800)
     }
 
-    const handleEmailSubmit = (value: string) => {
+    const handleEmailSubmit = async (value: string) => {
         setShowInput(false)
         updateFormData('email', value)
         addMessage('user', value)
+
+        // 🆕 SALVAR PROGRESSIVAMENTE
+        await saveProgress('email', value)
 
         setTimeout(() => {
             addMessage('bot', 'Quanto você tem disponível para investir mensalmente na geração de leads para o seu negócio?')
@@ -107,6 +117,9 @@ export default function DemoBooking() {
     const handleInvestmentSelect = async (value: string) => {
         updateFormData('investment', value)
         addMessage('user', value)
+
+        // 🆕 SALVAR PROGRESSIVAMENTE (marca como form_completed)
+        await saveProgress('investment', value)
 
         // Salvar lead no Supabase antes de mostrar o Calendly
         try {

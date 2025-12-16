@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { saveOrUpdatePartialLead } from '../services/conversationalLeadService'
 
 export type ConversationalStep =
     | 'welcome'
@@ -26,10 +27,23 @@ export interface Message {
     hideAvatar?: boolean
 }
 
+// Gerar ID único de sessão para rastrear leads parciais
+const getSessionId = () => {
+    if (typeof window === 'undefined') return ''
+
+    let sessionId = sessionStorage.getItem('lead_session_id')
+    if (!sessionId) {
+        sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        sessionStorage.setItem('lead_session_id', sessionId)
+    }
+    return sessionId
+}
+
 export function useConversationalForm() {
     const [currentStep, setCurrentStep] = useState<ConversationalStep>('welcome')
     const [formData, setFormData] = useState<Partial<FormData>>({})
     const [messages, setMessages] = useState<Message[]>([])
+    const [sessionId] = useState(getSessionId())
 
     const addMessage = useCallback((
         type: 'bot' | 'user',
@@ -51,6 +65,33 @@ export function useConversationalForm() {
     const updateFormData = useCallback((field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }))
     }, [])
+
+    // 🆕 Salvar progressivamente após cada campo
+    const saveProgress = useCallback(async (field: keyof FormData, value: string) => {
+        if (!sessionId) return
+
+        try {
+            const statusMap: Record<keyof FormData, string> = {
+                'name': 'partial_name',
+                'phone': 'partial_phone',
+                'email': 'partial_email',
+                'investment': 'form_completed'
+            }
+
+            const updatedData = { ...formData, [field]: value }
+
+            await saveOrUpdatePartialLead(
+                sessionId,
+                updatedData,
+                statusMap[field]
+            )
+
+            console.log(`✅ Lead parcial salvo: ${field} = ${value}`)
+        } catch (error) {
+            console.error('Erro ao salvar progresso:', error)
+            // Não bloquear UX por erro de salvamento
+        }
+    }, [sessionId, formData])
 
     const nextStep = useCallback(() => {
         const stepOrder: ConversationalStep[] = [
@@ -74,6 +115,10 @@ export function useConversationalForm() {
         setCurrentStep('welcome')
         setFormData({})
         setMessages([])
+        // Limpar sessão para novo preenchimento
+        if (typeof window !== 'undefined') {
+            sessionStorage.removeItem('lead_session_id')
+        }
     }, [])
 
     return {
@@ -84,6 +129,8 @@ export function useConversationalForm() {
         messages,
         addMessage,
         nextStep,
-        reset
+        reset,
+        saveProgress, // 🆕 Nova função exportada
+        sessionId     // 🆕 Exportar sessionId para debug
     }
 }

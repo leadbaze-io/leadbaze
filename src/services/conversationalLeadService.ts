@@ -63,6 +63,74 @@ export async function saveConversationalLead(data: ConversationalLeadData) {
 }
 
 /**
+ * Salva ou atualiza progressivamente um lead parcial
+ * Permite capturar leads mesmo se o usuário não completar o formulário
+ */
+export async function saveOrUpdatePartialLead(
+    sessionId: string,
+    data: Partial<ConversationalLeadData>,
+    status: string
+) {
+    try {
+        // Verificar se já existe lead para esta sessão
+        const { data: existingLead, error: searchError } = await supabase
+            .from('conversational_leads')
+            .select('id')
+            .eq('session_id', sessionId)
+            .maybeSingle()
+
+        if (searchError && searchError.code !== 'PGRST116') {
+            throw searchError
+        }
+
+        if (existingLead) {
+            // ATUALIZAR lead existente
+            const { data: updated, error } = await supabase
+                .from('conversational_leads')
+                .update({
+                    ...data,
+                    status,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('session_id', sessionId)
+                .select()
+                .single()
+
+            if (error) throw error
+            console.log('Lead parcial atualizado:', updated)
+            return updated
+        } else {
+            // CRIAR novo lead
+            const { data: created, error } = await supabase
+                .from('conversational_leads')
+                .insert({
+                    name: data.name || '',
+                    email: data.email || null,
+                    phone: data.phone,
+                    investment: data.investment,
+                    session_id: sessionId,
+                    status,
+                    source: 'conversational_form',
+                    utm_source: data.utm_source,
+                    utm_medium: data.utm_medium,
+                    utm_campaign: data.utm_campaign
+                })
+                .select()
+                .single()
+
+            if (error) throw error
+            console.log('Lead parcial criado:', created)
+            return created
+        }
+    } catch (error) {
+        console.error('Erro ao salvar lead parcial:', error)
+        // Não bloquear a UX por erro de salvamento
+        return null
+    }
+}
+
+
+/**
  * Atualiza o status de um lead
  */
 export async function updateLeadStatus(leadId: string, status: string) {
