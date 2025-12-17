@@ -219,6 +219,9 @@
   display: flex;
   justify-content: center;
   margin-bottom: 3rem;
+  z-index: 50;
+  /* Garante que está acima de tudo */
+  cursor: pointer;
 }
 
 /* Responsividade para mobile */

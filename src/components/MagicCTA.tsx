@@ -54,7 +54,7 @@ export default function MagicCTA() {
               <ShimmerButton
                 id="id_lead_dm"
                 onClick={() => {
-                  navigate('/demo-booking')
+                  navigate('/agendar-demo')
                   // Scroll para o topo após navegação
                   setTimeout(() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' })

@@ -74,10 +74,7 @@ export default function MobileHero() {
                 id="id_lead_dm"
                 onClick={() => {
                   navigate('/agendar-demo');
-                  // Scroll para o topo após navegação
-                  setTimeout(() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }, 100);
+                  window.scrollTo(0, 0);
                 }}
                 className="px-6 py-3 text-base"
               >
