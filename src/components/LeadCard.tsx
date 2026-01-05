@@ -1,6 +1,8 @@
-import { Star, Phone, Globe, MapPin, Eye } from "lucide-react"
+import { Star, Phone, Globe, MapPin, ExternalLink, Clock } from "lucide-react"
 import { motion } from "framer-motion"
 import type { Lead } from "../types"
+import { useState } from "react"
+import { createPortal } from "react-dom"
 
 interface LeadCardProps {
   lead: Lead & { selected?: boolean }
@@ -11,51 +13,43 @@ interface LeadCardProps {
 }
 
 export function LeadCard({
-
   lead,
-
   index,
-
   onToggleSelection,
-
   showCheckbox = true,
   className = ""
 }: LeadCardProps) {
+  const [showHours, setShowHours] = useState(false);
+
   const renderStars = (rating?: number) => {
     if (!rating) return null
 
-    return (
-      <div className="flex items-center space-x-1">
-        {Array.from({ length: 5 }, (_, i) => (
-          <Star
-            key={i}
-            className={`w-3 h-3 ${
-              i < Math.floor(rating)
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
 
-                ? 'text-yellow-400 fill-current'
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <Star
+          key={`full-${i}`}
+          className="w-3 h-3 text-yellow-400 fill-current"
+          aria-hidden="true"
+        />
+      )
+    }
 
-                : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className="text-xs disparador-texto-claro dark:text-gray-600 ml-1">{rating}</span>
-      </div>
-    )
-  }
+    if (hasHalfStar) {
+      stars.push(
+        <Star
+          key="half"
+          className="w-3 h-3 text-yellow-400 fill-current"
+          style={{ clipPath: 'inset(0 50% 0 0)' }}
+          aria-hidden="true"
+        />
+      )
+    }
 
-  const renderReviewsCount = (reviewsCount?: number) => {
-    const count = reviewsCount || 0
-
-    return (
-      <div className="flex items-center space-x-2">
-        <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 disparador-texto-claro">
-          {count}
-        </div>
-        <div className="text-xs disparador-texto-claro dark:text-muted-foreground">
-          Avaliações
-        </div>
-      </div>
-    )
+    return stars
   }
 
   const handleClick = () => {
@@ -65,92 +59,241 @@ export function LeadCard({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden ${
-        lead.selected
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-2 rounded-lg overflow-hidden h-full flex flex-col gerador-lead-card-claro gerador-lead-card-escuro ${lead.selected
+          ? 'border-blue-500 dark:border-blue-400 gerador-lead-selecionado-claro gerador-lead-selecionado-escuro'
+          : 'hover:border-blue-300 dark:hover:border-blue-200'
+          } ${className}`}
+        onClick={handleClick}
+      >
+        {/* Header do Card - Altura Fixa */}
+        <div
+          className={`p-4 border-b-2 rounded-b-none ${lead.selected
+            ? 'border-blue-200 dark:border-blue-700 gerador-lead-header-selecionado-claro gerador-lead-header-selecionado-escuro'
+            : 'border-gray-200 dark:border-border gerador-lead-header-claro gerador-lead-header-escuro'
+            }`}
+          style={{ minHeight: '120px' }}
+        >
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              {showCheckbox && (
+                <input
+                  type="checkbox"
+                  checked={lead.selected || false}
+                  onChange={(e) => {
+                    e.stopPropagation()
+                    handleClick()
+                  }}
+                  className="rounded w-4 h-4 focus:ring-2 focus:ring-blue-500 border-gray-300 text-blue-600 dark:border-gray-600"
+                />
+              )}
+              <div className="flex items-center space-x-2">
+                <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 disparador-texto-claro">
+                  {lead.rating ? Math.round((lead.rating / 5) * 100) : 0}
+                </div>
+                <div className="text-xs disparador-texto-claro dark:text-muted-foreground">
+                  Avaliações
+                </div>
+              </div>
+            </div>
 
-          ? 'ring-2 ring-blue-500 border-blue-500 shadow-md gerador-lead-selecionado-claro gerador-lead-selecionado-escuro dark:border-blue-400 dark:ring-blue-400'
+            {/* Rating */}
+            <div className="flex items-center space-x-1">
+              {renderStars(lead.rating)}
+              <span className="text-xs disparador-texto-claro dark:text-gray-600 ml-1">
+                {lead.rating?.toFixed(1)}
+              </span>
+            </div>
+          </div>
 
-          : 'gerador-lead-card-claro gerador-lead-card-escuro hover:border-blue-300 dark:hover:border-blue-200'
-      } ${className}`}
-      onClick={handleClick}
-    >
-      {/* Header do Card */}
-      <div className={`p-4 border-b-2 rounded-b-none ${
-        lead.selected
-
-          ? 'border-blue-200 dark:border-blue-700 gerador-lead-header-selecionado-claro gerador-lead-header-selecionado-escuro'
-
-          : 'border-gray-200 dark:border-border gerador-lead-header-claro gerador-lead-header-escuro'
-      }`}>
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center space-x-3">
-            {showCheckbox && (
-              <input
-                type="checkbox"
-                checked={lead.selected || false}
-                onChange={(e) => {
-                  e.stopPropagation()
-                  handleClick()
-                }}
-                className={`rounded w-4 h-4 focus:ring-2 focus:ring-blue-500 ${
-                  lead.selected
-
-                    ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:bg-blue-500 dark:text-white'
-
-                    : 'border-gray-300 text-blue-600 dark:border-gray-600'
-                }`}
-              />
+          {/* Nome e Status */}
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-semibold gerador-texto-claro dark:text-foreground text-base leading-tight flex-1">
+              {lead.name}
+            </h3>
+            {lead.is_open_now !== undefined && (
+              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${lead.is_open_now
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                }`}>
+                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${lead.is_open_now ? 'bg-green-600' : 'bg-red-600'}`}></span>
+                {lead.is_open_now ? 'Aberto' : 'Fechado'}
+              </div>
             )}
-            <div className="flex items-center space-x-2">
-              {renderReviewsCount(lead.reviews_count)}
-            </div>
-          </div>
-          <div className="flex items-center space-x-1">
-            {renderStars(lead.rating)}
           </div>
         </div>
 
-        {/* Nome do estabelecimento */}
-        <h3 className="font-semibold gerador-texto-claro dark:text-foreground text-base mb-2 leading-tight">
-          {lead.name}
-        </h3>
-      </div>
+        {/* Conteúdo do Card */}
+        <div className="p-4 space-y-3 flex-1 overflow-y-auto">
+          {/* Informações de contato - Altura Fixa */}
+          <div className="space-y-2" style={{ minHeight: '60px' }}>
+            {lead.phone ? (
+              <div className="flex items-center space-x-2 text-sm">
+                <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <span className="text-green-700 dark:text-green-300 font-medium gerador-texto-claro truncate">
+                  {lead.phone}
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-sm">
+                <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <span className="text-gray-500 dark:text-gray-400 text-xs italic">
+                  Telefone indisponível
+                </span>
+              </div>
+            )}
 
-      {/* Conteúdo do Card */}
-      <div className="p-4 space-y-3">
-        {/* Informações de contato */}
-        <div className="space-y-2">
-          {lead.phone && (
-            <div className="flex items-center space-x-2 text-sm">
-              <Phone className="w-4 h-4 text-green-600" />
-              <span className="text-green-700 dark:text-green-300 font-medium gerador-texto-claro">{lead.phone}</span>
-            </div>
-          )}
-          {lead.website && (
-            <div className="flex items-center space-x-2 text-sm">
-              <Globe className="w-4 h-4 text-blue-600" />
-              <span className="text-blue-700 dark:text-blue-300 font-medium gerador-texto-claro">Website disponível</span>
-            </div>
-          )}
-          {!lead.phone && !lead.website && (
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <Eye className="w-4 h-4" />
-              <span className="gerador-descricao-claro dark:text-muted-foreground">Contato não disponível</span>
-            </div>
-          )}
+            {lead.website ? (
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2 min-w-0 flex-1">
+                  <Globe className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                  <span className="text-blue-700 dark:text-blue-300 font-medium gerador-texto-claro truncate">
+                    Website disponível
+                  </span>
+                </div>
+                <a
+                  href={lead.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center space-x-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 text-xs font-medium flex-shrink-0 ml-2"
+                >
+                  <span>Acessar</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 text-sm">
+                <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                <span className="text-gray-500 dark:text-gray-400 text-xs italic">
+                  Website indisponível
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Endereço - Altura Fixa com Truncate */}
+          <div className="flex items-start space-x-2 pt-2 border-t border-gray-200 dark:border-gray-700" style={{ minHeight: '50px' }}>
+            <MapPin className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <span className="text-sm font-semibold text-blue-700 dark:text-blue-300 line-clamp-2">
+              {lead.address}
+            </span>
+          </div>
+
+          {/* Horários - Sempre presente */}
+          <div className="mt-3">
+            {lead.opening_hours && lead.opening_hours.length > 0 ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowHours(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-sm font-medium"
+              >
+                <Clock className="w-4 h-4" />
+                Ver horários
+              </button>
+            ) : (
+              <button
+                disabled
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 text-red-600 dark:text-red-400 text-sm font-medium cursor-not-allowed"
+              >
+                <Clock className="w-4 h-4" />
+                Horários indisponíveis
+              </button>
+            )}
+          </div>
+
+          {/* Galeria de Fotos - Altura Fixa */}
+          <div className="mt-3" style={{ minHeight: '100px' }}>
+            {lead.photos && lead.photos.length > 0 && (
+              <>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 font-medium">📸 Fotos do estabelecimento</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {lead.photos.slice(0, 3).map((photo, i) => (
+                    <img
+                      key={i}
+                      src={photo}
+                      alt={`${lead.name} - foto ${i + 1}`}
+                      className="w-full h-20 object-cover rounded border border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(photo, '_blank');
+                      }}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
+      </motion.div>
 
-        {/* Endereço - Movido para baixo */}
-        <div className="flex items-center space-x-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-          <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          <span className="text-base font-semibold text-blue-700 dark:text-blue-300">{lead.address}</span>
-        </div>
+      {/* Modal de Horários - Renderizado via Portal */}
+      {showHours && createPortal(
+        <div
+          className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowHours(false);
+          }}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg max-h-[90vh] sm:max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 px-4 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-white flex-shrink-0" />
+                  <h3 className="text-base sm:text-lg font-bold text-white">Horários de Funcionamento</h3>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowHours(false);
+                  }}
+                  className="text-white hover:bg-white/20 rounded-full p-1 transition-colors flex-shrink-0"
+                  aria-label="Fechar"
+                >
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-xs sm:text-sm text-white/90 mt-1 truncate">{lead.name}</p>
+            </div>
 
-      </div>
-    </motion.div>
+            {/* Content */}
+            <div className="p-4 sm:p-6 max-h-[calc(90vh-120px)] sm:max-h-[60vh] overflow-y-auto bg-white dark:bg-gray-800">
+              <div className="space-y-2">
+                {lead.opening_hours.map((hours, i) => {
+                  const [day, time] = hours.split(': ');
+                  return (
+                    <div
+                      key={i}
+                      className="flex justify-between items-center px-3 sm:px-4 py-2 sm:py-2.5 bg-white dark:bg-gray-700/50 rounded-lg border border-blue-100 dark:border-gray-600"
+                    >
+                      <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {day}
+                      </span>
+                      <span className="text-xs sm:text-sm tabular-nums text-blue-600 dark:text-blue-400 font-semibold">
+                        {time}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   )
 }

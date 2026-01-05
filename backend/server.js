@@ -39,6 +39,8 @@ const subscriptionSyncRoutes = require('./routes/subscriptionSync');
 const subscriptionOriginalRoutes = require('./routes/subscription-original');
 const recurringPaymentsRoutes = require('./routes/recurringPayments');
 const leadPackagesRoutes = require('./routes/leadPackages');
+// GOOGLE MAPS API
+const googleMapsRoutes = require('./routes/googleMapsRoutes');
 // ADMIN ROUTES
 const adminRoutes = require('./routes/adminRoutes');
 const DailySyncJob = require('./jobs/dailySyncJob');
@@ -1168,6 +1170,9 @@ app.use('/api/webhook-monitor', webhookMonitorRoutes);
 app.use('/api/subscription-sync', subscriptionSyncRoutes);
 app.use('/api/recurring-payments', recurringPaymentsRoutes);
 app.use('/api/lead-packages', leadPackagesRoutes);
+// Google Maps API routes
+app.use('/api/google-maps', googleMapsRoutes);
+console.log('✅ [Server] Google Maps API routes registradas com sucesso');
 // Admin routes - protegidas
 app.use('/api/admin', adminRoutes);
 console.log('✅ Rota de ADMIN registrada com sucesso em /api/admin');

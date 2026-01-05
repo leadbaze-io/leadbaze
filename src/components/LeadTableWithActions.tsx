@@ -21,24 +21,24 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
   // Função para detectar se um telefone é celular ou fixo
   const isMobilePhone = (phone: string): boolean => {
     if (!phone) return false
-    
+
     // Remove todos os caracteres não numéricos
     const cleanPhone = phone.replace(/\D/g, '')
-    
+
     // Telefones celulares brasileiros geralmente começam com 9 (após o DDD)
     // Padrão: (XX) 9XXXX-XXXX ou (XX) 9XXXXXXXX
     if (cleanPhone.length === 11) {
       // Verifica se o 3º dígito (após DDD) é 9
       return cleanPhone.charAt(2) === '9'
     }
-    
+
     // Telefones fixos brasileiros geralmente começam com 2, 3, 4 ou 5 (após o DDD)
     // Padrão: (XX) 2XXX-XXXX ou (XX) 3XXX-XXXX, etc.
     if (cleanPhone.length === 10) {
       const thirdDigit = cleanPhone.charAt(2)
       return ['2', '3', '4', '5'].includes(thirdDigit)
     }
-    
+
     return false
   }
 
@@ -89,7 +89,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
         (websiteFilter === "with" && lead.website) ||
         (websiteFilter === "without" && !lead.website)
 
-      const matchesPhone = phoneFilter === "all" || 
+      const matchesPhone = phoneFilter === "all" ||
         (phoneFilter === "mobile" && lead.phone && isMobilePhone(lead.phone)) ||
         (phoneFilter === "landline" && lead.phone && !isMobilePhone(lead.phone))
 
@@ -250,7 +250,7 @@ export default function LeadTableWithActions({ leads, onLeadsDeleted }: LeadTabl
       toast({
         title: "✅ Leads Deletados",
         description: `${deletedLeadIds.length} lead(s) foram deletados com sucesso.`,
-        className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-950 dark:to-emerald-950 dark:border-green-800',
+        className: 'bg-gradient-to-r from-green-600 to-emerald-600 border-green-700 text-white [&>*]:text-white',
       })
 
       // Notificar o componente pai sobre a deleção

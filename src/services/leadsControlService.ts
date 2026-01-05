@@ -19,8 +19,8 @@ export class LeadsControlService {
       }
 
 
-      // Buscar assinatura atual diretamente da API
-      const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
+      // Buscar assinatura atual diretamente da API (com timestamp anti-cache)
+      const response = await fetch(`/api/perfect-pay/subscription/${user.id}?t=${Date.now()}`);
       const data = await response.json();
 
       if (data.success && data.data) {
@@ -113,7 +113,7 @@ export class LeadsControlService {
 
 
       // Primeiro, tentar consumir leads da assinatura (se existir)
-      const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
+      const response = await fetch(`/api/perfect-pay/subscription/${user.id}?t=${Date.now()}`);
       const data = await response.json();
 
       if (data.success && data.data) {

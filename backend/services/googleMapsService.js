@@ -1,0 +1,229 @@
+const axios = require('axios');
+
+/**
+ * Serviço para integração com Google Maps Places API
+ * Substitui o fluxo N8N por chamadas diretas à API oficial
+ */
+class GoogleMapsService {
+    constructor() {
+        this.apiKey = process.env.GOOGLE_MAPS_API_KEY;
+        this.baseUrl = 'https://maps.googleapis.com/maps/api';
+        this.cache = new Map();
+        this.cacheTTL = parseInt(process.env.GOOGLE_MAPS_CACHE_TTL || '3600') * 1000; // 1 hora padrão
+    }
+
+    /**
+     * Busca estabelecimentos por tipo e localização
+     * @param {string} businessType - Tipo de estabelecimento (ex: "restaurante", "academia")
+     * @param {string} location - Localização (ex: "São Paulo, SP")
+     * @param {number} limit - Número máximo de resultados (padrão: 20)
+     * @returns {Promise<Array>} Lista de estabelecimentos encontrados
+     */
+    async searchPlaces(businessType, location, limit = 20) {
+        if (!this.apiKey) {
+            throw new Error('GOOGLE_MAPS_API_KEY não configurada');
+        }
+
+        const cacheKey = `search:${businessType}:${location}:${limit}`;
+        const cached = this.getFromCache(cacheKey);
+        if (cached) {
+            console.log('✅ Retornando resultado do cache');
+            return cached;
+        }
+
+        try {
+            console.log(`🔍 Buscando: ${businessType} em ${location}`);
+
+            // Passo 1: Geocodificar a localização para obter lat/lng
+            const geocodeUrl = `${this.baseUrl}/geocode/json`;
+            const geocodeResponse = await axios.get(geocodeUrl, {
+                params: {
+                    address: location,
+                    key: this.apiKey
+                }
+            });
+
+            if (!geocodeResponse.data.results || geocodeResponse.data.results.length === 0) {
+                throw new Error(`Localização não encontrada: ${location}`);
+            }
+
+            const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
+            console.log(`📍 Coordenadas: ${lat}, ${lng}`);
+
+            // Passo 2: Buscar estabelecimentos próximos
+            const placesUrl = `${this.baseUrl}/place/nearbysearch/json`;
+            const placesResponse = await axios.get(placesUrl, {
+                params: {
+                    location: `${lat},${lng}`,
+                    radius: 5000, // 5km de raio
+                    keyword: businessType,
+                    key: this.apiKey,
+                    language: 'pt-BR'
+                }
+            });
+
+            if (!placesResponse.data.results || placesResponse.data.results.length === 0) {
+                console.log('⚠️ Nenhum resultado encontrado');
+                return [];
+            }
+
+            // Limitar resultados
+            const results = placesResponse.data.results.slice(0, limit);
+            console.log(`✅ ${results.length} estabelecimentos encontrados`);
+
+            // Passo 3: Buscar detalhes de cada estabelecimento (em paralelo)
+            const detailedPlaces = await Promise.all(
+                results.map(place => this.getPlaceDetails(place.place_id))
+            );
+
+            // Normalizar dados
+            const normalizedPlaces = detailedPlaces.map(place => this.normalizePlace(place, businessType));
+
+            // Salvar no cache
+            this.setCache(cacheKey, normalizedPlaces);
+
+            return normalizedPlaces;
+
+        } catch (error) {
+            console.error('❌ Erro ao buscar estabelecimentos:', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Obtém detalhes completos de um estabelecimento
+     * @param {string} placeId - ID do estabelecimento no Google Maps
+     * @returns {Promise<Object>} Detalhes do estabelecimento
+     */
+    async getPlaceDetails(placeId) {
+        const cacheKey = `details:${placeId}`;
+        const cached = this.getFromCache(cacheKey);
+        if (cached) {
+            return cached;
+        }
+
+        try {
+            const detailsUrl = `${this.baseUrl}/place/details/json`;
+            const response = await axios.get(detailsUrl, {
+                params: {
+                    place_id: placeId,
+                    fields: 'name,formatted_address,formatted_phone_number,international_phone_number,rating,user_ratings_total,website,opening_hours,current_opening_hours,photos,price_level,url,geometry,business_status,types',
+                    key: this.apiKey,
+                    language: 'pt-BR'
+                }
+            });
+
+            if (!response.data.result) {
+                throw new Error(`Detalhes não encontrados para place_id: ${placeId}`);
+            }
+
+            const details = response.data.result;
+            this.setCache(cacheKey, details);
+
+            return details;
+
+        } catch (error) {
+            console.error(`❌ Erro ao buscar detalhes do place_id ${placeId}:`, error.message);
+            // Retornar objeto vazio em vez de falhar
+            return {
+                place_id: placeId,
+                name: 'Nome não disponível'
+            };
+        }
+    }
+
+    /**
+     * Normaliza dados da API do Google Maps para o formato Lead
+     * @param {Object} place - Dados brutos da API
+     * @param {string} businessType - Tipo de negócio buscado
+     * @returns {Object} Lead normalizado
+     */
+    normalizePlace(place, businessType) {
+        return {
+            id: place.place_id || `temp_${Date.now()}_${Math.random()}`,
+            name: place.name || 'Nome não disponível',
+            address: place.formatted_address || 'Endereço não disponível',
+            phone: this.formatPhone(place.formatted_phone_number || place.international_phone_number),
+            rating: place.rating || 0,
+            totalScore: place.rating || 0,
+            website: place.website || null,
+            business_type: businessType,
+            google_maps_url: place.url || `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
+            place_id: place.place_id,
+            reviews_count: place.user_ratings_total || 0,
+            price_level: place.price_level || null,
+            opening_hours: place.opening_hours?.weekday_text || [],
+            photos: this.extractPhotos(place.photos),
+            location: place.geometry?.location || null,
+            business_status: place.business_status || 'OPERATIONAL',
+            types: place.types || [],
+            is_open_now: place.current_opening_hours?.open_now ?? place.opening_hours?.open_now ?? null,
+            selected: false
+        };
+    }
+
+    /**
+     * Formata número de telefone
+     * @param {string} phone - Telefone bruto
+     * @returns {string|null} Telefone formatado ou null
+     */
+    formatPhone(phone) {
+        if (!phone) return null;
+
+        // Remove caracteres não numéricos
+        const cleaned = phone.replace(/\D/g, '');
+
+        // Se não tiver número, retorna null
+        if (!cleaned) return null;
+
+        // Retorna formatado
+        return phone.trim();
+    }
+
+    /**
+     * Extrai URLs de fotos
+     * @param {Array} photos - Array de fotos da API
+     * @returns {Array<string>} URLs das fotos
+     */
+    extractPhotos(photos) {
+        if (!photos || !Array.isArray(photos)) return [];
+
+        return photos.slice(0, 5).map(photo => {
+            if (photo.photo_reference) {
+                return `${this.baseUrl}/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=${this.apiKey}`;
+            }
+            return null;
+        }).filter(Boolean);
+    }
+
+    /**
+     * Gerenciamento de cache
+     */
+    getFromCache(key) {
+        const cached = this.cache.get(key);
+        if (!cached) return null;
+
+        const { data, timestamp } = cached;
+        const age = Date.now() - timestamp;
+
+        if (age > this.cacheTTL) {
+            this.cache.delete(key);
+            return null;
+        }
+
+        return data;
+    }
+
+    setCache(key, data) {
+        this.cache.set(key, {
+            data,
+            timestamp: Date.now()
+        });
+    }
+
+    clearCache() {
+        this.cache.clear();
+    }
+}
+
+module.exports = new GoogleMapsService();

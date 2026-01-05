@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import type { 
-  UserSubscription, 
-  LeadsAvailabilityResponse, 
+import type {
+  UserSubscription,
+  LeadsAvailabilityResponse,
   ConsumeLeadsResponse,
-  UseSubscriptionReturn 
+  UseSubscriptionReturn
 } from '../types/subscription';
 
 export const useSubscription = (): UseSubscriptionReturn => {
@@ -24,8 +24,8 @@ export const useSubscription = (): UseSubscriptionReturn => {
         return;
       }
 
-      // Buscar assinatura atual via Perfect Pay
-      const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
+      // Buscar assinatura atual via Perfect Pay (com timestamp anti-cache)
+      const response = await fetch(`/api/perfect-pay/subscription/${user.id}?t=${Date.now()}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -62,17 +62,17 @@ export const useSubscription = (): UseSubscriptionReturn => {
         };
       }
 
-      // Buscar assinatura atual diretamente
-      const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
+      // Buscar assinatura atual diretamente (com timestamp anti-cache)
+      const response = await fetch(`/api/perfect-pay/subscription/${user.id}?t=${Date.now()}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         // Verificar se o acesso não expirou
         const accessUntil = new Date(data.data.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
-        
+
+
         // Se o acesso não expirou e tem leads suficientes
         if (!isAccessExpired && data.data.leads_remaining >= leadsToGenerate) {
           return {
@@ -83,7 +83,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
             leads_limit: data.data.leads_limit
           };
         }
-        
+
         // Se o acesso expirou, não usar leads da assinatura
         if (isAccessExpired) {
         }
@@ -108,8 +108,8 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
-      
+
+
       if (bonusLeadsRemaining >= leadsToGenerate) {
         return {
           can_generate: true,
@@ -120,7 +120,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
         };
       }
 
-      
+
       return {
         can_generate: false,
         reason: 'insufficient_leads',
@@ -154,17 +154,17 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       // Primeiro, tentar consumir leads da assinatura (se existir)
-      const response = await fetch(`/api/perfect-pay/subscription/${user.id}`);
+      const response = await fetch(`/api/perfect-pay/subscription/${user.id}?t=${Date.now()}`);
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         const subscriptionData = data.data;
-        
+
         // Verificar se o acesso não expirou
         const accessUntil = new Date(subscriptionData.access_until);
         const now = new Date();
         const isAccessExpired = now > accessUntil;
-        
+
         // Se o acesso não expirou e tem leads suficientes, consumir da assinatura
         if (!isAccessExpired && subscriptionData.leads_remaining >= leadsToConsume) {
 
@@ -219,7 +219,7 @@ export const useSubscription = (): UseSubscriptionReturn => {
       }
 
       const bonusLeadsRemaining = (profile.bonus_leads || 0) - (profile.bonus_leads_used || 0);
-      
+
       if (bonusLeadsRemaining < leadsToConsume) {
         return {
           success: false,

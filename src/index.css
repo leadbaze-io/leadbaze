@@ -467,18 +467,33 @@ html.dark .disparador-texto-escuro {
 
 /* Animações personalizadas */
 @keyframes marquee {
-  from { transform: translateX(0%); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes marquee-vertical {
-  from { transform: translateY(0%); }
-  to { transform: translateY(-100%); }
+  from {
+    transform: translateY(0%);
+  }
+
+  to {
+    transform: translateY(-100%);
+  }
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .animate-marquee {
@@ -634,6 +649,7 @@ html.dark .lista-dicas-texto-escuro {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -645,6 +661,7 @@ html.dark .lista-dicas-texto-escuro {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
@@ -1447,32 +1464,34 @@ html.dark .gerador-aviso-phone-escuro {
 
 /* Modo Claro - Botão Selecionar Todos */
 html:not(.dark) .gerador-botao-selecionar-todos-claro {
-  background: linear-gradient(to right, #3b82f6, #1d4ed8) !important;
+  background: linear-gradient(135deg, rgb(16, 185, 129) 0%, rgb(5, 150, 105) 100%) !important;
   color: #ffffff !important;
-  border-color: #1d4ed8 !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 html:not(.dark) .gerador-botao-selecionar-todos-claro:hover {
-  background: linear-gradient(to right, #1d4ed8, #1e40af) !important;
-  border-color: #1e40af !important;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4) !important;
+  background: linear-gradient(135deg, rgb(5, 150, 105) 0%, rgb(4, 120, 87) 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
   transform: translateY(-1px) !important;
+  opacity: 0.9 !important;
 }
 
 /* Modo Escuro - Botão Selecionar Todos */
 html.dark .gerador-botao-selecionar-todos-escuro {
-  background: linear-gradient(to right, #60a5fa, #3b82f6) !important;
+  background: linear-gradient(135deg, rgb(16, 185, 129) 0%, rgb(5, 150, 105) 100%) !important;
   color: #ffffff !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
 html.dark .gerador-botao-selecionar-todos-escuro:hover {
-  background: linear-gradient(to right, #3b82f6, #2563eb) !important;
-  border-color: #2563eb !important;
-  box-shadow: 0 6px 16px rgba(96, 165, 250, 0.4) !important;
+  background: linear-gradient(135deg, rgb(5, 150, 105) 0%, rgb(4, 120, 87) 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
   transform: translateY(-1px) !important;
+  opacity: 0.9 !important;
 }
 
 /* Modo Claro - Seleção de Listas */

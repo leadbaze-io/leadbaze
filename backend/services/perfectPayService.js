@@ -14,12 +14,12 @@ class PerfectPayService {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzdndqeWhubnplZXd1dXV5a21iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDMzNzg1NiwiZXhwIjoyMDY5OTEzODU2fQ.XeXm2_L1IBhytbQPpEnmUgygv22TOcu8SCWelHcW3Mk'
       );
     }
-    
+
     // Configurações Perfect Pay (conforme documentação oficial)
     this.accessToken = process.env.PERFECT_PAY_ACCESS_TOKEN; // Token de Acesso conforme documentação
     this.webhookSecret = process.env.PERFECT_PAY_WEBHOOK_SECRET;
     this.baseUrl = 'https://app.perfectpay.com.br/api/v1';
-    
+
     // Mapeamento dos planos internos com códigos Perfect Pay
     // PLANOS REAIS com valores de produção
     this.planMapping = {
@@ -45,7 +45,7 @@ class PerfectPayService {
         leads: 10000
       }
     };
-    
+
   }
 
   /**
@@ -57,7 +57,7 @@ class PerfectPayService {
       // 1. Buscar dados do usuário (tentar auth primeiro, depois perfil)
       let userEmail = 'cliente@exemplo.com';
       let userName = 'Cliente';
-      
+
       try {
         const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(userId);
         if (!userError && userData?.user) {
@@ -68,7 +68,7 @@ class PerfectPayService {
       } catch (authError) {
         console.log('⚠️ [PerfectPay] Não foi possível buscar usuário via auth, usando dados padrão');
       }
-      
+
       // Tentar buscar dados do perfil como fallback
       try {
         const { data: profile, error: profileError } = await this.supabase
@@ -76,7 +76,7 @@ class PerfectPayService {
           .select('email, full_name')
           .eq('user_id', userId)
           .single();
-        
+
         if (!profileError && profile) {
           userEmail = profile.email || userEmail;
           userName = profile.full_name || userName;
@@ -118,7 +118,7 @@ class PerfectPayService {
 
       // 5. Usar link fixo do Perfect Pay com parâmetros
       const baseLink = this.getPerfectPayLink(planId);
-      
+
       // Adicionar parâmetros à URL para enviar dados do usuário
       const params = new URLSearchParams({
         email: userEmail,
@@ -128,7 +128,7 @@ class PerfectPayService {
         success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://leadbaze.io'}/profile`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://leadbaze.io'}/profile`
       });
-      
+
       const checkoutUrl = `${baseLink}?${params.toString()}`;
 
 
@@ -232,7 +232,7 @@ class PerfectPayService {
 
     const status = statusMap[saleStatusEnum] || 'unknown';
     console.log(`📝 [PerfectPay] Processando sale_status_enum: ${saleStatusEnum} -> ${status}`);
-    
+
     // Verificar também o status da subscription
     const subscriptionStatus = webhookData.subscription?.status;
     const subscriptionEvent = webhookData.subscription?.status_event;
@@ -243,32 +243,32 @@ class PerfectPayService {
       console.log('🎯 [PerfectPay] Detectado pagamento de pacote de leads');
       return await this.processLeadPackageWebhook(webhookData, externalReference);
     }
-    
+
     // Extrair informações do external_reference ou usar email como fallback
     let { operationType, userId, planId } = this.extractInfoFromReference(externalReference);
-    
+
     // Se external_reference for null, tentar usar email como identificador
     if (!userId || !planId) {
       console.log('⚠️ [PerfectPay] external_reference inválido, tentando usar email como identificador...');
-      
+
       const customerEmail = webhookData.customer?.email;
       if (!customerEmail) {
         return { processed: false, error: 'external_reference inválido e email não encontrado' };
       }
-      
+
       // Buscar usuário por email
       const { data: users, error: usersError } = await this.supabase.auth.admin.listUsers();
       if (usersError) {
         return { processed: false, error: 'Erro ao buscar usuários: ' + usersError.message };
       }
-      
+
       const user = users.users.find(u => u.email === customerEmail);
       if (!user) {
         return { processed: false, error: 'Usuário não encontrado com email: ' + customerEmail };
       }
-      
+
       userId = user.id;
-      
+
       // Tentar determinar o plano pelo código do plano no webhook
       const planCode = webhookData.plan?.code;
       if (planCode) {
@@ -284,9 +284,9 @@ class PerfectPayService {
         planId = '460a8b88-f828-4b18-9d42-4b8ad5333d61'; // Assumir plano Start por padrão
         console.log('⚠️ [PerfectPay] Código do plano não encontrado, usando Start como padrão');
       }
-      
+
       operationType = 'new'; // Assumir nova assinatura por padrão
-      
+
       console.log(`✅ [PerfectPay] Usuário encontrado por email: ${userId} (${customerEmail})`);
     }
 
@@ -299,7 +299,7 @@ class PerfectPayService {
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
-      
+
       if (existingSubscription) {
         operationType = 'renewal';
       } else {
@@ -320,17 +320,17 @@ class PerfectPayService {
         } else {
           return await this.processApprovedPayment(userId, planId, operationType, webhookData);
         }
-      
+
       case 'subscription_pending':
         return await this.processPendingPayment(userId, planId, operationType, webhookData);
-      
+
       case 'subscription_rejected':
       case 'subscription_expired':
         return await this.processRejectedPayment(userId, planId, operationType, webhookData);
-      
+
       case 'subscription_cancelled':
         return await this.processSubscriptionCancellation(userId, planId, webhookData);
-      
+
       default:
         console.log(`ℹ️ [PerfectPay] Status não processado: ${status} (${saleStatusEnum})`);
         return { processed: false, reason: `Status não suportado: ${status} (${saleStatusEnum})` };
@@ -379,7 +379,7 @@ class PerfectPayService {
           .select('id, name, display_name, price_cents, leads_included')
           .eq('id', planId)
           .single();
-        
+
         if (!planError && newPlan) {
           newPlanData = newPlan;
           console.log(`🔄 [PerfectPay] Detectada mudança de plano: ${existingSubscription.payment_plans?.display_name || 'N/A'} -> ${newPlan.display_name}`);
@@ -388,13 +388,13 @@ class PerfectPayService {
 
       // Calcular novos leads preservando extras do plano anterior
       let newLeadsBalance = existingSubscription.leads_balance; // Manter leads atuais
-      
+
       if (newPlanData) {
         // Se mudou de plano, adicionar leads do novo plano aos existentes
         const currentLeads = existingSubscription.leads_balance;
         const newPlanLeads = newPlanData.leads_included;
         newLeadsBalance = currentLeads + newPlanLeads;
-        
+
         console.log(`🔄 [PerfectPay] Cálculo de leads: ${currentLeads} (atuais) + ${newPlanLeads} (novo plano) = ${newLeadsBalance} leads`);
       } else {
         // Se não mudou plano, apenas resetar para o valor padrão do plano
@@ -439,12 +439,12 @@ class PerfectPayService {
         leads_preserved: existingSubscription.leads_balance
       });
 
-      const renewalMessage = newPlanData 
+      const renewalMessage = newPlanData
         ? `Assinatura renovada e atualizada para ${finalPlanData.display_name}!`
         : 'Assinatura renovada com sucesso!';
-      
+
       console.log(`✅ [PerfectPay] ${renewalMessage} Novo período: ${currentDate.toLocaleDateString('pt-BR')} até ${nextMonth.toLocaleDateString('pt-BR')}`);
-      
+
       return {
         processed: true,
         subscription: updatedSubscription,
@@ -513,7 +513,7 @@ class PerfectPayService {
       });
 
       console.log(`✅ [PerfectPay] Assinatura cancelada pelo Perfect Pay! Acesso até: ${existingSubscription.current_period_end}`);
-      
+
       return {
         processed: true,
         subscription: cancelledSubscription,
@@ -548,16 +548,16 @@ class PerfectPayService {
       switch (operationType) {
         case 'new':
           return await this.processNewSubscription(userId, plan, webhookData, existingSubscription);
-        
+
         case 'renewal':
           return await this.processRenewalSubscription(userId, plan, webhookData, existingSubscription);
-        
+
         case 'upgrade':
           return await this.processUpgradeSubscription(userId, plan, webhookData, existingSubscription);
-        
+
         case 'downgrade':
           return await this.processDowngradeSubscription(userId, plan, webhookData, existingSubscription);
-        
+
         default:
           // Determinação automática inteligente
           return await this.processSmartSubscription(userId, plan, webhookData, existingSubscription);
@@ -600,7 +600,7 @@ class PerfectPayService {
     // Estratégia robusta: tentar inserção completa primeiro, depois fallback sem coluna problemática
     let subscription = null;
     let subscriptionError = null;
-    
+
     // Primeira tentativa: inserção completa (com perfect_pay_subscription_id)
     try {
       console.log('🔄 [PerfectPay] Tentativa 1: Inserção completa com todas as colunas...');
@@ -609,10 +609,10 @@ class PerfectPayService {
         .insert(subscriptionData)
         .select()
         .single();
-      
+
       subscription = result.data;
       subscriptionError = result.error;
-      
+
       if (subscription) {
         console.log('✅ [PerfectPay] Inserção completa bem-sucedida!');
       }
@@ -620,28 +620,28 @@ class PerfectPayService {
       subscriptionError = err;
       console.log('⚠️ [PerfectPay] Erro na inserção completa:', err.message);
     }
-    
+
     // Segunda tentativa: inserção sem a coluna problemática (fallback seguro)
     if (!subscription && subscriptionError && subscriptionError.message.includes('schema cache')) {
       try {
         console.log('🔄 [PerfectPay] Tentativa 2: Fallback seguro - inserindo sem perfect_pay_subscription_id...');
-        
+
         // Criar dados sem a coluna problemática
         const fallbackData = { ...subscriptionData };
         delete fallbackData.perfect_pay_subscription_id;
-        
+
         const result = await this.supabase
           .from('user_payment_subscriptions')
           .insert(fallbackData)
           .select()
           .single();
-        
+
         subscription = result.data;
         subscriptionError = result.error;
-        
+
         if (subscription) {
           console.log('✅ [PerfectPay] Fallback bem-sucedido! Assinatura criada sem perfect_pay_subscription_id');
-          
+
           // Tentar atualizar com a coluna problemática em background (não crítico)
           this.updateSubscriptionIdInBackground(subscription.id, webhookData.subscription?.code);
         }
@@ -650,12 +650,12 @@ class PerfectPayService {
         console.log('❌ [PerfectPay] Erro no fallback:', err.message);
       }
     }
-    
+
     // Terceira tentativa: inserção mínima (último recurso)
     if (!subscription) {
       try {
         console.log('🔄 [PerfectPay] Tentativa 3: Inserção mínima (último recurso)...');
-        
+
         const minimalData = {
           user_id: subscriptionData.user_id,
           plan_id: subscriptionData.plan_id,
@@ -664,19 +664,19 @@ class PerfectPayService {
           current_period_start: subscriptionData.current_period_start,
           current_period_end: subscriptionData.current_period_end
         };
-        
+
         const result = await this.supabase
           .from('user_payment_subscriptions')
           .insert(minimalData)
           .select()
           .single();
-        
+
         subscription = result.data;
         subscriptionError = result.error;
-        
+
         if (subscription) {
           console.log('✅ [PerfectPay] Inserção mínima bem-sucedida! Assinatura criada com dados essenciais');
-          
+
           // Tentar atualizar com dados adicionais em background
           this.updateSubscriptionDetailsInBackground(subscription.id, subscriptionData);
         }
@@ -698,9 +698,9 @@ class PerfectPayService {
     });
 
     console.log(`✅ [PerfectPay] NOVA assinatura criada! Leads: ${plan.leads_included}`);
-    return { 
-      processed: true, 
-      status: 'approved', 
+    return {
+      processed: true,
+      status: 'approved',
       operation: 'new_subscription',
       subscription,
       leads_added: plan.leads_included,
@@ -722,11 +722,19 @@ class PerfectPayService {
     // REGRA 1: Somar leads mantendo os restantes
     const previousLeads = existingSubscription.leads_balance || 0;
     const newLeadsBalance = previousLeads + plan.leads_included;
-    
+
     // Atualizar período para próximo mês
+    const now = new Date();
     const currentPeriodEnd = new Date(existingSubscription.current_period_end);
-    const newPeriodStart = new Date(currentPeriodEnd);
-    const newPeriodEnd = new Date(currentPeriodEnd);
+
+    // CORREÇÃO INTELIGENTE: Se a assinatura já venceu, o novo período começa AGORA.
+    // Se ainda não venceu, adiciona 1 mês ao final do período atual (mantendo a continuidade).
+    const baseDate = currentPeriodEnd < now ? now : currentPeriodEnd;
+
+    // Data de início do novo período é a base (agora ou fim do anterior)
+    const newPeriodStart = baseDate;
+
+    const newPeriodEnd = new Date(baseDate);
     newPeriodEnd.setMonth(newPeriodEnd.getMonth() + 1);
 
     const { data: subscription, error: subscriptionError } = await this.supabase
@@ -755,9 +763,9 @@ class PerfectPayService {
     });
 
     console.log(`✅ [PerfectPay] RENOVAÇÃO concluída! Leads: ${previousLeads} + ${plan.leads_included} = ${newLeadsBalance}`);
-    return { 
-      processed: true, 
-      status: 'approved', 
+    return {
+      processed: true,
+      status: 'approved',
       operation: 'renewal',
       subscription,
       leads_added: plan.leads_included,
@@ -808,9 +816,9 @@ class PerfectPayService {
     });
 
     console.log(`✅ [PerfectPay] UPGRADE concluído! Leads: ${previousLeads} + ${plan.leads_included} = ${newLeadsBalance}`);
-    return { 
-      processed: true, 
-      status: 'approved', 
+    return {
+      processed: true,
+      status: 'approved',
       operation: 'upgrade',
       subscription,
       leads_added: plan.leads_included,
@@ -858,9 +866,9 @@ class PerfectPayService {
     });
 
     console.log(`✅ [PerfectPay] DOWNGRADE concluído! Leads mantidos: ${previousLeads}`);
-    return { 
-      processed: true, 
-      status: 'approved', 
+    return {
+      processed: true,
+      status: 'approved',
       operation: 'downgrade',
       subscription,
       leads_added: 0,
@@ -908,7 +916,7 @@ class PerfectPayService {
 
       // Cancelar assinatura
       const result = await this.cancelSubscription(userId, 'webhook_cancellation');
-      
+
       if (result.success) {
         return {
           processed: true,
@@ -942,13 +950,13 @@ class PerfectPayService {
 
       // Processar cancelamento local (Perfect Pay não possui API de cancelamento)
       const perfectPayResult = await this.cancelPerfectPaySubscription(existingSubscription);
-      
+
       if (!perfectPayResult.success) {
         console.error('❌ [PerfectPay] Erro ao processar cancelamento:', perfectPayResult.error);
         // Continuar com cancelamento local mesmo se falhar
       } else {
         console.log('✅ [PerfectPay] Cancelamento local processado:', perfectPayResult.message);
-        
+
         if (perfectPayResult.requires_manual_cancellation) {
           console.log('⚠️ [PerfectPay] ATENÇÃO: Cancelamento no Perfect Pay deve ser feito manualmente');
           console.log(`📋 [PerfectPay] ID da assinatura: ${perfectPayResult.perfect_pay_subscription_id}`);
@@ -1040,7 +1048,7 @@ class PerfectPayService {
       'a961e361-75d0-40cf-9461-62a7802a1948': 'https://go.perfectpay.com.br/PPU38CQ17OS',  // Enterprise
       'leads_package': 'https://go.perfectpay.com.br/PPU38CQ17OT' // Pacotes de leads (usar link Start)
     };
-    
+
     const link = planLinkMap[planId] || 'https://go.perfectpay.com.br/PPU38CQ17OT'; // Default: Start
     console.log(`🔗 [PerfectPay] Usando link fixo: ${link}`);
     return link;
@@ -1063,10 +1071,10 @@ class PerfectPayService {
         'e9004fad-85ab-41b8-9416-477e41e8bcc9': { code: 'PPLQQNGGM', price: 5.00 }, // Scale
         'a961e361-75d0-40cf-9461-62a7802a1948': { code: 'PPLQQNGGN', price: 5.00 }  // Enterprise
       };
-      
+
       const planData = planUuidMap[checkoutData.plan_id] || { code: 'PPLQQNGCL', price: 5.00 };
       const perfectPayPlanCode = planData.code;
-      
+
       // Preparar dados para API Perfect Pay (conforme documentação oficial)
       const apiData = {
         product_code: perfectPayPlanCode, // Código do produto no Perfect Pay
@@ -1106,7 +1114,7 @@ class PerfectPayService {
       }
 
       const result = await response.json();
-      
+
       if (result.checkout_url) {
         console.log('✅ [PerfectPay] Checkout real criado com sucesso');
         return result.checkout_url;
@@ -1120,38 +1128,38 @@ class PerfectPayService {
 
     } catch (error) {
       console.error('❌ [PerfectPay] Erro ao criar checkout real:', error.message);
-      
+
       // Fallback para URLs reais do Perfect Pay
       console.log('⚠️ [PerfectPay] Usando URLs reais do Perfect Pay');
-      
+
       // Mapear para os links reais que você forneceu
       const realLinks = {
         'PPLQQNGCO': 'https://go.perfectpay.com.br/PPU38CQ17OT', // Start
         'PPLQQNGCM': 'https://go.perfectpay.com.br/PPU38CQ17OP', // Scale
         'PPLQQNGCN': 'https://go.perfectpay.com.br/PPU38CQ17OS'  // Enterprise
       };
-      
+
       // Tentar encontrar o link correto baseado no plano
       const planCode = checkoutData.plan_code || 'PPLQQNGCO';
-      
+
       // Mapear UUID do plano para código correto
       const planUuidMap = {
         '460a8b88-f828-4b18-9d42-4b8ad5333d61': 'PPLQQNGCO', // Start
         'e9004fad-85ab-41b8-9416-477e41e8bcc9': 'PPLQQNGCM', // Scale
         'a961e361-75d0-40cf-9461-62a7802a1948': 'PPLQQNGCN'  // Enterprise
       };
-      
+
       // Se recebeu UUID, mapear para código
       const mappedCode = planUuidMap[checkoutData.plan_id] || planCode;
       const realLink = realLinks[mappedCode] || realLinks['PPLQQNGCO'];
-      
+
       console.log(`🔍 [PerfectPay] Debug mapeamento:`, {
         plan_id: checkoutData.plan_id,
         plan_code: planCode,
         mappedCode,
         realLink
       });
-      
+
       console.log(`✅ [PerfectPay] Usando link real: ${realLink}`);
       return realLink;
     }
@@ -1163,10 +1171,10 @@ class PerfectPayService {
 
   async getPlanById(planId) {
     console.log('🔍 [PerfectPay] Buscando plano por ID:', planId, typeof planId);
-    
+
     // SOLUÇÃO ROBUSTA: Tentar todas as formas possíveis
     let plan = null;
-    
+
     // 1. Se é UUID (formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
     if (typeof planId === 'string' && planId.includes('-') && planId.length === 36) {
       console.log('📋 [PerfectPay] Tentativa 1: Buscar por UUID');
@@ -1175,20 +1183,20 @@ class PerfectPayService {
         .select('*')
         .eq('id', planId)
         .single();
-        
+
       if (!uuidError && planByUuid) {
         console.log('✅ [PerfectPay] Plano encontrado por UUID:', planByUuid.name);
         return planByUuid;
       }
     }
-    
+
     // 2. Se é ID numérico (1, 2, 3), mapear para UUID
     const planIdMap = {
       '1': '460a8b88-f828-4b18-9d42-4b8ad5333d61', // Start
       '2': 'e9004fad-85ab-41b8-9416-477e41e8bcc9', // Scale
       '3': 'a961e361-75d0-40cf-9461-62a7802a1948'  // Enterprise
     };
-    
+
     if (planIdMap[planId]) {
       console.log('📋 [PerfectPay] Tentativa 2: Mapear ID numérico para UUID');
       const { data: planByMappedId, error: mappedError } = await this.supabase
@@ -1196,20 +1204,20 @@ class PerfectPayService {
         .select('*')
         .eq('id', planIdMap[planId])
         .single();
-        
+
       if (!mappedError && planByMappedId) {
         console.log('✅ [PerfectPay] Plano encontrado por mapeamento:', planByMappedId.name);
         return planByMappedId;
       }
     }
-    
+
     // 3. Se é nome do plano (start, scale, enterprise)
     const planNameMap = {
       'start': '460a8b88-f828-4b18-9d42-4b8ad5333d61',
       'scale': 'e9004fad-85ab-41b8-9416-477e41e8bcc9',
       'enterprise': 'a961e361-75d0-40cf-9461-62a7802a1948'
     };
-    
+
     if (planNameMap[planId]) {
       console.log('📋 [PerfectPay] Tentativa 3: Mapear nome para UUID');
       const { data: planByName, error: nameError } = await this.supabase
@@ -1217,13 +1225,13 @@ class PerfectPayService {
         .select('*')
         .eq('id', planNameMap[planId])
         .single();
-        
+
       if (!nameError && planByName) {
         console.log('✅ [PerfectPay] Plano encontrado por nome:', planByName.name);
         return planByName;
       }
     }
-    
+
     // 4. Último recurso: buscar por nome diretamente
     console.log('📋 [PerfectPay] Tentativa 4: Buscar por nome na coluna name');
     const { data: planByNameColumn, error: nameColumnError } = await this.supabase
@@ -1231,21 +1239,21 @@ class PerfectPayService {
       .select('*')
       .eq('name', planId)
       .single();
-      
+
     if (!nameColumnError && planByNameColumn) {
       console.log('✅ [PerfectPay] Plano encontrado por coluna name:', planByNameColumn.name);
       return planByNameColumn;
     }
-    
+
     // 5. Se nada funcionou, listar todos os planos para debug
     console.log('❌ [PerfectPay] NENHUMA TENTATIVA FUNCIONOU! Listando todos os planos:');
     const { data: allPlans } = await this.supabase
       .from('payment_plans')
       .select('*');
-      
+
     console.log('📋 [PerfectPay] Planos disponíveis:', allPlans?.map(p => ({ id: p.id, name: p.name })));
     console.log('❌ [PerfectPay] Plano não encontrado para ID:', planId);
-    
+
     return null;
   }
 
@@ -1299,8 +1307,8 @@ class PerfectPayService {
   async updateWebhookStatus(webhookId, result) {
     await this.supabase
       .from('payment_webhooks')
-      .update({ 
-        processed: true, 
+      .update({
+        processed: true,
         processed_at: new Date().toISOString(),
         error_message: result.error || null
       })
@@ -1318,18 +1326,18 @@ class PerfectPayService {
   async processLeadPackageWebhook(webhookData, externalReference) {
     try {
       console.log('🎯 [PerfectPay] Processando webhook de pacote de leads...');
-      
+
       // Extrair dados do external_reference: leads_packageId_userId_timestamp
       const refParts = externalReference.split('_');
       if (refParts.length < 4) {
         return { processed: false, error: 'Formato de external_reference inválido para pacote de leads' };
       }
-      
+
       const packageId = `${refParts[0]}_${refParts[1]}`; // leads_1000
       const userId = refParts[2];
-      
+
       console.log(`🎯 [PerfectPay] Dados extraídos: packageId=${packageId}, userId=${userId}`);
-      
+
       // Buscar dados do pacote no banco de dados
       const { data: packageData, error: packageError } = await this.supabase
         .from('lead_packages')
@@ -1337,12 +1345,12 @@ class PerfectPayService {
         .eq('package_id', packageId)
         .eq('active', true)
         .single();
-      
+
       if (packageError || !packageData) {
         console.error('❌ [PerfectPay] Pacote não encontrado:', packageId);
         return { processed: false, error: 'Pacote não encontrado' };
       }
-      
+
       // Buscar assinatura ativa do usuário
       const { data: subscription, error: subError } = await this.supabase
         .from('user_payment_subscriptions')
@@ -1350,15 +1358,15 @@ class PerfectPayService {
         .eq('user_id', userId)
         .eq('status', 'active')
         .single();
-      
+
       if (subError || !subscription) {
         console.log('⚠️ [PerfectPay] Usuário sem assinatura ativa, ignorando compra de pacote');
         return { processed: false, error: 'Usuário sem assinatura ativa' };
       }
-      
+
       // Adicionar leads extras à assinatura
       const newLeadsBalance = subscription.leads_balance + packageData.leads;
-      
+
       const { error: updateError } = await this.supabase
         .from('user_payment_subscriptions')
         .update({
@@ -1366,24 +1374,24 @@ class PerfectPayService {
           updated_at: new Date().toISOString()
         })
         .eq('id', subscription.id);
-      
+
       if (updateError) {
         console.error('❌ [PerfectPay] Erro ao atualizar leads:', updateError.message);
         return { processed: false, error: 'Erro ao atualizar leads' };
       }
-      
+
       console.log(`✅ [PerfectPay] Pacote processado: ${packageData.leads} leads adicionados`);
       console.log(`   Leads anteriores: ${subscription.leads_balance}`);
       console.log(`   Leads atuais: ${newLeadsBalance}`);
-      
-      return { 
-        processed: true, 
+
+      return {
+        processed: true,
         type: 'lead_package',
         package_name: packageData.name,
         leads_added: packageData.leads,
         new_balance: newLeadsBalance
       };
-      
+
     } catch (error) {
       console.error('❌ [PerfectPay] Erro ao processar pacote de leads:', error.message);
       return { processed: false, error: error.message };
@@ -1392,7 +1400,7 @@ class PerfectPayService {
 
   extractInfoFromReference(externalReference) {
     if (!externalReference) return { operationType: null, userId: null, planId: null };
-    
+
     // Formato: operationType_userId_planId_timestamp
     const parts = externalReference.split('_');
     return {
@@ -1418,14 +1426,14 @@ class PerfectPayService {
       style: 'currency',
       currency: 'BRL'
     });
-    
+
     const operationTexts = {
       new: `🎉 Nova Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
       renewal: `🎉 Renovação de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
       upgrade: `🎉 Upgrade de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`,
       downgrade: `🎉 Downgrade de Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`
     };
-    
+
     return operationTexts[operationType] || `Assinatura ${plan.display_name} - ${plan.leads_included} leads/mês - ${priceFormatted}`;
   }
 
@@ -1457,7 +1465,7 @@ class PerfectPayService {
   async cancelPerfectPaySubscription(subscription) {
     try {
       console.log('🔄 [PerfectPay] Processando cancelamento local...');
-      
+
       // Verificar se temos os dados necessários
       if (!subscription.perfect_pay_subscription_id) {
         console.log('⚠️ [PerfectPay] ID da assinatura Perfect Pay não encontrado');
@@ -1466,7 +1474,7 @@ class PerfectPayService {
 
       // Criar ticket de cancelamento na tabela
       const ticketId = `CANCEL-${Date.now()}-${subscription.user_id.substring(0, 8)}`;
-      
+
       // Buscar email do usuário
       const { data: userData, error: userError } = await this.supabase.auth.admin.getUserById(subscription.user_id);
       const userEmail = userData?.user?.email || 'email_nao_encontrado@leadbaze.io';
@@ -1510,24 +1518,24 @@ class PerfectPayService {
 
       // Retornar sucesso para cancelamento local
       // O cancelamento real no Perfect Pay deve ser feito manualmente pelo suporte
-           return { 
-             success: true, 
-             message: 'Cancelamento local registrado. IMPORTANTE: Você deve cancelar manualmente no Perfect Pay para evitar cobranças futuras.',
-             requires_manual_cancellation: true,
-             perfect_pay_subscription_id: subscription.perfect_pay_subscription_id,
-             ticket_id: ticketId,
-             support_contact: 'suporte@leadbaze.io',
-             instructions: 'ACESSO DIRETO: Faça login no Perfect Pay e cancele sua assinatura manualmente. Nossa equipe também processará o cancelamento.',
-             estimated_time: '24 horas',
-             status: 'pending_manual_cancellation',
-             warning: 'ATENÇÃO: Se não cancelar no Perfect Pay, você continuará sendo cobrado!'
-           };
+      return {
+        success: true,
+        message: 'Cancelamento local registrado. IMPORTANTE: Você deve cancelar manualmente no Perfect Pay para evitar cobranças futuras.',
+        requires_manual_cancellation: true,
+        perfect_pay_subscription_id: subscription.perfect_pay_subscription_id,
+        ticket_id: ticketId,
+        support_contact: 'suporte@leadbaze.io',
+        instructions: 'ACESSO DIRETO: Faça login no Perfect Pay e cancele sua assinatura manualmente. Nossa equipe também processará o cancelamento.',
+        estimated_time: '24 horas',
+        status: 'pending_manual_cancellation',
+        warning: 'ATENÇÃO: Se não cancelar no Perfect Pay, você continuará sendo cobrado!'
+      };
 
     } catch (error) {
       console.error('❌ [PerfectPay] Erro ao processar cancelamento:', error.message);
-      
-      return { 
-        success: false, 
+
+      return {
+        success: false,
         error: `Erro ao processar cancelamento: ${error.message}`
       };
     }
@@ -1623,12 +1631,12 @@ class PerfectPayService {
   async updateSubscriptionIdInBackground(subscriptionId, perfectPaySubscriptionId) {
     try {
       console.log(`🔄 [PerfectPay] Atualizando subscription_id em background: ${subscriptionId}`);
-      
+
       await this.supabase
         .from('user_payment_subscriptions')
         .update({ perfect_pay_subscription_id: perfectPaySubscriptionId })
         .eq('id', subscriptionId);
-      
+
       console.log('✅ [PerfectPay] Subscription_id atualizado em background');
     } catch (err) {
       console.log('⚠️ [PerfectPay] Erro ao atualizar subscription_id em background (não crítico):', err.message);
@@ -1641,19 +1649,19 @@ class PerfectPayService {
   async updateSubscriptionDetailsInBackground(subscriptionId, originalData) {
     try {
       console.log(`🔄 [PerfectPay] Atualizando detalhes da assinatura em background: ${subscriptionId}`);
-      
+
       const updateData = {
         perfect_pay_transaction_id: originalData.perfect_pay_transaction_id,
         perfect_pay_subscription_id: originalData.perfect_pay_subscription_id,
         first_payment_date: originalData.first_payment_date,
         refund_deadline: originalData.refund_deadline
       };
-      
+
       await this.supabase
         .from('user_payment_subscriptions')
         .update(updateData)
         .eq('id', subscriptionId);
-      
+
       console.log('✅ [PerfectPay] Detalhes da assinatura atualizados em background');
     } catch (err) {
       console.log('⚠️ [PerfectPay] Erro ao atualizar detalhes em background (não crítico):', err.message);

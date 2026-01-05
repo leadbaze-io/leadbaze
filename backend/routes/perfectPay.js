@@ -68,7 +68,7 @@ router.post('/webhook', async (req, res) => {
 
   } catch (error) {
     console.error('❌ [PerfectPay] Erro no webhook:', error.message);
-    
+
     // Mesmo com erro, responder 200 para não reenviar
     res.status(200).json({
       success: false,
@@ -116,7 +116,7 @@ router.get('/webhook', async (req, res) => {
 
   } catch (error) {
     console.error('❌ [PerfectPay] Erro no webhook GET:', error.message);
-    
+
     // Mesmo com erro, responder 200 para não reenviar
     res.status(200).json({
       success: false,
@@ -133,7 +133,7 @@ router.get('/webhook', async (req, res) => {
 router.get('/test', async (req, res) => {
   try {
     console.log('🧪 [PerfectPay] Teste de conectividade');
-    
+
     res.json({
       success: true,
       message: 'Perfect Pay Service funcionando!',
@@ -252,19 +252,17 @@ router.get('/subscription/:userId', async (req, res) => {
         billing_cycle: 'monthly',
         current_period_start: subscription.current_period_start,
         current_period_end: subscription.current_period_end,
-        // Lógica inteligente para leads com upgrade/acúmulo
-        // Para assinaturas com upgrade, mostrar 0 leads usados do plano base (pois tem leads excedentes)
-        // Para assinaturas normais, calcular normalmente
-        leads_used: subscription.leads_balance > subscription.payment_plans.leads_included 
-          ? 0 // Se tem leads excedentes (upgrade), não há leads usados do plano base
-          : Math.max(0, subscription.payment_plans.leads_included - subscription.leads_balance), // Se não tem leads excedentes, calcular normalmente
+        // Lógica corrigida para leads
+        // leads_used = total do plano - saldo atual
+        // leads_remaining = saldo atual
+        leads_used: Math.max(0, subscription.payment_plans.leads_included - subscription.leads_balance),
         leads_remaining: subscription.leads_balance,
         leads_limit: subscription.payment_plans.leads_included,
         leads_excess: Math.max(0, subscription.leads_balance - subscription.payment_plans.leads_included), // Leads excedentes
         auto_renewal: true,
         created_at: subscription.created_at,
         updated_at: subscription.updated_at,
-        
+
         // Dados do plano (compatível com frontend)
         plan_display_name: subscription.payment_plans.display_name,
         plan_name: subscription.payment_plans.name,
@@ -272,7 +270,7 @@ router.get('/subscription/:userId', async (req, res) => {
         features: subscription.payment_plans.features || [],
         is_free_trial: false,
         total_leads: subscription.payment_plans.leads_included,
-        
+
         // Informações de cancelamento
         cancelled_at: subscription.cancelled_at,
         cancellation_reason: subscription.cancellation_reason,
@@ -299,7 +297,7 @@ router.post('/cancel/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const { reason = 'user_request' } = req.body;
-    
+
     console.log(`🚫 [PerfectPay] Solicitação de cancelamento - Usuário: ${userId}`);
 
     const result = await perfectPayService.cancelSubscription(userId, reason);
@@ -411,7 +409,7 @@ router.post('/create-checkout-with-type', async (req, res) => {
 router.post('/upgrade', async (req, res) => {
   try {
     const { userId, newPlanId, reason } = req.body;
-    
+
     if (!userId || !newPlanId) {
       return res.status(400).json({
         success: false,
@@ -453,7 +451,7 @@ router.post('/upgrade', async (req, res) => {
       .select('*')
       .eq('id', newPlanId)
       .single();
-      
+
     if (planError || !newPlan) {
       return res.status(404).json({
         success: false,
@@ -464,7 +462,7 @@ router.post('/upgrade', async (req, res) => {
     // Verificar se é realmente um upgrade (preço maior)
     const currentPrice = currentSubscription.payment_plans.price_cents;
     const newPrice = newPlan.price_cents;
-    
+
     if (newPrice <= currentPrice) {
       return res.status(400).json({
         success: false,
@@ -475,7 +473,7 @@ router.post('/upgrade', async (req, res) => {
     // Usar link fixo do Perfect Pay (já configurado com valores de teste)
     const checkoutUrl = perfectPayService.getPerfectPayLink(newPlanId);
     const externalReference = `upgrade_${userId}_${newPlanId}_${Date.now()}`;
-    
+
     res.json({
       success: true,
       message: 'Link de pagamento criado com sucesso',
