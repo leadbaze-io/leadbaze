@@ -79,8 +79,8 @@ export default function WhatsAppConnection({
                   setConnectionState(null)
                   setInstanceName('')
                 }
-              } catch (evolutionError) {
-
+              } catch (error) {
+                console.error(error)
                 // Se não conseguir verificar na Evolution, marcar como desconectada
                 await WhatsAppInstanceService.updateInstanceStatus(instance.instance_name, 'disconnected')
                 setConnectionState(null)
@@ -106,8 +106,9 @@ export default function WhatsAppConnection({
                   // Instância realmente está desconectada
 
                 }
-              } catch (evolutionError) {
-
+              } catch (error) {
+                console.error(error)
+                // ignore
               }
             } else if (instance.status === 'qrcode') {
               // Reutilizar instância QR Code existente
@@ -126,12 +127,14 @@ export default function WhatsAppConnection({
 
           }
         } catch (error) {
-
+          console.error(error)
+          // ignore
         }
       }
     }
 
     checkExistingInstance()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
   // Verificar periodicamente se a instância ainda está ativa
@@ -161,6 +164,7 @@ export default function WhatsAppConnection({
 
           }
         } catch (error) {
+          console.error(error)
 
           // Se não conseguir verificar, marcar como desconectada
           if (userId) {
@@ -213,8 +217,9 @@ export default function WhatsAppConnection({
         try {
           await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
 
-        } catch (dbError) {
-
+        } catch (error) {
+          console.error(error)
+          // ignore
         }
       }
 
@@ -286,8 +291,9 @@ export default function WhatsAppConnection({
             try {
               await WhatsAppInstanceService.deleteInstance(existingInstance.instance_name)
 
-            } catch (deleteError) {
-
+            } catch (error) {
+              console.error(error)
+              // ignore
             }
           }
 
@@ -296,6 +302,8 @@ export default function WhatsAppConnection({
 
           await WhatsAppInstanceService.createInstance(userId, instanceNameToUse)
         } catch (error) {
+          console.error(error)
+          // ignore
 
           instanceNameToUse = EvolutionApiService.generateInstanceName(userId, userName)
           await WhatsAppInstanceService.createInstance(userId, instanceNameToUse)
@@ -323,7 +331,8 @@ export default function WhatsAppConnection({
             // Criar nova instância
             instance = await EvolutionApiService.createInstanceAndQRCode(instanceNameToUse, userName)
 
-          } catch (deleteError) {
+          } catch (error) {
+            console.error(error)
 
             // Se não conseguir deletar, tentar reutilizar
             instance = {
@@ -444,6 +453,7 @@ export default function WhatsAppConnection({
         }
 
       } catch (error) {
+        console.error(error)
 
         attempts++
         if (isPolling) {
@@ -497,6 +507,8 @@ export default function WhatsAppConnection({
               await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'connected')
 
             } catch (error) {
+              console.error(error)
+              // ignore
 
             }
           }
@@ -520,6 +532,8 @@ export default function WhatsAppConnection({
               await WhatsAppInstanceService.updateInstanceStatus(instanceName, 'disconnected')
 
             } catch (error) {
+              console.error(error)
+              // ignore
 
             }
           }
@@ -753,7 +767,8 @@ export default function WhatsAppConnection({
                         const state = await EvolutionApiService.getConnectionState(instanceName);
                         setConnectionState(state);
                       } catch (error) {
-
+                        console.error(error)
+                        // ignore
                       }
                     }
                   }}
@@ -788,6 +803,7 @@ export default function WhatsAppConnection({
                         variant: 'info',
                       });
                     } catch (error) {
+                      console.error(error)
 
                       toast({
                         title: '❌ Erro',

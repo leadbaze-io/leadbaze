@@ -253,8 +253,8 @@ export default function Footer() {
                         block: 'start'
                       });
 
-                    } catch (error) {
-
+                    } catch {
+                      // Ignorar erros de scroll
                     }
 
                     // Verificar posição após scroll
@@ -273,19 +273,8 @@ export default function Footer() {
                     }, 500);
 
                   } else {
-                    // Procurar por elementos similares
-                    const allSections = document.querySelectorAll('section');
-
-                    allSections.forEach((_section, _index) => {
-
-                    });
-
-                    // Procurar por elementos com "faq" no ID ou classe
-                    const faqElements = document.querySelectorAll('[id*="faq"], [class*="faq"]');
-
-                    faqElements.forEach((_el, _index) => {
-
-                    });
+                    // Se não encontrar, apenas logar aviso
+                    console.warn('Seção FAQ não encontrada');
                   }
 
                 }}

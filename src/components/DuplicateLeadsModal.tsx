@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Phone, MapPin, Calendar, AlertTriangle, CheckCircle } from 'lucide-react'
 import { Button } from './ui/button'
@@ -43,13 +43,7 @@ export default function DuplicateLeadsModal({
   const [loading, setLoading] = useState(false)
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
-    if (isOpen && duplicateLeads.length > 0) {
-      loadDuplicateDetails()
-    }
-  }, [isOpen, duplicateLeads])
-
-  const loadDuplicateDetails = async () => {
+  const loadDuplicateDetails = useCallback(async () => {
     setLoading(true)
     try {
       const details = await Promise.all(
@@ -72,11 +66,17 @@ export default function DuplicateLeadsModal({
       )
       setDuplicateDetails(details)
     } catch (error) {
-
+      console.error('Error loading duplicate details:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [duplicateLeads])
+
+  useEffect(() => {
+    if (isOpen && duplicateLeads.length > 0) {
+      loadDuplicateDetails()
+    }
+  }, [isOpen, duplicateLeads, loadDuplicateDetails])
 
   const handleSelectLead = (leadId: string) => {
     const newSelected = new Set(selectedLeads)
@@ -237,11 +237,10 @@ export default function DuplicateLeadsModal({
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Card className={`border-l-4 transition-all duration-200 ${
-                        selectedLeads.has(detail.lead.id || detail.lead.phone || '')
-                          ? 'border-l-orange-500 bg-orange-50 shadow-md'
-                          : 'border-l-red-400 bg-white hover:bg-gray-50'
-                      }`}>
+                      <Card className={`border-l-4 transition-all duration-200 ${selectedLeads.has(detail.lead.id || detail.lead.phone || '')
+                        ? 'border-l-orange-500 bg-orange-50 shadow-md'
+                        : 'border-l-red-400 bg-white hover:bg-gray-50'
+                        }`}>
                         <CardHeader className="pb-3">
                           <div className="flex items-start space-x-3">
                             <input

@@ -272,7 +272,7 @@ export function LeadCard({
             {/* Content */}
             <div className="p-4 sm:p-6 max-h-[calc(90vh-120px)] sm:max-h-[60vh] overflow-y-auto bg-white dark:bg-gray-800">
               <div className="space-y-2">
-                {lead.opening_hours.map((hours, i) => {
+                {lead.opening_hours && lead.opening_hours.map((hours, i) => {
                   const [day, time] = hours.split(': ');
                   return (
                     <div

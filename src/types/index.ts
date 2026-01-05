@@ -22,6 +22,7 @@ export interface Lead {
   google_maps_url?: string
   place_id?: string
   reviews_count?: number
+  user_ratings_total?: number
   price_level?: number
   opening_hours?: string[]
   photos?: string[]

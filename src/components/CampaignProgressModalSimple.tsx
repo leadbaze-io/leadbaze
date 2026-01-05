@@ -43,7 +43,7 @@ interface CampaignProgressModalSimpleProps {
   status: CampaignStatus
   successCount: number
   failedCount: number
-  currentLead?: {name: string, phone: string} | null
+  currentLead?: { name: string, phone: string } | null
   startTime?: Date
   isInitializing?: boolean
   onCancel: () => void
@@ -63,7 +63,7 @@ export default function CampaignProgressModalSimple({
   onCancel,
   onClose
 }: CampaignProgressModalSimpleProps) {
-  const { } = useTheme()
+  useTheme()
   const [elapsedTime, setElapsedTime] = useState<string>('00:00')
   const [showDetails, setShowDetails] = useState<boolean>(false)
 
@@ -345,13 +345,12 @@ export default function CampaignProgressModalSimple({
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-slate-700 dark:text-gray-300">Qualidade da Campanha:</span>
-                          <span className={`font-medium px-2 py-1 rounded-full text-xs ${
-                            parseFloat(successRate) >= 90 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                          <span className={`font-medium px-2 py-1 rounded-full text-xs ${parseFloat(successRate) >= 90 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
                             parseFloat(successRate) >= 70 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                          }`}>
+                              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                            }`}>
                             {parseFloat(successRate) >= 90 ? 'Excelente' :
-                             parseFloat(successRate) >= 70 ? 'Boa' : 'Precisa Melhorar'}
+                              parseFloat(successRate) >= 70 ? 'Boa' : 'Precisa Melhorar'}
                           </span>
                         </div>
                       </div>
@@ -371,8 +370,8 @@ export default function CampaignProgressModalSimple({
 
                           ' Excelente performance!' :
                           parseFloat(successRate) >= 70 ?
-                          ' Boa performance!' :
-                          ' Precisa melhorar.'
+                            ' Boa performance!' :
+                            ' Precisa melhorar.'
                         }
                       </p>
                     </div>

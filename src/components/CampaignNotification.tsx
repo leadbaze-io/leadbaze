@@ -29,7 +29,7 @@ export function CampaignNotification({
   failedCount,
   totalLeads,
   onOpenModal,
-  onClose: _onClose
+  onClose
 }: CampaignNotificationProps) {
   const [isVisible, setIsVisible] = useState(true)
 
@@ -92,7 +92,10 @@ export function CampaignNotification({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsVisible(false)}
+            onClick={() => {
+              setIsVisible(false);
+              if (onClose) onClose();
+            }}
             className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
           >
             <X className="w-3 h-3" />
