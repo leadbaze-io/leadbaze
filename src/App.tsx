@@ -34,6 +34,7 @@ const BlogAutomationDashboard = lazy(() => import(/* webpackChunkName: "blog-adm
 const UserProfile = lazy(() => import(/* webpackChunkName: "profile" */ './pages/UserProfile'))
 const PlansPage = lazy(() => import(/* webpackChunkName: "plans" */ './pages/PlansPage'))
 const DemoBooking = lazy(() => import(/* webpackChunkName: "demo-booking" */ './pages/DemoBooking'))
+const CRMSettingsPage = lazy(() => import(/* webpackChunkName: "settings" */ './pages/CRMSettingsPage'))
 
 // Páginas de pagamento - baixa prioridade
 const PaymentSuccess = lazy(() => import(/* webpackChunkName: "payment" */ './pages/PaymentSuccess'))
@@ -99,6 +100,7 @@ function AppContent() {
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/test-smtp" element={<SMTPTestPage />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/settings/crm" element={<CRMSettingsPage />} />
             <Route path="/plans" element={<PlansPage />} />
             <Route path="/agendar-demo" element={<DemoBooking />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />

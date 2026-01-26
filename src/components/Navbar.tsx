@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard } from 'lucide-react'
+import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard, Building2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
@@ -66,6 +66,9 @@ export default function Navbar() {
     }
     if (path === '/disparador') {
       return location.pathname === '/disparador' || location.pathname === '/disparador-novo'
+    }
+    if (path === '/settings/crm') {
+      return location.pathname === '/settings/crm'
     }
     if (path === '/admin/blog-automation') {
       return location.pathname === '/admin/blog-automation'
@@ -468,6 +471,21 @@ export default function Navbar() {
                   }}
                 >
                   Disparador
+                </NavLink>
+                <NavLink
+
+                  to="/settings/crm"
+
+                  className={`text-white hover:text-green-400 transition-colors ${isActiveLink('/settings/crm') ? 'text-green-400 font-semibold' : ''
+                    }`}
+                  onClick={() => {
+                    // Scroll para o topo após navegação
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }, 100)
+                  }}
+                >
+                  CRM
                 </NavLink>
                 <NavLink
 

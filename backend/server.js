@@ -41,6 +41,8 @@ const recurringPaymentsRoutes = require('./routes/recurringPayments');
 const leadPackagesRoutes = require('./routes/leadPackages');
 // GOOGLE MAPS API
 const googleMapsRoutes = require('./routes/googleMapsRoutes');
+// CRM INTEGRATION
+const crmRoutes = require('./routes/crm');
 // ADMIN ROUTES
 const adminRoutes = require('./routes/adminRoutes');
 const DailySyncJob = require('./jobs/dailySyncJob');
@@ -1173,7 +1175,9 @@ app.use('/api/lead-packages', leadPackagesRoutes);
 // Google Maps API routes
 app.use('/api/google-maps', googleMapsRoutes);
 console.log('✅ [Server] Google Maps API routes registradas com sucesso');
-// Admin routes - protegidas
+// CRM Integration routes
+app.use('/api/crm', crmRoutes);
+console.log('✅ [Server] CRM Integration routes registradas com sucesso'); // Admin routes - protegidas
 app.use('/api/admin', adminRoutes);
 console.log('✅ Rota de ADMIN registrada com sucesso em /api/admin');
 console.log('✅ [Server] Admin routes registradas com sucesso');

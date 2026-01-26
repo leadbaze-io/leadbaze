@@ -94,6 +94,8 @@ router.post('/response', verifyWebhookAuth, async (req, res) => {
 // Endpoint para receber status de entrega das mensagens
 router.post('/delivery-status', verifyWebhookAuth, async (req, res) => {
   try {
+    console.log('📨 [Webhook] Recebido delivery-status:', JSON.stringify(req.body, null, 2));
+
     const {
       campaign_id,
       lead_phone,
@@ -105,31 +107,37 @@ router.post('/delivery-status', verifyWebhookAuth, async (req, res) => {
 
     // Validar dados obrigatórios
     if (!campaign_id || !lead_phone || !status || !user_id) {
+      console.error('❌ [Webhook] Dados incompletos:', req.body);
       return res.status(400).json({
         error: 'Dados obrigatórios não fornecidos',
-        required: ['campaign_id', 'lead_phone', 'status', 'user_id']
+        required: ['campaign_id', 'lead_phone', 'status', 'user_id'],
+        received: req.body
       });
     }
 
     // Atualizar status na tabela de campanhas
     const updateField = status === 'delivered' || status === 'read' ? 'success_count' : 'failed_count';
 
-    const { error } = await supabase
+    const { error, count } = await supabase
       .from('bulk_campaigns')
       .update({
         [updateField]: supabase.raw(`${updateField} + 1`),
         updated_at: new Date().toISOString()
       })
       .eq('id', campaign_id)
-      .eq('user_id', user_id);
+      .eq('user_id', user_id)
+      .select('id', { count: 'exact' });
 
     if (error) {
-      console.error('Erro ao atualizar status da campanha:', error);
+      console.error('❌ [Webhook] Erro ao atualizar status da campanha:', error);
       return res.status(500).json({ error: 'Erro ao atualizar campanha' });
     }
 
-    // Log do status para debugging
-    console.log(`Status atualizado para ${lead_phone}: ${status}`);
+    if (count === 0) {
+      console.warn(`⚠️ [Webhook] Nenhuma campanha encontrada/atualizada para ID: ${campaign_id} e User: ${user_id}`);
+    } else {
+      console.log(`✅ [Webhook] Status atualizado para ${lead_phone}: ${status} (Campanha: ${campaign_id})`);
+    }
 
     res.status(200).json({
       success: true,
