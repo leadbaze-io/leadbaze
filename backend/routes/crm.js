@@ -100,7 +100,11 @@ router.get('/callback', (req, res) => {
                     <script>
                         // Send code to parent window
                         if (window.opener) {
-                            window.opener.postMessage({ code: "${code}", source: 'kommo-oauth' }, "*");
+                            window.opener.postMessage({ 
+                                code: "${code}", 
+                                referer: "${referer || ''}",
+                                source: 'kommo-oauth' 
+                            }, "*");
                             window.close();
                         } else {
                             document.write("Autorização concluída! Você pode fechar esta janela.");

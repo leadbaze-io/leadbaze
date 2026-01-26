@@ -34,43 +34,21 @@ class GoogleMapsService {
         try {
             console.log(`🔍 Buscando: ${businessType} em ${location} (limite: ${limit})`);
 
-            // Passo 1: Geocodificar a localização para obter lat/lng
-            const geocodeUrl = `${this.baseUrl}/geocode/json`;
-            const geocodeResponse = await axios.get(geocodeUrl, {
-                params: {
-                    address: location,
-                    key: this.apiKey
-                }
-            });
-
-            if (!geocodeResponse.data.results || geocodeResponse.data.results.length === 0) {
-                throw new Error(`Localização não encontrada: ${location}`);
-            }
-
-            const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
-            console.log(`📍 Coordenadas: ${lat}, ${lng}`);
-
-            // Passo 2: Buscar estabelecimentos com paginação
+            // Estratégia de Busca Inteligente
+            // 1. Busca Principal
+            const mainQuery = `${businessType} em ${location}`;
             let allResults = [];
-            const placesUrl = `${this.baseUrl}/place/nearbysearch/json`;
 
-            // A API retorna max 20 por página, até 3 páginas (60 total)
-            // Para limites maiores, usamos múltiplos raios de busca
-            const searchRadii = limit <= 60 ? [5000] : [5000, 10000, 15000];
-
-            for (const radius of searchRadii) {
-                if (allResults.length >= limit) break;
-
-                console.log(`🔎 Buscando com raio de ${radius}m...`);
+            // Função auxiliar para realizar uma busca textSearch
+            const performTextSearch = async (query) => {
+                const searchUrl = `${this.baseUrl}/place/textsearch/json`;
+                let results = [];
                 let pageToken = null;
                 let pageCount = 0;
-                const maxPages = 3; // Google limita a 3 páginas
 
                 do {
                     const params = {
-                        location: `${lat},${lng}`,
-                        radius: radius,
-                        keyword: businessType,
+                        query: query,
                         key: this.apiKey,
                         language: 'pt-BR'
                     };
@@ -79,27 +57,51 @@ class GoogleMapsService {
                         params.pagetoken = pageToken;
                     }
 
-                    const placesResponse = await axios.get(placesUrl, { params });
+                    try {
+                        const response = await axios.get(searchUrl, { params });
 
-                    if (placesResponse.data.results && placesResponse.data.results.length > 0) {
-                        allResults = allResults.concat(placesResponse.data.results);
-                        console.log(`  ✅ +${placesResponse.data.results.length} resultados (total: ${allResults.length})`);
-                    }
+                        if (response.data.results) {
+                            results = results.concat(response.data.results);
+                        }
 
-                    pageToken = placesResponse.data.next_page_token;
-                    pageCount++;
+                        pageToken = response.data.next_page_token;
+                        pageCount++;
 
-                    // Se há próxima página e ainda não atingimos o limite
-                    if (pageToken && allResults.length < limit && pageCount < maxPages) {
-                        // Google requer delay antes de usar pagetoken
-                        console.log('  ⏳ Aguardando 2s para próxima página...');
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                    } else {
+                        if (pageToken && pageCount < 3) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        }
+                    } catch (e) {
+                        console.error(`Erro na busca '${query}':`, e.message);
                         break;
                     }
-                } while (pageToken && allResults.length < limit && pageCount < maxPages);
+                } while (pageToken && pageCount < 3);
 
-                if (allResults.length >= limit) break;
+                return results;
+            };
+
+            // Executar busca principal
+            console.log(`🔎 Executando busca principal: "${mainQuery}"`);
+            const mainResults = await performTextSearch(mainQuery);
+            allResults = [...mainResults];
+
+            // Se precisarmos de mais leads (> 60), usar estratégia de zonas
+            if (limit > 60 && allResults.length < limit) {
+                console.log('🚀 Ativando expansão de zonas geográficas...');
+                const zones = ['Centro', 'Zona Norte', 'Zona Sul', 'Zona Leste', 'Zona Oeste'];
+
+                // Executar em paralelo (com cuidado para não estourar rate limit)
+                for (const zone of zones) {
+                    if (allResults.length >= limit * 1.5) break; // Buffer de segurança
+
+                    const zoneQuery = `${businessType} em ${location} ${zone}`;
+                    console.log(`📍 Buscando em zona: "${zoneQuery}"`);
+
+                    const zoneResults = await performTextSearch(zoneQuery);
+                    allResults = allResults.concat(zoneResults);
+
+                    // Pequeno delay entre zonas para evitar rejeição da API
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
             }
 
             if (allResults.length === 0) {
@@ -112,19 +114,16 @@ class GoogleMapsService {
                 new Map(allResults.map(item => [item.place_id, item])).values()
             );
 
-            // Limitar ao número solicitado
+            // Limitar e Retornar
             const results = uniqueResults.slice(0, limit);
-            console.log(`✅ ${results.length} estabelecimentos únicos encontrados (de ${uniqueResults.length} totais)`);
+            console.log(`✅ ${results.length} estabelecimentos únicos encontrados (de ${uniqueResults.length} brutos)`);
 
-            // Passo 3: Buscar detalhes de cada estabelecimento (em paralelo)
+            // Passo 3: Buscar detalhes (mantido igual)
             const detailedPlaces = await Promise.all(
                 results.map(place => this.getPlaceDetails(place.place_id))
             );
 
-            // Normalizar dados
             const normalizedPlaces = detailedPlaces.map(place => this.normalizePlace(place, businessType));
-
-            // Salvar no cache
             this.setCache(cacheKey, normalizedPlaces);
 
             return normalizedPlaces;
@@ -203,8 +202,24 @@ class GoogleMapsService {
             business_status: place.business_status || 'OPERATIONAL',
             types: place.types || [],
             is_open_now: place.current_opening_hours?.open_now ?? place.opening_hours?.open_now ?? null,
-            selected: false
+            selected: false,
+
+            // Enriquecimento (Heurísticas Simples)
+            instagram: this.detectInstagram(place.website),
+            cnpj: null, // Requer integação futura com BrasilAPI
+            company_size: null,
+            founded_date: null
         };
+    }
+
+    /**
+     * Tenta detectar URL do Instagram
+     */
+    detectInstagram(website) {
+        if (!website) return null;
+        if (website.includes('instagram.com')) return website;
+        if (website.includes('linktr.ee')) return null; // Pode ter insta, mas não garantido
+        return null;
     }
 
     /**

@@ -30,6 +30,18 @@ export interface Lead {
   types?: string[]
   is_open_now?: boolean | null
   selected?: boolean // Para controle de seleção na UI
+
+  // Campos de Enriquecimento
+  cnpj?: string
+  instagram?: string
+  company_size?: string
+  founded_date?: string
+  social_media?: {
+    instagram?: string
+    facebook?: string
+    linkedin?: string
+    twitter?: string
+  }
 }
 
 export interface LeadList {

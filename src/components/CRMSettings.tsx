@@ -46,23 +46,24 @@ export function CRMSettings() {
                     window.removeEventListener('message', messageHandler);
 
                     // 2. Send code to backend to exchange for tokens
+                    // 2. Send code to backend to exchange for tokens
                     try {
-                        // Ask user for subdomain if it's not in the event data (Kommo usually doesn't send subdomain in popup mode callback unless redirect)
-                        // For now, we assume the user's config env has it, OR we prompt.
-                        // But let's try to connect just with the code.
-
-                        // Prompt for subdomain (optional but good for specific accounts)
-                        const subdomain = prompt("Por favor, digite seu subdomínio Kommo (ex: nomedasuaempresa):");
-                        if (!subdomain) {
-                            alert("Subdomínio é obrigatório para conectar.");
-                            setIsConnecting(false);
-                            authWindow?.close();
-                            return;
+                        // Extract subdomain from referer (e.g., "dvemarketingadm.kommo.com" -> "dvemarketingadm")
+                        let subdomain = null;
+                        if (event.data.referer) {
+                            subdomain = event.data.referer.split('.')[0];
+                            console.log('🔗 Subdomínio detectado:', subdomain);
                         }
 
+                        // Connect without prompting (backend handles logic)
                         await connect(event.data.code, { subdomain });
-                        alert('Conectado com sucesso!');
-                        reload();
+
+                        // Force a slight delay before reload to ensure DB update propagates
+                        setTimeout(() => {
+                            reload();
+                            alert('Conectado com sucesso!');
+                        }, 1000);
+
                     } catch (connErr) {
                         console.error('Backend connection error:', connErr);
                         alert('Erro ao conectar com o backend: ' + (connErr instanceof Error ? connErr.message : String(connErr)));
