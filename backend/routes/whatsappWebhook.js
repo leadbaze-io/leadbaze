@@ -223,33 +223,111 @@ router.post('/events', verifyWebhookAuth, async (req, res) => {
       const state = data?.state || eventData.state;
       const instanceName = instance || eventData.instance;
 
-      if (!instanceName || !state) {
-        return res.status(400).json({ error: 'Dados de conexão incompletos' });
+      if (instanceName && state) {
+        console.log(`🔄 [Connection Update] Instância: ${instanceName}, Novo Estado: ${state}`);
+
+        // Mapear status da Evolution para status do nosso banco
+        let dbStatus = 'disconnected';
+        if (state === 'open') dbStatus = 'connected';
+        else if (state === 'connecting') dbStatus = 'connecting';
+        else if (state === 'close' || state === 'closed') dbStatus = 'disconnected';
+
+        // Atualizar no Supabase
+        const { error } = await supabase
+          .from('whatsapp_instances')
+          .update({
+            status: dbStatus,
+            updated_at: new Date().toISOString()
+          })
+          .eq('instance_name', instanceName);
+
+        if (error) {
+          console.error('❌ Erro ao atualizar status da instância no banco:', error);
+        } else {
+          console.log(`✅ Status da instância ${instanceName} atualizado para ${dbStatus}`);
+        }
       }
+    }
 
-      console.log(`🔄 [Connection Update] Instância: ${instanceName}, Novo Estado: ${state}`);
+    // Tratamento de STATUS DE MENSAGEM (MESSAGES_UPDATE / messages.update)
+    if (event === 'messages.update' || event === 'MESSAGES_UPDATE' || eventData.type === 'message_update') {
+      const messages = data || eventData.data;
+      const messageList = Array.isArray(messages) ? messages : [messages];
+      const instanceName = instance || eventData.instance;
 
-      // Mapear status da Evolution para status do nosso banco
-      let dbStatus = 'disconnected';
-      if (state === 'open') dbStatus = 'connected';
-      else if (state === 'connecting') dbStatus = 'connecting';
-      else if (state === 'close' || state === 'closed') dbStatus = 'disconnected';
+      if (instanceName) {
+        console.log(`📨 [Webhook Event] Processando ${messageList.length} atualizações de mensagem para ${instanceName}`);
 
-      // Atualizar no Supabase
-      const { error } = await supabase
-        .from('whatsapp_instances')
-        .update({
-          status: dbStatus,
-          updated_at: new Date().toISOString()
-        })
-        .eq('instance_name', instanceName);
+        // 1. Encontrar o usuário dono dessa instância
+        const { data: instanceData, error: instanceError } = await supabase
+          .from('whatsapp_instances')
+          .select('user_id')
+          .eq('instance_name', instanceName)
+          .single();
 
-      if (error) {
-        console.error('❌ Erro ao atualizar status da instância no banco:', error);
-        return res.status(500).json({ error: 'Erro ao atualizar banco de dados' });
+        if (instanceData) {
+          const userId = instanceData.user_id;
+          let successCount = 0;
+          let failedCount = 0;
+
+          for (const msg of messageList) {
+            // Normalizar status
+            const status = (msg.status || '').toLowerCase();
+            const remoteJid = msg.key?.remoteJid || '';
+            const phone = remoteJid.split('@')[0];
+
+            // Ignorar status irrelevantes
+            if (['pending', 'playing'].includes(status)) continue;
+
+            console.log(`🔍 [Status Update] ${phone} -> ${status}`);
+
+            // Mapear status para contadores
+            if (['server_ack', 'delivery_ack', 'delivered', 'read', 'played'].includes(status)) {
+              successCount++;
+            } else if (['failed', 'error'].includes(status)) {
+              failedCount++;
+            }
+          }
+
+          if (successCount > 0 || failedCount > 0) {
+            console.log(`📊 [Webhook Event] Atualizando campanhas para User ${userId}: +${successCount} sucessos, +${failedCount} falhas`);
+
+            // 2. Encontrar campanha ATIVA ou RECENTE deste usuário
+            const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+            const { data: activeCampaigns } = await supabase
+              .from('bulk_campaigns')
+              .select('id, status, success_count, failed_count')
+              .eq('user_id', userId)
+              .gte('updated_at', oneDayAgo)
+              .neq('status', 'cancelled')
+              .order('updated_at', { ascending: false })
+              .limit(1);
+
+            if (activeCampaigns && activeCampaigns.length > 0) {
+              const campaign = activeCampaigns[0];
+              console.log(`🎯 [Webhook Event] Atualizando campanha ${campaign.id} (${campaign.status})`);
+
+              const { error: updateError } = await supabase
+                .from('bulk_campaigns')
+                .update({
+                  success_count: campaign.success_count + successCount,
+                  failed_count: campaign.failed_count + failedCount,
+                  updated_at: new Date().toISOString()
+                })
+                .eq('id', campaign.id);
+
+              if (updateError) {
+                console.error('❌ Erro ao atualizar contadores da campanha:', updateError);
+              } else {
+                console.log('✅ Campanha atualizada com sucesso!');
+              }
+            } else {
+              console.warn('⚠️ Nenhuma campanha ativa encontrada para este usuário nos últimos 24h.');
+            }
+          }
+        }
       }
-
-      console.log(`✅ Status da instância ${instanceName} atualizado para ${dbStatus}`);
     }
 
     res.status(200).json({ success: true });
