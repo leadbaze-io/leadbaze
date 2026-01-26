@@ -53,13 +53,13 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remover console em produção para reduzir tamanho
+        drop_console: false, // Habilitado temporariamente para debug em produção
         drop_debugger: true,
         ecma: 2020,
-        passes: 3, // Mais passes para melhor compressão e tree-shaking
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'], // Remover logs
-        unused: true, // Remover código não utilizado
-        unsafe: false, // Desabilitar otimizações unsafe para evitar quebras
+        passes: 3,
+        pure_funcs: [], // Não remover logs para permitir debug
+        unused: true,
+        unsafe: false,
         unsafe_comps: false,
         unsafe_math: false,
         dead_code: true // Remover código morto
@@ -84,53 +84,53 @@ export default defineConfig({
     reportCompressedSize: false, // Mais rápido em builds grandes
     assetsInlineLimit: 4096, // Inline de assets pequenos (4KB)
     // Otimização de chunks para reduzir tamanho
-           rollupOptions: {
-             output: {
-               // Hash único para cada arquivo
-               entryFileNames: `assets/[name]-[hash].js`,
-               chunkFileNames: `assets/[name]-[hash].js`,
-               assetFileNames: `assets/[name]-[hash].[ext]`,
-               // Inline CSS crítico quando possível
-               inlineDynamicImports: false,
-               // Otimização de chunks - React e React-DOM devem estar juntos
-               manualChunks: {
-                 // React e React-DOM JUNTOS (essencial para funcionar)
-                 'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
-                 
-                 // Router separado
-                 'react-router': ['react-router-dom'],
-                 
-                 // Framer Motion separado (pesado)
-                 'framer': ['framer-motion'],
-                 
-                 // Supabase separado
-                 'supabase': ['@supabase/supabase-js'],
-                 
-                 // React Query
-                 'query': ['@tanstack/react-query', '@tanstack/react-query-devtools'],
-                 
-                 // UI Libraries (Radix UI)
-                 'ui-libs': [
-                   '@radix-ui/react-dialog',
-                   '@radix-ui/react-select',
-                   '@radix-ui/react-toast',
-                   '@radix-ui/react-dropdown-menu',
-                   '@radix-ui/react-avatar',
-                   '@radix-ui/react-label',
-                   '@radix-ui/react-progress',
-                   '@radix-ui/react-scroll-area',
-                   '@radix-ui/react-separator',
-                   '@radix-ui/react-slot',
-                   '@radix-ui/react-tabs',
-                   '@radix-ui/react-tooltip'
-                 ],
-                 
-                 // Forms
-                 'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
-                 
-                 // Carousel
-                 'carousel': ['react-slick', 'slick-carousel'],
-               }
+    rollupOptions: {
+      output: {
+        // Hash único para cada arquivo
+        entryFileNames: `assets/[name]-[hash].js`,
+        chunkFileNames: `assets/[name]-[hash].js`,
+        assetFileNames: `assets/[name]-[hash].[ext]`,
+        // Inline CSS crítico quando possível
+        inlineDynamicImports: false,
+        // Otimização de chunks - React e React-DOM devem estar juntos
+        manualChunks: {
+          // React e React-DOM JUNTOS (essencial para funcionar)
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+
+          // Router separado
+          'react-router': ['react-router-dom'],
+
+          // Framer Motion separado (pesado)
+          'framer': ['framer-motion'],
+
+          // Supabase separado
+          'supabase': ['@supabase/supabase-js'],
+
+          // React Query
+          'query': ['@tanstack/react-query', '@tanstack/react-query-devtools'],
+
+          // UI Libraries (Radix UI)
+          'ui-libs': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-select',
+            '@radix-ui/react-toast',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-label',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-scroll-area',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip'
+          ],
+
+          // Forms
+          'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
+
+          // Carousel
+          'carousel': ['react-slick', 'slick-carousel'],
+        }
       }
     },
   },

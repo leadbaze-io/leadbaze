@@ -97,7 +97,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https:"],
+      connectSrc: ["'self'", "https:", "http:", "ws:", "wss:"], // Permitir http/ws para conexões locaux/SSE
     },
   },
 }));
@@ -164,7 +164,15 @@ app.use(generalLimit);
 // Middleware básico
 app.use(express.json({ limit: '10mb' }));
 const compression = require('compression');
-app.use(compression());
+app.use(compression({
+  filter: (req, res) => {
+    // NÃO comprimir rotas de SSE (Server-Sent Events) para evitar buffering
+    if (req.headers['accept'] === 'text/event-stream' || req.path.includes('/stream/')) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}));
 
 // Configuração CORS dinâmica
 const corsOrigins = process.env.CORS_ORIGIN

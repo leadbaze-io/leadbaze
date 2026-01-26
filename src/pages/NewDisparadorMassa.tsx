@@ -508,6 +508,7 @@ export default function NewDisparadorMassa() {
             onBack={handleBackToCampaigns}
             onSendCampaign={handleSendCampaign}
             onStepChange={handleWizardStepChange}
+            onCampaignCreated={handleEditCampaign}
           />
         )
 
