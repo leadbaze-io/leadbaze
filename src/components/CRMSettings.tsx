@@ -52,8 +52,13 @@ export function CRMSettings() {
                         // But let's try to connect just with the code.
 
                         // Prompt for subdomain (optional but good for specific accounts)
-                        // const subdomain = prompt("Por favor, confirme seu subdomínio Kommo (ex: dvemarketingadm):", "dvemarketingadm");
-                        const subdomain = "dvemarketingadm"; // Hardcoded for this specific user/task
+                        const subdomain = prompt("Por favor, digite seu subdomínio Kommo (ex: nomedasuaempresa):");
+                        if (!subdomain) {
+                            alert("Subdomínio é obrigatório para conectar.");
+                            setIsConnecting(false);
+                            authWindow?.close();
+                            return;
+                        }
 
                         await connect(event.data.code, { subdomain });
                         alert('Conectado com sucesso!');
@@ -208,9 +213,9 @@ export function CRMSettings() {
                         <div className="text-sm text-blue-900">
                             <strong>📋 Como conectar:</strong>
                             <ol className="mt-2 ml-4 space-y-1 list-decimal">
-                                <li>A integração Kommo já está configurada para sua conta (DVE Marketing)</li>
-                                <li>Os leads serão sincronizados automaticamente ao clicar em "Enviar para CRM"</li>
-                                <li>Acesse seu Kommo para verificar os leads importados</li>
+                                <li>Clique no botão "Conectar Kommo" acima</li>
+                                <li>Faça login na sua conta Kommo e autorize o acesso</li>
+                                <li>Após a conexão, os leads serão sincronizados automaticamente</li>
                             </ol>
                         </div>
                     </div>

@@ -122,7 +122,7 @@ export function SyncToCRMButton({
                             <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <AlertCircle className="h-5 w-5 text-blue-600" />
                                 <p className="text-sm text-blue-900">
-                                    Esta ação enviará {totalLeads} lead{totalLeads !== 1 ? 's' : ''} para sua conta Kommo (DVE Marketing).
+                                    Esta ação enviará {totalLeads} lead{totalLeads !== 1 ? 's' : ''} para sua conta Kommo conectada.
                                 </p>
                             </div>
                         </div>
