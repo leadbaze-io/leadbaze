@@ -3,11 +3,29 @@
  * Usa webhooks em vez de polling para atualizações em tempo real
  */
 
-const API_BASE_URL = process.env.NODE_ENV === 'production'
+const getApiBaseUrl = () => {
+  // 1. Prioridade: Variável de ambiente explícita
+  if (import.meta.env.VITE_BACKEND_URL) return import.meta.env.VITE_BACKEND_URL;
 
-  ? 'https://leadbaze.io'
+  // 2. Produção (Build)
+  if (import.meta.env.PROD) {
+    // Se estiver no domínio oficial
+    if (typeof window !== 'undefined' && window.location.hostname.includes('leadbaze.io')) {
+      return 'https://leadbaze.io';
+    }
+    // Se estiver rodando na porta 3000 (PM2 serve padrão), assumir backend na 3001
+    if (typeof window !== 'undefined' && window.location.port === '3000') {
+      return `${window.location.protocol}//${window.location.hostname}:3001`;
+    }
+    // Se estiver em outra porta ou sem porta (80/443), assumir proxy reverso (caminho relativo)
+    return '';
+  }
 
-  : ''; // Em desenvolvimento, usar URLs relativas (proxy do Vite)
+  // 3. Desenvolvimento (URL relativa para usar Proxy do Vite)
+  return '';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export interface CampaignStatus {
   id: string;

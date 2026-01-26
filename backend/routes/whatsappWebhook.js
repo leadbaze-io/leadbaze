@@ -277,12 +277,14 @@ router.post('/events', verifyWebhookAuth, async (req, res) => {
             const phone = remoteJid.split('@')[0];
 
             // Ignorar status irrelevantes
-            if (['pending', 'playing'].includes(status)) continue;
+            if (['pending', 'playing', 'server_ack'].includes(status)) continue;
 
             console.log(`🔍 [Status Update] ${phone} -> ${status}`);
 
-            // Mapear status para contadores
-            if (['server_ack', 'delivery_ack', 'delivered', 'read', 'played'].includes(status)) {
+            // Mapear status para contadores (Heurística: apenas 'delivered' ou 'read' contam como sucesso)
+            // 'server_ack' ignorado para evitar contagem antecipada/dupla.
+            if (['delivery_ack', 'delivered', 'read', 'played'].includes(status)) {
+              // Contar apenas se for a transição para entregue/lido
               successCount++;
             } else if (['failed', 'error'].includes(status)) {
               failedCount++;
@@ -292,11 +294,11 @@ router.post('/events', verifyWebhookAuth, async (req, res) => {
           if (successCount > 0 || failedCount > 0) {
             console.log(`📊 [Webhook Event] Atualizando campanhas para User ${userId}: +${successCount} sucessos, +${failedCount} falhas`);
 
-            // 2. Encontrar campanha ATIVA ou RECENTE deste usuário
+            // 2. Encontrar campanha ATIVA ou RECENTE deste usuário na tabela campaigns (correta)
             const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
             const { data: activeCampaigns } = await supabase
-              .from('bulk_campaigns')
+              .from('campaigns')
               .select('id, status, success_count, failed_count')
               .eq('user_id', userId)
               .gte('updated_at', oneDayAgo)
@@ -309,10 +311,10 @@ router.post('/events', verifyWebhookAuth, async (req, res) => {
               console.log(`🎯 [Webhook Event] Atualizando campanha ${campaign.id} (${campaign.status})`);
 
               const { error: updateError } = await supabase
-                .from('bulk_campaigns')
+                .from('campaigns')
                 .update({
-                  success_count: campaign.success_count + successCount,
-                  failed_count: campaign.failed_count + failedCount,
+                  success_count: (campaign.success_count || 0) + successCount,
+                  failed_count: (campaign.failed_count || 0) + failedCount,
                   updated_at: new Date().toISOString()
                 })
                 .eq('id', campaign.id);
@@ -323,7 +325,7 @@ router.post('/events', verifyWebhookAuth, async (req, res) => {
                 console.log('✅ Campanha atualizada com sucesso!');
               }
             } else {
-              console.warn('⚠️ Nenhuma campanha ativa encontrada para este usuário nos últimos 24h.');
+              console.warn('⚠️ Nenhuma campanha ativa encontrada na tabela campaigns nos últimos 24h.');
             }
           }
         }
