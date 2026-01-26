@@ -79,18 +79,17 @@ const KPICard = ({
               )}
             </h3>
             {change !== undefined && !loading && (
-              <div className={`flex items-center space-x-1 text-sm font-medium ${
-                change > 0 ? 'text-green-600 dark:text-green-400' :
+              <div className={`flex items-center space-x-1 text-sm font-medium ${change > 0 ? 'text-green-600 dark:text-green-400' :
 
-                change < 0 ? 'text-red-600 dark:text-red-400' :
+                  change < 0 ? 'text-red-600 dark:text-red-400' :
 
-                'dashboard-card-muted-claro dark:text-muted-foreground'
-              }`}>
+                    'dashboard-card-muted-claro dark:text-muted-foreground'
+                }`}>
                 {change > 0 ? <ArrowUpRight className="w-4 h-4" /> :
 
-                 change < 0 ? <ArrowDownRight className="w-4 h-4" /> :
+                  change < 0 ? <ArrowDownRight className="w-4 h-4" /> :
 
-                 <Minus className="w-4 h-4" />}
+                    <Minus className="w-4 h-4" />}
                 <span>{Math.abs(change)}%</span>
               </div>
             )}
@@ -203,7 +202,7 @@ export const AnalyticsDashboard: React.FC = () => {
       const data = await AnalyticsService.getAllAnalytics(timeRange);
       setAnalytics(data);
     } catch (error) {
-
+      console.error('Error loading analytics:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -221,10 +220,10 @@ export const AnalyticsDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         {/* Header Skeleton */}
-        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl dashboard-glow-green" style={{background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'}}>
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 text-white shadow-2xl dashboard-glow-green" style={{ background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)' }}>
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-              <BarChart3 className="w-6 h-6" style={{color: '#10b981'}} />
+              <BarChart3 className="w-6 h-6" style={{ color: '#10b981' }} />
             </div>
             <div>
               <div className="h-8 w-48 bg-white/20 animate-pulse rounded mb-2" />
@@ -250,7 +249,7 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="w-16 h-16 dashboard-badge-claro dashboard-badge-escuro rounded-full flex items-center justify-center mx-auto mb-4">
-            <BarChart3 className="w-8 h-8" style={{color: '#10b981'}} />
+            <BarChart3 className="w-8 h-8" style={{ color: '#10b981' }} />
           </div>
           <h3 className="text-lg font-semibold dashboard-card-title-claro dark:text-foreground mb-2">
             Nenhum dado disponível
@@ -303,7 +302,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 className="flex items-center space-x-3"
               >
                 <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <BarChart3 className="w-6 h-6" style={{color: '#10b981'}} />
+                  <BarChart3 className="w-6 h-6" style={{ color: '#10b981' }} />
                 </div>
                 <div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
@@ -314,7 +313,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   </p>
                 </div>
               </motion.div>
-          </div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -393,20 +392,19 @@ export const AnalyticsDashboard: React.FC = () => {
         <nav className="flex space-x-1 sm:space-x-2">
           <button
             onClick={() => setActiveTab('performance')}
-            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${
-              activeTab === 'performance'
+            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${activeTab === 'performance'
                 ? 'scale-105'
                 : 'hover:scale-102'
-            }`}
+              }`}
             style={{
-              background: activeTab === 'performance' 
+              background: activeTab === 'performance'
                 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                 : 'transparent',
-              color: activeTab === 'performance' 
-                ? '#ffffff' 
+              color: activeTab === 'performance'
+                ? '#ffffff'
                 : isDark ? '#9ca3af' : '#6b7280',
-              boxShadow: activeTab === 'performance' 
-                ? '0 4px 12px rgba(16, 185, 129, 0.3)' 
+              boxShadow: activeTab === 'performance'
+                ? '0 4px 12px rgba(16, 185, 129, 0.3)'
                 : 'none'
             }}
           >
@@ -428,20 +426,19 @@ export const AnalyticsDashboard: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('activity')}
-            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${
-              activeTab === 'activity'
+            className={`relative py-2 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 transform ${activeTab === 'activity'
                 ? 'scale-105'
                 : 'hover:scale-102'
-            }`}
+              }`}
             style={{
-              background: activeTab === 'activity' 
+              background: activeTab === 'activity'
                 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                 : 'transparent',
-              color: activeTab === 'activity' 
-                ? '#ffffff' 
+              color: activeTab === 'activity'
+                ? '#ffffff'
                 : isDark ? '#9ca3af' : '#6b7280',
-              boxShadow: activeTab === 'activity' 
-                ? '0 4px 12px rgba(16, 185, 129, 0.3)' 
+              boxShadow: activeTab === 'activity'
+                ? '0 4px 12px rgba(16, 185, 129, 0.3)'
                 : 'none'
             }}
           >
@@ -598,8 +595,8 @@ export const AnalyticsDashboard: React.FC = () => {
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                         <Award className="w-6 h-6 text-white" />
+                      </div>
                     </div>
-                  </div>
                   </motion.div>
                 </div>
               </div>
@@ -624,7 +621,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 <h3 className="text-xl font-bold dashboard-card-title-claro dark:text-foreground">
                   Atividade Recente
                 </h3>
-      </div>
+              </div>
 
               <div className="space-y-3">
                 <AnimatePresence>

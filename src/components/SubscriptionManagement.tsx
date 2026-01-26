@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  AlertTriangle, 
+import {
+  X,
+  AlertTriangle,
   CreditCard,
   ExternalLink
 } from 'lucide-react';
@@ -39,7 +39,6 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
       setCancelReason('');
       refetch();
       onSuccess?.();
-    } else {
     }
   };
 
@@ -49,13 +48,13 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
 
   const handleCancelRecurring = async () => {
     if (!subscription?.gateway_subscription_id) return;
-    
+
     const result = await cancelRecurringSubscription(
       subscription.gateway_subscription_id,
       subscription.user_id || '',
       cancelReason
     );
-    
+
     if (result?.success) {
       setShowCancelModal(false);
       setCancelReason('');
@@ -75,12 +74,12 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
   }
 
   // Se a assinatura está cancelada mas ainda no período, mostrar opção de reativação
-  const isCancelledInPeriod = subscription.status === 'cancelled' && 
+  const isCancelledInPeriod = subscription.status === 'cancelled' &&
     new Date(subscription.current_period_end) > new Date();
 
   return (
     <div className="space-y-4">
-      
+
       {/* Status da Assinatura */}
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
 
@@ -107,7 +106,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
           <div className="space-y-3">
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
               <p className="text-sm text-red-800 dark:text-red-200">
-                <strong>🚨 ASSINATURA CANCELADA - AÇÃO MANUAL NECESSÁRIA</strong><br/>
+                <strong>🚨 ASSINATURA CANCELADA - AÇÃO MANUAL NECESSÁRIA</strong><br />
                 Sua assinatura foi cancelada no LeadBaze, mas você DEVE cancelar manualmente no Perfect Pay para evitar cobranças futuras!
               </p>
             </div>
@@ -178,7 +177,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
 
       {/* Modal de Cancelamento */}
       {showCancelModal && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -186,7 +185,7 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
             }
           }}
         >
-          <div 
+          <div
             className="subscription-modal-content max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
@@ -198,42 +197,42 @@ export const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
                 Cancelar Assinatura
               </h3>
             </div>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Tem certeza que deseja cancelar sua assinatura? 
+              Tem certeza que deseja cancelar sua assinatura?
               <strong className="text-green-600 dark:text-green-400"> Você poderá continuar usando os {subscription.leads_remaining} leads restantes até {new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}.</strong>
             </p>
-            
+
 
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>📋 Instruções para Cancelamento Manual:</strong><br/>
-                1. Acesse: <strong>https://app.perfectpay.com.br</strong><br/>
-                2. Faça login com suas credenciais<br/>
-                3. Vá para "Minhas Assinaturas"<br/>
-                4. Cancele a assinatura do LeadBaze<br/>
+                <strong>📋 Instruções para Cancelamento Manual:</strong><br />
+                1. Acesse: <strong>https://app.perfectpay.com.br</strong><br />
+                2. Faça login com suas credenciais<br />
+                3. Vá para "Minhas Assinaturas"<br />
+                4. Cancele a assinatura do LeadBaze<br />
                 5. Confirme o cancelamento
               </p>
             </div>
 
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                <strong>⚠️ Política de Cancelamento:</strong><br/>
-                • <strong>Acesso mantido</strong> até o final do período atual<br/>
-                • <strong>Leads preservados</strong> durante o período de acesso<br/>
+                <strong>⚠️ Política de Cancelamento:</strong><br />
+                • <strong>Acesso mantido</strong> até o final do período atual<br />
+                • <strong>Leads preservados</strong> durante o período de acesso<br />
                 • <strong>Nova assinatura</strong> necessária após o período atual
               </p>
             </div>
-            
+
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-4">
               <p className="text-sm text-green-800 dark:text-green-200">
                 <strong>✅ Leads Restantes:</strong> Você poderá continuar usando os <strong>{subscription.leads_remaining} leads restantes</strong> até <strong>{new Date(subscription.current_period_end).toLocaleDateString('pt-BR')}</strong>.
               </p>
             </div>
-            
+
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 mb-4">
               <p className="text-sm text-red-800 dark:text-red-200">
-                <strong>📅 Data da compra:</strong> {new Date(subscription.current_period_start).toLocaleDateString('pt-BR')}<br/>
+                <strong>📅 Data da compra:</strong> {new Date(subscription.current_period_start).toLocaleDateString('pt-BR')}<br />
                 <strong>⏰ Prazo para reembolso:</strong> {new Date(new Date(subscription.current_period_start).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')}
               </p>
             </div>

@@ -46,27 +46,7 @@ export const ProfileCheckGuard: React.FC<ProfileCheckGuardProps> = ({
     )
   }
 
-  // Se está criando perfil
-  if (false) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md mx-auto p-6">
-          <Loader className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Configurando sua conta...
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Estamos criando seu perfil automaticamente. Isso pode levar alguns segundos.
-          </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-800">
-              <strong>Email:</strong> {user?.email}
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
+
 
   // Se há erro
   if (error) {

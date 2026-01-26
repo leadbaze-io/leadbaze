@@ -274,7 +274,7 @@ export const EnhancedSignupForm: React.FC<EnhancedSignupFormProps> = ({
       }
 
       console.log('✅ Dados validados com sucesso')
-    } catch (validationError: any) {
+    } catch (validationError: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       console.error('❌ Erro de validação:', validationError)
       toast({
         title: "⚠️ Erro de Validação",

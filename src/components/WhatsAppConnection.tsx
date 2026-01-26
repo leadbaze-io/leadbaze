@@ -124,7 +124,7 @@ export default function WhatsAppConnection({
               startQRCodePolling(instance.instance_name)
             }
           } else {
-
+            console.log('Instance disconnected or not found')
           }
         } catch (error) {
           console.error(error)
@@ -161,7 +161,7 @@ export default function WhatsAppConnection({
               variant: 'warning',
             })
           } else {
-
+            // Conexão ok
           }
         } catch (error) {
           console.error(error)

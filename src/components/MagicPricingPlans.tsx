@@ -16,8 +16,8 @@ export default function MagicPricingPlans() {
   useLayoutEffect(() => {
     if (sectionRef.current) {
       sectionRef.current.setAttribute('id', 'pricing-plans-section-desktop')
-      sectionRef.current.offsetHeight // Forçar layout
-      sectionRef.current.offsetTop // Forçar cálculo do offsetTop
+      void sectionRef.current.offsetHeight // Forçar layout
+      void sectionRef.current.offsetTop // Forçar cálculo do offsetTop
     }
   }, [])
 
@@ -105,11 +105,11 @@ export default function MagicPricingPlans() {
   ]
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      id="pricing-plans-section-desktop" 
+      id="pricing-plans-section-desktop"
       data-section-type="pricing-desktop"
-      className="relative py-24 md:py-32 overflow-hidden" 
+      className="relative py-24 md:py-32 overflow-hidden"
       data-ready="true"
       style={{
         background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)',
@@ -136,10 +136,10 @@ export default function MagicPricingPlans() {
           {/* Main Heading - Renderizar imediatamente sem delay para garantir dimensões */}
           <div style={{ opacity: 1 }}>
             <div className="mb-6">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{color: '#FFFFFF', opacity: 1}}>
-                Escolha o <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Plano</span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#FFFFFF', opacity: 1 }}>
+                Escolha o <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Plano</span>
                 <br />
-                <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+                <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                   Perfeito para Você
                 </span>
               </h2>
@@ -149,8 +149,8 @@ export default function MagicPricingPlans() {
           {/* Subheadline - Renderizar imediatamente */}
           <div style={{ opacity: 1 }}>
             <div className="mb-12">
-              <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{color: '#FFFFFF', opacity: 0.9}}>
-                <span className="font-semibold" style={{color: '#FFFFFF'}}>Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.<span className="font-semibold"> Teste agora mesmo com 30 <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Leads Gratuitos</span>!</span>
+              <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: '#FFFFFF', opacity: 0.9 }}>
+                <span className="font-semibold" style={{ color: '#FFFFFF' }}>Transforme seu negócio hoje!</span> Comece pequeno e escale conforme cresce.<span className="font-semibold"> Teste agora mesmo com 30 <span className="bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Leads Gratuitos</span>!</span>
               </p>
             </div>
           </div>
@@ -174,61 +174,60 @@ export default function MagicPricingPlans() {
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00'}}>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{ backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00' }}>
                   🏆 Mais Vendido
                 </div>
               )}
 
               {/* Best Value Badge for Start Plan */}
               {plan.id === 'start' && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00'}}>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{ backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00' }}>
                   💎 Custo-Benefício
                 </div>
               )}
 
               {/* Premium Badge for Enterprise Plan */}
               {plan.id === 'enterprise' && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00'}}>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-full font-bold text-sm shadow-lg z-10" style={{ backgroundColor: '#FFFFFF', color: '#082721', border: '2px solid #00ff00' }}>
                   👑 Premium
                 </div>
               )}
 
-              <div className={`relative bg-white rounded-3xl p-8 shadow-xl border-2 transition-all duration-500 overflow-hidden h-full flex flex-col ${
-                selectedPlan === plan.id
+              <div className={`relative bg-white rounded-3xl p-8 shadow-xl border-2 transition-all duration-500 overflow-hidden h-full flex flex-col ${selectedPlan === plan.id
                   ? 'shadow-2xl'
                   : 'hover:shadow-xl'
-              }`} style={{
-                borderColor: selectedPlan === plan.id ? '#00ff00' : '#2e4842',
-                borderWidth: '3px'
-              }}>
+                }`} style={{
+                  borderColor: selectedPlan === plan.id ? '#00ff00' : '#2e4842',
+                  borderWidth: '3px'
+                }}>
                 {/* Background Gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
 
                 {/* Header */}
                 <div className="relative text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl text-white mb-4" style={{backgroundColor: '#00ff00'}}>
-                    <plan.icon className="w-8 h-8" style={{color: '#082721'}} />
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl text-white mb-4" style={{ backgroundColor: '#00ff00' }}>
+                    <plan.icon className="w-8 h-8" style={{ color: '#082721' }} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>{plan.name}</h3>
+                  <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{plan.name}</h3>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold" style={{color: '#000000'}}>{plan.price}</span>
-                    <span className="text-lg ml-1" style={{color: '#2e4842'}}>{plan.period}</span>
+                    <span className="text-4xl font-bold" style={{ color: '#000000' }}>{plan.price}</span>
+                    <span className="text-lg ml-1" style={{ color: '#2e4842' }}>{plan.period}</span>
                   </div>
                 </div>
 
                 {/* Price per Lead */}
                 <div className="text-center mb-6">
-                  <div className="text-sm mb-1" style={{color: '#2e4842'}}>Preço por Lead</div>
-                  <div className="text-2xl font-bold" style={{color: '#000000'}}>{plan.pricePerLead}</div>
+                  <div className="text-sm mb-1" style={{ color: '#2e4842' }}>Preço por Lead</div>
+                  <div className="text-2xl font-bold" style={{ color: '#000000' }}>{plan.pricePerLead}</div>
 
                   {/* Urgency Badge - Only for Scale Plan */}
                   {plan.id === 'scale' && (
                     <div className="mt-3 space-y-2">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border" style={{backgroundColor: '#FFFFFF', color: '#082721', borderColor: '#00ff00', borderWidth: '2px'}}>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border" style={{ backgroundColor: '#FFFFFF', color: '#082721', borderColor: '#00ff00', borderWidth: '2px' }}>
                         ⚡ Oferta Limitada
                       </span>
-                      <div className="text-xs" style={{color: '#082721'}}>
-                        Apenas <span className="font-bold" style={{color: '#000000'}}>23 vagas</span> restantes
+                      <div className="text-xs" style={{ color: '#082721' }}>
+                        Apenas <span className="font-bold" style={{ color: '#000000' }}>23 vagas</span> restantes
                       </div>
                     </div>
                   )}
@@ -236,16 +235,16 @@ export default function MagicPricingPlans() {
                   {/* Limited spots for other plans */}
                   {plan.id === 'start' && (
                     <div className="mt-3">
-                      <div className="text-xs" style={{color: '#082721'}}>
-                        Apenas <span className="font-bold" style={{color: '#000000'}}>67 vagas</span> restantes
+                      <div className="text-xs" style={{ color: '#082721' }}>
+                        Apenas <span className="font-bold" style={{ color: '#000000' }}>67 vagas</span> restantes
                       </div>
                     </div>
                   )}
 
                   {plan.id === 'enterprise' && (
                     <div className="mt-3">
-                      <div className="text-xs" style={{color: '#082721'}}>
-                        Apenas <span className="font-bold" style={{color: '#000000'}}>12 vagas</span> restantes
+                      <div className="text-xs" style={{ color: '#082721' }}>
+                        Apenas <span className="font-bold" style={{ color: '#000000' }}>12 vagas</span> restantes
                       </div>
                     </div>
                   )}
@@ -274,7 +273,7 @@ export default function MagicPricingPlans() {
               </div>
             </motion.div>
           ))}
-          </div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -282,9 +281,9 @@ export default function MagicPricingPlans() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center"
         >
-          <div className="bg-white rounded-3xl p-8 shadow-xl border max-w-2xl mx-auto" style={{borderColor: '#00ff00', borderWidth: '3px'}}>
-            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>Pronto para começar?</h3>
-            <p className="mb-6" style={{color: '#2e4842'}}>Teste agora mesmo nossa plataforma com 30 Leads Gratuitos!</p>
+          <div className="bg-white rounded-3xl p-8 shadow-xl border max-w-2xl mx-auto" style={{ borderColor: '#00ff00', borderWidth: '3px' }}>
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-green-500 via-green-400 to-green-600 bg-clip-text text-transparent font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Pronto para começar?</h3>
+            <p className="mb-6" style={{ color: '#2e4842' }}>Teste agora mesmo nossa plataforma com 30 Leads Gratuitos!</p>
             <ShimmerButton
               onClick={handleStartNow}
               className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg"

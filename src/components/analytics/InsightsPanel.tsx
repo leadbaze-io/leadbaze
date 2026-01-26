@@ -57,7 +57,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
       await markInsightAsRead(insightId)
       onInsightRead?.(insightId)
     } catch (error) {
-
+      console.error('Error marking insight as read:', error)
     }
   }
 
@@ -67,7 +67,7 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
       await generateAutomaticInsights('current-user-id')
       onRefresh?.()
     } catch (error) {
-
+      console.error('Error generating insights:', error)
     } finally {
       setIsGenerating(false)
     }
@@ -199,9 +199,8 @@ export default function InsightsPanel({ insights, onInsightRead, onRefresh }: In
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative p-4 rounded-lg border-2 transition-all duration-200 ${
-                  getSeverityColor(insight.severity)
-                } ${!insight.isRead ? 'ring-2 ring-blue-500/20' : ''}`}
+                className={`relative p-4 rounded-lg border-2 transition-all duration-200 ${getSeverityColor(insight.severity)
+                  } ${!insight.isRead ? 'ring-2 ring-blue-500/20' : ''}`}
               >
                 {/* Indicador de não lido */}
                 {!insight.isRead && (

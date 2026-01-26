@@ -106,7 +106,7 @@ export default function ChangePasswordForm({ onSuccess, onCancel }: ChangePasswo
 
       reset()
       onSuccess?.()
-    } catch (error: any) {
+    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
 
       toast({
         title: "❌ Erro inesperado",

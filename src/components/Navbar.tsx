@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard, Building2 } from 'lucide-react'
+import { LogOut, Menu, X, Home, FileText, Info, BarChart3, Users, MessageCircle, ArrowRight, Crown, CreditCard } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCurrentUser, signOut, supabase } from '../lib/supabaseClient'
 import LogoImage from './LogoImage'
@@ -288,7 +288,7 @@ export default function Navbar() {
                       // Buscar TODAS as seções desktop e encontrar a de planos
                       const findPlansSection = () => {
                         // Primeiro tentar pelo ID
-                        let section = document.getElementById('pricing-plans-section-desktop')
+                        const section = document.getElementById('pricing-plans-section-desktop')
                         if (section) {
                           const h2 = section.querySelector('h2')
                           const text = h2?.textContent || ''

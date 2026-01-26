@@ -11,8 +11,8 @@ interface LazySectionProps {
  * Componente otimizado que lazy load children com Intersection Observer
  * Carrega mais cedo para animações fluidas e experiência profissional
  */
-export function LazySection({ 
-  children, 
+export function LazySection({
+  children,
   fallback = <div className="min-h-[200px]" />,
   rootMargin = '500px', // Aumentado para carregar mais cedo e garantir fluidez
   threshold = 0.01
@@ -59,9 +59,9 @@ export function LazySection({
           }
         })
       },
-      { 
+      {
         rootMargin: typeof rootMargin === 'string' ? rootMargin : '500px',
-        threshold 
+        threshold
       }
     )
 
@@ -76,23 +76,23 @@ export function LazySection({
       scrollTimeout = setTimeout(() => {
         if (checkIfNearViewport()) {
           observer.disconnect()
-          window.removeEventListener('scroll', handleScroll, { passive: true } as any)
+          window.removeEventListener('scroll', handleScroll, { passive: true } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
         }
       }, 50)
     }
-    
+
     let resizeTimeout: NodeJS.Timeout
     const handleResize = () => {
       clearTimeout(resizeTimeout)
       resizeTimeout = setTimeout(() => {
         if (checkIfNearViewport()) {
           observer.disconnect()
-          window.removeEventListener('resize', handleResize, { passive: true } as any)
-          window.removeEventListener('scroll', handleScroll, { passive: true } as any)
+          window.removeEventListener('resize', handleResize, { passive: true } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+          window.removeEventListener('scroll', handleScroll, { passive: true } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
         }
       }, 50)
     }
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', handleResize, { passive: true })
 
@@ -100,14 +100,14 @@ export function LazySection({
       observer.disconnect()
       clearTimeout(scrollTimeout)
       clearTimeout(resizeTimeout)
-      window.removeEventListener('scroll', handleScroll, { passive: true } as any)
-      window.removeEventListener('resize', handleResize, { passive: true } as any)
+      window.removeEventListener('scroll', handleScroll, { passive: true } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+      window.removeEventListener('resize', handleResize, { passive: true } as any) // eslint-disable-line @typescript-eslint/no-explicit-any
     }
   }, [shouldLoad, rootMargin, threshold])
 
   if (shouldLoad) {
     return (
-      <div 
+      <div
         style={{
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
