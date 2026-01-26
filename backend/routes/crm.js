@@ -99,13 +99,34 @@ router.get('/callback', (req, res) => {
                 <body>
                     <script>
                         // Send code to parent window
+                        // Tenta comunicação via postMessage (padrão)
                         if (window.opener) {
-                            window.opener.postMessage({ 
-                                code: "${code}", 
+                            try {
+                                window.opener.postMessage({ 
+                                    code: "${code}", 
+                                    referer: "${referer || ''}",
+                                    source: 'kommo-oauth' 
+                                }, "*");
+                            } catch (e) {
+                                console.log('PostMessage falhou:', e);
+                            }
+                        }
+
+                        // Fallback robusto via LocalStorage (funciona mesmo se o opener for perdido)
+                        try {
+                            localStorage.setItem('kommo_oauth_result', JSON.stringify({
+                                code: "${code}",
                                 referer: "${referer || ''}",
-                                source: 'kommo-oauth' 
-                            }, "*");
+                                timestamp: Date.now()
+                            }));
+                        } catch (e) {
+                            console.log('LocalStorage falhou:', e);
+                        }
+
+                        // Tenta fechar a janela
+                        setTimeout(function() {
                             window.close();
+                        }, 500);
                         } else {
                             document.write("Autorização concluída! Você pode fechar esta janela.");
                         }
