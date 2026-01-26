@@ -19,10 +19,10 @@ router.post('/search', authenticateToken, async (req, res) => {
             });
         }
 
-        if (limit < 1 || limit > 60) {
+        if (limit < 1 || limit > 200) {
             return res.status(400).json({
                 success: false,
-                error: 'limit deve estar entre 1 e 60'
+                error: 'limit deve estar entre 1 e 200'
             });
         }
 
