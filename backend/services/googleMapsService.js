@@ -32,7 +32,7 @@ class GoogleMapsService {
         }
 
         try {
-            console.log(`🔍 Buscando: ${businessType} em ${location}`);
+            console.log(`🔍 Buscando: ${businessType} em ${location} (limite: ${limit})`);
 
             // Passo 1: Geocodificar a localização para obter lat/lng
             const geocodeUrl = `${this.baseUrl}/geocode/json`;
@@ -50,26 +50,71 @@ class GoogleMapsService {
             const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
             console.log(`📍 Coordenadas: ${lat}, ${lng}`);
 
-            // Passo 2: Buscar estabelecimentos próximos
+            // Passo 2: Buscar estabelecimentos com paginação
+            let allResults = [];
             const placesUrl = `${this.baseUrl}/place/nearbysearch/json`;
-            const placesResponse = await axios.get(placesUrl, {
-                params: {
-                    location: `${lat},${lng}`,
-                    radius: 5000, // 5km de raio
-                    keyword: businessType,
-                    key: this.apiKey,
-                    language: 'pt-BR'
-                }
-            });
 
-            if (!placesResponse.data.results || placesResponse.data.results.length === 0) {
+            // A API retorna max 20 por página, até 3 páginas (60 total)
+            // Para limites maiores, usamos múltiplos raios de busca
+            const searchRadii = limit <= 60 ? [5000] : [5000, 10000, 15000];
+
+            for (const radius of searchRadii) {
+                if (allResults.length >= limit) break;
+
+                console.log(`🔎 Buscando com raio de ${radius}m...`);
+                let pageToken = null;
+                let pageCount = 0;
+                const maxPages = 3; // Google limita a 3 páginas
+
+                do {
+                    const params = {
+                        location: `${lat},${lng}`,
+                        radius: radius,
+                        keyword: businessType,
+                        key: this.apiKey,
+                        language: 'pt-BR'
+                    };
+
+                    if (pageToken) {
+                        params.pagetoken = pageToken;
+                    }
+
+                    const placesResponse = await axios.get(placesUrl, { params });
+
+                    if (placesResponse.data.results && placesResponse.data.results.length > 0) {
+                        allResults = allResults.concat(placesResponse.data.results);
+                        console.log(`  ✅ +${placesResponse.data.results.length} resultados (total: ${allResults.length})`);
+                    }
+
+                    pageToken = placesResponse.data.next_page_token;
+                    pageCount++;
+
+                    // Se há próxima página e ainda não atingimos o limite
+                    if (pageToken && allResults.length < limit && pageCount < maxPages) {
+                        // Google requer delay antes de usar pagetoken
+                        console.log('  ⏳ Aguardando 2s para próxima página...');
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    } else {
+                        break;
+                    }
+                } while (pageToken && allResults.length < limit && pageCount < maxPages);
+
+                if (allResults.length >= limit) break;
+            }
+
+            if (allResults.length === 0) {
                 console.log('⚠️ Nenhum resultado encontrado');
                 return [];
             }
 
-            // Limitar resultados
-            const results = placesResponse.data.results.slice(0, limit);
-            console.log(`✅ ${results.length} estabelecimentos encontrados`);
+            // Remover duplicatas por place_id
+            const uniqueResults = Array.from(
+                new Map(allResults.map(item => [item.place_id, item])).values()
+            );
+
+            // Limitar ao número solicitado
+            const results = uniqueResults.slice(0, limit);
+            console.log(`✅ ${results.length} estabelecimentos únicos encontrados (de ${uniqueResults.length} totais)`);
 
             // Passo 3: Buscar detalhes de cada estabelecimento (em paralelo)
             const detailedPlaces = await Promise.all(

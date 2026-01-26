@@ -1057,6 +1057,9 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                               <SelectItem value="30">30 Leads</SelectItem>
                               <SelectItem value="40">40 Leads</SelectItem>
                               <SelectItem value="50">50 Leads</SelectItem>
+                              <SelectItem value="100">100 Leads</SelectItem>
+                              <SelectItem value="150">150 Leads</SelectItem>
+                              <SelectItem value="200">200 Leads</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
