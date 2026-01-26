@@ -181,16 +181,54 @@ class KommoCRMService extends CRMService {
     }
 
     /**
+     * Get available pipelines and their statuses
+     */
+    async getPipelines() {
+        try {
+            const token = await this.getValidToken();
+
+            const response = await axios.get(`${this.baseURL}${this.apiVersion}/leads/pipelines`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const pipelines = response.data._embedded.pipelines;
+            console.log(`📋 [Kommo] Found ${pipelines.length} pipeline(s):`);
+
+            pipelines.forEach(pipeline => {
+                console.log(`  - ${pipeline.name} (ID: ${pipeline.id})`);
+                if (pipeline._embedded?.statuses) {
+                    pipeline._embedded.statuses.forEach(status => {
+                        console.log(`    └─ ${status.name} (ID: ${status.id})`);
+                    });
+                }
+            });
+
+            return pipelines;
+        } catch (error) {
+            console.error('❌ [Kommo] Failed to fetch pipelines:', error.response?.data || error.message);
+            throw error;
+        }
+    }
+
+    /**
      * Create lead/deal in Kommo
      */
     async createDeal(leadData) {
         try {
+            console.log(`🔨 [Kommo] Creating deal for: ${leadData.name}`);
             const token = await this.getValidToken();
 
             // First create contact
             const contact = await this.createContact(leadData);
+            console.log(`👤 [Kommo] Contact created: ID ${contact.id}`);
 
-            // Then create lead associated with contact
+            // Get configured pipeline/status or use defaults
+            const pipelineId = this.integration.crm_config?.pipeline_id;
+            const statusId = this.integration.crm_config?.status_id;
+
+            // Build lead payload
             const leadPayload = [{
                 name: `Lead - ${leadData.name || 'Sem nome'}`,
                 price: leadData.budget || 0,
@@ -198,6 +236,18 @@ class KommoCRMService extends CRMService {
                     contacts: [{ id: contact.id }]
                 }
             }];
+
+            // Add pipeline/status if configured
+            if (pipelineId) {
+                leadPayload[0].pipeline_id = parseInt(pipelineId);
+                console.log(`🎯 [Kommo] Using configured pipeline ID: ${pipelineId}`);
+            }
+            if (statusId) {
+                leadPayload[0].status_id = parseInt(statusId);
+                console.log(`📍 [Kommo] Using configured status ID: ${statusId}`);
+            }
+
+            console.log(`📤 [Kommo] Sending lead payload:`, JSON.stringify(leadPayload, null, 2));
 
             const response = await axios.post(
                 `${this.baseURL}${this.apiVersion}/leads`,
@@ -211,11 +261,19 @@ class KommoCRMService extends CRMService {
             );
 
             const createdLead = response.data._embedded.leads[0];
-            console.log(`✅ [Kommo] Lead created: ${createdLead.name} (ID: ${createdLead.id})`);
+            console.log(`✅ [Kommo] Lead created successfully!`);
+            console.log(`   - Name: ${createdLead.name}`);
+            console.log(`   - ID: ${createdLead.id}`);
+            console.log(`   - Pipeline ID: ${createdLead.pipeline_id}`);
+            console.log(`   - Status ID: ${createdLead.status_id}`);
 
             return createdLead;
         } catch (error) {
-            console.error('❌ [Kommo] Failed to create lead:', error.response?.data || error.message);
+            console.error('❌ [Kommo] Failed to create lead:');
+            console.error('   Error:', error.response?.data || error.message);
+            if (error.response?.data) {
+                console.error('   Response:', JSON.stringify(error.response.data, null, 2));
+            }
             throw new Error(`Failed to create lead in Kommo: ${error.response?.data?.detail || error.message}`);
         }
     }

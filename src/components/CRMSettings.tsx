@@ -3,11 +3,10 @@ import { useCRMIntegration } from '../hooks/useCRMIntegration';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { Loader2, CheckCircle2, XCircle, RefreshCw, ExternalLink } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, ExternalLink } from 'lucide-react';
 
 export function CRMSettings() {
     const { integration, isConnected, isLoading, error, disconnect, reload, connect } = useCRMIntegration('kommo');
-    const [isTesting, setIsTesting] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
 
     const handleConnect = async () => {
@@ -144,11 +143,7 @@ export function CRMSettings() {
         }
     };
 
-    const handleTest = async () => {
-        setIsTesting(true);
-        await reload();
-        setIsTesting(false);
-    };
+
 
     if (isLoading) {
         return (
@@ -215,28 +210,13 @@ export function CRMSettings() {
                     {/* Action Buttons */}
                     <div className="flex gap-2">
                         {isConnected ? (
-                            <>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleTest}
-                                    disabled={isTesting}
-                                >
-                                    {isTesting ? (
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                    ) : (
-                                        <RefreshCw className="h-4 w-4 mr-2" />
-                                    )}
-                                    Testar Conexão
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleDisconnect}
-                                >
-                                    Desconectar
-                                </Button>
-                            </>
+                            <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={handleDisconnect}
+                            >
+                                Desconectar
+                            </Button>
                         ) : (
                             <Button
                                 size="sm"

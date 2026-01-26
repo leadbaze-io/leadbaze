@@ -61,6 +61,8 @@ class CRMService {
      * @returns {Promise<{success: number, failed: number, errors: Array}>}
      */
     async syncLeads(leads) {
+        console.log(`📤 [CRM] Starting sync of ${leads.length} lead(s)...`);
+
         const results = {
             success: 0,
             failed: 0,
@@ -69,10 +71,16 @@ class CRMService {
 
         for (const lead of leads) {
             try {
-                await this.createContact(lead);
+                console.log(`📝 [CRM] Syncing lead: ${lead.name || 'Unnamed'} | Phone: ${lead.phone || 'N/A'}`);
+
+                // Create lead/deal (which also creates contact)
+                await this.createDeal(lead);
+
                 results.success++;
+                console.log(`✅ [CRM] Successfully synced lead: ${lead.name}`);
             } catch (error) {
                 results.failed++;
+                console.error(`❌ [CRM] Failed to sync lead: ${lead.name}`, error.message);
                 results.errors.push({
                     lead_name: lead.name,
                     lead_phone: lead.phone,
@@ -81,6 +89,7 @@ class CRMService {
             }
         }
 
+        console.log(`📊 [CRM] Sync complete: ${results.success} success, ${results.failed} failed`);
         return results;
     }
 
