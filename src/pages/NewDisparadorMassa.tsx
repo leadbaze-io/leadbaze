@@ -90,7 +90,7 @@ export default function NewDisparadorMassa() {
   const [currentTotalLeads, setCurrentTotalLeads] = useState<number>(0)
   const [currentSuccessCount, setCurrentSuccessCount] = useState<number>(0)
   const [currentFailedCount, setCurrentFailedCount] = useState<number>(0)
-  const [currentLead, setCurrentLead] = useState<{name: string, phone: string} | null>(null)
+  const [currentLead, setCurrentLead] = useState<{ name: string, phone: string } | null>(null)
   const [campaignLeads, setCampaignLeads] = useState<any[]>([])
   const [isInitializing, setIsInitializing] = useState(true)
 
@@ -382,28 +382,39 @@ export default function NewDisparadorMassa() {
   // Conectar ao SSE quando modal estiver aberto e campanha estiver sendo enviada
   useEffect(() => {
     if (!showProgressModal || currentCampaignStatus !== 'sending' || !selectedCampaign?.id) {
+      console.log('🔴 [SSE] Não conectando - Modal:', showProgressModal, 'Status:', currentCampaignStatus, 'CampaignID:', selectedCampaign?.id)
       return
     }
-    const eventSource = new EventSource(`${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/campaign/status/stream/${selectedCampaign.id}`)
+
+    const sseUrl = `${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/campaign/status/stream/${selectedCampaign.id}`
+    console.log('🟢 [SSE] Conectando ao:', sseUrl)
+
+    const eventSource = new EventSource(sseUrl)
 
     eventSource.onopen = () => {
-
+      console.log('✅ [SSE] Conexão estabelecida com sucesso!')
     }
 
     eventSource.onmessage = (event) => {
+      console.log('📨 [SSE] Mensagem recebida:', event.data)
+
       try {
         const data = JSON.parse(event.data)
+        console.log('📦 [SSE] Dados parseados:', data)
 
         if (data.type === 'progress') {
+          console.log('📊 [SSE] Atualizando progresso:', data.data)
 
           // Sair do estado de inicialização na primeira atualização
           if (isInitializing) {
+            console.log('🚀 [SSE] Saindo do modo de inicialização')
             setIsInitializing(false)
           }
 
           // Atualizar estados locais
           setCurrentSuccessCount(data.data.successCount || 0)
           setCurrentFailedCount(data.data.failedCount || 0)
+          console.log('✅ [SSE] Estados atualizados - Sucessos:', data.data.successCount, 'Falhas:', data.data.failedCount)
 
           // Priorizar o lead atual enviado pelo SSE
           if (data.data.currentLead) {
@@ -411,6 +422,7 @@ export default function NewDisparadorMassa() {
               name: data.data.currentLead.name,
               phone: data.data.currentLead.phone
             })
+            console.log('👤 [SSE] Lead atual:', data.data.currentLead.name)
           } else {
             // Fallback: calcular baseado no progresso
             const progressPercent = data.data.progress || 0
@@ -433,10 +445,12 @@ export default function NewDisparadorMassa() {
                   name: currentLead.name || 'Lead',
                   phone: currentLead.phone || '(11) 99999-0001'
                 })
+                console.log('👤 [SSE] Lead calculado (fallback):', currentLead.name)
               }
             }
           }
         } else if (data.type === 'complete') {
+          console.log('🎉 [SSE] Campanha concluída!', data.data)
 
           // Finalizar campanha
           setCurrentCampaignStatus('completed')
@@ -448,18 +462,26 @@ export default function NewDisparadorMassa() {
             description: `Campanha finalizada com ${data.data.successCount} sucessos e ${data.data.failedCount} falhas.`,
             variant: 'success'
           })
+        } else if (data.type === 'heartbeat') {
+          console.log('💓 [SSE] Heartbeat recebido')
+        } else if (data.type === 'connected') {
+          console.log('🔗 [SSE] Evento de conexão recebido')
+        } else {
+          console.log('❓ [SSE] Tipo de mensagem desconhecido:', data.type)
         }
       } catch (error) {
-
+        console.error('❌ [SSE] Erro ao processar mensagem:', error, 'Data:', event.data)
       }
     }
 
-    eventSource.onerror = (_error) => {
-
+    eventSource.onerror = (error) => {
+      console.error('❌ [SSE] Erro na conexão:', error)
+      console.error('❌ [SSE] ReadyState:', eventSource.readyState)
+      console.error('❌ [SSE] URL:', eventSource.url)
     }
 
     return () => {
-
+      console.log('🔌 [SSE] Fechando conexão (cleanup)')
       eventSource.close()
     }
   }, [showProgressModal, currentCampaignStatus, selectedCampaign?.id])
@@ -549,7 +571,7 @@ export default function NewDisparadorMassa() {
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             className="w-16 h-16 mx-auto mb-6"
           >
-            <div className="w-full h-full rounded-full border-4" style={{borderColor: '#b7c7c1', borderTopColor: '#00ff00'}}></div>
+            <div className="w-full h-full rounded-full border-4" style={{ borderColor: '#b7c7c1', borderTopColor: '#00ff00' }}></div>
           </motion.div>
           <motion.p
 
@@ -586,7 +608,7 @@ export default function NewDisparadorMassa() {
             transition={{ duration: 0.6 }}
             className="mb-4 sm:mb-6 md:mb-8"
           >
-            <div 
+            <div
               className="relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-2xl"
               style={{
                 background: 'linear-gradient(135deg, #082721 0%, #1A3A3A 50%, #082721 100%)'
@@ -639,40 +661,40 @@ export default function NewDisparadorMassa() {
                     transition={{ delay: 0.4 }}
                     className="flex justify-center sm:justify-end"
                   >
-                  <motion.div
+                    <motion.div
 
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300"
-                  >
-                    <div className="text-xs sm:text-sm text-white/80 mb-1">Status WhatsApp</div>
-                    <div className="text-base sm:text-lg font-semibold flex items-center space-x-2">
-                      {connectedInstance ? (
-                        <>
-                          <motion.div
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                          </motion.div>
-                          <span className="text-white text-sm sm:text-base">Conectado</span>
-                        </>
-                      ) : (
-                        <>
-                          <motion.div
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
-                          </motion.div>
-                          <span className="text-white text-sm sm:text-base">Aguardando</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="text-xs text-white/70 mt-1">
-                      {connectedInstance ? 'Pronto para enviar campanhas' : 'Configure sua instância'}
-                    </div>
-                  </motion.div>
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20 hover:bg-white/15 transition-all duration-300"
+                    >
+                      <div className="text-xs sm:text-sm text-white/80 mb-1">Status WhatsApp</div>
+                      <div className="text-base sm:text-lg font-semibold flex items-center space-x-2">
+                        {connectedInstance ? (
+                          <>
+                            <motion.div
+                              animate={{ scale: [1, 1.1, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            >
+                              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                            </motion.div>
+                            <span className="text-white text-sm sm:text-base">Conectado</span>
+                          </>
+                        ) : (
+                          <>
+                            <motion.div
+                              animate={{ rotate: [0, 10, -10, 0] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            >
+                              <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
+                            </motion.div>
+                            <span className="text-white text-sm sm:text-base">Aguardando</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-xs text-white/70 mt-1">
+                        {connectedInstance ? 'Pronto para enviar campanhas' : 'Configure sua instância'}
+                      </div>
+                    </motion.div>
 
                   </motion.div>
                 </div>
@@ -741,20 +763,18 @@ export default function NewDisparadorMassa() {
             // Indicador para Criação/Edição de Campanha
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'lists'
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'lists'
 
                     ? 'bg-gradient-to-r from-indigo-500 to-blue-600'
 
                     : 'bg-gray-300 dark:bg-gray-600'
-                }`}></div>
-                <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'lists'
+                  }`}></div>
+                <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'lists'
 
                     ? 'text-indigo-600 dark:text-indigo-400'
 
                     : 'text-gray-600 dark:text-gray-400'
-                }`}>
+                  }`}>
                   <span className="hidden sm:inline">Criar/Editar Campanha</span>
                   <span className="sm:hidden">Campanha</span>
                 </span>
@@ -764,20 +784,18 @@ export default function NewDisparadorMassa() {
               <div className="sm:hidden w-8 h-px bg-gray-300 dark:bg-gray-600"></div>
 
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'message'
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'message'
 
                     ? 'bg-gradient-to-r from-purple-500 to-pink-600'
 
                     : 'bg-gray-300 dark:bg-gray-600'
-                }`}></div>
-                <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'message'
+                  }`}></div>
+                <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'message'
 
                     ? 'text-purple-600 dark:text-purple-400'
 
                     : 'text-gray-600 dark:text-gray-400'
-                }`}>
+                  }`}>
                   Mensagem
                 </span>
               </div>
@@ -786,20 +804,18 @@ export default function NewDisparadorMassa() {
               <div className="sm:hidden w-8 h-px bg-gray-300 dark:bg-gray-600"></div>
 
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
-                  currentWizardStep === 'review'
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'review'
 
                     ? 'bg-gradient-to-r from-green-500 to-green-600'
 
                     : 'bg-gray-300 dark:bg-gray-600'
-                }`}></div>
-                <span className={`text-sm sm:text-base font-semibold ${
-                  currentWizardStep === 'review'
+                  }`}></div>
+                <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'review'
 
                     ? 'text-green-700 dark:text-green-400'
 
                     : 'text-gray-600 dark:text-gray-400'
-                }`}>
+                  }`}>
                   <span className="hidden sm:inline">Revisão e Envio</span>
                   <span className="sm:hidden">Revisão</span>
                 </span>
