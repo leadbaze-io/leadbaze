@@ -381,40 +381,55 @@ export default function NewDisparadorMassa() {
 
   // Conectar ao SSE quando modal estiver aberto e campanha estiver sendo enviada
   useEffect(() => {
+    // Adicionar logs para debug de estado
+    if (showProgressModal) {
+      console.log('🔍 [SSE] Debug Estado:', {
+        showProgressModal,
+        status: currentCampaignStatus,
+        campaignId: selectedCampaign?.id,
+        campaignName: selectedCampaign?.name
+      })
+    }
+
     if (!showProgressModal || currentCampaignStatus !== 'sending' || !selectedCampaign?.id) {
-      console.log('🔴 [SSE] Não conectando - Modal:', showProgressModal, 'Status:', currentCampaignStatus, 'CampaignID:', selectedCampaign?.id)
+      if (showProgressModal) {
+        console.log('🔴 [SSE] Não conectando - Condições não atendidas')
+      }
       return
     }
 
-    const sseUrl = `${import.meta.env.VITE_BACKEND_URL || 'https://leadbaze.io'}/api/campaign/status/stream/${selectedCampaign.id}`
-    console.log('🟢 [SSE] Conectando ao:', sseUrl)
+    // Usar URL relativa se VITE_BACKEND_URL não estiver definida (para usar o proxy do Vite)
+    // Se estiver em produção, usar a URL definida ou leadbaze.io
+    const baseUrl = import.meta.env.VITE_BACKEND_URL || (import.meta.env.PROD ? 'https://leadbaze.io' : '')
+    const sseUrl = `${baseUrl}/api/campaign/status/stream/${selectedCampaign.id}`
+
+    console.log('🟢 [SSE] Tentando conectar ao:', sseUrl)
 
     const eventSource = new EventSource(sseUrl)
 
     eventSource.onopen = () => {
-      console.log('✅ [SSE] Conexão estabelecida com sucesso!')
+      console.log('✅ [SSE] Conexão estabelecida com sucesso! ReadyState:', eventSource.readyState)
     }
 
     eventSource.onmessage = (event) => {
-      console.log('📨 [SSE] Mensagem recebida:', event.data)
+      // Log do evento bruto para debug
+      // console.log('📨 [SSE] Mensagem bruta recebida:', event.data)
 
       try {
         const data = JSON.parse(event.data)
-        console.log('📦 [SSE] Dados parseados:', data)
+
+        // Ignorar heartbeats nos logs para não poluir
+        if (data.type !== 'heartbeat') {
+          console.log('📦 [SSE] Evento processado:', data.type, data)
+        }
 
         if (data.type === 'progress') {
-          console.log('📊 [SSE] Atualizando progresso:', data.data)
-
-          // Sair do estado de inicialização na primeira atualização
-          if (isInitializing) {
-            console.log('🚀 [SSE] Saindo do modo de inicialização')
-            setIsInitializing(false)
-          }
+          // Sair do estado de inicialização
+          if (isInitializing) setIsInitializing(false)
 
           // Atualizar estados locais
           setCurrentSuccessCount(data.data.successCount || 0)
           setCurrentFailedCount(data.data.failedCount || 0)
-          console.log('✅ [SSE] Estados atualizados - Sucessos:', data.data.successCount, 'Falhas:', data.data.failedCount)
 
           // Priorizar o lead atual enviado pelo SSE
           if (data.data.currentLead) {
@@ -422,62 +437,47 @@ export default function NewDisparadorMassa() {
               name: data.data.currentLead.name,
               phone: data.data.currentLead.phone
             })
-            console.log('👤 [SSE] Lead atual:', data.data.currentLead.name)
-          } else {
-            // Fallback: calcular baseado no progresso
-            const progressPercent = data.data.progress || 0
+          }
+          // Se não tem lead atual mas tem progresso, tentar estimar
+          else if (data.data.progress > 0 && campaignLeads.length > 0) {
             const totalLeads = campaignLeads.length
+            const processedLeads = Math.floor((data.data.progress / 100) * totalLeads)
+            const currentLeadIndex = Math.min(processedLeads, totalLeads - 1)
 
-            if (totalLeads > 0) {
-              // IMPORTANTE: O primeiro lead já foi enviado quando a campanha iniciou
-              // Então quando progresso = 50% (1 de 2), já estamos processando o SEGUNDO lead
-
-              // Calcular quantos leads já foram processados
-              const processedLeads = Math.floor((progressPercent / 100) * totalLeads)
-
-              // O lead que está sendo processado AGORA é o próximo após os já processados
-              // Exemplo: 2 leads, progresso 50% = 1 processado, então processando lead[1] (segundo)
-              const currentLeadIndex = Math.min(processedLeads, totalLeads - 1)
-
-              if (campaignLeads[currentLeadIndex]) {
-                const currentLead = campaignLeads[currentLeadIndex]
-                setCurrentLead({
-                  name: currentLead.name || 'Lead',
-                  phone: currentLead.phone || '(11) 99999-0001'
-                })
-                console.log('👤 [SSE] Lead calculado (fallback):', currentLead.name)
-              }
+            if (campaignLeads[currentLeadIndex]) {
+              const currentLead = campaignLeads[currentLeadIndex]
+              setCurrentLead({
+                name: currentLead.name || 'Lead',
+                phone: currentLead.phone || '(11) ...'
+              })
             }
           }
         } else if (data.type === 'complete') {
-          console.log('🎉 [SSE] Campanha concluída!', data.data)
-
-          // Finalizar campanha
+          console.log('🎉 [SSE] Campanha concluída via evento!')
           setCurrentCampaignStatus('completed')
           setCurrentSuccessCount(data.data.successCount || 0)
           setCurrentFailedCount(data.data.failedCount || 0)
 
           toast({
             title: '🎉 Campanha Concluída!',
-            description: `Campanha finalizada com ${data.data.successCount} sucessos e ${data.data.failedCount} falhas.`,
+            description: `Finalizada: ${data.data.successCount} sucessos, ${data.data.failedCount} falhas.`,
             variant: 'success'
           })
-        } else if (data.type === 'heartbeat') {
-          console.log('💓 [SSE] Heartbeat recebido')
-        } else if (data.type === 'connected') {
-          console.log('🔗 [SSE] Evento de conexão recebido')
-        } else {
-          console.log('❓ [SSE] Tipo de mensagem desconhecido:', data.type)
+
+          // Fechar conexão
+          eventSource.close()
         }
       } catch (error) {
-        console.error('❌ [SSE] Erro ao processar mensagem:', error, 'Data:', event.data)
+        console.error('❌ [SSE] Erro ao processar mensagem:', error)
       }
     }
 
     eventSource.onerror = (error) => {
-      console.error('❌ [SSE] Erro na conexão:', error)
-      console.error('❌ [SSE] ReadyState:', eventSource.readyState)
-      console.error('❌ [SSE] URL:', eventSource.url)
+      // Não logar erro apenas se for fechamento normal
+      if (eventSource.readyState !== EventSource.CLOSED) {
+        console.error('❌ [SSE] Erro na conexão:', error)
+        console.error('❌ [SSE] ReadyState:', eventSource.readyState)
+      }
     }
 
     return () => {
@@ -765,15 +765,15 @@ export default function NewDisparadorMassa() {
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'lists'
 
-                    ? 'bg-gradient-to-r from-indigo-500 to-blue-600'
+                  ? 'bg-gradient-to-r from-indigo-500 to-blue-600'
 
-                    : 'bg-gray-300 dark:bg-gray-600'
+                  : 'bg-gray-300 dark:bg-gray-600'
                   }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'lists'
 
-                    ? 'text-indigo-600 dark:text-indigo-400'
+                  ? 'text-indigo-600 dark:text-indigo-400'
 
-                    : 'text-gray-600 dark:text-gray-400'
+                  : 'text-gray-600 dark:text-gray-400'
                   }`}>
                   <span className="hidden sm:inline">Criar/Editar Campanha</span>
                   <span className="sm:hidden">Campanha</span>
@@ -786,15 +786,15 @@ export default function NewDisparadorMassa() {
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'message'
 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-600'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-600'
 
-                    : 'bg-gray-300 dark:bg-gray-600'
+                  : 'bg-gray-300 dark:bg-gray-600'
                   }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'message'
 
-                    ? 'text-purple-600 dark:text-purple-400'
+                  ? 'text-purple-600 dark:text-purple-400'
 
-                    : 'text-gray-600 dark:text-gray-400'
+                  : 'text-gray-600 dark:text-gray-400'
                   }`}>
                   Mensagem
                 </span>
@@ -806,15 +806,15 @@ export default function NewDisparadorMassa() {
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${currentWizardStep === 'review'
 
-                    ? 'bg-gradient-to-r from-green-500 to-green-600'
+                  ? 'bg-gradient-to-r from-green-500 to-green-600'
 
-                    : 'bg-gray-300 dark:bg-gray-600'
+                  : 'bg-gray-300 dark:bg-gray-600'
                   }`}></div>
                 <span className={`text-sm sm:text-base font-semibold ${currentWizardStep === 'review'
 
-                    ? 'text-green-700 dark:text-green-400'
+                  ? 'text-green-700 dark:text-green-400'
 
-                    : 'text-gray-600 dark:text-gray-400'
+                  : 'text-gray-600 dark:text-gray-400'
                   }`}>
                   <span className="hidden sm:inline">Revisão e Envio</span>
                   <span className="sm:hidden">Revisão</span>
