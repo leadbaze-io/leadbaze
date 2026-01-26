@@ -127,9 +127,6 @@ router.get('/callback', (req, res) => {
                         setTimeout(function() {
                             window.close();
                         }, 500);
-                        } else {
-                            document.write("Autorização concluída! Você pode fechar esta janela.");
-                        }
                     </script>
                     <div style="font-family: sans-serif; text-align: center; padding: 20px;">
                         <h2>Conectando ao LeadBaze...</h2>
