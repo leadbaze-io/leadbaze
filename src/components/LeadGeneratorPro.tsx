@@ -46,6 +46,7 @@ import { SimpleBonusLeadsAlert } from './SimpleBonusLeadsAlert'
 import { useProfileCheck } from '../hooks/useProfileCheck'
 import { useTheme } from '../contexts/ThemeContext'
 import { useSaveLeadList } from '../hooks/useLeadLists'
+import { useCRMIntegration } from '../hooks/useCRMIntegration'
 import { Checkbox } from './ui/checkbox'
 import { Upload } from 'lucide-react'
 
@@ -118,6 +119,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   }, [])
 
   const { profile } = useProfileCheck(user); // Obter dados do perfil do usuário
+  const { isConnected: hasCRMIntegration } = useCRMIntegration(); // Verificar se usuário tem CRM configurado
 
   // Estados para verificação de duplicatas
   const [duplicateLeads, setDuplicateLeads] = useState<Lead[]>([])
@@ -1452,29 +1454,31 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                             />
                           </div>
 
-                          {/* Auto-Sync to CRM Checkbox */}
-                          <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-md">
-                            <div className="flex items-start space-x-3">
-                              <Checkbox
-                                id="auto-sync-crm"
-                                checked={autoSyncToCRM}
-                                onCheckedChange={(checked) => setAutoSyncToCRM(checked as boolean)}
-                                className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                              />
-                              <div className="flex-1 space-y-1">
-                                <Label
-                                  htmlFor="auto-sync-crm"
-                                  className="text-base font-semibold flex items-center gap-2 cursor-pointer gerador-texto-claro dark:text-foreground"
-                                >
-                                  <Upload className="h-4 w-4 text-primary" />
-                                  Enviar automaticamente para o CRM
-                                </Label>
-                                <p className="text-sm text-muted-foreground">
-                                  Os {getSelectedLeads().length} leads selecionados serão enviados para o pipeline BDR do seu Kommo CRM após serem salvos.
-                                </p>
+                          {/* Auto-Sync to CRM Checkbox - Only show if user has CRM integration */}
+                          {hasCRMIntegration && (
+                            <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-md">
+                              <div className="flex items-start space-x-3">
+                                <Checkbox
+                                  id="auto-sync-crm"
+                                  checked={autoSyncToCRM}
+                                  onCheckedChange={(checked) => setAutoSyncToCRM(checked as boolean)}
+                                  className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                />
+                                <div className="flex-1 space-y-1">
+                                  <Label
+                                    htmlFor="auto-sync-crm"
+                                    className="text-base font-semibold flex items-center gap-2 cursor-pointer gerador-texto-claro dark:text-foreground"
+                                  >
+                                    <Upload className="h-4 w-4 text-primary" />
+                                    Enviar automaticamente para o CRM
+                                  </Label>
+                                  <p className="text-sm text-muted-foreground">
+                                    Os {getSelectedLeads().length} leads selecionados serão enviados para o pipeline BDR do seu Kommo CRM após serem salvos.
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       )}
 

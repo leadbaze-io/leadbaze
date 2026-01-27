@@ -65,17 +65,15 @@ router.get('/auth-url', authenticateToken, (req, res) => {
 
         const clientId = process.env.KOMMO_CLIENT_ID;
         const redirectUri = process.env.KOMMO_REDIRECT_URI;
-        const subdomain = process.env.KOMMO_SUBDOMAIN || 'www'; // Fallback to www if specific subdomain not needed for initial auth
+        // Fallback to www if specific subdomain not needed for initial auth
+        const subdomain = process.env.KOMMO_SUBDOMAIN || 'www';
 
         if (!clientId || !redirectUri) {
             return res.status(500).json({ success: false, error: 'Kommo credentials not configured' });
         }
 
-        // Kommo 
+        // Kommo OAuth URL
         const authUrl = `https://www.kommo.com/oauth?client_id=${clientId}&mode=popup`;
-
-        // Note: For Kommo, the user might need to input their subdomain manually in the popup
-        // or we can redirect to a specific subdomain if known: https://{subdomain}.kommo.com/oauth...
 
         res.json({ success: true, url: authUrl });
     } catch (error) {
@@ -201,6 +199,47 @@ router.post('/callback', authenticateToken, async (req, res) => {
         });
     } catch (error) {
         console.error('❌ [CRM] OAuth callback error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+/**
+ * POST /api/crm/setup-fields
+ * Setup required custom fields in CRM
+ */
+router.post('/setup-fields', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ success: false, error: 'Unauthorized' });
+        }
+
+        // Get integration
+        const { data: integration, error } = await supabase
+            .from('crm_integrations')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('is_active', true)
+            .single();
+
+        if (error || !integration) {
+            return res.status(404).json({ success: false, error: 'No active CRM integration found' });
+        }
+
+        console.log(`🔧 [CRM] Setting up fields for user ${userId} (${integration.crm_provider})...`);
+
+        const crmService = getCRMService(integration);
+
+        if (crmService.setupRequiredFields) {
+            const results = await crmService.setupRequiredFields();
+            res.json({ success: true, results });
+        } else {
+            res.status(400).json({ success: false, error: 'Setup not supported for this provider' });
+        }
+
+    } catch (error) {
+        console.error('Error setting up CRM fields:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });

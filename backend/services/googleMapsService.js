@@ -84,6 +84,18 @@ class GoogleMapsService {
             const mainResults = await performTextSearch(mainQuery);
             allResults = [...mainResults];
 
+            // Tentar variação singular/plural para melhorar resultados
+            const pluralVariations = this.getWordVariations(businessType);
+            for (const variation of pluralVariations) {
+                if (variation !== businessType) {
+                    const varQuery = `${variation} em ${location}`;
+                    console.log(`🔄 Tentando variação: "${varQuery}"`);
+                    const varResults = await performTextSearch(varQuery);
+                    allResults = allResults.concat(varResults);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+
             // Se precisarmos de mais leads (> 60), usar estratégia de zonas
             if (limit > 60 && allResults.length < limit) {
                 console.log('🚀 Ativando expansão de zonas geográficas...');
@@ -283,6 +295,38 @@ class GoogleMapsService {
 
     clearCache() {
         this.cache.clear();
+    }
+
+    /**
+     * Gera variações de uma palavra (singular/plural)
+     */
+    getWordVariations(word) {
+        const variations = [word];
+        const lowerWord = word.toLowerCase();
+
+        // Regras comuns de plural em português
+        if (lowerWord.endsWith('s')) {
+            // Pode ser plural, tentar remover 's' final para singular
+            const singular = word.slice(0, -1);
+            variations.push(singular);
+
+            // Casos especiais ending in 'es'
+            if (lowerWord.endsWith('es')) {
+                const singularEs = word.slice(0, -2);
+                variations.push(singularEs);
+            }
+        } else {
+            // Provavelmente singular, adicionar plural
+            variations.push(word + 's');
+
+            // Casos especiais
+            if (lowerWord.endsWith('l') || lowerWord.endsWith('r')) {
+                variations.push(word + 'es');
+            }
+        }
+
+        // Remover duplicatas e retornar
+        return [...new Set(variations)];
     }
 }
 

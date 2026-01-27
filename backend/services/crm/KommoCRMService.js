@@ -20,6 +20,9 @@ class KommoCRMService extends CRMService {
         this.clientId = process.env.KOMMO_CLIENT_ID;
         this.clientSecret = process.env.KOMMO_CLIENT_SECRET;
         this.redirectUri = process.env.KOMMO_REDIRECT_URI || 'https://leadbaze.io/api/crm/callback';
+
+        // Cache for custom field IDs
+        this.fieldIdsCache = null;
     }
 
     /**
@@ -100,6 +103,200 @@ class KommoCRMService extends CRMService {
     }
 
     /**
+     * Get custom field IDs from account
+     * Cache the results to avoid repeated API calls
+     */
+    async getCustomFieldIds() {
+        if (this.fieldIdsCache) {
+            return this.fieldIdsCache;
+        }
+
+        try {
+            const token = await this.getValidToken();
+
+            const response = await axios.get(`${this.baseURL}${this.apiVersion}/contacts/custom_fields`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const fields = response.data._embedded.custom_fields || [];
+
+            console.log(`📋 [Kommo] Found ${fields.length} custom fields in account`);
+
+            // Map field types to their IDs
+            const fieldIds = {};
+            fields.forEach(field => {
+                console.log(`   - Field: "${field.name}" | Type: ${field.type} | Code: ${field.code || 'N/A'} | ID: ${field.id}`);
+
+                const name = field.name?.toLowerCase() || '';
+                const code = field.code?.toLowerCase() || '';
+
+                // Field type multitext can be phone or email
+                if (field.type === 'multitext') {
+                    if (code.includes('phone') || name.includes('phone') || name.includes('telefone')) {
+                        fieldIds.phone = field.id;
+                    } else if (code.includes('email') || name.includes('email')) {
+                        fieldIds.email = field.id;
+                    }
+                }
+                // Field type url or text for website/social
+                else if (field.type === 'url' || field.type === 'text') {
+                    if (name.includes('website') || name.includes('site') || code.includes('web')) {
+                        fieldIds.website = field.id;
+                    } else if (name.includes('instagram') || code.includes('insta')) {
+                        fieldIds.instagram = field.id;
+                    } else if (name.includes('google maps') || name.includes('maps') || code.includes('maps')) {
+                        fieldIds.google_maps = field.id;
+                    } else if (name.includes('endereço') || name.includes('address') || code.includes('addr')) {
+                        fieldIds.address = field.id;
+                    } else if (name.includes('nota') || name.includes('rating') || code.includes('rating')) {
+                        fieldIds.rating = field.id;
+                    }
+                }
+                // Numeric fields
+                else if (field.type === 'numeric') {
+                    if (name.includes('nota') || name.includes('rating') || code.includes('rating')) {
+                        fieldIds.rating = field.id;
+                    } else if (name.includes('avaliações') || name.includes('reviews') || code.includes('reviews')) {
+                        fieldIds.reviews = field.id;
+                    }
+                }
+            });
+
+            console.log('📋 [Kommo] Custom field IDs found:', fieldIds);
+
+            // Cache the results
+            this.fieldIdsCache = fieldIds;
+
+            return fieldIds;
+        } catch (error) {
+            console.error('❌ [Kommo] Failed to fetch custom fields:', error.message);
+            return {};
+        }
+    }
+
+    /**
+     * Create a custom field in Kommo
+     */
+    async createCustomField(name, type, code) {
+        try {
+            const token = await this.getValidToken();
+
+            console.log(`🔨 [Kommo] Creating custom field: ${name} (${type})...`);
+
+            const payload = {
+                name: name,
+                type: type,
+                code: code,
+                is_api_only: false
+            };
+
+            const response = await axios.post(
+                `${this.baseURL}${this.apiVersion}/contacts/custom_fields`,
+                [payload], // API expects an array
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.data && response.data._embedded && response.data._embedded.custom_fields) {
+                const newField = response.data._embedded.custom_fields[0];
+                console.log(`✅ [Kommo] Custom field created: ${newField.name} (ID: ${newField.id})`);
+                return newField.id;
+            }
+
+            return null;
+        } catch (error) {
+            console.error(`❌ [Kommo] Failed to create custom field ${name}:`, error.response?.data || error.message);
+            return null;
+        }
+    }
+
+    /**
+     * Update a custom field in Kommo (e.g. to change sorting)
+     */
+    async updateCustomField(id, data) {
+        try {
+            const token = await this.getValidToken();
+
+            console.log(`🔄 [Kommo] Updating custom field ${id}...`);
+
+            // Use PATCH for updating
+            const response = await axios.patch(
+                `${this.baseURL}${this.apiVersion}/contacts/custom_fields/${id}`,
+                data,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            console.log(`✅ [Kommo] Custom field updated: ${response.data.name} (Sort: ${response.data.sort || 'N/A'})`);
+            return response.data;
+        } catch (error) {
+            console.error(`❌ [Kommo] Failed to update custom field ${id}:`, error.response?.data || error.message);
+            return null;
+        }
+    }
+
+    /**
+     * Setup all required custom fields
+     * Checks if fields exist, if not creates them
+     */
+    async setupRequiredFields() {
+        console.log('🚀 [Kommo] Starting setup of required custom fields...');
+        const token = await this.getValidToken();
+
+        // Force refresh cache
+        this.fieldIdsCache = null;
+        const currentFields = await this.getCustomFieldIds();
+
+        const fieldsToEnsure = [
+            { key: 'reviews', name: 'Total de Avaliações', type: 'numeric', code: 'TOTAL_REVIEWS' },
+            { key: 'rating', name: 'Nota Google', type: 'text', code: 'GOOGLE_RATING' },
+            { key: 'website', name: 'Website', type: 'url', code: 'WEBSITE' },
+            { key: 'instagram', name: 'Instagram', type: 'url', code: 'INSTAGRAM' },
+            { key: 'address', name: 'Endereço Completo', type: 'text', code: 'FULL_ADDRESS' },
+            { key: 'google_maps', name: 'Google Maps Link', type: 'url', code: 'GOOGLE_MAPS' }
+        ];
+
+        const results = {
+            existing: [],
+            created: [],
+            failed: []
+        };
+
+        for (const field of fieldsToEnsure) {
+            if (currentFields[field.key]) {
+                console.log(`✅ [Kommo] Field "${field.name}" already exists (ID: ${currentFields[field.key]})`);
+                results.existing.push({ name: field.name, id: currentFields[field.key] });
+            } else {
+                console.log(`⚠️ [Kommo] Field "${field.name}" missing. Creating...`);
+                // Short wait to avoid rate limits
+                await new Promise(r => setTimeout(r, 500));
+
+                const newId = await this.createCustomField(field.name, field.type, field.code);
+                if (newId) {
+                    currentFields[field.key] = newId;
+                    results.created.push({ name: field.name, id: newId });
+                } else {
+                    results.failed.push({ name: field.name });
+                }
+            }
+        }
+
+        // Update cache
+        this.fieldIdsCache = currentFields;
+
+        console.log('🏁 [Kommo] Field setup complete:', results);
+        return results;
+    }
+
+    /**
    * Create contact in Kommo
    */
     async createContact(leadData) {
@@ -111,16 +308,32 @@ class KommoCRMService extends CRMService {
             console.log(`📧 [Kommo] Email: ${leadData.email || 'N/A'}`);
             console.log(`🌐 [Kommo] Website: ${leadData.website || 'N/A'}`);
 
+            // Get custom field IDs from account
+            const fieldIds = await this.getCustomFieldIds();
+
+            // Ensure website field exists if we have website data
+            if (leadData.website && !fieldIds.website) {
+                console.log('⚠️ [Kommo] Website field not found, creating it...');
+                const newFieldId = await this.createCustomField('Website', 'url', 'WEB');
+                if (newFieldId) {
+                    fieldIds.website = newFieldId;
+                    // Update cache
+                    if (this.fieldIdsCache) {
+                        this.fieldIdsCache.website = newFieldId;
+                    }
+                }
+            }
+
             // Kommo standard contact structure with custom fields
             const contactData = [{
                 name: leadData.name || 'Lead sem nome',
                 custom_fields_values: []
             }];
 
-            // Add phone if available (field_code PHONE)
-            if (leadData.phone) {
+            // Add phone if available and field ID exists
+            if (leadData.phone && fieldIds.phone) {
                 contactData[0].custom_fields_values.push({
-                    field_code: 'PHONE',
+                    field_id: fieldIds.phone,
                     values: [{
                         value: leadData.phone,
                         enum_code: 'WORK'
@@ -128,10 +341,10 @@ class KommoCRMService extends CRMService {
                 });
             }
 
-            // Add email if available (field_code EMAIL)
-            if (leadData.email) {
+            // Add email if available and field ID exists
+            if (leadData.email && fieldIds.email) {
                 contactData[0].custom_fields_values.push({
-                    field_code: 'EMAIL',
+                    field_id: fieldIds.email,
                     values: [{
                         value: leadData.email,
                         enum_code: 'WORK'
@@ -139,109 +352,53 @@ class KommoCRMService extends CRMService {
                 });
             }
 
-            // Add website if available (field_code WEB)
-            if (leadData.website) {
+            // Add website if available and field ID exists
+            if (leadData.website && fieldIds.website) {
                 contactData[0].custom_fields_values.push({
-                    field_code: 'WEB',
-                    values: [{
-                        value: leadData.website,
-                        enum_code: 'WORK'
-                    }]
-                });
-            }
-
-            // Add address if available
-            if (leadData.address) {
-                contactData[0].custom_fields_values.push({
-                    field_name: 'Endereço',
-                    values: [{
-                        value: leadData.address
-                    }]
+                    field_id: fieldIds.website,
+                    values: [{ value: leadData.website }]
                 });
             }
 
             // Add Instagram if available
-            if (leadData.instagram) {
+            const instagram = leadData.instagram || (leadData.website && leadData.website.includes('instagram.com') ? leadData.website : null);
+            if (instagram && fieldIds.instagram) {
                 contactData[0].custom_fields_values.push({
-                    field_name: 'Instagram',
-                    values: [{
-                        value: leadData.instagram
-                    }]
+                    field_id: fieldIds.instagram,
+                    values: [{ value: instagram }]
                 });
             }
 
-            // Add CNPJ if available
-            if (leadData.cnpj) {
+            // Add Google Maps Link
+            if (leadData.google_maps_url && fieldIds.google_maps) {
                 contactData[0].custom_fields_values.push({
-                    field_name: 'CNPJ',
-                    values: [{
-                        value: leadData.cnpj
-                    }]
+                    field_id: fieldIds.google_maps,
+                    values: [{ value: leadData.google_maps_url }]
                 });
             }
 
-            // Add company size if available
-            if (leadData.company_size) {
+            // Add Address
+            if (leadData.address && fieldIds.address) {
                 contactData[0].custom_fields_values.push({
-                    field_name: 'Tamanho da Empresa',
-                    values: [{
-                        value: leadData.company_size
-                    }]
+                    field_id: fieldIds.address,
+                    values: [{ value: leadData.address }]
                 });
             }
 
-            // Add Google Maps URL if available
-            if (leadData.google_maps_url) {
+            // Add Rating
+            const rating = leadData.rating || leadData.totalScore;
+            if (rating && fieldIds.rating) {
                 contactData[0].custom_fields_values.push({
-                    field_name: 'Google Maps',
-                    values: [{
-                        value: leadData.google_maps_url
-                    }]
+                    field_id: fieldIds.rating,
+                    values: [{ value: String(rating) }]
                 });
             }
 
-            // Add business type if available
-            if (leadData.business_type) {
+            // Add Reviews Count
+            if (leadData.reviews_count && fieldIds.reviews) {
                 contactData[0].custom_fields_values.push({
-                    field_name: 'Tipo de Negócio',
-                    values: [{
-                        value: leadData.business_type
-                    }]
-                });
-            }
-
-            // Add rating if available
-            if (leadData.rating) {
-                contactData[0].custom_fields_values.push({
-                    field_name: 'Avaliação Google',
-                    values: [{
-                        value: `${leadData.rating} estrelas (${leadData.reviews_count || 0} avaliações)`
-                    }]
-                });
-            }
-
-            // Add business status if available
-            if (leadData.business_status) {
-                const statusMap = {
-                    'OPERATIONAL': 'Em operação',
-                    'CLOSED_TEMPORARILY': 'Fechado temporariamente',
-                    'CLOSED_PERMANENTLY': 'Fechado permanentemente'
-                };
-                contactData[0].custom_fields_values.push({
-                    field_name: 'Status do Negócio',
-                    values: [{
-                        value: statusMap[leadData.business_status] || leadData.business_status
-                    }]
-                });
-            }
-
-            // Add open status if available
-            if (leadData.is_open_now !== null && leadData.is_open_now !== undefined) {
-                contactData[0].custom_fields_values.push({
-                    field_name: 'Aberto Agora',
-                    values: [{
-                        value: leadData.is_open_now ? 'Sim' : 'Não'
-                    }]
+                    field_id: fieldIds.reviews,
+                    values: [{ value: leadData.reviews_count }] // Numeric field expects number
                 });
             }
 
