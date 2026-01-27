@@ -106,14 +106,146 @@ class KommoCRMService extends CRMService {
         try {
             const token = await this.getValidToken();
 
-            // Kommo standard contact structure
-            // Phone and email are standard fields, not custom fields
+            console.log(`👤 [Kommo] Creating contact for: ${leadData.name}`);
+            console.log(`📞 [Kommo] Phone: ${leadData.phone || 'N/A'}`);
+            console.log(`📧 [Kommo] Email: ${leadData.email || 'N/A'}`);
+            console.log(`🌐 [Kommo] Website: ${leadData.website || 'N/A'}`);
+
+            // Kommo standard contact structure with custom fields
             const contactData = [{
                 name: leadData.name || 'Lead sem nome',
-                // Note: phone and email are not added here by default
-                // They require custom field configuration in Kommo
-                // For now, we'll just create the contact with name
+                custom_fields_values: []
             }];
+
+            // Add phone if available (field_code PHONE)
+            if (leadData.phone) {
+                contactData[0].custom_fields_values.push({
+                    field_code: 'PHONE',
+                    values: [{
+                        value: leadData.phone,
+                        enum_code: 'WORK'
+                    }]
+                });
+            }
+
+            // Add email if available (field_code EMAIL)
+            if (leadData.email) {
+                contactData[0].custom_fields_values.push({
+                    field_code: 'EMAIL',
+                    values: [{
+                        value: leadData.email,
+                        enum_code: 'WORK'
+                    }]
+                });
+            }
+
+            // Add website if available (field_code WEB)
+            if (leadData.website) {
+                contactData[0].custom_fields_values.push({
+                    field_code: 'WEB',
+                    values: [{
+                        value: leadData.website,
+                        enum_code: 'WORK'
+                    }]
+                });
+            }
+
+            // Add address if available
+            if (leadData.address) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Endereço',
+                    values: [{
+                        value: leadData.address
+                    }]
+                });
+            }
+
+            // Add Instagram if available
+            if (leadData.instagram) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Instagram',
+                    values: [{
+                        value: leadData.instagram
+                    }]
+                });
+            }
+
+            // Add CNPJ if available
+            if (leadData.cnpj) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'CNPJ',
+                    values: [{
+                        value: leadData.cnpj
+                    }]
+                });
+            }
+
+            // Add company size if available
+            if (leadData.company_size) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Tamanho da Empresa',
+                    values: [{
+                        value: leadData.company_size
+                    }]
+                });
+            }
+
+            // Add Google Maps URL if available
+            if (leadData.google_maps_url) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Google Maps',
+                    values: [{
+                        value: leadData.google_maps_url
+                    }]
+                });
+            }
+
+            // Add business type if available
+            if (leadData.business_type) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Tipo de Negócio',
+                    values: [{
+                        value: leadData.business_type
+                    }]
+                });
+            }
+
+            // Add rating if available
+            if (leadData.rating) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Avaliação Google',
+                    values: [{
+                        value: `${leadData.rating} estrelas (${leadData.reviews_count || 0} avaliações)`
+                    }]
+                });
+            }
+
+            // Add business status if available
+            if (leadData.business_status) {
+                const statusMap = {
+                    'OPERATIONAL': 'Em operação',
+                    'CLOSED_TEMPORARILY': 'Fechado temporariamente',
+                    'CLOSED_PERMANENTLY': 'Fechado permanentemente'
+                };
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Status do Negócio',
+                    values: [{
+                        value: statusMap[leadData.business_status] || leadData.business_status
+                    }]
+                });
+            }
+
+            // Add open status if available
+            if (leadData.is_open_now !== null && leadData.is_open_now !== undefined) {
+                contactData[0].custom_fields_values.push({
+                    field_name: 'Aberto Agora',
+                    values: [{
+                        value: leadData.is_open_now ? 'Sim' : 'Não'
+                    }]
+                });
+            }
+
+            console.log(`📤 [Kommo] Contact payload:`, JSON.stringify(contactData, null, 2));
 
             const response = await axios.post(
                 `${this.baseURL}${this.apiVersion}/contacts`,
@@ -129,14 +261,12 @@ class KommoCRMService extends CRMService {
             const createdContact = response.data._embedded.contacts[0];
             console.log(`✅ [Kommo] Contact created: ${createdContact.name} (ID: ${createdContact.id})`);
 
-            // After creating, update with phone if provided
-            if (leadData.phone) {
-                await this.updateContactPhone(createdContact.id, leadData.phone, token);
-            }
-
             return createdContact;
         } catch (error) {
             console.error('❌ [Kommo] Failed to create contact:', error.response?.data || error.message);
+            if (error.response?.data) {
+                console.error('❌ [Kommo] Error details:', JSON.stringify(error.response.data, null, 2));
+            }
             throw new Error(`Failed to create contact in Kommo: ${error.response?.data?.detail || error.message}`);
         }
     }
