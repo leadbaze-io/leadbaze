@@ -330,7 +330,12 @@ router.post('/test', authenticateToken, async (req, res) => {
  * Sync leads from a list to CRM (protected)
  * Body: { leadListId, provider }
  */
-router.post('/sync-leads', authenticateToken, async (req, res) => {
+router.post('/sync-leads', (req, res, next) => {
+    console.log('🔍 [DEBUG] /sync-leads endpoint HIT - Request received');
+    console.log('🔍 [DEBUG] Body:', req.body);
+    console.log('🔍 [DEBUG] Headers Authorization:', req.headers.authorization ? 'Present' : 'Missing');
+    next();
+}, authenticateToken, async (req, res) => {
     try {
         const { leadListId, provider } = req.body;
         const userId = req.user?.id;
