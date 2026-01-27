@@ -17,6 +17,7 @@ import './utils/analyticsErrorInterceptor'
 // Páginas principais - carregamento prioritário
 const LandingPage = lazy(() => import(/* webpackChunkName: "landing" */ './pages/LandingPage'))
 const LoginPage = lazy(() => import(/* webpackChunkName: "login" */ './pages/LoginPage'))
+const ResetPasswordPage = lazy(() => import(/* webpackChunkName: "reset-password" */ './pages/ResetPasswordPage'))
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/Dashboard'))
 
 // Páginas de funcionalidades - carregamento sob demanda
@@ -74,6 +75,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/gerador" element={<GeradorLeads />} />
             <Route path="/disparador" element={<NewDisparadorMassa />} />

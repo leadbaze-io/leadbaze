@@ -66,12 +66,37 @@ export const useSaveLeadList = () => {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: ({ name, leads, description, tags }: {
+    mutationFn: async ({ name, leads, description, tags, autoSyncToCRM }: {
       name: string
       leads: Lead[]
       description?: string
       tags?: string[]
-    }) => LeadService.saveLeadList(name, leads, description, tags),
+      autoSyncToCRM?: boolean
+    }) => {
+      // Salvar a lista primeiro
+      const savedList = await LeadService.saveLeadList(name, leads, description, tags)
+
+      // Se auto-sync estiver habilitado, enviar para CRM
+      if (autoSyncToCRM) {
+        console.log('🔄 Auto-sync to CRM enabled, syncing leads...')
+        try {
+          // Importar dinamicamente para evitar circular dependency
+          const { crmService } = await import('../services/crmService')
+          await crmService.syncLeads(savedList.id, 'kommo')
+          console.log('✅ Leads automatically synced to CRM')
+        } catch (error) {
+          console.error('❌ Failed to auto-sync to CRM:', error)
+          // Não falha o salvamento se o sync falhar
+          toast({
+            title: "⚠️ Lista salva, mas sync falhou",
+            description: "A lista foi salva com sucesso, mas não foi possível enviar ao CRM automaticamente.",
+            variant: 'default',
+          })
+        }
+      }
+
+      return savedList
+    },
 
     onMutate: async ({ name, leads }) => {
       // Cancel any outgoing refetches
@@ -109,10 +134,14 @@ export const useSaveLeadList = () => {
       })
     },
 
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      const syncMessage = variables.autoSyncToCRM
+        ? ` e enviados para o CRM`
+        : ''
+
       toast({
-        title: "Lista Salva com Sucesso!",
-        description: `${data.total_leads} leads salvos na lista "${data.name}".`,
+        title: "✅ Lista Salva com Sucesso!",
+        description: `${data.total_leads} leads salvos na lista "${data.name}"${syncMessage}.`,
         variant: 'success',
       })
     },

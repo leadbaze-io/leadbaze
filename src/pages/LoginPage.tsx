@@ -24,7 +24,9 @@ export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
+  const [resetEmail, setResetEmail] = useState('')
   const navigate = useNavigate()
   const { forceLightMode } = useTheme()
   const { trackLogin } = useAnalytics()
@@ -108,7 +110,7 @@ export default function LoginPage() {
       } else if (authData.user) {
         // Rastrear login bem-sucedido
         trackLogin('email');
-        
+
         setMessage({ type: 'success', text: 'Login realizado com sucesso! Redirecionando...' })
         // Aguardar um pouco para o listener processar
         setTimeout(() => {
@@ -157,12 +159,51 @@ export default function LoginPage() {
 
   const handleEnhancedSignupError = (error: string) => {
     setMessage({
-
       type: 'error',
-
       text: error
-
     })
+  }
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setMessage(null)
+
+    try {
+      const redirectUrl = window.location.origin.includes('localhost')
+        ? 'http://localhost:5173/reset-password'
+        : 'https://leadbaze.io/reset-password'
+
+      console.log('📧 Sending password reset email with redirect:', redirectUrl)
+
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: redirectUrl
+      })
+
+      if (error) {
+        setMessage({
+          type: 'error',
+          text: error.message || 'Erro ao enviar email de recuperação'
+        })
+      } else {
+        setMessage({
+          type: 'success',
+          text: 'Email de recuperação enviado! Verifique sua caixa de entrada.'
+        })
+        // Voltar para login após 3 segundos
+        setTimeout(() => {
+          setIsForgotPassword(false)
+          setResetEmail('')
+        }, 3000)
+      }
+    } catch (error: any) {
+      setMessage({
+        type: 'error',
+        text: error.message || 'Erro ao processar solicitação'
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   // Se não estiver em modo de login, mostrar o formulário completo
@@ -232,72 +273,128 @@ export default function LoginPage() {
 
         {/* Form Card */}
         <div className="login-form-card py-8 px-6 shadow-xl rounded-2xl">
+          {/* Forgot Password Mode */}
+          {isForgotPassword && (
+            <div className="mb-6">
+              <button
+                onClick={() => {
+                  setIsForgotPassword(false)
+                  setMessage(null)
+                  setResetEmail('')
+                }}
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-4 inline-flex items-center transition-colors"
+              >
+                ← Voltar para login
+              </button>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Recuperar Senha</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Digite seu email e enviaremos um link para redefinir sua senha.
+              </p>
+            </div>
+          )}
           {/* Message */}
           {message && (
-            <div className={`mb-6 ${
-              message.type === 'success'
+            <div className={`mb-6 ${message.type === 'success'
 
-                ? 'login-message-success'
+              ? 'login-message-success'
 
-                : 'login-message-error'
-            }`}>
+              : 'login-message-error'
+              }`}>
               {message.text}
             </div>
           )}
 
-          {/* Login Form */}
-          <form onSubmit={handleLoginSubmit(handleLogin)} className="space-y-6">
-            <div>
-              <label className="login-label block text-sm font-medium mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                <input
-                  {...registerLogin('email')}
-                  type="email"
-                  className="login-input-with-icon w-full"
-                  placeholder="seu@email.com"
-                />
+          {/* Login Form ou Forgot Password Form */}
+          {isForgotPassword ? (
+            <form onSubmit={handleForgotPassword} className="space-y-6">
+              <div>
+                <label className="login-label block text-sm font-medium mb-2">
+                  Email
+                </label>
+                <div className="relative">
+                  <Mail className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    className="login-input-with-icon w-full"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
               </div>
-              {loginErrors.email && (
-                <p className="mt-1 text-sm text-red-600">{loginErrors.email.message}</p>
-              )}
-            </div>
 
-            <div>
-              <label className="login-label block text-sm font-medium mb-2">
-                Senha
-              </label>
-              <div className="relative">
-                <Lock className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                <input
-                  {...registerLogin('password')}
-                  type={showPassword ? 'text' : 'password'}
-                  className="login-input-with-icon-button w-full"
-                  placeholder="Sua senha"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="login-icon-button absolute right-3 top-1/2 transform -translate-y-1/2"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+              <button
+                type="submit"
+                disabled={isLoading || !resetEmail}
+                className="login-button w-full flex items-center justify-center space-x-2"
+              >
+                {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Enviar link de recuperação</span>}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleLoginSubmit(handleLogin)} className="space-y-6">
+              <div>
+                <label className="login-label block text-sm font-medium mb-2">
+                  Email
+                </label>
+                <div className="relative">
+                  <Mail className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                  <input
+                    {...registerLogin('email')}
+                    type="email"
+                    className="login-input-with-icon w-full"
+                    placeholder="seu@email.com"
+                  />
+                </div>
+                {loginErrors.email && (
+                  <p className="mt-1 text-sm text-red-600">{loginErrors.email.message}</p>
+                )}
               </div>
-              {loginErrors.password && (
-                <p className="mt-1 text-sm text-red-600">{loginErrors.password.message}</p>
-              )}
-            </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="login-button w-full flex items-center justify-center space-x-2"
-            >
-              {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Entrar</span>}
-            </button>
-          </form>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="login-label block text-sm font-medium">
+                    Senha
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPassword(true)}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  >
+                    Esqueci minha senha
+                  </button>
+                </div>
+                <div className="relative">
+                  <Lock className="login-icon absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                  <input
+                    {...registerLogin('password')}
+                    type={showPassword ? 'text' : 'password'}
+                    className="login-input-with-icon-button w-full"
+                    placeholder="Sua senha"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="login-icon-button absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {loginErrors.password && (
+                  <p className="mt-1 text-sm text-red-600">{loginErrors.password.message}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="login-button w-full flex items-center justify-center space-x-2"
+              >
+                {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Entrar</span>}
+              </button>
+            </form>
+          )}
           {/* Toggle Mode */}
           <div className="mt-6 text-center">
             <p className="login-help-text">

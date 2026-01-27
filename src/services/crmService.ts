@@ -142,21 +142,35 @@ class CRMService {
      * Sync leads to CRM
      */
     async syncLeads(leadListId: string, provider: string = 'kommo'): Promise<SyncResult> {
-        const headers = await this.getAuthHeaders();
+        console.log('🚀 [Frontend] syncLeads called with:', { leadListId, provider });
 
-        const response = await fetch(`${API_BASE_URL}/api/crm/sync-leads`, {
+        const headers = await this.getAuthHeaders();
+        console.log('🔑 [Frontend] Auth headers obtained:', headers);
+
+        const url = `${API_BASE_URL}/api/crm/sync-leads`;
+        const body = { leadListId, provider };
+
+        console.log('📤 [Frontend] Sending request to:', url);
+        console.log('📦 [Frontend] Request body:', body);
+
+        const response = await fetch(url, {
             method: 'POST',
             headers,
             credentials: 'include',
-            body: JSON.stringify({ leadListId, provider })
+            body: JSON.stringify(body)
         });
+
+        console.log('📥 [Frontend] Response status:', response.status);
+        console.log('📥 [Frontend] Response ok:', response.ok);
 
         if (!response.ok) {
             const error = await response.json();
+            console.error('❌ [Frontend] Error response:', error);
             throw new Error(error.error || 'Failed to sync leads');
         }
 
         const data = await response.json();
+        console.log('✅ [Frontend] Success response:', data);
         return data.results;
     }
 

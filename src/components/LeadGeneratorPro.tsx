@@ -45,6 +45,9 @@ import { LeadsControlGuard } from './LeadsControlGuard'
 import { SimpleBonusLeadsAlert } from './SimpleBonusLeadsAlert'
 import { useProfileCheck } from '../hooks/useProfileCheck'
 import { useTheme } from '../contexts/ThemeContext'
+import { useSaveLeadList } from '../hooks/useLeadLists'
+import { Checkbox } from './ui/checkbox'
+import { Upload } from 'lucide-react'
 
 const searchFormSchema = z.object({
   businessType: z
@@ -103,6 +106,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [showBusinessTypeTooltip, setShowBusinessTypeTooltip] = useState(false)
   const [showLocationTooltip, setShowLocationTooltip] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [autoSyncToCRM, setAutoSyncToCRM] = useState(true) // Default: enviar para CRM
 
   // Buscar usuário atual
   useEffect(() => {
@@ -144,6 +148,7 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
   const [maxReviews, setMaxReviews] = useState("none")
 
   const { toast } = useToast()
+  const saveLeadListMutation = useSaveLeadList()
 
   const searchForm = useForm<z.infer<typeof searchFormSchema>>({
     resolver: zodResolver(searchFormSchema),
@@ -544,7 +549,15 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
 
     try {
       if (saveMode === 'new') {
-        await LeadService.saveLeadList(newListName, selectedLeads)
+        // Usar o hook para ter suporte a auto-sync
+        // IMPORTANTE: Usa leadsToSave (sem duplicatas) em vez de selectedLeads
+        await saveLeadListMutation.mutateAsync({
+          name: newListName,
+          leads: leadsToSave,
+          description: `Gerado em ${new Date().toLocaleDateString('pt-BR')}`,
+          tags: [],
+          autoSyncToCRM: autoSyncToCRM
+        })
       } else {
         // Salvar apenas os leads não duplicados
         await LeadService.addLeadsToList(selectedListId, leadsToSave)
@@ -1425,17 +1438,43 @@ export function LeadGeneratorPro({ onLeadsGenerated, onLeadsSaved, existingLists
                       </div>
 
                       {saveMode === 'new' && (
-                        <div className="space-y-3">
-                          <Label className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
-                            <Users className="w-4 h-4" />
-                            <span>Nome da Nova Lista</span>
-                          </Label>
-                          <Input
-                            placeholder="Ex: Restaurantes em São Paulo"
-                            value={newListName}
-                            onChange={(e) => setNewListName(e.target.value)}
-                            className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                          />
+                        <div className="space-y-4">
+                          <div className="space-y-3">
+                            <Label className="text-base font-semibold flex items-center space-x-2 gerador-texto-claro dark:text-foreground">
+                              <Users className="w-4 h-4" />
+                              <span>Nome da Nova Lista</span>
+                            </Label>
+                            <Input
+                              placeholder="Ex: Restaurantes em São Paulo"
+                              value={newListName}
+                              onChange={(e) => setNewListName(e.target.value)}
+                              className="h-12 text-base border-2 gerador-input-claro gerador-input-escuro focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            />
+                          </div>
+
+                          {/* Auto-Sync to CRM Checkbox */}
+                          <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-md">
+                            <div className="flex items-start space-x-3">
+                              <Checkbox
+                                id="auto-sync-crm"
+                                checked={autoSyncToCRM}
+                                onCheckedChange={(checked) => setAutoSyncToCRM(checked as boolean)}
+                                className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                              />
+                              <div className="flex-1 space-y-1">
+                                <Label
+                                  htmlFor="auto-sync-crm"
+                                  className="text-base font-semibold flex items-center gap-2 cursor-pointer gerador-texto-claro dark:text-foreground"
+                                >
+                                  <Upload className="h-4 w-4 text-primary" />
+                                  Enviar automaticamente para o CRM
+                                </Label>
+                                <p className="text-sm text-muted-foreground">
+                                  Os {getSelectedLeads().length} leads selecionados serão enviados para o pipeline BDR do seu Kommo CRM após serem salvos.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
 

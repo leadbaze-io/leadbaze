@@ -33,11 +33,14 @@ export function SyncToCRMButton({
     const { toast } = useToast();
 
     const handleSync = async () => {
+        console.log('🎯 [SyncButton] handleSync triggered for leadListId:', leadListId);
         try {
             setIsSyncing(true);
             setSyncResult(null);
 
+            console.log('📞 [SyncButton] Calling syncLeads...');
             const result = await syncLeads(leadListId);
+            console.log('✅ [SyncButton] syncLeads returned:', result);
 
             setSyncResult({
                 success: result.success_count,
@@ -62,6 +65,7 @@ export function SyncToCRMButton({
                 });
             }
         } catch (error) {
+            console.error('❌ [SyncButton] Error in handleSync:', error);
             toast({
                 title: '❌ Erro na sincronização',
                 description: error instanceof Error ? error.message : 'Falha ao sincronizar leads',
